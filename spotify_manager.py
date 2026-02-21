@@ -118,3 +118,36 @@ class SpotifyAPI:
         # Add the tracks to the playlist
         self.sp.playlist_add_items(playlist_id, track_uris)
         print(f"Playlist '{playlist_id}' updated with album '{album_uri}'")
+
+    def fetch_recent_tracks(self, after_timestamp=None):
+        """
+        Pull recently played tracks.
+        Filters by last_checked timestamp if provided.
+        """
+        results = self.sp.current_user_recently_played(limit=50)
+
+        tracks = []
+        for item in results["items"]:
+            played_at = item["played_at"]
+
+            if after_timestamp and played_at <= after_timestamp:
+                continue
+
+            track = item["track"]
+            album = track["album"]
+
+            tracks.append(
+                {
+                    "track_id": track["id"],
+                    "track_name": track["name"],
+                    "album_id": album["id"],
+                    "album_name": album["name"],
+                    "artist": ", ".join(a["name"] for a in album["artists"]),
+                    "played_at": played_at,
+                }
+            )
+
+        return tracks
+
+    def fetch_album_metadata(self, album_id):
+        return self.sp.album(album_id)
