@@ -16,14 +16,13 @@ def main():
 
     credentials = util.get_local_credentials()
     spotify = SpotifyAPI(credentials)
-    sp = spotify.sp
 
     tracks = spotify.fetch_recent_tracks(state["last_checked"])
 
     if not tracks:
         print("No new tracks found.")
     else:
-        tracking.update_album_progress(state, tracks)
+        tracking.update_album_progress(state, spotify, tracks)
 
         completed_album_ids = tracking.check_album_completion(state)
 

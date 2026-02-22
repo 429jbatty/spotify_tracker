@@ -2,7 +2,7 @@ import datetime
 from spotify_manager import SpotifyAPI
 
 
-def update_album_progress(state, tracks):
+def update_album_progress(state, sp: SpotifyAPI, tracks):
     """
     Updates albums_in_progress with newly played tracks.
     """
@@ -12,7 +12,7 @@ def update_album_progress(state, tracks):
 
         if album_id not in state["albums_in_progress"]:
             # Fetch album metadata once
-            album_meta = SpotifyAPI.fetch_album_metadata()
+            album_meta = sp.fetch_album_metadata(album_id)
             total_tracks = album_meta["total_tracks"]
 
             state["albums_in_progress"][album_id] = {
