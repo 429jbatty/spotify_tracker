@@ -13,6 +13,9 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
         if album_id not in state["albums_in_progress"]:
             # Fetch album metadata once
             album_meta = sp.fetch_album_metadata(album_id)
+            if album_meta["album_type"] != "album":
+                print(f"Skipping {album_meta['name']} because it's not an album")
+                continue
             total_tracks = album_meta["total_tracks"]
 
             state["albums_in_progress"][album_id] = {
@@ -32,7 +35,7 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
         album_entry["last_played"] = t["played_at"]
 
 
-def check_album_completion(state):
+def check_album_completion(state, threshold: float):
     """
     Determine which albums meet completion criteria.
 
@@ -40,32 +43,54 @@ def check_album_completion(state):
     - Strict: all tracks played
     """
 
+    # verify threshold
+    if (threshold > 1) or (threshold < 0.01):
+        raise ValueError("threshold must be between 0 and 1")
+
     completed = []
 
     for album_id, album_data in state["albums_in_progress"].items():
         if album_id in state["completed_albums"]:
             continue
 
-        if len(album_data["played_tracks"]) >= album_data["total_tracks"]:
-            completed.append(album_id)
+        # verify threshold met (% of songs on album)
+        total_tracks = album_data["total_tracks"]
+        unique_tracks = album_data["played_tracks"]
+
+        if len(unique_tracks) / total_tracks < threshold:
+            continue
+
+        completed.append(album_id)
 
     return completed
 
 
-def log_completed_album(state, album_id):
-    """
-    Placeholder logging sink.
-    Later this can:
-    - Append to Google Sheets
-    - Send to Notion
-    - Insert into DB
-    """
+def log_completed_album(state, sp: SpotifyAPI, album_id):
 
-    album_data = state["albums_in_progress"][album_id]
+    # get album data
+    album_logged_data = state["albums_in_progress"][album_id]
+    album_metadata = sp.fetch_album_metadata(album_id)
+    album_art = album_metadata["images"][0]["url"] if album_metadata["images"] else None
+    print(
+        f"Album completed: {album_logged_data['artist']} - {album_logged_data['album_name']}"
+    )
+    artist = album_metadata["artists"][0]["name"]
+    metadata_variables_to_track = [
+        "album_type",
+        "total_tracks",
+        "name",
+        "release_date",
+        "label",
+    ]
 
-    print(f"Album completed: {album_data['artist']} - {album_data['album_name']}")
+    filtered_dict = {
+        k: album_metadata[k] for k in metadata_variables_to_track if k in album_metadata
+    }
 
     state["completed_albums"][album_id] = {
-        "completed_at": datetime.datetime.utcnow().isoformat(),
+        "listen_date": album_logged_data["last_played"],
         "listen_count": 1,
+        **filtered_dict,
+        "image_url": album_art,
+        "artist": artist,
     }
