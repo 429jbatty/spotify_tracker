@@ -1,0 +1,16 @@
+{  
+    "completed_albums":
+        {
+            "Girl With a Basket of Fruit": {
+                "listen_date": null,
+                "listen_count": 1,
+                "album_type": "album",
+                "total_tracks": null,
+                "name": "Girl With a Basket of Fruit",
+                "release_date": "2019-02-08",
+                "label": null,
+                "image_url": null,
+                "artist": "Xiu Xiu"
+            }
+        }
+}

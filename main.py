@@ -31,6 +31,19 @@ def main():
     newest_timestamp = max(t["played_at"] for t in tracks)
     state["last_checked"] = newest_timestamp
 
+    # obtain manual entries
+    manual_entries = util.load_manual_entries()
+
+    # obtain google sheets entries
+    google_sheets_entries = util.load_google_sheets_entries()
+
+    # combine automatic and manual entries (will not duplicate keys)
+    state["completed_albums"] = {
+        **state["completed_albums"],
+        **manual_entries["completed_albums"],
+        **google_sheets_entries["completed_albums"],
+    }
+
     util.save_state(state)
 
 

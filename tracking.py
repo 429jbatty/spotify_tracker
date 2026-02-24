@@ -93,4 +93,5 @@ def log_completed_album(state, sp: SpotifyAPI, album_id):
         **filtered_dict,
         "image_url": album_art,
         "artist": artist,
+        "source": "spotify",
     }

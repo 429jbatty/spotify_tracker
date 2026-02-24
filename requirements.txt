@@ -1,2 +1,5 @@
 spotipy
 dotenv
+pandas
+unidecode
+rapidfuzz
