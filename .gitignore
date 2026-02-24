@@ -4,3 +4,4 @@ __pycache__/
 album_state.json
 spotify_credentials.json
 .cache*
+unmatched_albums.csv
