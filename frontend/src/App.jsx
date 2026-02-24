@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AlbumList from "./components/AlbumList";
+import AlbumCardList from "./components/AlbumCardList";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeline from "./AlbumTimeline";
 import AlbumSearch from "./components/AlbumSearch";
@@ -7,7 +7,7 @@ import AlbumSearch from "./components/AlbumSearch";
 function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [view, setView] = useState("table"); // "table" or "list"
+  const [view, setView] = useState("table"); // "table" or "card"
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -41,6 +41,17 @@ function App() {
     borderRadius: "4px",
   });
 
+  {/*Search functionality*/}
+  const filteredAlbums = Object.fromEntries(
+    Object.entries(data.completed_albums).filter(([id, album]) => {
+      const term = searchTerm.toLowerCase();
+      return (
+        album.name.toLowerCase().includes(term) ||
+        album.artist.toLowerCase().includes(term)
+      );
+    })
+  );
+
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Completed Albums</h1>
@@ -54,10 +65,10 @@ function App() {
           Table View
         </button>
         <button
-          onClick={() => setView("list")}
-          style={buttonStyle(view === "list")}
+          onClick={() => setView("card")}
+          style={buttonStyle(view === "card")}
         >
-          List View
+          Card View
         </button>
         <button
           onClick={() => setView("timeline")}
@@ -71,9 +82,9 @@ function App() {
       <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
       {/* Conditional rendering based on selected view */}
-      {view === "table" && <AlbumTable albums={data.completed_albums} searchTerm={searchTerm}/>}
-      {view === "list" && <AlbumList albums={data.completed_albums} searchTerm={searchTerm}/>}
-      {view === "timeline" && <AlbumTimeline albums={data.completed_albums} searchTerm={searchTerm}/>}
+      {view === "table" && <AlbumTable albums={filteredAlbums}/>}
+      {view === "card" && <AlbumCardList albums={filteredAlbums}/>}
+      {view === "timeline" && <AlbumTimeline albums={filteredAlbums}/>}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-function AlbumCard({ albumId, album }) {
+function AlbumCard({ album }) {
   return (
     <div
       style={{
@@ -8,10 +8,12 @@ function AlbumCard({ albumId, album }) {
       }}
     >
       {/* Album Artwork */}
-      {album.image_url && (
         <img
-          src={album.image_url}
-          alt={album.name}
+          src={album.image_url || "/placeholder_art.png"}
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = "/placeholder_art.png";
+          }}
           style={{
             height: "200px",      // fixed height
             width: "auto",        // width adjusts to preserve aspect ratio
@@ -20,7 +22,6 @@ function AlbumCard({ albumId, album }) {
             objectFit: "cover"    // ensures the image fills the box nicely if you use both width & height
           }}
         />
-      )}
 
       <h2>{album.name}</h2>
 

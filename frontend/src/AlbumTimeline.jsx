@@ -31,8 +31,11 @@ function AlbumTimeline({ albums }) {
         >
           {/* Album artwork */}
           <img
-            src={album.image_url}
-            alt={album.name}
+            src={album.image_url || "/placeholder_art.png"}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/placeholder_art.png";
+            }}
             style={{
               width: "100px",
               height: "100px",

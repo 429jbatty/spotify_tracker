@@ -1,6 +1,6 @@
 import AlbumCard from "./AlbumCard";
 
-function AlbumList({ albums }) {
+function AlbumCardList({ albums }) {
   const albumArray = Object.entries(albums || {});
 
   if (albumArray.length === 0) {
@@ -16,4 +16,4 @@ function AlbumList({ albums }) {
   );
 }
 
-export default AlbumList;
+export default AlbumCardList;

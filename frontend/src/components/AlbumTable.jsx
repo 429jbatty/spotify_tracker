@@ -1,23 +1,11 @@
 import { useState } from "react";
 import AlbumRow from "./AlbumRow";
 
-function AlbumTable({ albums, searchTerm }) {
+function AlbumTable({ albums }) {
   const [sortBy, setSortBy] = useState("listen_date");
   const [ascending, setAscending] = useState(false);
 
-  // Convert albums object to array and filter by search term
-  const filteredAlbums = Object.entries(albums)
-    .map(([id, data]) => ({ id, ...data }))
-    .filter((album) => {
-      const term = searchTerm.toLowerCase();
-      return (
-        album.name.toLowerCase().includes(term) ||
-        (album.artist && album.artist.toLowerCase().includes(term)) ||
-        (album.label && album.label.toLowerCase().includes(term))
-      );
-    });
-
-  const sortedAlbums = Object.entries(filteredAlbums)
+  const sortedAlbums = Object.entries(albums)
     .map(([id, data]) => ({ id, ...data }))
     .sort((a, b) => {
       const aValue = a[sortBy];
