@@ -3,11 +3,12 @@ import AlbumCardList from "./components/AlbumCardList";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeline from "./AlbumTimeline";
 import AlbumSearch from "./components/AlbumSearch";
+import Dashboard from "./components/Dashboard";
 
 function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [view, setView] = useState("table"); // "table" or "card"
+  const [view, setView] = useState("table"); // "table", "card", "timeline", "dashboard"
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -59,6 +60,12 @@ function App() {
       {/* View toggle buttons */}
       <div style={{ marginBottom: "1rem" }}>
         <button
+          onClick={() => setView("dashboard")}
+          style={buttonStyle(view === "dasboard")}
+        >
+          Dashboard
+        </button>
+        <button
           onClick={() => setView("table")}
           style={buttonStyle(view === "table")}
         >
@@ -82,6 +89,7 @@ function App() {
       <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
 
       {/* Conditional rendering based on selected view */}
+      {view === "dashboard" && <Dashboard albums={data.completed_albums}/>}
       {view === "table" && <AlbumTable albums={filteredAlbums}/>}
       {view === "card" && <AlbumCardList albums={filteredAlbums}/>}
       {view === "timeline" && <AlbumTimeline albums={filteredAlbums}/>}
