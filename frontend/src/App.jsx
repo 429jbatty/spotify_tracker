@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AlbumCardList from "./components/AlbumCardList";
 import AlbumTable from "./components/AlbumTable";
-import AlbumTimeline from "./AlbumTimeline";
+import AlbumTimeView from "./components/AlbumTimeView";
 import AlbumSearch from "./components/AlbumSearch";
 import Dashboard from "./components/Dashboard";
 
@@ -92,7 +92,7 @@ function App() {
       {view === "dashboard" && <Dashboard albums={data.completed_albums}/>}
       {view === "table" && <AlbumTable albums={filteredAlbums}/>}
       {view === "card" && <AlbumCardList albums={filteredAlbums}/>}
-      {view === "timeline" && <AlbumTimeline albums={filteredAlbums}/>}
+      {view === "timeline" && <AlbumTimeView albums={filteredAlbums}/>}
     </div>
   );
 }
