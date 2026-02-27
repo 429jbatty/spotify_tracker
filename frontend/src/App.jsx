@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AlbumCardList from "./components/AlbumCardList";
 import AlbumTable from "./components/AlbumTable";
-import AlbumTimeView from "./components/AlbumTimeView";
+import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
 import Dashboard from "./components/Dashboard";
 
@@ -69,19 +69,19 @@ function App() {
           onClick={() => setView("table")}
           style={buttonStyle(view === "table")}
         >
-          Table View
+          All
         </button>
         <button
           onClick={() => setView("card")}
           style={buttonStyle(view === "card")}
         >
-          Card View
+          Cards
         </button>
         <button
           onClick={() => setView("timeline")}
           style={buttonStyle(view === "timeline")}
         >
-          Timeline View
+          Release Dates
         </button>
       </div>
 
