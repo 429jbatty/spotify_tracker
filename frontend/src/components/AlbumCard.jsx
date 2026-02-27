@@ -1,4 +1,14 @@
 function AlbumCard({ album }) {
+  // Define the fields and order you want to display
+  const metadataForCard = [
+    "artist",
+    "release_date",
+    "label",
+    "total_tracks",
+    "listen_date",
+    "source"
+  ];
+
   return (
     <div
       style={{
@@ -8,27 +18,27 @@ function AlbumCard({ album }) {
       }}
     >
       {/* Album Artwork */}
-        <img
-          src={album.image_url || "/placeholder_art.png"}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = "/placeholder_art.png";
-          }}
-          style={{
-            height: "200px",      // fixed height
-            width: "auto",        // width adjusts to preserve aspect ratio
-            borderRadius: "6px",
-            marginBottom: "0.75rem",
-            objectFit: "cover"    // ensures the image fills the box nicely if you use both width & height
-          }}
-        />
+      <img
+        src={album.image_url || "/placeholder_art.png"}
+        onError={(e) => {
+          e.target.onerror = null;
+          e.target.src = "/placeholder_art.png";
+        }}
+        style={{
+          height: "200px",      // fixed height
+          width: "auto",        // width adjusts to preserve aspect ratio
+          borderRadius: "6px",
+          marginBottom: "0.75rem",
+          objectFit: "cover"
+        }}
+      />
 
       <h2>{album.name}</h2>
 
       <div style={{ fontSize: "0.9rem", marginTop: "0.5rem" }}>
-        {Object.entries(album).map(([key, value]) => {
-          if (key === "name" || key === "image_url") return null; // because these were already used we don't want to display them
-
+        {metadataForCard.map((key) => {
+          const value = album[key];
+          if (value === undefined || value === null) return null;
           return (
             <div key={key}>
               <strong>{formatKey(key)}:</strong> {String(value)}

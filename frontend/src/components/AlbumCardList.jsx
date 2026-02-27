@@ -8,7 +8,7 @@ function AlbumCardList({ albums }) {
   }
 
   return (
-    <div style={{ display: "grid", gap: "1rem" }}>
+    <div style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(3, 1fr)" }}>
       {albumArray.map(([albumId, albumData]) => (
         <AlbumCard key={albumId} albumId={albumId} album={albumData} />
       ))}
