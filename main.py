@@ -9,7 +9,7 @@ import utils as util
 import tracking as tracking
 
 load_dotenv()
-THRESHOLD = 0.2
+THRESHOLD = 0.85
 
 
 def main():
