@@ -138,7 +138,7 @@ class SpotifyAPI:
 
             tracks.append(
                 {
-                    "track_id": track["id"],
+                    "track_spid": track["id"],
                     "track_name": track["name"],
                     "album_id": album["id"],
                     "album_name": album["name"],

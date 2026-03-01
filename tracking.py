@@ -29,8 +29,8 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
 
         album_entry = state["albums_in_progress"][album_id]
 
-        if t["track_id"] not in album_entry["played_tracks"]:
-            album_entry["played_tracks"].append(t["track_id"])
+        if t["track_spid"] not in album_entry["played_tracks"]:
+            album_entry["played_tracks"].append(t["track_spid"])
 
         album_entry["last_played"] = t["played_at"]
 
