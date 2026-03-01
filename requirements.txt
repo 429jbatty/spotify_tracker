@@ -3,3 +3,4 @@ dotenv
 pandas
 unidecode
 rapidfuzz
+musicbrainzngs
