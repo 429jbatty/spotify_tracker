@@ -1,5 +1,9 @@
 import datetime
 from spotify_manager import SpotifyAPI
+import album_metadata_service as meta
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def update_album_progress(state, sp: SpotifyAPI, tracks):
@@ -14,7 +18,6 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
             # Fetch album metadata once
             album_meta = sp.fetch_album_metadata(album_id)
             if album_meta["album_type"] != "album":
-                print(f"Skipping {album_meta['name']} because it's not an album")
                 continue
             total_tracks = album_meta["total_tracks"]
 
@@ -33,6 +36,8 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
             album_entry["played_tracks"].append(t["track_spid"])
 
         album_entry["last_played"] = t["played_at"]
+
+    return state
 
 
 def check_album_completion(state, threshold: float):
@@ -65,33 +70,18 @@ def check_album_completion(state, threshold: float):
     return completed
 
 
-def log_completed_album(state, sp: SpotifyAPI, album_id):
+def log_completed_album(state, album_id):
 
     # get album data
     album_logged_data = state["albums_in_progress"][album_id]
-    album_metadata = sp.fetch_album_metadata(album_id)
-    album_art = album_metadata["images"][0]["url"] if album_metadata["images"] else None
-    print(
-        f"Album completed: {album_logged_data['artist']} - {album_logged_data['album_name']}"
-    )
-    artist = album_metadata["artists"][0]["name"]
-    metadata_variables_to_track = [
-        "album_type",
-        "total_tracks",
-        "name",
-        "release_date",
-        "label",
-    ]
+    artist = album_logged_data["artist"]
+    album_name = album_logged_data["album_name"]
+    album_metadata = meta.get_album_metadata(artist, album_name)
 
-    filtered_dict = {
-        k: album_metadata[k] for k in metadata_variables_to_track if k in album_metadata
-    }
+    key = album_metadata["release_group_mbid"]
 
-    state["completed_albums"][album_id] = {
-        "listen_date": album_logged_data["last_played"],
-        "listen_count": 1,
-        **filtered_dict,
-        "image_url": album_art,
-        "artist": artist,
-        "source": "spotify",
-    }
+    state["completed_albums"][key] = album_metadata
+
+    logging.info(f"Logged completed album: {artist} - {album_name}")
+
+    return state

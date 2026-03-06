@@ -8,6 +8,12 @@ load_dotenv()
 STATE_FILE = os.environ.get("STATE_FILE")
 MANUAL_ENTRY_FILE = os.environ.get("MANUAL_ENTRY_FILE")
 GOOGLE_SHEETS_ENTRY_FILE = os.environ.get("GOOGLE_SHEETS_ENTRY_FILE")
+SOURCE_PRIORITY = {
+    "manual": 3,
+    "google_sheets": 2,
+    "spotify_tracking": 1,
+    "musicbrainz_bulk": 0,
+}
 
 
 def load_state():
@@ -49,3 +55,55 @@ def get_local_credentials():
         "redirect_uri": os.environ.get("SPOTIFY_REDIRECT_URI"),
         "refresh_token": os.environ.get("SPOTIFY_REFRESH_TOKEN"),
     }
+
+
+def merge_completed_albums_with_priority(*album_dicts):
+    """
+    Merge multiple completed_albums dicts using source-based priority.
+
+    If duplicate keys exist, the entry whose `source` has higher
+    SOURCE_PRIORITY wins.
+    """
+
+    merged = {}
+    stats = {
+        "added": 0,
+        "overwritten": 0,
+        "skipped_lower_priority": 0,
+    }
+
+    for album_dict in album_dicts:
+        for key, record in album_dict.items():
+
+            incoming_source = record.get("source")
+            incoming_priority = SOURCE_PRIORITY.get(incoming_source, -1)
+
+            if key not in merged:
+                merged[key] = record
+                stats["added"] += 1
+                continue
+
+            existing_record = merged[key]
+            existing_source = existing_record.get("source")
+            existing_priority = SOURCE_PRIORITY.get(existing_source, -1)
+
+            if incoming_priority > existing_priority:
+                print(
+                    f"[OVERWRITE] {key} | "
+                    f"{incoming_source} ({incoming_priority}) "
+                    f"overrode {existing_source} ({existing_priority})"
+                )
+                merged[key] = record
+                stats["overwritten"] += 1
+            else:
+                print(
+                    f"[SKIP] {key} | "
+                    f"{incoming_source} ({incoming_priority}) "
+                    f"lost to {existing_source} ({existing_priority})"
+                )
+                stats["skipped_lower_priority"] += 1
+
+    print("MERGE STATS:", stats)
+    print("FINAL TOTAL:", len(merged))
+
+    return merged

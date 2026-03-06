@@ -156,7 +156,7 @@ def format_album_record(album_data):
         "release_date": album_data.get("release_date"),
         "label": album_data.get("label"),
         "image_url": extract_image_url(album_data),
-        "listen_date": None,
+        "listen_history": [],
         "source": "spotify bulk upload",
     }
 
