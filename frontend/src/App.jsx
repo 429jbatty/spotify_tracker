@@ -4,6 +4,7 @@ import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
 import Dashboard from "./components/Dashboard";
+import normalizeAlbums from "./services/albumNormalizer";
 
 function App() {
   const [data, setData] = useState(null);
@@ -21,7 +22,10 @@ function App() {
       })
       .then((json) => {
         console.log("Loaded JSON:", json); // Debug visibility
-        setData(json);
+        setData({
+          ...json,
+          completed_albums: normalizeAlbums(json.completed_albums)
+        });      
       })
       .catch((err) => {
         console.error(err);

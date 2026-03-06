@@ -2,7 +2,7 @@ import { useState } from "react";
 import AlbumRow from "./AlbumRow";
 
 function AlbumTable({ albums }) {
-  const [sortBy, setSortBy] = useState("listen_date");
+  const [sortBy, setSortBy] = useState("listen_history");
   const [ascending, setAscending] = useState(false);
 
   const sortedAlbums = Object.entries(albums)
@@ -40,8 +40,8 @@ function AlbumTable({ albums }) {
   // dynamically create headers based on album fields
   const headers = [
     { key: "image_url", label: "" },
-    { key: "artist", label: "Artist" },
     { key: "name", label: "Album" },
+    { key: "artist", label: "Artist" },
     { key: "release_date", label: "Release Date" },
     { key: "label", label: "Label" },
   ];

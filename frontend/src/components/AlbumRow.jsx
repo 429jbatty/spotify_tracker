@@ -18,8 +18,8 @@ function AlbumRow({ albumId, album }) {
           }}
         />
       </td>
-      <td>{album.artist}</td>
       <td>{album.name}</td>
+      <td>{album.artist}</td>
       <td>{album.release_date}</td>
       <td>{album.label}</td>
     </tr>

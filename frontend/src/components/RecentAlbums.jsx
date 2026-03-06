@@ -8,8 +8,8 @@ function RecentAlbums({ albums }) {
   
   const recentAlbums = Object.entries(albums)
       .map(([id, album]) => ({ id, ...album }))
-      .filter(a => a.listen_date)
-      .sort((a, b) => new Date(b.listen_date) - new Date(a.listen_date))
+      .filter(a => a.listen_history)
+      .sort((a, b) => new Date(b.listen_history) - new Date(a.listen_history))
       .slice(0, numberRecentAlbums);
 
   return (

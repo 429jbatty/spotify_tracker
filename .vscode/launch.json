@@ -14,6 +14,16 @@
             "python": "${workspaceFolder}/.venv/bin/python"
         },
         {
+            "name": "Bulk Upload",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "one_time_scripts._bulk_upload_history_use_musicbrainz",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}"
+        },
+        {
             "name": "Current File",
             "type": "debugpy",
             "request": "launch",
