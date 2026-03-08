@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-08T22:07:11.557Z",
+  "last_checked": "2026-03-08T23:08:12.794Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -469,20 +469,23 @@
       "artist": "The Electric Prunes",
       "total_tracks": 12,
       "played_tracks": [
-        "5YgCmkSdGukXqK3fJlX4pQ"
+        "5YgCmkSdGukXqK3fJlX4pQ",
+        "7aRVxvubodRSjp875ZBYNC"
       ],
       "first_played": "2026-03-08T21:54:07.824Z",
-      "last_played": "2026-03-08T21:54:07.824Z"
+      "last_played": "2026-03-08T22:48:07.972Z"
     },
     "2deJO9RGJYw2HVO4k1HPz9": {
       "album_name": "The Animals: The Mickie Most Years And More",
       "artist": "The Animals",
       "total_tracks": 62,
       "played_tracks": [
-        "1Yn0HNcdYidKRZs245seLD"
+        "1Yn0HNcdYidKRZs245seLD",
+        "4zzY7s6PKnMFIQ3ZNfHzGh",
+        "33PUeknVuj1Ny1VrUmxKCI"
       ],
       "first_played": "2026-03-08T21:51:08.574Z",
-      "last_played": "2026-03-08T21:51:08.574Z"
+      "last_played": "2026-03-08T22:28:05.333Z"
     },
     "36qtMdwzo4s7lisavSgorV": {
       "album_name": "Part One",
@@ -509,10 +512,134 @@
       "artist": "Buffalo Springfield",
       "total_tracks": 10,
       "played_tracks": [
-        "4FBNQnqK54uY5ly5XLGm90"
+        "4FBNQnqK54uY5ly5XLGm90",
+        "5RXjEF5tqZFAsiPXZrcpnu",
+        "042v1NacbKJzCyi6nBme7T"
       ],
       "first_played": "2026-03-08T22:01:36.218Z",
-      "last_played": "2026-03-08T22:01:36.218Z"
+      "last_played": "2026-03-08T22:19:10.112Z"
+    },
+    "2jQEpak8oXYb6dh9sCZqqY": {
+      "album_name": "Quicksilver Messenger Service",
+      "artist": "Quicksilver Messenger Service",
+      "total_tracks": 6,
+      "played_tracks": [
+        "3hr9mAgl6NCmsgYAPTQQP1"
+      ],
+      "first_played": "2026-03-08T23:08:12.794Z",
+      "last_played": "2026-03-08T23:08:12.794Z"
+    },
+    "0bjmNe3FkwxnDIdtAvKpnU": {
+      "album_name": "The Animals On Tour",
+      "artist": "The Animals",
+      "total_tracks": 15,
+      "played_tracks": [
+        "6blxz1Nvtv0u0EznvX0KEa",
+        "0tKc52w2uMTFuqz0XveWW6"
+      ],
+      "first_played": "2026-03-08T23:04:09.851Z",
+      "last_played": "2026-03-08T22:10:07.376Z"
+    },
+    "4NbLTe8YqLFwys4SmkEofd": {
+      "album_name": "Incense And Peppermints",
+      "artist": "Strawberry Alarm Clock",
+      "total_tracks": 10,
+      "played_tracks": [
+        "16iApoNZYaN6gbMtRRVV6B"
+      ],
+      "first_played": "2026-03-08T23:00:25.942Z",
+      "last_played": "2026-03-08T23:00:25.942Z"
+    },
+    "08mPxuP35Db56jUUgRvGFs": {
+      "album_name": "The Letter/Neon Rainbow",
+      "artist": "The Box Tops",
+      "total_tracks": 16,
+      "played_tracks": [
+        "6RJK553YhstRzyKA4mug09"
+      ],
+      "first_played": "2026-03-08T22:50:00.751Z",
+      "last_played": "2026-03-08T22:50:00.751Z"
+    },
+    "1NQxkuCbddVP1UgmvRhfXp": {
+      "album_name": "For Your Love",
+      "artist": "The Yardbirds",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6o21UfW2RHkzzleZGLfFpK"
+      ],
+      "first_played": "2026-03-08T22:43:06.636Z",
+      "last_played": "2026-03-08T22:43:06.636Z"
+    },
+    "2vbAImlNuDjPBMdU6T1oRQ": {
+      "album_name": "At Home",
+      "artist": "Shocking Blue",
+      "total_tracks": 15,
+      "played_tracks": [
+        "6N2jkJNkyMAOTz1hx7GgDw",
+        "7HehrtKCIXEh8ZfuAPF7Jv"
+      ],
+      "first_played": "2026-03-08T22:40:31.773Z",
+      "last_played": "2026-03-08T22:22:31.123Z"
+    },
+    "3PkdGRruLnJ9zCtANiDrpB": {
+      "album_name": "Buffalo Springfield",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3OL43r2enbxrT9htCmf8C8"
+      ],
+      "first_played": "2026-03-08T22:37:13.674Z",
+      "last_played": "2026-03-08T22:37:13.674Z"
+    },
+    "2fNVSqSja0AqhKd5dq2xKy": {
+      "album_name": "Kiln House",
+      "artist": "Fleetwood Mac",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4WiB9ZqUmKU1xJzbn5kh8Y"
+      ],
+      "first_played": "2026-03-08T22:33:46.625Z",
+      "last_played": "2026-03-08T22:33:46.625Z"
+    },
+    "6NDt4G1QiGzMNnri4kxq6f": {
+      "album_name": "And Then...Along Comes",
+      "artist": "The Association",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3Zje70mXjYyMuzge8j24L9"
+      ],
+      "first_played": "2026-03-08T22:30:58.718Z",
+      "last_played": "2026-03-08T22:30:58.718Z"
+    },
+    "50zHjIiTOZM232gnWvOydX": {
+      "album_name": "More of The Monkees (Deluxe Edition)",
+      "artist": "The Monkees",
+      "total_tracks": 30,
+      "played_tracks": [
+        "7dvtNWoHd3ioEBmIl0s3In"
+      ],
+      "first_played": "2026-03-08T22:24:57.336Z",
+      "last_played": "2026-03-08T22:24:57.336Z"
+    },
+    "4Ji83LjzvEzFoCpN85m5lW": {
+      "album_name": "Then Play On (2013 Remaster; Expanded Edition)",
+      "artist": "Fleetwood Mac",
+      "total_tracks": 18,
+      "played_tracks": [
+        "4ZC6OO6P6mE3AtgZZhHECZ"
+      ],
+      "first_played": "2026-03-08T22:16:17.956Z",
+      "last_played": "2026-03-08T22:16:17.956Z"
+    },
+    "34pUE4ZtTaXTdvZ5l39OL1": {
+      "album_name": "The Complete Johnny Kidd Vol 1 & 2",
+      "artist": "Johnny Kidd & The Pirates",
+      "total_tracks": 62,
+      "played_tracks": [
+        "6Xv160PuntxAtb67Ed4t4I"
+      ],
+      "first_played": "2026-03-08T22:12:30.437Z",
+      "last_played": "2026-03-08T22:12:30.437Z"
     }
   },
   "completed_albums": {
@@ -397024,6 +397151,127 @@
         "classic pop and rock"
       ],
       "image_url": "https://coverartarchive.org/release/8903ead0-aad6-4e24-9901-03712380a13b/front",
+      "listen_history": [],
+      "source": "musicbrainz"
+    },
+    "164b6d72-512b-37f7-8288-ada5c9a976f0": {
+      "artist": "The Animals",
+      "artist_mbid": "c6eb1395-f865-41c7-b5e9-e5bb982cfea0",
+      "name": "The Animals",
+      "release_group_mbid": "164b6d72-512b-37f7-8288-ada5c9a976f0",
+      "label": "Forever Gold",
+      "release_year": 2001,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "The House of the Rising Sun",
+          "credits": {},
+          "recording_mbid": "83a16d91-22ed-40d2-9c40-f884528a367f"
+        },
+        {
+          "position": "2",
+          "title": "Don\u2019t Let Me Be Misunderstood",
+          "credits": {},
+          "recording_mbid": "6e2611c8-c073-4bb2-9b91-721dea268879"
+        },
+        {
+          "position": "3",
+          "title": "When I Was Young",
+          "credits": {},
+          "recording_mbid": "f2f09e64-be03-45fa-aafd-368240eddc65"
+        },
+        {
+          "position": "4",
+          "title": "Bring It On Home to Me",
+          "credits": {},
+          "recording_mbid": "413d413e-7983-4ee8-89ad-2a6e0e71a0d4"
+        },
+        {
+          "position": "5",
+          "title": "Spill the Wine",
+          "credits": {},
+          "recording_mbid": "e9d568a1-99e4-4417-8003-1b3006574b59"
+        },
+        {
+          "position": "6",
+          "title": "Boom Boom",
+          "credits": {},
+          "recording_mbid": "2e2a535f-2654-4e7e-9311-b73a8462c6be"
+        },
+        {
+          "position": "7",
+          "title": "Frisco Queen",
+          "credits": {},
+          "recording_mbid": "0d9fc883-9bdd-43af-9c4f-82d848c0afc0"
+        },
+        {
+          "position": "8",
+          "title": "Roadbuster",
+          "credits": {},
+          "recording_mbid": "9ad7e238-3629-4d75-87b8-7b9003140310"
+        },
+        {
+          "position": "9",
+          "title": "San Franciscan Nights",
+          "credits": {},
+          "recording_mbid": "3e390e2a-83bc-47ed-9d54-0d0b73f10ba2"
+        },
+        {
+          "position": "10",
+          "title": "Howlin\u2019",
+          "credits": {},
+          "recording_mbid": "6f0b248b-4342-43a4-8367-8b7a559738d5"
+        },
+        {
+          "position": "11",
+          "title": "Night Fighter",
+          "credits": {},
+          "recording_mbid": "b6a49c8e-166b-4515-9644-e790ef1608e9"
+        },
+        {
+          "position": "12",
+          "title": "We Gotta Get Out of This Place",
+          "credits": {},
+          "recording_mbid": "b7653feb-da5d-4bef-b716-95f4663eb595"
+        },
+        {
+          "position": "13",
+          "title": "Love Fire",
+          "credits": {},
+          "recording_mbid": "1a297c54-06b6-43d1-8bf5-4ded7607842d"
+        },
+        {
+          "position": "14",
+          "title": "I\u2019m Almost Grown",
+          "credits": {},
+          "recording_mbid": "b1b23b04-065a-49b4-bdd4-efb1ae0124df"
+        },
+        {
+          "position": "15",
+          "title": "\u201cC\u201d Jam Blues",
+          "credits": {},
+          "recording_mbid": "eda5d1fd-ccef-425d-a5d6-89e92ec0d2df"
+        },
+        {
+          "position": "16",
+          "title": "Gotta Find My Baby",
+          "credits": {},
+          "recording_mbid": "89a85ec5-b4b7-4cb4-be1a-c134cc416f96"
+        },
+        {
+          "position": "17",
+          "title": "Let It Rock",
+          "credits": {},
+          "recording_mbid": "6dc4c6bd-2cd6-4011-9a27-380569370fde"
+        }
+      ],
+      "tags": [
+        "rock",
+        "pop"
+      ],
+      "image_url": "https://coverartarchive.org/release/553d5f24-91ce-4c25-bb46-234e616831dd/front",
       "listen_history": [],
       "source": "musicbrainz"
     }
