@@ -34,6 +34,7 @@ jobs:
           SPOTIFY_CLIENT_ID: ${{ secrets.SPOTIFY_CLIENT_ID }}
           SPOTIFY_CLIENT_SECRET: ${{ secrets.SPOTIFY_CLIENT_SECRET }}
           SPOTIFY_REDIRECT_URI: ${{ secrets.SPOTIFY_REDIRECT_URI }}
+          SPOTIFY_REFRESH_TOKEN: ${{ secrets.SPOTIFY_REFRESH_TOKEN }}
           STATE_FILE: ${{ secrets.STATE_FILE }}
           MANUAL_ENTRY_FILE: ${{ secrets.MANUAL_ENTRY_FILE }}
           GOOGLE_SHEETS_ENTRY_FILE: ${{ secrets.GOOGLE_SHEETS_ENTRY_FILE }}
