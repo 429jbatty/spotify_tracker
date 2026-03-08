@@ -5,6 +5,7 @@ import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
 import Dashboard from "./components/Dashboard";
 import normalizeAlbums from "./services/albumNormalizer";
+import ViewSwitcher from "./components/ViewSwitcher";
 
 function App() {
   const [data, setData] = useState(null);
@@ -36,16 +37,6 @@ function App() {
   if (error) return <div>Error: {error}</div>;
   if (!data) return <div>Loading...</div>;
 
-  const buttonStyle = (isActive) => ({
-    marginRight: "0.5rem",
-    padding: "0.5rem 1rem",
-    cursor: "pointer",
-    backgroundColor: isActive ? "#007bff" : "#f0f0f0",
-    color: isActive ? "white" : "black",
-    border: "none",
-    borderRadius: "4px",
-  });
-
   {/*Search functionality*/}
   const filteredAlbums = Object.fromEntries(
     Object.entries(data.completed_albums).filter(([id, album]) => {
@@ -60,37 +51,12 @@ function App() {
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Completed Albums</h1>
+      <ViewSwitcher view={view} setView={setView} />
 
-      {/* View toggle buttons */}
-      <div style={{ marginBottom: "1rem" }}>
-        <button
-          onClick={() => setView("dashboard")}
-          style={buttonStyle(view === "dasboard")}
-        >
-          Dashboard
-        </button>
-        <button
-          onClick={() => setView("table")}
-          style={buttonStyle(view === "table")}
-        >
-          All
-        </button>
-        <button
-          onClick={() => setView("card")}
-          style={buttonStyle(view === "card")}
-        >
-          Cards
-        </button>
-        <button
-          onClick={() => setView("timeline")}
-          style={buttonStyle(view === "timeline")}
-        >
-          Release Dates
-        </button>
-      </div>
-
-      {/*search box */}
-      <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      {/* search box (don't render on dashboard) */}
+      {view !== "dashboard" && (
+        <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      )}
 
       {/* Conditional rendering based on selected view */}
       {view === "dashboard" && <Dashboard albums={data.completed_albums}/>}
