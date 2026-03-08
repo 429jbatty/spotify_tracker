@@ -39,6 +39,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist # Vite default build output
+          publish_dir: frontend/dist # Vite default build output
           # Optional: configure branch
           # publish_branch: gh-pages
