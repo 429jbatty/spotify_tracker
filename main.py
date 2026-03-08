@@ -13,6 +13,7 @@ import logging
 load_dotenv()
 THRESHOLD = 0.90
 LOG_LEVEL = logging.INFO
+pull_bulk_google_sheets_data = False
 
 # Set up logging
 logging.basicConfig(
@@ -46,7 +47,9 @@ def main():
     spotify_new_count = len(completed_album_ids)
     logging.info(f"Newly completed albums from Spotify: {spotify_new_count}")
 
-    updated_albums_state = updated_tracks_state
+    # create new object with no completed albums but timestamp and all recent tracks
+    updated_albums_state = updated_tracks_state.copy()
+    updated_albums_state["completed_albums"] = {}
 
     for album_id in completed_album_ids:
         updated_albums_state = tracking.log_completed_album(
@@ -59,19 +62,23 @@ def main():
         updated_albums_state["last_checked"] = newest_timestamp
 
     # Manual + Google Sheets
+    if pull_bulk_google_sheets_data:
+        google_sheets_entries = util.load_google_sheets_entries()
+        sheets_count = len(google_sheets_entries.get("completed_albums", {}))
+        logging.info(f"Google Sheets completed albums loaded: {sheets_count}")
+    else:
+        google_sheets_entries = {"completed_albums": {}}
+        logging.info("Skipping Google Sheets data pull")  # log skipping
+
     manual_entries = util.load_manual_entries()
-    google_sheets_entries = util.load_google_sheets_entries()
-
     manual_count = len(manual_entries.get("completed_albums", {}))
-    sheets_count = len(google_sheets_entries.get("completed_albums", {}))
-
     logging.info(f"Manual completed albums loaded: {manual_count}")
-    logging.info(f"Google Sheets completed albums loaded: {sheets_count}")
 
     # Merge with priority logic
     end_state = updated_albums_state.copy()
 
     end_state["completed_albums"] = util.merge_completed_albums_with_priority(
+        start_state.get("completed_albums", {}),  # start state
         manual_entries["completed_albums"],
         google_sheets_entries["completed_albums"],
         updated_albums_state["completed_albums"],

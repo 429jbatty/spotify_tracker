@@ -10,9 +10,7 @@ MANUAL_ENTRY_FILE = os.environ.get("MANUAL_ENTRY_FILE")
 GOOGLE_SHEETS_ENTRY_FILE = os.environ.get("GOOGLE_SHEETS_ENTRY_FILE")
 SOURCE_PRIORITY = {
     "manual": 3,
-    "google_sheets": 2,
-    "spotify_tracking": 1,
-    "musicbrainz_bulk": 0,
+    "musicbrainz": 2,
 }
 
 
@@ -57,18 +55,18 @@ def get_local_credentials():
     }
 
 
-def merge_completed_albums_with_priority(*album_dicts):
+def merge_completed_albums_with_priority(start_state, *album_dicts):
     """
-    Merge multiple completed_albums dicts using source-based priority.
+    Merge additional album dicts into a starting state using source priority.
 
-    If duplicate keys exist, the entry whose `source` has higher
-    SOURCE_PRIORITY wins.
+    Stats are measured relative to the start_state.
     """
 
-    merged = {}
+    merged = start_state.copy()
+
     stats = {
-        "added": 0,
-        "overwritten": 0,
+        "added": 0,  # new albums not in start_state
+        "overwritten": 0,  # start_state entries replaced by higher priority
         "skipped_lower_priority": 0,
     }
 
@@ -95,6 +93,13 @@ def merge_completed_albums_with_priority(*album_dicts):
                 )
                 merged[key] = record
                 stats["overwritten"] += 1
+            elif incoming_priority == existing_priority:
+                print(
+                    f"[EQUAL PRIORITY] {key} | "
+                    f"{incoming_source} ({incoming_priority}) "
+                    f"tied with {existing_source} ({existing_priority}) - keeping existing"
+                )
+                stats["skipped_lower_priority"] += 1
             else:
                 print(
                     f"[SKIP] {key} | "

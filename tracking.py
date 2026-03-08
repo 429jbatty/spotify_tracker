@@ -62,7 +62,8 @@ def check_album_completion(state, threshold: float):
         total_tracks = album_data["total_tracks"]
         unique_tracks = album_data["played_tracks"]
 
-        if len(unique_tracks) / total_tracks < threshold:
+        percent_listened = len(unique_tracks) / total_tracks
+        if percent_listened < threshold:
             continue
 
         completed.append(album_id)
