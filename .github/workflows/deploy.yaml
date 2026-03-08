@@ -28,11 +28,11 @@ jobs:
 
       # 3. Install dependencies
       - name: Install npm dependencies
-        run: npm install
+        run: cd frontend && npm install
 
       # 4. Build frontend
       - name: Build React/Vite app
-        run: npm run build
+        run: cd frontend && npm run build
 
       # 5. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
