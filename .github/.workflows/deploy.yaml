@@ -1,0 +1,44 @@
+name: Build and Deploy React Frontend
+
+# Trigger on push to main branch (or change branch as needed)
+on:
+  push:
+    branches:
+      - main # adjust if your main branch has a different name
+    # Optional: only trigger if certain paths changed
+    # paths:
+    #   - 'src/**'
+    #   - 'public/**'
+  workflow_dispatch: {} # allows manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      # 3. Install dependencies
+      - name: Install npm dependencies
+        run: npm install
+
+      # 4. Build frontend
+      - name: Build React/Vite app
+        run: npm run build
+
+      # 5. Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v6
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist # Vite default build output
+          # Optional: configure branch
+          # publish_branch: gh-pages
