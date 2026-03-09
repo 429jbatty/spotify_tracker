@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-09T14:23:53.325Z",
+  "last_checked": "2026-03-09T16:22:34.506Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -497,10 +497,11 @@
         "4k8noDmQMVzjI6f6dqvzWE",
         "3zIIMKndTh9XqwSFWjaksQ",
         "1ijuVqqcXzmyqCdTMCVto8",
-        "3ZpCIuDSaazRjg7vL1gxxS"
+        "3ZpCIuDSaazRjg7vL1gxxS",
+        "20h8ZwAMkjdYgrRCvKMpGG"
       ],
       "first_played": "2026-03-08T21:51:08.574Z",
-      "last_played": "2026-03-09T12:20:54.373Z"
+      "last_played": "2026-03-09T14:47:07.398Z"
     },
     "36qtMdwzo4s7lisavSgorV": {
       "album_name": "Part One",
@@ -565,10 +566,11 @@
         "6Z1u2HQnbLfSWS8mgdOEhH",
         "4W7Fr971nOlzyNlNBdWpCn",
         "0Q6MsceltSh9gstpkERkz4",
-        "6p6ze8nhLTBFWaJz74yNke"
+        "6p6ze8nhLTBFWaJz74yNke",
+        "19lIBEYthseTmHDnx6jKj2"
       ],
       "first_played": "2026-03-08T23:04:09.851Z",
-      "last_played": "2026-03-09T13:01:51.385Z"
+      "last_played": "2026-03-09T14:29:21.663Z"
     },
     "4NbLTe8YqLFwys4SmkEofd": {
       "album_name": "Incense And Peppermints",
@@ -594,10 +596,11 @@
         "74JnPNuXzfXYJkLNCogBC5",
         "2bO3cK5apgiVlSVIBUACe3",
         "1F898dzpPq7Erdd8pDgUad",
-        "00olYl3uAVihNRt46OAT04"
+        "00olYl3uAVihNRt46OAT04",
+        "4F2guUdsh7PMx5EpQaHmGw"
       ],
       "first_played": "2026-03-08T22:50:00.751Z",
-      "last_played": "2026-03-09T12:32:54.405Z"
+      "last_played": "2026-03-09T14:40:17.501Z"
     },
     "1NQxkuCbddVP1UgmvRhfXp": {
       "album_name": "For Your Love",
@@ -1700,10 +1703,12 @@
       "total_tracks": 17,
       "played_tracks": [
         "5uZD2015uZBis6B2VwRYUZ",
-        "4uGIJG1jYFonGc4LGp5uQL"
+        "4uGIJG1jYFonGc4LGp5uQL",
+        "3fNvTmIR68qzusVAUhSwk3",
+        "6V1f1eJ6MPNfLQXPmzqXja"
       ],
       "first_played": "2026-03-09T13:35:49.302Z",
-      "last_played": "2026-03-09T13:06:52.886Z"
+      "last_played": "2026-03-09T14:26:56.102Z"
     },
     "0zKjnOsXxs63unPR6TWoHq": {
       "album_name": "School's Out",
@@ -1730,10 +1735,11 @@
       "artist": "The Youngbloods",
       "total_tracks": 11,
       "played_tracks": [
-        "3BViJq8vintoW0yRw90PYi"
+        "3BViJq8vintoW0yRw90PYi",
+        "6GrU8CtcbnSluWp2yI4Mt0"
       ],
       "first_played": "2026-03-09T13:20:59.376Z",
-      "last_played": "2026-03-09T13:20:59.376Z"
+      "last_played": "2026-03-09T14:52:22.974Z"
     },
     "77zr8OxPQKKiIsJTJ3HKbk": {
       "album_name": "George Thorogood & the Destroyers",
@@ -1814,6 +1820,99 @@
       ],
       "first_played": "2026-03-09T12:42:07.804Z",
       "last_played": "2026-03-09T12:42:07.804Z"
+    },
+    "0u9EF2bbsELJvn9ibBzUm7": {
+      "album_name": "Event of Your Leaving",
+      "artist": "Raum",
+      "total_tracks": 5,
+      "played_tracks": [
+        "0fD5281x8wloSusMBSTUmc"
+      ],
+      "first_played": "2026-03-09T16:22:34.506Z",
+      "last_played": "2026-03-09T16:22:34.506Z"
+    },
+    "15OVBQYlldnAnwLnEywCJA": {
+      "album_name": "Foreign Body",
+      "artist": "Mirrorring",
+      "total_tracks": 6,
+      "played_tracks": [
+        "2sUwbKtpTLk4iAF5uKObX7"
+      ],
+      "first_played": "2026-03-09T16:13:07.173Z",
+      "last_played": "2026-03-09T16:13:07.173Z"
+    },
+    "5YMsM8N0PVicGhnDiFO3NK": {
+      "album_name": "Reassemblage",
+      "artist": "Visible Cloaks",
+      "total_tracks": 15,
+      "played_tracks": [
+        "6zH4JhuFvC8Fe6DSGv61cC"
+      ],
+      "first_played": "2026-03-09T16:06:13.976Z",
+      "last_played": "2026-03-09T16:06:13.976Z"
+    },
+    "3wjaDfCkbngdwxN2lloyCB": {
+      "album_name": "After its own death / Walking in a spiral towards the house",
+      "artist": "Nivhek",
+      "total_tracks": 4,
+      "played_tracks": [
+        "4F8HlqT6gkJDytZwMwhtGE",
+        "6VAQq0NST9DpWDc7zretjm",
+        "4HvMB0OYldA6Zd0nmLgx5p",
+        "0JJmrRoNITYVgeJfk063n3"
+      ],
+      "first_played": "2026-03-09T16:02:34.658Z",
+      "last_played": "2026-03-09T15:20:12.943Z"
+    },
+    "1GsZEzYNzXOvTVTlEkiL9Z": {
+      "album_name": "Non Stop",
+      "artist": "The Box Tops",
+      "total_tracks": 16,
+      "played_tracks": [
+        "1aR9HTokyIrreiVGXnhvyF"
+      ],
+      "first_played": "2026-03-09T14:59:06.500Z",
+      "last_played": "2026-03-09T14:59:06.500Z"
+    },
+    "26tH0kjUhkxBEd3ipGkx3Y": {
+      "album_name": "Physical Graffiti (Deluxe Edition)",
+      "artist": "Led Zeppelin",
+      "total_tracks": 22,
+      "played_tracks": [
+        "26yQ7ty7PQBHxqSFGoaORp"
+      ],
+      "first_played": "2026-03-09T14:56:16.222Z",
+      "last_played": "2026-03-09T14:56:16.222Z"
+    },
+    "1BiTbrh3rZ8fLOFtrenm74": {
+      "album_name": "Revolution!",
+      "artist": "Paul Revere & The Raiders",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0AA6HF90AGlS4KhUfJH74f"
+      ],
+      "first_played": "2026-03-09T14:49:58.851Z",
+      "last_played": "2026-03-09T14:49:58.851Z"
+    },
+    "0OhNZ7R4dOqtDPLGp0jBAZ": {
+      "album_name": "Child Is Father To The Man",
+      "artist": "Blood, Sweat & Tears",
+      "total_tracks": 15,
+      "played_tracks": [
+        "4DOIrynDnS1TWVdBDl0Ir3"
+      ],
+      "first_played": "2026-03-09T14:35:31.283Z",
+      "last_played": "2026-03-09T14:35:31.283Z"
+    },
+    "3TJQMnhcNzi1nQDZALmT3P": {
+      "album_name": "Just Like Us!",
+      "artist": "Paul Revere & The Raiders",
+      "total_tracks": 15,
+      "played_tracks": [
+        "1wWyiDmH930CFyyJ67lxC8"
+      ],
+      "first_played": "2026-03-09T14:32:22.066Z",
+      "last_played": "2026-03-09T14:32:22.066Z"
     }
   },
   "completed_albums": {
@@ -398525,6 +398624,50 @@
         "psychedelic rock"
       ],
       "image_url": "https://coverartarchive.org/release/5fe7dbe1-a653-4508-8599-4eb59bab1b7a/front",
+      "listen_history": [],
+      "source": "musicbrainz"
+    },
+    "a23791fe-603b-48ae-aebb-3991886a2b6e": {
+      "artist": "Nivhek",
+      "artist_mbid": "455d7ca3-629d-498c-93f3-9d428dbfe4e0",
+      "name": "After Its Own Death / Walking in a Spiral Towards the House",
+      "release_group_mbid": "a23791fe-603b-48ae-aebb-3991886a2b6e",
+      "label": "Yellowelectric",
+      "release_year": 2019,
+      "release_month": 2,
+      "release_day": 8,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "After Its Own Death: Cloudmouth / blue room / Night\u2010Walking / Funeral Song",
+          "credits": {},
+          "recording_mbid": "c945b273-afad-4a08-991e-347f391a6504"
+        },
+        {
+          "position": "2",
+          "title": "After Its Own Death: Thirteen (version) / Crying Jar / Entry / Walking in a Spiral Towards the House / Weightless",
+          "credits": {},
+          "recording_mbid": "95fb8934-dc2f-4050-862e-27f1af0d1570"
+        },
+        {
+          "position": "3",
+          "title": "Walking in a Spiral Towards the House: Night\u2010Walking / Funeral Song",
+          "credits": {},
+          "recording_mbid": "3518fcf4-bf60-41e3-8960-800eda00ba8d"
+        },
+        {
+          "position": "4",
+          "title": "Walking in a Spiral Towards the House: Thirteen / Walking in a Spiral Towards the House",
+          "credits": {},
+          "recording_mbid": "e8d3ac82-3622-414a-b65e-47ee178f5123"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "ambient",
+        "experimental"
+      ],
+      "image_url": "https://coverartarchive.org/release/fea797e2-7669-4c14-bd87-db09faba744a/front",
       "listen_history": [],
       "source": "musicbrainz"
     }
