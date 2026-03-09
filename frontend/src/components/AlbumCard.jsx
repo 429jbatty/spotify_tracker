@@ -2,6 +2,7 @@ import { useState } from "react";
 
 // Helper function to group album credits by category
 function groupAlbumCredits(album) {
+
   const categories = {
     Engineers: ["engineer", "mix"],
     Instrumentation: ["instrument"],
@@ -15,8 +16,6 @@ function groupAlbumCredits(album) {
     Producer: {},
     Other: {},
   };
-
-  const allCredits = [];
 
   for (const track of album.tracklist || []) {
     const credits = Array.isArray(track.credits) ? track.credits : [];
@@ -53,6 +52,7 @@ function groupAlbumCredits(album) {
 function AlbumCard({ album }) {
   const [creditsOpen, setCreditsOpen] = useState(false);
   const groupedCredits = groupAlbumCredits(album);
+  const BASE = import.meta.env.BASE_URL;
 
   return (
     <div
@@ -65,10 +65,10 @@ function AlbumCard({ album }) {
     >
       {/* Album Artwork */}
       <img
-        src={album.image_url || "/placeholder_art.png"}
+        src={album.image_url || `${BASE}placeholder_art.png`}
         onError={(e) => {
           e.target.onerror = null;
-          e.target.src = "/placeholder_art.png";
+          e.target.src = `${BASE}placeholder_art.png`;
         }}
         style={{
           height: "200px",
