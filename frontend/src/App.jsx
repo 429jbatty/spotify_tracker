@@ -14,7 +14,7 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    fetch("/album_state.json")
+    fetch(`${import.meta.env.BASE_URL}album_state.json`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Failed to fetch album data");
@@ -22,11 +22,11 @@ function App() {
         return res.json();
       })
       .then((json) => {
-        console.log("Loaded JSON:", json); // Debug visibility
+        console.log("Loaded JSON:", json);
         setData({
           ...json,
           completed_albums: normalizeAlbums(json.completed_albums)
-        });      
+        });
       })
       .catch((err) => {
         console.error(err);
