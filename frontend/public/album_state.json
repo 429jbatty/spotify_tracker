@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-09T20:09:29.288Z",
+  "last_checked": "2026-03-09T21:56:39.106Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -1927,10 +1927,14 @@
         "2nxRNNXYZsiebwptaGgUTa",
         "5DRnssBoVo8e7uAQZkNT8O",
         "1wHiZMPV9waV8Uru0eW26d",
-        "4nWgVqxEeLiid7NHWG1VTd"
+        "4nWgVqxEeLiid7NHWG1VTd",
+        "40pBMtKxUIoPosFho1NA3j",
+        "5PZuWw56Wwc9W6nEi3ZcWO",
+        "4EskFFJbNoR2bW9g1wdocP",
+        "1EQFnxBTDsUJhnFzEYOuLc"
       ],
       "first_played": "2026-03-09T18:02:28.575Z",
-      "last_played": "2026-03-09T20:08:34.072Z"
+      "last_played": "2026-03-09T20:12:59.164Z"
     },
     "3VaVfO7eUl24zzrtuayksx": {
       "album_name": "Atlas",
@@ -1941,6 +1945,36 @@
       ],
       "first_played": "2026-03-09T17:21:43.332Z",
       "last_played": "2026-03-09T17:21:43.332Z"
+    },
+    "5bmpvyP7UGqB4VuXmrJUMy": {
+      "album_name": "Either/Or",
+      "artist": "Elliott Smith",
+      "total_tracks": 12,
+      "played_tracks": [
+        "05lmqBrKGLHAmqsADEuU9a"
+      ],
+      "first_played": "2026-03-09T21:56:39.106Z",
+      "last_played": "2026-03-09T21:56:39.106Z"
+    },
+    "21xp7NdU1ajmO1CX0w2Egd": {
+      "album_name": "Ants From Up There",
+      "artist": "Black Country, New Road",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0y5akbuW5mCnnUe71xATpe"
+      ],
+      "first_played": "2026-03-09T20:56:51.267Z",
+      "last_played": "2026-03-09T20:56:51.267Z"
+    },
+    "5Pq92omNLyQgGGrj2u4pur": {
+      "album_name": "Rocket",
+      "artist": "Alex G",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1CRq2M7Tq4dl7Bwif65doB"
+      ],
+      "first_played": "2026-03-09T20:47:21.328Z",
+      "last_played": "2026-03-09T20:47:21.328Z"
     }
   },
   "completed_albums": {
@@ -398696,6 +398730,104 @@
         "experimental"
       ],
       "image_url": "https://coverartarchive.org/release/fea797e2-7669-4c14-bd87-db09faba744a/front",
+      "listen_history": [],
+      "source": "musicbrainz"
+    },
+    "26e50192-3b06-4556-952c-36d86c4253e3": {
+      "artist": "Alex G",
+      "artist_mbid": "7df4c4de-3181-4a69-bd36-9d663970cebb",
+      "name": "God Save the Animals",
+      "release_group_mbid": "26e50192-3b06-4556-952c-36d86c4253e3",
+      "label": "Domino",
+      "release_year": 2022,
+      "release_month": 9,
+      "release_day": 23,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "After All",
+          "credits": {},
+          "recording_mbid": "ff3ba75a-d768-40f3-81c6-5eef15f0b27c"
+        },
+        {
+          "position": "2",
+          "title": "Runner",
+          "credits": {},
+          "recording_mbid": "d260a92a-0751-4237-9cb7-7f9ba21f8991"
+        },
+        {
+          "position": "3",
+          "title": "Mission",
+          "credits": {},
+          "recording_mbid": "e392b1a7-4187-4fb3-9f44-5379413e1bed"
+        },
+        {
+          "position": "4",
+          "title": "S.D.O.S",
+          "credits": {},
+          "recording_mbid": "6d7cb639-d46a-4d66-9f9a-93348f9fa684"
+        },
+        {
+          "position": "5",
+          "title": "No Bitterness",
+          "credits": {},
+          "recording_mbid": "7889ec66-f075-47d8-bd6e-9c626a467cee"
+        },
+        {
+          "position": "6",
+          "title": "Ain\u2019t It Easy",
+          "credits": {},
+          "recording_mbid": "b4899d7b-4e61-43c2-851f-f764643c1fe6"
+        },
+        {
+          "position": "7",
+          "title": "Cross the Sea",
+          "credits": {},
+          "recording_mbid": "86e1670e-6bab-41a6-9bfb-7e9f16de083f"
+        },
+        {
+          "position": "8",
+          "title": "Blessing",
+          "credits": {},
+          "recording_mbid": "2d5ae073-c840-4941-af0d-9e9c68858ce3"
+        },
+        {
+          "position": "9",
+          "title": "Early Morning Waiting",
+          "credits": {},
+          "recording_mbid": "2565bc31-a3fe-4cc8-a78f-dc8b15027351"
+        },
+        {
+          "position": "10",
+          "title": "Immunity",
+          "credits": {},
+          "recording_mbid": "8156cfdf-1b0a-4230-990f-b3adfec00964"
+        },
+        {
+          "position": "11",
+          "title": "Headroom Piano",
+          "credits": {},
+          "recording_mbid": "5f471213-259c-4d90-870b-1f2f4fdd7ee3"
+        },
+        {
+          "position": "12",
+          "title": "Miracles",
+          "credits": {},
+          "recording_mbid": "d2f9bbab-dca7-4c4a-8236-cbc3f16b5dfc"
+        },
+        {
+          "position": "13",
+          "title": "Forgive",
+          "credits": {},
+          "recording_mbid": "a8f79c79-bb32-4ced-a705-a2295169fc9f"
+        }
+      ],
+      "tags": [
+        "alternative rock",
+        "indie rock",
+        "indie pop"
+      ],
+      "image_url": "https://coverartarchive.org/release/0c889c27-2492-46ca-82c2-d93b536d54ec/front",
       "listen_history": [],
       "source": "musicbrainz"
     }
