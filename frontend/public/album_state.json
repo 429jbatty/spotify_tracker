@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-09T16:22:34.506Z",
+  "last_checked": "2026-03-09T18:02:28.575Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -1913,6 +1913,33 @@
       ],
       "first_played": "2026-03-09T14:32:22.066Z",
       "last_played": "2026-03-09T14:32:22.066Z"
+    },
+    "6TzgWk5HZItbFmMT7hH4bU": {
+      "album_name": "God Save The Animals",
+      "artist": "Alex G",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5mKJrP0WTkVdZnrxwxOPoN",
+        "73iWf3dFe1YpRbP590SvGQ",
+        "3YdkukHIzvVxSvY92JAVw3",
+        "3s3Twsw0pQr40yiZpS3toD",
+        "7E8bhgC7aPjbi9p2zBBWpX",
+        "2nxRNNXYZsiebwptaGgUTa",
+        "5DRnssBoVo8e7uAQZkNT8O",
+        "1wHiZMPV9waV8Uru0eW26d"
+      ],
+      "first_played": "2026-03-09T18:02:28.575Z",
+      "last_played": "2026-03-09T17:20:57.832Z"
+    },
+    "3VaVfO7eUl24zzrtuayksx": {
+      "album_name": "Atlas",
+      "artist": "Laurel Halo",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0UN98DwrzC832dPsv8xmkw"
+      ],
+      "first_played": "2026-03-09T17:21:43.332Z",
+      "last_played": "2026-03-09T17:21:43.332Z"
     }
   },
   "completed_albums": {
