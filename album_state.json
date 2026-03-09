@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-09T14:23:53.325Z",
+  "last_checked": "2026-03-09T21:56:39.106Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -497,10 +497,11 @@
         "4k8noDmQMVzjI6f6dqvzWE",
         "3zIIMKndTh9XqwSFWjaksQ",
         "1ijuVqqcXzmyqCdTMCVto8",
-        "3ZpCIuDSaazRjg7vL1gxxS"
+        "3ZpCIuDSaazRjg7vL1gxxS",
+        "20h8ZwAMkjdYgrRCvKMpGG"
       ],
       "first_played": "2026-03-08T21:51:08.574Z",
-      "last_played": "2026-03-09T12:20:54.373Z"
+      "last_played": "2026-03-09T14:47:07.398Z"
     },
     "36qtMdwzo4s7lisavSgorV": {
       "album_name": "Part One",
@@ -565,10 +566,11 @@
         "6Z1u2HQnbLfSWS8mgdOEhH",
         "4W7Fr971nOlzyNlNBdWpCn",
         "0Q6MsceltSh9gstpkERkz4",
-        "6p6ze8nhLTBFWaJz74yNke"
+        "6p6ze8nhLTBFWaJz74yNke",
+        "19lIBEYthseTmHDnx6jKj2"
       ],
       "first_played": "2026-03-08T23:04:09.851Z",
-      "last_played": "2026-03-09T13:01:51.385Z"
+      "last_played": "2026-03-09T14:29:21.663Z"
     },
     "4NbLTe8YqLFwys4SmkEofd": {
       "album_name": "Incense And Peppermints",
@@ -594,10 +596,11 @@
         "74JnPNuXzfXYJkLNCogBC5",
         "2bO3cK5apgiVlSVIBUACe3",
         "1F898dzpPq7Erdd8pDgUad",
-        "00olYl3uAVihNRt46OAT04"
+        "00olYl3uAVihNRt46OAT04",
+        "4F2guUdsh7PMx5EpQaHmGw"
       ],
       "first_played": "2026-03-08T22:50:00.751Z",
-      "last_played": "2026-03-09T12:32:54.405Z"
+      "last_played": "2026-03-09T14:40:17.501Z"
     },
     "1NQxkuCbddVP1UgmvRhfXp": {
       "album_name": "For Your Love",
@@ -1700,10 +1703,12 @@
       "total_tracks": 17,
       "played_tracks": [
         "5uZD2015uZBis6B2VwRYUZ",
-        "4uGIJG1jYFonGc4LGp5uQL"
+        "4uGIJG1jYFonGc4LGp5uQL",
+        "3fNvTmIR68qzusVAUhSwk3",
+        "6V1f1eJ6MPNfLQXPmzqXja"
       ],
       "first_played": "2026-03-09T13:35:49.302Z",
-      "last_played": "2026-03-09T13:06:52.886Z"
+      "last_played": "2026-03-09T14:26:56.102Z"
     },
     "0zKjnOsXxs63unPR6TWoHq": {
       "album_name": "School's Out",
@@ -1730,10 +1735,11 @@
       "artist": "The Youngbloods",
       "total_tracks": 11,
       "played_tracks": [
-        "3BViJq8vintoW0yRw90PYi"
+        "3BViJq8vintoW0yRw90PYi",
+        "6GrU8CtcbnSluWp2yI4Mt0"
       ],
       "first_played": "2026-03-09T13:20:59.376Z",
-      "last_played": "2026-03-09T13:20:59.376Z"
+      "last_played": "2026-03-09T14:52:22.974Z"
     },
     "77zr8OxPQKKiIsJTJ3HKbk": {
       "album_name": "George Thorogood & the Destroyers",
@@ -1814,6 +1820,161 @@
       ],
       "first_played": "2026-03-09T12:42:07.804Z",
       "last_played": "2026-03-09T12:42:07.804Z"
+    },
+    "0u9EF2bbsELJvn9ibBzUm7": {
+      "album_name": "Event of Your Leaving",
+      "artist": "Raum",
+      "total_tracks": 5,
+      "played_tracks": [
+        "0fD5281x8wloSusMBSTUmc"
+      ],
+      "first_played": "2026-03-09T16:22:34.506Z",
+      "last_played": "2026-03-09T16:22:34.506Z"
+    },
+    "15OVBQYlldnAnwLnEywCJA": {
+      "album_name": "Foreign Body",
+      "artist": "Mirrorring",
+      "total_tracks": 6,
+      "played_tracks": [
+        "2sUwbKtpTLk4iAF5uKObX7"
+      ],
+      "first_played": "2026-03-09T16:13:07.173Z",
+      "last_played": "2026-03-09T16:13:07.173Z"
+    },
+    "5YMsM8N0PVicGhnDiFO3NK": {
+      "album_name": "Reassemblage",
+      "artist": "Visible Cloaks",
+      "total_tracks": 15,
+      "played_tracks": [
+        "6zH4JhuFvC8Fe6DSGv61cC"
+      ],
+      "first_played": "2026-03-09T16:06:13.976Z",
+      "last_played": "2026-03-09T16:06:13.976Z"
+    },
+    "3wjaDfCkbngdwxN2lloyCB": {
+      "album_name": "After its own death / Walking in a spiral towards the house",
+      "artist": "Nivhek",
+      "total_tracks": 4,
+      "played_tracks": [
+        "4F8HlqT6gkJDytZwMwhtGE",
+        "6VAQq0NST9DpWDc7zretjm",
+        "4HvMB0OYldA6Zd0nmLgx5p",
+        "0JJmrRoNITYVgeJfk063n3"
+      ],
+      "first_played": "2026-03-09T16:02:34.658Z",
+      "last_played": "2026-03-09T15:20:12.943Z"
+    },
+    "1GsZEzYNzXOvTVTlEkiL9Z": {
+      "album_name": "Non Stop",
+      "artist": "The Box Tops",
+      "total_tracks": 16,
+      "played_tracks": [
+        "1aR9HTokyIrreiVGXnhvyF"
+      ],
+      "first_played": "2026-03-09T14:59:06.500Z",
+      "last_played": "2026-03-09T14:59:06.500Z"
+    },
+    "26tH0kjUhkxBEd3ipGkx3Y": {
+      "album_name": "Physical Graffiti (Deluxe Edition)",
+      "artist": "Led Zeppelin",
+      "total_tracks": 22,
+      "played_tracks": [
+        "26yQ7ty7PQBHxqSFGoaORp"
+      ],
+      "first_played": "2026-03-09T14:56:16.222Z",
+      "last_played": "2026-03-09T14:56:16.222Z"
+    },
+    "1BiTbrh3rZ8fLOFtrenm74": {
+      "album_name": "Revolution!",
+      "artist": "Paul Revere & The Raiders",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0AA6HF90AGlS4KhUfJH74f"
+      ],
+      "first_played": "2026-03-09T14:49:58.851Z",
+      "last_played": "2026-03-09T14:49:58.851Z"
+    },
+    "0OhNZ7R4dOqtDPLGp0jBAZ": {
+      "album_name": "Child Is Father To The Man",
+      "artist": "Blood, Sweat & Tears",
+      "total_tracks": 15,
+      "played_tracks": [
+        "4DOIrynDnS1TWVdBDl0Ir3"
+      ],
+      "first_played": "2026-03-09T14:35:31.283Z",
+      "last_played": "2026-03-09T14:35:31.283Z"
+    },
+    "3TJQMnhcNzi1nQDZALmT3P": {
+      "album_name": "Just Like Us!",
+      "artist": "Paul Revere & The Raiders",
+      "total_tracks": 15,
+      "played_tracks": [
+        "1wWyiDmH930CFyyJ67lxC8"
+      ],
+      "first_played": "2026-03-09T14:32:22.066Z",
+      "last_played": "2026-03-09T14:32:22.066Z"
+    },
+    "6TzgWk5HZItbFmMT7hH4bU": {
+      "album_name": "God Save The Animals",
+      "artist": "Alex G",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5mKJrP0WTkVdZnrxwxOPoN",
+        "73iWf3dFe1YpRbP590SvGQ",
+        "3YdkukHIzvVxSvY92JAVw3",
+        "3s3Twsw0pQr40yiZpS3toD",
+        "7E8bhgC7aPjbi9p2zBBWpX",
+        "2nxRNNXYZsiebwptaGgUTa",
+        "5DRnssBoVo8e7uAQZkNT8O",
+        "1wHiZMPV9waV8Uru0eW26d",
+        "4nWgVqxEeLiid7NHWG1VTd",
+        "40pBMtKxUIoPosFho1NA3j",
+        "5PZuWw56Wwc9W6nEi3ZcWO",
+        "4EskFFJbNoR2bW9g1wdocP",
+        "1EQFnxBTDsUJhnFzEYOuLc"
+      ],
+      "first_played": "2026-03-09T18:02:28.575Z",
+      "last_played": "2026-03-09T20:12:59.164Z"
+    },
+    "3VaVfO7eUl24zzrtuayksx": {
+      "album_name": "Atlas",
+      "artist": "Laurel Halo",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0UN98DwrzC832dPsv8xmkw"
+      ],
+      "first_played": "2026-03-09T17:21:43.332Z",
+      "last_played": "2026-03-09T17:21:43.332Z"
+    },
+    "5bmpvyP7UGqB4VuXmrJUMy": {
+      "album_name": "Either/Or",
+      "artist": "Elliott Smith",
+      "total_tracks": 12,
+      "played_tracks": [
+        "05lmqBrKGLHAmqsADEuU9a"
+      ],
+      "first_played": "2026-03-09T21:56:39.106Z",
+      "last_played": "2026-03-09T21:56:39.106Z"
+    },
+    "21xp7NdU1ajmO1CX0w2Egd": {
+      "album_name": "Ants From Up There",
+      "artist": "Black Country, New Road",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0y5akbuW5mCnnUe71xATpe"
+      ],
+      "first_played": "2026-03-09T20:56:51.267Z",
+      "last_played": "2026-03-09T20:56:51.267Z"
+    },
+    "5Pq92omNLyQgGGrj2u4pur": {
+      "album_name": "Rocket",
+      "artist": "Alex G",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1CRq2M7Tq4dl7Bwif65doB"
+      ],
+      "first_played": "2026-03-09T20:47:21.328Z",
+      "last_played": "2026-03-09T20:47:21.328Z"
     }
   },
   "completed_albums": {
@@ -398525,6 +398686,148 @@
         "psychedelic rock"
       ],
       "image_url": "https://coverartarchive.org/release/5fe7dbe1-a653-4508-8599-4eb59bab1b7a/front",
+      "listen_history": [],
+      "source": "musicbrainz"
+    },
+    "a23791fe-603b-48ae-aebb-3991886a2b6e": {
+      "artist": "Nivhek",
+      "artist_mbid": "455d7ca3-629d-498c-93f3-9d428dbfe4e0",
+      "name": "After Its Own Death / Walking in a Spiral Towards the House",
+      "release_group_mbid": "a23791fe-603b-48ae-aebb-3991886a2b6e",
+      "label": "Yellowelectric",
+      "release_year": 2019,
+      "release_month": 2,
+      "release_day": 8,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "After Its Own Death: Cloudmouth / blue room / Night\u2010Walking / Funeral Song",
+          "credits": {},
+          "recording_mbid": "c945b273-afad-4a08-991e-347f391a6504"
+        },
+        {
+          "position": "2",
+          "title": "After Its Own Death: Thirteen (version) / Crying Jar / Entry / Walking in a Spiral Towards the House / Weightless",
+          "credits": {},
+          "recording_mbid": "95fb8934-dc2f-4050-862e-27f1af0d1570"
+        },
+        {
+          "position": "3",
+          "title": "Walking in a Spiral Towards the House: Night\u2010Walking / Funeral Song",
+          "credits": {},
+          "recording_mbid": "3518fcf4-bf60-41e3-8960-800eda00ba8d"
+        },
+        {
+          "position": "4",
+          "title": "Walking in a Spiral Towards the House: Thirteen / Walking in a Spiral Towards the House",
+          "credits": {},
+          "recording_mbid": "e8d3ac82-3622-414a-b65e-47ee178f5123"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "ambient",
+        "experimental"
+      ],
+      "image_url": "https://coverartarchive.org/release/fea797e2-7669-4c14-bd87-db09faba744a/front",
+      "listen_history": [],
+      "source": "musicbrainz"
+    },
+    "26e50192-3b06-4556-952c-36d86c4253e3": {
+      "artist": "Alex G",
+      "artist_mbid": "7df4c4de-3181-4a69-bd36-9d663970cebb",
+      "name": "God Save the Animals",
+      "release_group_mbid": "26e50192-3b06-4556-952c-36d86c4253e3",
+      "label": "Domino",
+      "release_year": 2022,
+      "release_month": 9,
+      "release_day": 23,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "After All",
+          "credits": {},
+          "recording_mbid": "ff3ba75a-d768-40f3-81c6-5eef15f0b27c"
+        },
+        {
+          "position": "2",
+          "title": "Runner",
+          "credits": {},
+          "recording_mbid": "d260a92a-0751-4237-9cb7-7f9ba21f8991"
+        },
+        {
+          "position": "3",
+          "title": "Mission",
+          "credits": {},
+          "recording_mbid": "e392b1a7-4187-4fb3-9f44-5379413e1bed"
+        },
+        {
+          "position": "4",
+          "title": "S.D.O.S",
+          "credits": {},
+          "recording_mbid": "6d7cb639-d46a-4d66-9f9a-93348f9fa684"
+        },
+        {
+          "position": "5",
+          "title": "No Bitterness",
+          "credits": {},
+          "recording_mbid": "7889ec66-f075-47d8-bd6e-9c626a467cee"
+        },
+        {
+          "position": "6",
+          "title": "Ain\u2019t It Easy",
+          "credits": {},
+          "recording_mbid": "b4899d7b-4e61-43c2-851f-f764643c1fe6"
+        },
+        {
+          "position": "7",
+          "title": "Cross the Sea",
+          "credits": {},
+          "recording_mbid": "86e1670e-6bab-41a6-9bfb-7e9f16de083f"
+        },
+        {
+          "position": "8",
+          "title": "Blessing",
+          "credits": {},
+          "recording_mbid": "2d5ae073-c840-4941-af0d-9e9c68858ce3"
+        },
+        {
+          "position": "9",
+          "title": "Early Morning Waiting",
+          "credits": {},
+          "recording_mbid": "2565bc31-a3fe-4cc8-a78f-dc8b15027351"
+        },
+        {
+          "position": "10",
+          "title": "Immunity",
+          "credits": {},
+          "recording_mbid": "8156cfdf-1b0a-4230-990f-b3adfec00964"
+        },
+        {
+          "position": "11",
+          "title": "Headroom Piano",
+          "credits": {},
+          "recording_mbid": "5f471213-259c-4d90-870b-1f2f4fdd7ee3"
+        },
+        {
+          "position": "12",
+          "title": "Miracles",
+          "credits": {},
+          "recording_mbid": "d2f9bbab-dca7-4c4a-8236-cbc3f16b5dfc"
+        },
+        {
+          "position": "13",
+          "title": "Forgive",
+          "credits": {},
+          "recording_mbid": "a8f79c79-bb32-4ced-a705-a2295169fc9f"
+        }
+      ],
+      "tags": [
+        "alternative rock",
+        "indie rock",
+        "indie pop"
+      ],
+      "image_url": "https://coverartarchive.org/release/0c889c27-2492-46ca-82c2-d93b536d54ec/front",
       "listen_history": [],
       "source": "musicbrainz"
     }
