@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-09T03:06:36.470Z",
+  "last_checked": "2026-03-09T04:38:43.114Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -535,10 +535,11 @@
       "played_tracks": [
         "3hr9mAgl6NCmsgYAPTQQP1",
         "1hvMgi5y919TAFuOHyEd0j",
-        "0Z1gFxgGNXrikEBAUXxx7J"
+        "0Z1gFxgGNXrikEBAUXxx7J",
+        "0bQK6AyaYp0DRdnsRa80Xh"
       ],
       "first_played": "2026-03-08T23:08:12.794Z",
-      "last_played": "2026-03-08T23:37:17.504Z"
+      "last_played": "2026-03-09T03:23:31.364Z"
     },
     "0bjmNe3FkwxnDIdtAvKpnU": {
       "album_name": "The Animals On Tour",
@@ -648,10 +649,11 @@
       "played_tracks": [
         "7dvtNWoHd3ioEBmIl0s3In",
         "2U1nVCTFKFdieTPTg3VrvY",
-        "2l1GIxmkts2O0qYrlwGwF0"
+        "2l1GIxmkts2O0qYrlwGwF0",
+        "6mqnvF9RVn04nmD3Li12pk"
       ],
       "first_played": "2026-03-08T22:24:57.336Z",
-      "last_played": "2026-03-09T00:58:01.477Z"
+      "last_played": "2026-03-09T04:20:42.103Z"
     },
     "4Ji83LjzvEzFoCpN85m5lW": {
       "album_name": "Then Play On (2013 Remaster; Expanded Edition)",
@@ -699,10 +701,11 @@
       "artist": "The Human Beinz",
       "total_tracks": 11,
       "played_tracks": [
-        "3060Tww6Phdrn3emZ5YVxb"
+        "3060Tww6Phdrn3emZ5YVxb",
+        "2tuLDDDGylZeKBXrraDlL1"
       ],
       "first_played": "2026-03-09T00:21:07.472Z",
-      "last_played": "2026-03-09T00:21:07.472Z"
+      "last_played": "2026-03-09T03:45:36.355Z"
     },
     "2ttWOCsc5bRts2TsOO3un4": {
       "album_name": "Somewhere Outside",
@@ -719,10 +722,11 @@
       "artist": "Quicksilver Messenger Service",
       "total_tracks": 10,
       "played_tracks": [
-        "0C097TFNj4ikTOISggfohB"
+        "0C097TFNj4ikTOISggfohB",
+        "14hykKy6TC9y6chiptCtje"
       ],
       "first_played": "2026-03-09T00:16:23.122Z",
-      "last_played": "2026-03-09T00:16:23.122Z"
+      "last_played": "2026-03-09T03:43:07.031Z"
     },
     "6T7Khw4k3uAgc7n1Fl5o3v": {
       "album_name": "The Definitive Anthology",
@@ -741,10 +745,12 @@
       "played_tracks": [
         "3Rw6JegVY0neLRs8jccMDV",
         "2mDsXSWfqY8AHVsE7xWSHk",
-        "1Se3VN5DEkN4nbeuGVNoEx"
+        "1Se3VN5DEkN4nbeuGVNoEx",
+        "1nE3arIIBRNwzzbBxhhSC4",
+        "1LSsFm4dg3QS2MO91HgUdx"
       ],
       "first_played": "2026-03-09T00:03:10.758Z",
-      "last_played": "2026-03-08T23:28:16.875Z"
+      "last_played": "2026-03-09T03:39:34.272Z"
     },
     "4EeWoE08deCeVuI3LRgVwH": {
       "album_name": "Crimson & Clover",
@@ -771,10 +777,12 @@
       "artist": "The Smoke",
       "total_tracks": 14,
       "played_tracks": [
-        "6eYh3A7TE8cIwKFGK5vLTj"
+        "6eYh3A7TE8cIwKFGK5vLTj",
+        "730nZg9zYfDzuqXkxR25NZ",
+        "38w5aX8Yz4by4SfEaHXUa9"
       ],
       "first_played": "2026-03-08T23:31:22.038Z",
-      "last_played": "2026-03-08T23:31:22.038Z"
+      "last_played": "2026-03-09T03:32:44.449Z"
     },
     "1cbtDEwxCjMhglb49OgNBR": {
       "album_name": "Bo Diddley",
@@ -782,20 +790,23 @@
       "total_tracks": 12,
       "played_tracks": [
         "3v30QiQtdQQAUIWwfKByN7",
-        "2R7uUQ0Dehu80gsOcydQC9"
+        "2R7uUQ0Dehu80gsOcydQC9",
+        "0Stq0NVgLIXyrAN5tLvyIt",
+        "3BnfMMWFkPFpgI41mHWOKf"
       ],
       "first_played": "2026-03-08T23:21:02.253Z",
-      "last_played": "2026-03-09T02:21:45.660Z"
+      "last_played": "2026-03-09T03:55:25.641Z"
     },
     "2tJfEX4O0mNPax2wR0q0DQ": {
       "album_name": "Begin Here",
       "artist": "The Zombies",
       "total_tracks": 14,
       "played_tracks": [
-        "6s6jmTumtDJGOB725jMJ8z"
+        "6s6jmTumtDJGOB725jMJ8z",
+        "49nGZdcQoKS3ANy4iM6sPR"
       ],
       "first_played": "2026-03-08T23:18:34.886Z",
-      "last_played": "2026-03-08T23:18:34.886Z"
+      "last_played": "2026-03-09T04:27:38.528Z"
     },
     "6xmPL0CddWADJTJkJZkrl2": {
       "album_name": "Blind Faith",
@@ -803,10 +814,11 @@
       "total_tracks": 6,
       "played_tracks": [
         "1dDzeqgr8IObq1J8pj2qA9",
-        "5zNCFqfUZ0qsrnDRjcJLdW"
+        "5zNCFqfUZ0qsrnDRjcJLdW",
+        "3p0dqXyYn3ZpJmPiUpisCl"
       ],
       "first_played": "2026-03-08T23:13:34.725Z",
-      "last_played": "2026-03-09T02:19:16.759Z"
+      "last_played": "2026-03-09T03:13:58.224Z"
     },
     "74ipe6kA1lEYQE2Asr6rGZ": {
       "album_name": "The World In A Sea Shell",
@@ -864,10 +876,11 @@
       "artist": "The Seeds",
       "total_tracks": 19,
       "played_tracks": [
-        "4yQRczx7diWEf7Yvps3kmC"
+        "4yQRczx7diWEf7Yvps3kmC",
+        "2NcbZVlmgq9g89Vz10bBRB"
       ],
       "first_played": "2026-03-09T02:42:40.371Z",
-      "last_played": "2026-03-09T02:42:40.371Z"
+      "last_played": "2026-03-09T03:09:29.559Z"
     },
     "3lzWoPYHiPK1TOMUCK9GEn": {
       "album_name": "Love Is (Expanded Edition)",
@@ -960,6 +973,101 @@
       ],
       "first_played": "2026-03-09T01:05:51.168Z",
       "last_played": "2026-03-09T01:05:51.168Z"
+    },
+    "1q1LuLo92N5cl5e0GKRq7h": {
+      "album_name": "The Monkees (Deluxe Edition)",
+      "artist": "The Monkees",
+      "total_tracks": 29,
+      "played_tracks": [
+        "3h4t9qpFktohHeUQc3hZCa"
+      ],
+      "first_played": "2026-03-09T04:38:43.114Z",
+      "last_played": "2026-03-09T04:38:43.114Z"
+    },
+    "3qWJ6R8Wg3PPCAOToluwPJ": {
+      "album_name": "Introducing The Beau Brummels",
+      "artist": "The Beau Brummels",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4PXJjX7PQGzCh4G5WR4Pli"
+      ],
+      "first_played": "2026-03-09T04:35:58.411Z",
+      "last_played": "2026-03-09T04:35:58.411Z"
+    },
+    "4L1Qw49gKwFuQwQovBxsKI": {
+      "album_name": "In-A-Gadda-Da-Vida",
+      "artist": "Iron Butterfly",
+      "total_tracks": 6,
+      "played_tracks": [
+        "2XAYP8pJ25m3ZmO0CjR72h",
+        "6qSVJPiAzPDfCn63hXmBIG",
+        "69s11db3tWSmahivhUPnTX"
+      ],
+      "first_played": "2026-03-09T04:33:32.709Z",
+      "last_played": "2026-03-09T03:20:52.810Z"
+    },
+    "7pHW7BXM4B4t0HVsOi6ruM": {
+      "album_name": "Ark",
+      "artist": "The Animals",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0fcCx79KPvLxc4Ts8bKtEm"
+      ],
+      "first_played": "2026-03-09T04:30:40.663Z",
+      "last_played": "2026-03-09T04:30:40.663Z"
+    },
+    "7rSZXXHHvIhF4yUFdaOCy9": {
+      "album_name": "Are You Experienced",
+      "artist": "Jimi Hendrix",
+      "total_tracks": 17,
+      "played_tracks": [
+        "5lWeY2p6lpCK2bDZyy2nPd",
+        "5jC8uR4L35LBJufeDmOmtk",
+        "3f5JtAsGRIXN8pSAeTi6vA",
+        "4oGRZ3J9o56fPaL96y2NEH"
+      ],
+      "first_played": "2026-03-09T04:23:57.935Z",
+      "last_played": "2026-03-09T03:30:16.501Z"
+    },
+    "78iN3JSUuZ5RDI4SUR7j7d": {
+      "album_name": "Shady Grove",
+      "artist": "Quicksilver Messenger Service",
+      "total_tracks": 9,
+      "played_tracks": [
+        "1WHSb9ulEtX6G1jwe75lwe"
+      ],
+      "first_played": "2026-03-09T04:02:07.074Z",
+      "last_played": "2026-03-09T04:02:07.074Z"
+    },
+    "318v2umlcLw4BLwlPjHr9S": {
+      "album_name": "In The Spotlight",
+      "artist": "Bo Diddley",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1miwQNADgNEBikbUBful7z"
+      ],
+      "first_played": "2026-03-09T03:35:32.269Z",
+      "last_played": "2026-03-09T03:35:32.269Z"
+    },
+    "79v0WaGkCOQCa2qIxb5DUN": {
+      "album_name": "Easy",
+      "artist": "The Easybeats",
+      "total_tracks": 22,
+      "played_tracks": [
+        "4XnqYkCUbgvtqMFkq4BY3z"
+      ],
+      "first_played": "2026-03-09T03:26:22.437Z",
+      "last_played": "2026-03-09T03:26:22.437Z"
+    },
+    "3dAjO3dyUP7edWoE1OeB7b": {
+      "album_name": "Vincebus Eruptum",
+      "artist": "Blue Cheer",
+      "total_tracks": 6,
+      "played_tracks": [
+        "7J8A3XOuGFnGheoSsHUXC8"
+      ],
+      "first_played": "2026-03-09T03:17:43.501Z",
+      "last_played": "2026-03-09T03:17:43.501Z"
     }
   },
   "completed_albums": {
