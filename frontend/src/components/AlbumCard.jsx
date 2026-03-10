@@ -65,6 +65,7 @@ function AlbumCard({ album }) {
     >
       {/* Album Artwork */}
       <img
+        loading="lazy"
         src={album.image_url || `${BASE}placeholder_art.png`}
         onError={(e) => {
           e.target.onerror = null;
