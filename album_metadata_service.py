@@ -235,6 +235,5 @@ def _build_album_record(release_group, release):
         "tracklist": tracklist,
         "tags": tags,
         "image_url": image_url,
-        "listen_history": [],
         "source": "musicbrainz",
     }

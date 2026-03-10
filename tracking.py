@@ -1,9 +1,36 @@
-import datetime
+from datetime import datetime, timezone
 from spotify_manager import SpotifyAPI
 import album_metadata_service as meta
 import logging
+from dateutil import parser
 
 logger = logging.getLogger(__name__)
+
+from dateutil import parser
+from datetime import datetime, timezone, timedelta
+
+
+def cleanup_stale_albums(state, max_age_hours=48):
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=max_age_hours)
+    logging.info(f"Cleaning up albums not listened to since {cutoff.isoformat()}")
+
+    to_remove = []
+    for album_id, album in state["albums_in_progress"].items():
+        last_played = parser.isoparse(album["last_played"])
+
+        if last_played.tzinfo is None:
+            last_played = last_played.replace(tzinfo=timezone.utc)
+
+        if last_played < cutoff:
+            to_remove.append(album_id)
+
+    for album_id in to_remove:
+        logging.info(
+            f"Removing stale album from in-progress: {state['albums_in_progress'][album_id]['artist']} - {state['albums_in_progress'][album_id]['album_name']}"
+        )
+        del state["albums_in_progress"][album_id]
+
+    return state
 
 
 def update_album_progress(state, sp: SpotifyAPI, tracks):
@@ -41,24 +68,17 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
 
 
 def check_album_completion(state, threshold: float):
-    """
-    Determine which albums meet completion criteria.
 
-    Placeholder logic:
-    - Strict: all tracks played
-    """
-
-    # verify threshold
     if (threshold > 1) or (threshold < 0.01):
         raise ValueError("threshold must be between 0 and 1")
 
     completed = []
 
     for album_id, album_data in state["albums_in_progress"].items():
-        if album_id in state["completed_albums"]:
+
+        if album_data.get("completion_logged"):
             continue
 
-        # verify threshold met (% of songs on album)
         total_tracks = album_data["total_tracks"]
         unique_tracks = album_data["played_tracks"]
 
@@ -77,12 +97,47 @@ def log_completed_album(state, album_id):
     album_logged_data = state["albums_in_progress"][album_id]
     artist = album_logged_data["artist"]
     album_name = album_logged_data["album_name"]
-    album_metadata = meta.get_album_metadata(artist, album_name)
+    album_metadata = meta.get_album_metadata(
+        artist, album_name
+    )  # inefficient because might not be needed
+    key = f"{artist} - {album_name}"
+    listen_datetime = album_logged_data["last_played"]
 
-    key = album_metadata["release_group_mbid"]
+    if key not in state["completed_albums"]:
+        album_metadata["listen_history"] = [listen_datetime]
+        state["completed_albums"][key] = album_metadata
+        logging.info(f"New album logged: {artist} - {album_name}")
 
-    state["completed_albums"][key] = album_metadata
+    else:
+        state["completed_albums"][key].setdefault("listen_history", []).append(
+            listen_datetime
+        )
+        logging.info(f"Subsequent listen logged: {artist} - {album_name}")
 
-    logging.info(f"Logged completed album: {artist} - {album_name}")
+    album_logged_data["completion_logged"] = True
 
     return state
+
+
+def get_most_recently_listened(state: dict, num=10) -> list[str]:
+    albums = state.get("completed_albums", {})
+
+    def parse_utc(ts):
+        dt = parser.isoparse(ts)
+        return dt if dt.tzinfo else dt.replace(tzinfo=timezone.utc)
+
+    album_to_most_recent_listen = {}
+    for key, album_data in albums.items():
+        history = album_data.get("listen_history", [])
+        if history:
+            most_recent_listen = max(parse_utc(dt) for dt in history)
+            album_to_most_recent_listen[key] = most_recent_listen
+
+    # get most recent num albums
+    sorted_albums = sorted(
+        album_to_most_recent_listen.items(),
+        key=lambda x: x[1],
+        reverse=True,
+    )[:num]
+
+    return [key for key, _ in sorted_albums]

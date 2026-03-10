@@ -11,8 +11,9 @@ import logging
 
 
 load_dotenv()
-THRESHOLD = 0.90
+THRESHOLD = 0.9
 LOG_LEVEL = logging.INFO
+STALE_HOURS = 48
 pull_bulk_google_sheets_data = False
 
 # Set up logging
@@ -38,8 +39,17 @@ def main():
     tracks = spotify.fetch_recent_tracks(start_state["last_checked"])
     logging.info(f"Fetched {len(tracks)} recent tracks from Spotify")
 
-    updated_tracks_state = tracking.update_album_progress(start_state, spotify, tracks)
+    # delete stale listens
+    clean_up_state = tracking.cleanup_stale_albums(
+        start_state, max_age_hours=STALE_HOURS
+    )
 
+    # update new listens
+    updated_tracks_state = tracking.update_album_progress(
+        clean_up_state, spotify, tracks
+    )
+
+    # check completed albums
     completed_album_ids = tracking.check_album_completion(
         updated_tracks_state, threshold=THRESHOLD
     )
@@ -89,6 +99,11 @@ def main():
 
     net_change = final_completed_count - starting_completed_count
     logging.info(f"Net change this run: {net_change}")
+
+    # update most recently listened
+    end_state["most_recently_listened"] = tracking.get_most_recently_listened(
+        end_state, num=10
+    )
 
     util.save_state(end_state)
 
