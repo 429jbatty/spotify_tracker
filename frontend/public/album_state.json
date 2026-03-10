@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-10T18:18:38.846Z",
+  "last_checked": "2026-03-10T19:25:25.865Z",
   "albums_in_progress": {
     "3a3Yp0PRguSTH3dBOeWRyZ": {
       "album_name": "Halcyon Digest",
@@ -21,10 +21,11 @@
       "played_tracks": [
         "0bWtmYrWat7IWlpx3rmuwc",
         "3l14MJpQB4tFFgKLqUqtV3",
-        "5sHPMdCjomrXVrrGuX5Gpb"
+        "5sHPMdCjomrXVrrGuX5Gpb",
+        "0xn9WsyWhNbfI82Ipnpwqa"
       ],
       "first_played": "2026-03-10T17:16:12.901Z",
-      "last_played": "2026-03-10T14:10:18.342Z"
+      "last_played": "2026-03-10T18:23:39.223Z"
     },
     "5Ci3qdm3m5wnkK9ORy2hU5": {
       "album_name": "Chocolate and Cheese",
@@ -32,10 +33,11 @@
       "total_tracks": 16,
       "played_tracks": [
         "2rBPpHo5abuVGgJJjDWKjG",
-        "7zNOt8sNIYHD3iZYp6irr7"
+        "7zNOt8sNIYHD3iZYp6irr7",
+        "5taUV8kbsjppc3Krz3KgFr"
       ],
       "first_played": "2026-03-10T17:11:53.079Z",
-      "last_played": "2026-03-10T16:46:45.458Z"
+      "last_played": "2026-03-10T18:58:22.069Z"
     },
     "41R93VsCmTTCprOwXJz8eG": {
       "album_name": "In a Priest Driven Ambulance",
@@ -78,10 +80,11 @@
       "artist": "Yo La Tengo",
       "total_tracks": 16,
       "played_tracks": [
-        "00839RHIOqd7KUunk009jh"
+        "00839RHIOqd7KUunk009jh",
+        "2RCaDbgmfL6xge4jEZYwV6"
       ],
       "first_played": "2026-03-10T16:52:15.001Z",
-      "last_played": "2026-03-10T16:52:15.001Z"
+      "last_played": "2026-03-10T18:42:32.690Z"
     },
     "4Gucn0d30QiZSrXrcNVjhk": {
       "album_name": "Embryonic",
@@ -181,10 +184,11 @@
         "2AXuXJT9Rg6SxlGh2lIGsP",
         "4UMNkcouzvSn4Bm3YAxQEb",
         "2fYbwzIKDvNt6DVaMTXFCD",
-        "6LgLdukvV66FrzqPfgRngV"
+        "6LgLdukvV66FrzqPfgRngV",
+        "1ov6Nnp8ej8aHI6lss1ZEn"
       ],
       "first_played": "2026-03-10T15:56:00.689Z",
-      "last_played": "2026-03-10T18:12:05.747Z"
+      "last_played": "2026-03-10T18:50:31.084Z"
     },
     "4qV3ueP3Bau6i4kdWQZm2U": {
       "album_name": "Slanted & Enchanted: Luxe & Reduxe",
@@ -212,10 +216,11 @@
       "total_tracks": 11,
       "played_tracks": [
         "3SZbFOY8nxqll77me1srrz",
-        "4NIVH91yWJBxxDkct2zKSP"
+        "4NIVH91yWJBxxDkct2zKSP",
+        "7EDSrqFVA9WFTN4gYdt7l4"
       ],
       "first_played": "2026-03-10T15:36:16.188Z",
-      "last_played": "2026-03-10T15:01:59.233Z"
+      "last_played": "2026-03-10T18:28:21.108Z"
     },
     "6oVaKzODiXqew6MScEd7T4": {
       "album_name": "At War with the Mystics",
@@ -223,10 +228,11 @@
       "total_tracks": 12,
       "played_tracks": [
         "0qvu1kesaxf4aNC9nDcCeZ",
-        "2SsrjDZM8ZIvKaUssqPs4o"
+        "2SsrjDZM8ZIvKaUssqPs4o",
+        "2GawXKI8LyfvrFGTZoge7R"
       ],
       "first_played": "2026-03-10T15:26:42.800Z",
-      "last_played": "2026-03-10T17:34:46.062Z"
+      "last_played": "2026-03-10T19:12:55.488Z"
     },
     "17q5eeNk3HAjX1gzQnkTX7": {
       "album_name": "In the Aeroplane Over the Sea",
@@ -294,10 +300,11 @@
       "artist": "Ween",
       "total_tracks": 15,
       "played_tracks": [
-        "3gLAwpRUTdvjBH7DLmK2mf"
+        "3gLAwpRUTdvjBH7DLmK2mf",
+        "0aWdsVgvfvO0eDl8YjPWiR"
       ],
       "first_played": "2026-03-10T18:08:14.475Z",
-      "last_played": "2026-03-10T18:08:14.475Z"
+      "last_played": "2026-03-10T18:31:47.801Z"
     },
     "4H8NX3ovAZdY2iJmwSNqlw": {
       "album_name": "American Head",
@@ -368,6 +375,76 @@
       ],
       "first_played": "2026-03-10T17:25:23.124Z",
       "last_played": "2026-03-10T17:25:23.124Z"
+    },
+    "4jVVAenBaHRF8w0MV6qKw7": {
+      "album_name": "Yankee Hotel Foxtrot (Expanded Edition)",
+      "artist": "Wilco",
+      "total_tracks": 29,
+      "played_tracks": [
+        "7qTr6NXpNeVriU1jCbXqCg"
+      ],
+      "first_played": "2026-03-10T19:25:25.865Z",
+      "last_played": "2026-03-10T19:25:25.865Z"
+    },
+    "3D278bVsRcK48RvV5yLVt8": {
+      "album_name": "Modern Guilt",
+      "artist": "Beck",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4PElfWzcplSVIazwRPO9ir"
+      ],
+      "first_played": "2026-03-10T19:23:55.831Z",
+      "last_played": "2026-03-10T19:23:55.831Z"
+    },
+    "6nL0U84JsEJ0cRsGCnsDnJ": {
+      "album_name": "You Forgot It In People",
+      "artist": "Broken Social Scene",
+      "total_tracks": 13,
+      "played_tracks": [
+        "3Cl35xMXJUEhpPaYBeNUQR"
+      ],
+      "first_played": "2026-03-10T19:19:17.716Z",
+      "last_played": "2026-03-10T19:19:17.716Z"
+    },
+    "1R8kkopLT4IAxzMMkjic6X": {
+      "album_name": "Sound of Silver",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2Ud3deeqLAG988pfW0Kwcl"
+      ],
+      "first_played": "2026-03-10T19:06:04.540Z",
+      "last_played": "2026-03-10T19:06:04.540Z"
+    },
+    "2L4xduAFQeVbHLRiKUH7rD": {
+      "album_name": "Clouds Taste Metallic",
+      "artist": "The Flaming Lips",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4MfPridclsCChiN6ccmNkH"
+      ],
+      "first_played": "2026-03-10T18:53:47.189Z",
+      "last_played": "2026-03-10T18:53:47.189Z"
+    },
+    "0OHDiDMyxzWJfwtoeHNCf4": {
+      "album_name": "Wowee Zowee",
+      "artist": "Pavement",
+      "total_tracks": 18,
+      "played_tracks": [
+        "5l5qXM8M1BRBy9m8jZSe2t"
+      ],
+      "first_played": "2026-03-10T18:46:49.098Z",
+      "last_played": "2026-03-10T18:46:49.098Z"
+    },
+    "6YM4MpYgz6BhIeqQkxp3u4": {
+      "album_name": "Purple Mountains",
+      "artist": "Purple Mountains",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0oCpNIVoV1iJK51xmh59Yh"
+      ],
+      "first_played": "2026-03-10T18:36:06.632Z",
+      "last_played": "2026-03-10T18:36:06.632Z"
     }
   },
   "completed_albums": {
