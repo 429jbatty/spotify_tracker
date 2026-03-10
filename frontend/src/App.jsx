@@ -59,7 +59,7 @@ function App() {
       )}
 
       {/* Conditional rendering based on selected view */}
-      {view === "dashboard" && <Dashboard albums={data.completed_albums}/>}
+      {view === "dashboard" && <Dashboard albums={data.completed_albums} ids={data.most_recently_listened} />}
       {view === "table" && <AlbumTable albums={filteredAlbums}/>}
       {view === "card" && <AlbumCardList albums={filteredAlbums}/>}
       {view === "timeline" && <AlbumTimeView albums={filteredAlbums}/>}

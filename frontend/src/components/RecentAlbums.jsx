@@ -1,16 +1,21 @@
-import AlbumCard from "./AlbumCard";
 import AlbumCardList from "./AlbumCardList";
 
-function RecentAlbums({ albums }) {
-  
-  // Number of recent albums to display
-  const numberRecentAlbums = 6
-  
-  const recentAlbums = Object.entries(albums)
-      .map(([id, album]) => ({ id, ...album }))
-      .filter(a => a.listen_history)
-      .sort((a, b) => new Date(b.listen_history) - new Date(a.listen_history))
-      .slice(0, numberRecentAlbums);
+function RecentAlbums({ albums, ids }) {
+
+  const numberRecentAlbums = 6;
+
+  const recentAlbums = ids
+    .slice(0, numberRecentAlbums)
+    .map(id => {
+      const album = albums[id];
+      if (!album) return null;
+
+      return {
+        id,
+        ...album
+      };
+    })
+    .filter(Boolean);
 
   return (
     <div style={{ marginTop: "2rem" }}>

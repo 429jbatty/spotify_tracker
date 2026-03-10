@@ -1,11 +1,11 @@
 import StatsBar from "./StatsBar";
 import RecentAlbums from "./RecentAlbums";
 
-function Dashboard({ albums }) {
+function Dashboard({ albums, ids }) {
   return (
     <div style={{ padding: "2rem" }}>
       <StatsBar albums={albums} />
-      <RecentAlbums albums={albums} />
+      <RecentAlbums albums={albums} ids={ids} />
     </div>
   );
 }
