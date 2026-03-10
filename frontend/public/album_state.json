@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-10T17:19:02.715Z",
+  "last_checked": "2026-03-10T18:18:38.846Z",
   "albums_in_progress": {
     "3a3Yp0PRguSTH3dBOeWRyZ": {
       "album_name": "Halcyon Digest",
@@ -8,10 +8,11 @@
       "played_tracks": [
         "1dYM5FPrZSKgtx2xsdW5Xs",
         "4xV2mE4rbiE2jVpEoynhFu",
-        "0qIjFOa3hO4DUzcXZOKhlU"
+        "0qIjFOa3hO4DUzcXZOKhlU",
+        "1vkYr7OwGCzUWcxeCdIg3f"
       ],
       "first_played": "2026-03-10T17:19:02.715Z",
-      "last_played": "2026-03-10T16:32:25.613Z"
+      "last_played": "2026-03-10T18:14:44.064Z"
     },
     "5MoaDbFw4nrm2P7Om1on3b": {
       "album_name": "Give Up (Deluxe 10th Anniversary Edition)",
@@ -120,10 +121,11 @@
       "played_tracks": [
         "3fsnRK4dEe7NykXL5anAGp",
         "5wYAof2gsaOvwNJ4PWZWxP",
-        "1Vi8bCaz8AqucqF88ffnqI"
+        "1Vi8bCaz8AqucqF88ffnqI",
+        "0IGV3sRIl91200R1kW3rGo"
       ],
       "first_played": "2026-03-10T16:25:58.132Z",
-      "last_played": "2026-03-10T14:50:44.455Z"
+      "last_played": "2026-03-10T17:38:04.407Z"
     },
     "0gkUcpkyW2SXN49Yktkf6F": {
       "album_name": "The Suburbs (Deluxe)",
@@ -178,10 +180,11 @@
       "played_tracks": [
         "2AXuXJT9Rg6SxlGh2lIGsP",
         "4UMNkcouzvSn4Bm3YAxQEb",
-        "2fYbwzIKDvNt6DVaMTXFCD"
+        "2fYbwzIKDvNt6DVaMTXFCD",
+        "6LgLdukvV66FrzqPfgRngV"
       ],
       "first_played": "2026-03-10T15:56:00.689Z",
-      "last_played": "2026-03-10T14:34:30.081Z"
+      "last_played": "2026-03-10T18:12:05.747Z"
     },
     "4qV3ueP3Bau6i4kdWQZm2U": {
       "album_name": "Slanted & Enchanted: Luxe & Reduxe",
@@ -219,10 +222,11 @@
       "artist": "The Flaming Lips",
       "total_tracks": 12,
       "played_tracks": [
-        "0qvu1kesaxf4aNC9nDcCeZ"
+        "0qvu1kesaxf4aNC9nDcCeZ",
+        "2SsrjDZM8ZIvKaUssqPs4o"
       ],
       "first_played": "2026-03-10T15:26:42.800Z",
-      "last_played": "2026-03-10T15:26:42.800Z"
+      "last_played": "2026-03-10T17:34:46.062Z"
     },
     "17q5eeNk3HAjX1gzQnkTX7": {
       "album_name": "In the Aeroplane Over the Sea",
@@ -274,6 +278,96 @@
       ],
       "first_played": "2026-03-10T14:27:26.221Z",
       "last_played": "2026-03-10T14:27:26.221Z"
+    },
+    "1ldF9hxaYcrQvvlIl5E4VY": {
+      "album_name": "You & Me",
+      "artist": "The Walkmen",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0enroZxRyOZjRMLTMjfheq"
+      ],
+      "first_played": "2026-03-10T18:18:38.846Z",
+      "last_played": "2026-03-10T18:18:38.846Z"
+    },
+    "7iSKF89UecuufP4t7LXYkt": {
+      "album_name": "Quebec",
+      "artist": "Ween",
+      "total_tracks": 15,
+      "played_tracks": [
+        "3gLAwpRUTdvjBH7DLmK2mf"
+      ],
+      "first_played": "2026-03-10T18:08:14.475Z",
+      "last_played": "2026-03-10T18:08:14.475Z"
+    },
+    "4H8NX3ovAZdY2iJmwSNqlw": {
+      "album_name": "American Head",
+      "artist": "The Flaming Lips",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4M1IQ6dTFqgtrRHlEqYDAH"
+      ],
+      "first_played": "2026-03-10T18:04:35.819Z",
+      "last_played": "2026-03-10T18:04:35.819Z"
+    },
+    "2AJqzRQltkneduxKsqmgYJ": {
+      "album_name": "Emperor Tomato Ketchup (Expanded Edition)",
+      "artist": "Stereolab",
+      "total_tracks": 28,
+      "played_tracks": [
+        "0atchYBOarx9klLwbqKeaR"
+      ],
+      "first_played": "2026-03-10T18:00:54.998Z",
+      "last_played": "2026-03-10T18:00:54.998Z"
+    },
+    "1DMMv1Kmoli3Y9fVEZDUVC": {
+      "album_name": "\u00c1g\u00e6tis byrjun",
+      "artist": "Sigur R\u00f3s",
+      "total_tracks": 10,
+      "played_tracks": [
+        "2f4zQEtyo2gja8Kok7sNEc"
+      ],
+      "first_played": "2026-03-10T17:56:11.513Z",
+      "last_played": "2026-03-10T17:56:11.513Z"
+    },
+    "64TDaAbxgO0TmKZrIavdLg": {
+      "album_name": "Person Pitch",
+      "artist": "Panda Bear",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6ID2kAZjCkilJGb041DEUO"
+      ],
+      "first_played": "2026-03-10T17:48:24.874Z",
+      "last_played": "2026-03-10T17:48:24.874Z"
+    },
+    "6w7XFtdCQf871KU40Ot1Ra": {
+      "album_name": "The Three E.P.'s",
+      "artist": "The Beta Band",
+      "total_tracks": 12,
+      "played_tracks": [
+        "14v8jznoR89bjfgmVWvCrh"
+      ],
+      "first_played": "2026-03-10T17:44:24.039Z",
+      "last_played": "2026-03-10T17:44:24.039Z"
+    },
+    "151mT9g0fDHVfpmWeYk4Wx": {
+      "album_name": "Dots And Loops (Expanded Edition)",
+      "artist": "Stereolab",
+      "total_tracks": 24,
+      "played_tracks": [
+        "6Wi3gizHOtRi7DSsX3XWZA"
+      ],
+      "first_played": "2026-03-10T17:30:53.345Z",
+      "last_played": "2026-03-10T17:30:53.345Z"
+    },
+    "6ZB8qaR9JNuS0Q0bG1nbcH": {
+      "album_name": "Funeral",
+      "artist": "Arcade Fire",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0O8Ymlu03OqEX5XU5p8Rw3"
+      ],
+      "first_played": "2026-03-10T17:25:23.124Z",
+      "last_played": "2026-03-10T17:25:23.124Z"
     }
   },
   "completed_albums": {
