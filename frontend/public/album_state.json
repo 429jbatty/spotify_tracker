@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-10T00:32:16.421Z",
+  "last_checked": "2026-03-10T02:59:18.295Z",
   "albums_in_progress": {
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -7,10 +7,14 @@
       "total_tracks": 11,
       "played_tracks": [
         "4bTXFLSWqZiUrrXD202tVG",
-        "0UQnWjRKEphlQtzeZ83lC2"
+        "0UQnWjRKEphlQtzeZ83lC2",
+        "7zq5lyei1uoskShdtxQO1o",
+        "1esrPCrpjJhubSqRtNz5Yw",
+        "0ScgmigVOJr2mFsAtwFQmz",
+        "2cVj88Q5SL5bZa8O2iFrDL"
       ],
       "first_played": "2026-03-06T01:44:31.623Z",
-      "last_played": "2026-03-05T23:45:05.198Z"
+      "last_played": "2026-03-10T00:54:49.574Z"
     },
     "6aSk2vxoY3xtz7cXKuY9EL": {
       "album_name": "LCD Soundsystem",
@@ -83,10 +87,15 @@
         "2PBtyFh5rgThYrfzr2CNMJ",
         "4KPr9Oan2RiTzaT2V5luNH",
         "6aEkehn1UrYfdjpIRCuzVO",
-        "1RZlGlz8eXT1KmJYpqFRzH"
+        "1RZlGlz8eXT1KmJYpqFRzH",
+        "2EJDRDvRRMZy3pBIDKuvbj",
+        "6mtIRdklAtM6lRuipHLwok",
+        "4zxQmYMxXzNc8YrToM83F1",
+        "12j0Hvgy2QtAzvWbqxoTbx",
+        "4D8amAivdlQ4LyiBD6xc1d"
       ],
       "first_played": "2026-03-06T00:13:54.970Z",
-      "last_played": "2026-03-09T23:59:05.360Z"
+      "last_played": "2026-03-10T00:34:07.198Z"
     },
     "755yBlrk0Sz8tIgMMTgyr1": {
       "album_name": "We Will Always Love You",
@@ -124,10 +133,15 @@
       "total_tracks": 13,
       "played_tracks": [
         "7EyVbyQS66aaH2LwhN0gpl",
-        "03gKdAQAswBo7v4p8F1An4"
+        "03gKdAQAswBo7v4p8F1An4",
+        "17z65LFVRqSVJCMyjfrBm9",
+        "34NxpUqK4BZmVB9Pe6VuUZ",
+        "2hmRUMkO75ZTrDw8kdZiVv",
+        "57WmTDCk4mWh3Mlca9OiyL",
+        "4wNKEUTSUjX7QOmeV9BP5R"
       ],
       "first_played": "2026-03-05T23:40:21.677Z",
-      "last_played": "2026-03-05T23:07:10.708Z"
+      "last_played": "2026-03-10T01:07:06.332Z"
     },
     "4hnqM0JK4CM1phwfq1Ldyz": {
       "album_name": "This Is Happening",
@@ -166,10 +180,12 @@
       "artist": "Brian Eno",
       "total_tracks": 14,
       "played_tracks": [
-        "2d9KBVxb6bUfVCjjv1JAVe"
+        "2d9KBVxb6bUfVCjjv1JAVe",
+        "6ZWVeMysm8Q8zZu3lKnY2v",
+        "0UROPTHqU5C7TI1N8wOkIF"
       ],
       "first_played": "2026-03-05T23:10:12.609Z",
-      "last_played": "2026-03-05T23:10:12.609Z"
+      "last_played": "2026-03-10T01:10:08.919Z"
     },
     "1J60iwLlrXqJokziB4h19U": {
       "album_name": "the long goodbye (lcd soundsystem live at madison square garden)",
@@ -1983,6 +1999,94 @@
       ],
       "first_played": "2026-03-09T20:47:21.328Z",
       "last_played": "2026-03-09T20:47:21.328Z"
+    },
+    "2GbNeQEg5fLtuxjr5nlIpc": {
+      "album_name": "American Water",
+      "artist": "Silver Jews",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5E4AIOCPNZ8EGg6ebjFCPs",
+        "4DYR2Y7YkUyQSKzn9GUppR"
+      ],
+      "first_played": "2026-03-10T02:59:18.295Z",
+      "last_played": "2026-03-10T01:42:07.129Z"
+    },
+    "5HmBv8TzN3vYt3Knh5Wxdn": {
+      "album_name": "Kaputt",
+      "artist": "Destroyer",
+      "total_tracks": 9,
+      "played_tracks": [
+        "1VgZhSXQb7qJtFdJDd6Dop",
+        "4cekdcTYFuGc6gJzpvYU2v",
+        "1xVJh5Aqq4YqPzdtUdO5K7",
+        "4rs8c7RMGmy91nUWxqoMwT",
+        "2gAKFfC45dlggTy11odzxK"
+      ],
+      "first_played": "2026-03-10T02:49:46.127Z",
+      "last_played": "2026-03-10T01:03:16.073Z"
+    },
+    "4jVVAenBaHRF8w0MV6qKw7": {
+      "album_name": "Yankee Hotel Foxtrot (Expanded Edition)",
+      "artist": "Wilco",
+      "total_tracks": 29,
+      "played_tracks": [
+        "2Tnu7HHMOttl9a2wlf1lI2",
+        "0UOxrpK8qWF9xQnYsOE6jE",
+        "0xZui3lPulzn0AubjuL0zq",
+        "1TrFJT6Y39GUhMkXZ1MlzF"
+      ],
+      "first_played": "2026-03-10T02:42:45.477Z",
+      "last_played": "2026-03-10T01:18:28.713Z"
+    },
+    "3a3Yp0PRguSTH3dBOeWRyZ": {
+      "album_name": "Halcyon Digest",
+      "artist": "Deerhunter",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6t0y05rcx80LFmlzqXWHRA"
+      ],
+      "first_played": "2026-03-10T02:37:37.608Z",
+      "last_played": "2026-03-10T02:37:37.608Z"
+    },
+    "7dtI4gOyh3dD8jW6mSLMg7": {
+      "album_name": "Bluffer's guide to the flight deck",
+      "artist": "Flotation Toy Warning",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0igOPriv6bz9fTM9PHnD9i"
+      ],
+      "first_played": "2026-03-10T02:32:37.323Z",
+      "last_played": "2026-03-10T02:32:37.323Z"
+    },
+    "5ieP11rJQvuYz0Ov3k03cy": {
+      "album_name": "Sea Change",
+      "artist": "Beck",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1bGas968flWbyqIdVqlHt4"
+      ],
+      "first_played": "2026-03-10T02:04:09.157Z",
+      "last_played": "2026-03-10T02:04:09.157Z"
+    },
+    "6DlZzUnITGI5cWGTjIWSBm": {
+      "album_name": "Perfect from Now On",
+      "artist": "Built To Spill",
+      "total_tracks": 8,
+      "played_tracks": [
+        "6JT3dTww2LuGrtze7j5jw9"
+      ],
+      "first_played": "2026-03-10T01:38:48.549Z",
+      "last_played": "2026-03-10T01:38:48.549Z"
+    },
+    "0jOHO83JJHKTMRfUiVSUSM": {
+      "album_name": "Various Failures",
+      "artist": "Swans",
+      "total_tracks": 33,
+      "played_tracks": [
+        "3vHy5cXBvRlsPqSeFoBGyR"
+      ],
+      "first_played": "2026-03-10T01:14:39.745Z",
+      "last_played": "2026-03-10T01:14:39.745Z"
     }
   },
   "completed_albums": {
@@ -398836,6 +398940,692 @@
         "indie pop"
       ],
       "image_url": "https://coverartarchive.org/release/0c889c27-2492-46ca-82c2-d93b536d54ec/front",
+      "listen_history": [],
+      "source": "musicbrainz"
+    },
+    "1a021034-95d1-3a2d-bdca-73b25e455e49": {
+      "artist": "The Flaming Lips",
+      "artist_mbid": "1f43d76f-8edf-44f6-aaf1-b65f05ad9402",
+      "name": "The Soft Bulletin",
+      "release_group_mbid": "1a021034-95d1-3a2d-bdca-73b25e455e49",
+      "label": "Warner Bros. Records",
+      "release_year": 1999,
+      "release_month": 5,
+      "release_day": 17,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Race for the Prize",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "1c39630b-ff63-4477-ac9a-8541c7bbf4b8"
+        },
+        {
+          "position": "2",
+          "title": "A Spoonful Weighs a Ton",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "6deeee64-d457-4c72-be51-9d387dafecec"
+        },
+        {
+          "position": "3",
+          "title": "The Spark That Bled",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "4c09e3e5-9fb7-41c9-8223-67c387841c15"
+        },
+        {
+          "position": "4",
+          "title": "The Spiderbite Song",
+          "credits": {},
+          "recording_mbid": "a24bfabf-a569-41f8-ad57-f4ecf32c7446"
+        },
+        {
+          "position": "5",
+          "title": "Buggin\u2019 (remix)",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "remixer",
+              ""
+            ]
+          ],
+          "recording_mbid": "235e9760-ee09-424e-8135-97aff28f131c"
+        },
+        {
+          "position": "6",
+          "title": "What Is the Light?",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "f4c1d085-f5f2-4823-8b4c-4df317bda63b"
+        },
+        {
+          "position": "7",
+          "title": "The Observer",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "64299442-0f3f-4245-a33c-7f54a7841cce"
+        },
+        {
+          "position": "8",
+          "title": "Waitin\u2019 for a Superman",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "f06ce647-2f79-4415-9251-acb74cc26fa8"
+        },
+        {
+          "position": "9",
+          "title": "Suddenly Everything Has Changed",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "f271824e-8781-4444-8d4e-4a8bed78baf4"
+        },
+        {
+          "position": "10",
+          "title": "The Gash",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "47f4a12c-ee35-48d4-8a74-68f79b913b19"
+        },
+        {
+          "position": "11",
+          "title": "Feeling Yourself Disintegrate",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "a96e97ad-0d76-4bd3-8fe9-555f546d5698"
+        },
+        {
+          "position": "12",
+          "title": "Sleeping on the Roof",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ]
+          ],
+          "recording_mbid": "049bfc89-16cd-4dcf-a9ae-3266817c9a64"
+        },
+        {
+          "position": "13",
+          "title": "Race for the Prize (Peter Mokran remix)",
+          "credits": [
+            [
+              "Peter Mokran",
+              "remixer",
+              ""
+            ]
+          ],
+          "recording_mbid": "561532ac-2236-44ae-bf29-3acaca6be388"
+        },
+        {
+          "position": "14",
+          "title": "Waitin\u2019 for a Superman (remix)",
+          "credits": [
+            [
+              "The Flaming Lips",
+              "mix",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "mix",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "mix",
+              "additional"
+            ],
+            [
+              "Scott Booker",
+              "producer",
+              ""
+            ],
+            [
+              "The Flaming Lips",
+              "producer",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "producer",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "producer",
+              "additional"
+            ],
+            [
+              "The Flaming Lips",
+              "recording",
+              ""
+            ],
+            [
+              "Dave Fridmann",
+              "recording",
+              ""
+            ],
+            [
+              "Peter Mokran",
+              "remixer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1187c6a6-0452-4aba-9aab-2a102185158d"
+        }
+      ],
+      "tags": [
+        "rock",
+        "electronic",
+        "pop",
+        "alternative rock",
+        "noise",
+        "experimental",
+        "indie rock",
+        "psychedelic rock",
+        "psychedelic pop",
+        "experimental rock",
+        "symphonic rock",
+        "neo-psychedelia",
+        "chamber pop",
+        "user defined",
+        "progressive pop",
+        "art pop",
+        "space rock revival"
+      ],
+      "image_url": "https://coverartarchive.org/release/85687660-5f99-4e14-b0bc-7943bbb1abe8/front",
       "listen_history": [],
       "source": "musicbrainz"
     }
