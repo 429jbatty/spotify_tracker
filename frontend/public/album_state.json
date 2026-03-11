@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-10T19:25:25.865Z",
+  "last_checked": "2026-03-11T22:07:47.694Z",
   "albums_in_progress": {
     "3a3Yp0PRguSTH3dBOeWRyZ": {
       "album_name": "Halcyon Digest",
@@ -445,6 +445,19 @@
       ],
       "first_played": "2026-03-10T18:36:06.632Z",
       "last_played": "2026-03-10T18:36:06.632Z"
+    },
+    "1JYyYFJSYrXMHLe7Dz1B3W": {
+      "album_name": "Orbital 2",
+      "artist": "Orbital",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6MyP2ZC46BwmzoremgiugV",
+        "0kWWrjVHbRqEkd6j8firv4",
+        "4Sf37RwOXi0HwkWJU1J7m9",
+        "3t1AlBSGtruH3fxgoc2aYe"
+      ],
+      "first_played": "2026-03-11T22:07:47.694Z",
+      "last_played": "2026-03-11T21:46:08.630Z"
     }
   },
   "completed_albums": {
