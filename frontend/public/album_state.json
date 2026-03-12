@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-12T14:20:56.916Z",
+  "last_checked": "2026-03-12T16:25:50.338Z",
   "albums_in_progress": {
     "3a3Yp0PRguSTH3dBOeWRyZ": {
       "album_name": "Halcyon Digest",
@@ -49,18 +49,6 @@
       "first_played": "2026-03-10T17:09:52.589Z",
       "last_played": "2026-03-10T17:09:52.589Z"
     },
-    "4h99OhINkm39y6qs7dYOwM": {
-      "album_name": "Under the Western Freeway",
-      "artist": "Grandaddy",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5oicSMosrbOAS7G7g1XjpQ",
-        "3S1ELwNDd0wZlArp390Fdt",
-        "1MxjQ4SyxY3JlHvKimwSwK"
-      ],
-      "first_played": "2026-03-10T17:00:25.728Z",
-      "last_played": "2026-03-10T14:23:14.927Z"
-    },
     "3V18DIKvRuwdxc2LE4wuac": {
       "album_name": "I Can Hear The Heart Beating As One",
       "artist": "Yo La Tengo",
@@ -81,17 +69,6 @@
       ],
       "first_played": "2026-03-10T16:43:35.667Z",
       "last_played": "2026-03-10T16:43:35.667Z"
-    },
-    "4AChnLbiWqxiotXz8kv6D7": {
-      "album_name": "The Boy With The Arab Strap",
-      "artist": "Belle and Sebastian",
-      "total_tracks": 12,
-      "played_tracks": [
-        "2lSPUbb5lPPIHyzS9jETj3",
-        "3K0H4TRfMCDUiOydJ1WFBD"
-      ],
-      "first_played": "2026-03-10T16:39:40.671Z",
-      "last_played": "2026-03-10T16:18:37.200Z"
     },
     "2S3ybnf5C9v8X3M2kl4nvL": {
       "album_name": "The Sophtware Slump",
@@ -116,41 +93,6 @@
       "first_played": "2026-03-10T16:25:58.132Z",
       "last_played": "2026-03-10T17:38:04.407Z"
     },
-    "0gkUcpkyW2SXN49Yktkf6F": {
-      "album_name": "The Suburbs (Deluxe)",
-      "artist": "Arcade Fire",
-      "total_tracks": 18,
-      "played_tracks": [
-        "5VWRCDKukSgYRAhXMriSCu"
-      ],
-      "first_played": "2026-03-10T16:13:23.660Z",
-      "last_played": "2026-03-10T16:13:23.660Z"
-    },
-    "24PLsR6sPrbhk6f0jdVZ79": {
-      "album_name": "Sumday",
-      "artist": "Grandaddy",
-      "total_tracks": 12,
-      "played_tracks": [
-        "3uPTwA3OnS94uT2P5SbRDS",
-        "1Y4S6ZrxmpYVWKnsBS1AzO",
-        "6z4lEaVyZQyOko7c6Nlwvk",
-        "4tGa6zJgDPU1UEB3qtfZiI"
-      ],
-      "first_played": "2026-03-10T16:08:43.058Z",
-      "last_played": "2026-03-10T14:46:35.788Z"
-    },
-    "6xHEzpqk0yDUt2uuodhWqF": {
-      "album_name": "White Pepper",
-      "artist": "Ween",
-      "total_tracks": 12,
-      "played_tracks": [
-        "42WCGd8b9J771EyHBxpxwP",
-        "3Yfx6OUnjz4dEtHdHxh4g9",
-        "50PHi5BOQPjTng4JRKvm2L"
-      ],
-      "first_played": "2026-03-10T16:04:34.780Z",
-      "last_played": "2026-03-10T14:30:49.558Z"
-    },
     "3e9VtbXnl6tqrFKrnNyxaI": {
       "album_name": "If You're Feeling Sinister",
       "artist": "Belle and Sebastian",
@@ -164,26 +106,6 @@
       ],
       "first_played": "2026-03-10T15:56:00.689Z",
       "last_played": "2026-03-10T18:50:31.084Z"
-    },
-    "4qV3ueP3Bau6i4kdWQZm2U": {
-      "album_name": "Slanted & Enchanted: Luxe & Reduxe",
-      "artist": "Pavement",
-      "total_tracks": 48,
-      "played_tracks": [
-        "3gCEnkK3LybUm3ZcGHp13B"
-      ],
-      "first_played": "2026-03-10T15:51:45.185Z",
-      "last_played": "2026-03-10T15:51:45.185Z"
-    },
-    "3XQMgEnLQnOMkFaJA9w6sZ": {
-      "album_name": "Veckatimest",
-      "artist": "Grizzly Bear",
-      "total_tracks": 12,
-      "played_tracks": [
-        "6abe1wtVmnCIGRYGAX0Kdl"
-      ],
-      "first_played": "2026-03-10T15:48:56.463Z",
-      "last_played": "2026-03-10T15:48:56.463Z"
     },
     "0rr668ZzoNDQa1yxhSpBAw": {
       "album_name": "Transmissions From the Satellite Heart",
@@ -208,57 +130,6 @@
       ],
       "first_played": "2026-03-10T15:26:42.800Z",
       "last_played": "2026-03-10T19:12:55.488Z"
-    },
-    "17q5eeNk3HAjX1gzQnkTX7": {
-      "album_name": "In the Aeroplane Over the Sea",
-      "artist": "Neutral Milk Hotel",
-      "total_tracks": 11,
-      "played_tracks": [
-        "48WuGsko0WxKO9KUqZlqys",
-        "7c6Z6ArJ07SdsHxFjuOJ6I"
-      ],
-      "first_played": "2026-03-10T15:11:28.242Z",
-      "last_played": "2026-03-10T14:48:07.086Z"
-    },
-    "7o14zVcXSRk7clV6QCEdOD": {
-      "album_name": "Slanted & Enchanted",
-      "artist": "Pavement",
-      "total_tracks": 14,
-      "played_tracks": [
-        "6PZ7dOM7QOPhPPaC4JJP7K"
-      ],
-      "first_played": "2026-03-10T14:58:45.540Z",
-      "last_played": "2026-03-10T14:58:45.540Z"
-    },
-    "6X31sE7CXKZiUw4ppitLuj": {
-      "album_name": "Due To High Expectations...The Flaming Lips Are Providing Needles For Your Balloons",
-      "artist": "The Flaming Lips",
-      "total_tracks": 8,
-      "played_tracks": [
-        "4JCbA1WhiNHbl9FgCcKSKu"
-      ],
-      "first_played": "2026-03-10T14:42:30.594Z",
-      "last_played": "2026-03-10T14:42:30.594Z"
-    },
-    "6LvzAzZDazPb9hKNjj1JRN": {
-      "album_name": "Terror Twilight",
-      "artist": "Pavement",
-      "total_tracks": 11,
-      "played_tracks": [
-        "6hXzGc9Sj1vQQNvMmZdZvW"
-      ],
-      "first_played": "2026-03-10T14:37:57.243Z",
-      "last_played": "2026-03-10T14:37:57.243Z"
-    },
-    "3HTsNBfZLfRXQTfdLeLVK1": {
-      "album_name": "On Avery Island",
-      "artist": "Neutral Milk Hotel",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1hkdSByn7q9G3cpuQ2Ormt"
-      ],
-      "first_played": "2026-03-10T14:27:26.221Z",
-      "last_played": "2026-03-10T14:27:26.221Z"
     },
     "1ldF9hxaYcrQvvlIl5E4VY": {
       "album_name": "You & Me",
@@ -615,10 +486,61 @@
         "2KS7b9EbL3sPGswRf3seAZ",
         "687l4FFeMyg6wJYO8LCX4b",
         "3MF9cjIlg3R9osw3SgRmEb",
-        "6vM82JxGkOuGPuxg4GShI9"
+        "6vM82JxGkOuGPuxg4GShI9",
+        "4ydJds7IeqzZqCJnvMx1P7",
+        "4rRe3lijaWtTbLEtAmwGKH",
+        "75HQyFyVb3O5SUc8ldQEH7",
+        "0fTRKXymeRaQW2tfg0MZNz",
+        "1AzyK709SaGmKOT32r0jSj",
+        "3EdKuUmSqITYGp1t3JhSC6",
+        "2mCymKpp0gtaDWormoaLqm",
+        "68s8Ag0XXEspm5K2oK90Si",
+        "75Txh8tOIcoLAdVLUv1UI2",
+        "0oQnEv1a9SsjUNBNVV9n5I",
+        "1AplqH50oIGaeQtFFrYDhA",
+        "7FKPc0Xx4r3SJR1IwrQfxF"
       ],
       "first_played": "2026-03-12T14:20:56.916Z",
-      "last_played": "2026-03-12T13:50:04.314Z"
+      "last_played": "2026-03-12T14:25:15.538Z",
+      "completion_logged": true
+    },
+    "3ChV6s15ch9qohd5gZaGOF": {
+      "album_name": "Stochastic Drift",
+      "artist": "Barker",
+      "total_tracks": 8,
+      "played_tracks": [
+        "71WOzqtJI1CNFC38454Aih",
+        "4uyYd09ILlXDhxVo3V5YdP",
+        "3nUHoTqYcdbcmKZxLoGBPb",
+        "2ssYuzdM4dvhQskAWStf8e",
+        "5KfpuSlyjWMPMNE0eN75Vk",
+        "6MA4LrvNMPQB6d58Z4SzwS",
+        "0gRPbCjHQ3B5R7LnYdxdJg",
+        "3g6m19HubGWzZJ4jsZygM8"
+      ],
+      "first_played": "2026-03-12T16:25:50.338Z",
+      "last_played": "2026-03-12T15:48:51.335Z",
+      "completion_logged": true
+    },
+    "7H6gso8aBfKK7mlouLCsW3": {
+      "album_name": "Replica",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "2wVZvnpQsY7IIaKHK89xBj"
+      ],
+      "first_played": "2026-03-12T15:42:42.641Z",
+      "last_played": "2026-03-12T15:14:29.613Z"
+    },
+    "6uO5B6km2Dco28tOBmZtSU": {
+      "album_name": "The Campfire Headphase",
+      "artist": "Boards of Canada",
+      "total_tracks": 15,
+      "played_tracks": [
+        "4b3i2rXFZx9JqQQq9KuVAj"
+      ],
+      "first_played": "2026-03-12T15:01:58.778Z",
+      "last_played": "2026-03-12T15:01:58.778Z"
     }
   },
   "completed_albums": {
@@ -397403,9 +397325,535 @@
       "listen_history": [
         "2026-03-11T22:18:15.825Z"
       ]
+    },
+    "Boards of Canada - Geogaddi": {
+      "artist": "Boards of Canada",
+      "artist_mbid": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+      "name": "Geogaddi",
+      "release_group_mbid": "8183834a-6c8a-39ef-a7bc-a82f79b929e9",
+      "label": "Warp",
+      "release_year": 2002,
+      "release_month": 2,
+      "release_day": 13,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Ready Lets Go",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a40aa9a8-af16-484b-8fe9-47cc9c4c81ab"
+        },
+        {
+          "position": "2",
+          "title": "Music Is Math",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f0a4be92-bf11-43e3-90eb-6a47e9bcba0c"
+        },
+        {
+          "position": "3",
+          "title": "Beware the Friendly Stranger",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c2e874ec-0376-4afc-8f77-4c6596c5283f"
+        },
+        {
+          "position": "4",
+          "title": "Gyroscope",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "18828062-8b1e-4b1c-84b9-a3472798789f"
+        },
+        {
+          "position": "5",
+          "title": "Dandelion",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "bfe43d24-abf9-4bd0-a64e-f605836c1f1f"
+        },
+        {
+          "position": "6",
+          "title": "Sunshine Recorder",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "2d26541b-4512-49cd-8151-3fe5c7b687be"
+        },
+        {
+          "position": "7",
+          "title": "In the Annexe",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "11a79554-a2ce-421a-bd06-2ea8c94bdc13"
+        },
+        {
+          "position": "8",
+          "title": "Julie and Candy",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ef080dc7-57bc-4bfb-b18f-e2a36e8de8b6"
+        },
+        {
+          "position": "9",
+          "title": "The Smallest Weird Number",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8697746c-61eb-4081-aac8-618d739739d0"
+        },
+        {
+          "position": "10",
+          "title": "1969",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1fe9a3b8-8e18-43b9-9f48-4f2d65fef3fe"
+        },
+        {
+          "position": "11",
+          "title": "Energy Warning",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "cd9072f6-15d7-4046-9849-6389a791dcf6"
+        },
+        {
+          "position": "12",
+          "title": "The Beach at Redpoint",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "110ca761-038e-40d8-bcac-42fe96eb0b25"
+        },
+        {
+          "position": "13",
+          "title": "Opening the Mouth",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "fc08d5e5-bbbc-4d0c-8d10-e00f582927e8"
+        },
+        {
+          "position": "14",
+          "title": "Alpha and Omega",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "3a714783-ab2f-4db9-81c8-34b623eda833"
+        },
+        {
+          "position": "15",
+          "title": "I Saw Drones",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "17147d60-f2dc-4620-a302-f68e4f0d9fc1"
+        },
+        {
+          "position": "16",
+          "title": "The Devil Is in the Details",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a161a2e9-cc3f-4992-ac47-068ef3b3a8ea"
+        },
+        {
+          "position": "17",
+          "title": "A Is to B as B Is to C",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1d77d5eb-9d68-490a-8b9f-451922c82167"
+        },
+        {
+          "position": "18",
+          "title": "Over the Horizon Radar",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "0d5f5736-3787-4acc-8243-cd5fa6b30c94"
+        },
+        {
+          "position": "19",
+          "title": "Dawn Chorus",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "aa7c93f6-1b5e-4413-af4e-60e0f08e09ca"
+        },
+        {
+          "position": "20",
+          "title": "Diving Station",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1a36def5-cf28-4fa1-9515-cfe933f8eb74"
+        },
+        {
+          "position": "21",
+          "title": "You Could Feel the Sky",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "939232f4-fb22-46b2-890d-2f4da7e36bbc"
+        },
+        {
+          "position": "22",
+          "title": "Corsair",
+          "credits": [
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "56259e67-e02c-4fea-a996-7802a48eb127"
+        },
+        {
+          "position": "23",
+          "title": "Magic Window",
+          "credits": {},
+          "recording_mbid": "6f8815cf-9379-4fa9-ac2b-bc7250505408"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "downtempo",
+        "instrumental",
+        "ambient",
+        "concept album",
+        "mellow",
+        "idm",
+        "progressive",
+        "hauntology",
+        "psychedelic",
+        "hypnotic",
+        "abstract",
+        "avant-garde",
+        "dark",
+        "spiritual",
+        "ethereal",
+        "technical",
+        "melancholic",
+        "nostalgia",
+        "dance and electronica",
+        "eclectic",
+        "atmospheric",
+        "dense",
+        "tribal",
+        "sampling",
+        "apocalyptic",
+        "psychedelia",
+        "repetitive",
+        "bright",
+        "nature",
+        "surreal",
+        "scary",
+        "lonely",
+        "mysterious",
+        "ominous",
+        "warm",
+        "nocturnal",
+        "pastoral",
+        "rhythmic",
+        "occult",
+        "autumn",
+        "paranoia",
+        "childhood",
+        "paranormal",
+        "disturbing",
+        "lush",
+        "hazy",
+        "anxious",
+        "crackly",
+        "infernal",
+        "ritualistic",
+        "satanism",
+        "cryptic"
+      ],
+      "image_url": "https://coverartarchive.org/release/653fcac9-9695-4bfe-bc9c-0894a7d3754d/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-12T14:25:15.538Z"
+      ]
+    },
+    "Barker - Stochastic Drift": {
+      "artist": "Barker",
+      "artist_mbid": "5c555e44-94b7-4aa3-8d21-63a935e3806e",
+      "name": "Stochastic Drift",
+      "release_group_mbid": "19f3bd91-e5df-4b72-a61d-045a4a995d2a",
+      "label": "Smalltown Supersound",
+      "release_year": 2025,
+      "release_month": 4,
+      "release_day": 4,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Force of Habit",
+          "credits": {},
+          "recording_mbid": "54cfb6c7-cc67-4a2c-a8b0-0dbfd7423d78"
+        },
+        {
+          "position": "2",
+          "title": "Reframing",
+          "credits": {},
+          "recording_mbid": "49f2754e-ad23-4764-9123-aa6442f3746b"
+        },
+        {
+          "position": "3",
+          "title": "Difference and Repetition",
+          "credits": {},
+          "recording_mbid": "71ddf5af-2d7d-4c9c-90fc-7b008b01fa26"
+        },
+        {
+          "position": "4",
+          "title": "The Remembering Self",
+          "credits": {},
+          "recording_mbid": "4702937e-4f80-456f-87a7-cf5873994373"
+        },
+        {
+          "position": "5",
+          "title": "Positive Disintegration",
+          "credits": {},
+          "recording_mbid": "a5533308-2aa0-4e85-aa98-f46e174091ab"
+        },
+        {
+          "position": "6",
+          "title": "Cosmic Microwave",
+          "credits": {},
+          "recording_mbid": "c634e9e6-d117-4ccb-9546-e766665acc65"
+        },
+        {
+          "position": "7",
+          "title": "Fluid Mechanics",
+          "credits": {},
+          "recording_mbid": "14a76750-6410-4f3a-9e94-ae795a8a881b"
+        },
+        {
+          "position": "8",
+          "title": "Stochastic Drift",
+          "credits": {},
+          "recording_mbid": "38233a97-646b-41a0-bc96-bcfa20434f0c"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "ambient",
+        "techno",
+        "ambient techno",
+        "leftfield"
+      ],
+      "image_url": "https://coverartarchive.org/release/21966f64-802f-4ab4-a971-0eea27d3af84/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-12T15:48:51.335Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Barker - Stochastic Drift",
+    "Boards of Canada - Geogaddi",
     "Orbital - Orbital 2"
   ]
 }
