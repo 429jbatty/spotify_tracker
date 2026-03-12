@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-11T22:07:47.694Z",
+  "last_checked": "2026-03-12T00:27:38.005Z",
   "albums_in_progress": {
     "3a3Yp0PRguSTH3dBOeWRyZ": {
       "album_name": "Halcyon Digest",
@@ -454,10 +454,148 @@
         "6MyP2ZC46BwmzoremgiugV",
         "0kWWrjVHbRqEkd6j8firv4",
         "4Sf37RwOXi0HwkWJU1J7m9",
-        "3t1AlBSGtruH3fxgoc2aYe"
+        "3t1AlBSGtruH3fxgoc2aYe",
+        "0D1LiFCy13mWW0CpivdKE6",
+        "5xcunlfaZvD9BDQsLONI7A",
+        "6cPvnd1wGihhNz69ptTY0a",
+        "3fs882TE0MobYBFtfNyAn2",
+        "7bYab61Dffg0ckGLwxglSd",
+        "2DlTYQi0khcko06mvFJUOy"
       ],
       "first_played": "2026-03-11T22:07:47.694Z",
-      "last_played": "2026-03-11T21:46:08.630Z"
+      "last_played": "2026-03-11T22:18:15.825Z",
+      "completion_logged": true
+    },
+    "65a7yUVNDttPR2ioJOgyok": {
+      "album_name": "Urban Driftwood",
+      "artist": "Yasmin Williams",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5gk0unWvy4rZZ1t3KwJJqz"
+      ],
+      "first_played": "2026-03-12T00:24:04.357Z",
+      "last_played": "2026-03-12T00:24:04.357Z"
+    },
+    "1kYA6joYEk4CUBfLXHyXfN": {
+      "album_name": "Boerum Palace",
+      "artist": "Steve Gunn",
+      "total_tracks": 6,
+      "played_tracks": [
+        "6OMMray0miQyhryyYKjW7P"
+      ],
+      "first_played": "2026-03-12T00:13:27.098Z",
+      "last_played": "2026-03-12T00:13:27.098Z"
+    },
+    "7MdG2fvUTJJhIiLP8NowHF": {
+      "album_name": "Out of Sight",
+      "artist": "Jake Xerxes Fussell",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2ullTX3QSnKZmgOrWR5x9R"
+      ],
+      "first_played": "2026-03-12T00:11:13.892Z",
+      "last_played": "2026-03-12T00:11:13.892Z"
+    },
+    "6YKeVJneiI8JACX4Xu72s9": {
+      "album_name": "Modern Country",
+      "artist": "William Tyler",
+      "total_tracks": 7,
+      "played_tracks": [
+        "26inGYfRedalX04e185q9m",
+        "2wF5jnXSY4BMza03KP6LYg"
+      ],
+      "first_played": "2026-03-12T00:08:29.604Z",
+      "last_played": "2026-03-11T23:47:44.401Z"
+    },
+    "7oLM7usVmIbvTBYappAZQs": {
+      "album_name": "Belladonna",
+      "artist": "Daniel Lanois",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5hOuAwI61s135DmaIvO1Ag"
+      ],
+      "first_played": "2026-03-12T00:03:03.345Z",
+      "last_played": "2026-03-12T00:03:03.345Z"
+    },
+    "6BmbMSgAflE0vEOeey6zO7": {
+      "album_name": "Ribbons",
+      "artist": "Bibio",
+      "total_tracks": 16,
+      "played_tracks": [
+        "4RrjI28ZDQ4avjibzKVIUf"
+      ],
+      "first_played": "2026-03-11T23:57:16.243Z",
+      "last_played": "2026-03-11T23:57:16.243Z"
+    },
+    "6VaXdKLchZGpI0idCasMpV": {
+      "album_name": "Letting Go",
+      "artist": "Hayden Pedigo",
+      "total_tracks": 7,
+      "played_tracks": [
+        "4qWBcNGLT7oCZCXCQUefv0"
+      ],
+      "first_played": "2026-03-11T23:54:21.132Z",
+      "last_played": "2026-03-11T23:54:21.132Z"
+    },
+    "0Yak3Y7E8UjlUGSEn4DUuM": {
+      "album_name": "Good and Green Again",
+      "artist": "Jake Xerxes Fussell",
+      "total_tracks": 9,
+      "played_tracks": [
+        "26dQ43D04GAMlC4BxHy9Xg"
+      ],
+      "first_played": "2026-03-11T23:50:55.560Z",
+      "last_played": "2026-03-11T23:50:55.560Z"
+    },
+    "4m5C2Kv0spRbAZHFSMW0wn": {
+      "album_name": "Goes West",
+      "artist": "William Tyler",
+      "total_tracks": 10,
+      "played_tracks": [
+        "685WU5T4DGDeRHGjFMy2Cj",
+        "1ZVkXwiYKsplrA3ARx7Fli",
+        "45gXzOdzMQJ8XxbdkO6U0n",
+        "6c1DvyVU45HskvCV2rPeae",
+        "0Aztv5eZ4TKPw0cP2P5sS5",
+        "6DdOn2utHRoz0ShdxHiz2j",
+        "3oiS8T8I1LoouNnCxYpDMn",
+        "4CmrQGQidqzscBj4Yh7JhO",
+        "0JPNYkK96OPJXHoiukZLUC",
+        "0cZzSqwf3OoBLYD2yPommj"
+      ],
+      "first_played": "2026-03-11T23:44:12.847Z",
+      "last_played": "2026-03-11T23:11:51.832Z",
+      "completion_logged": true
+    },
+    "2xHvAxrgMfKrYIicQVT9ay": {
+      "album_name": "Dead Cities",
+      "artist": "The Future Sound Of London",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4jXkjKMOJYi4BUMBM86m9Y"
+      ],
+      "first_played": "2026-03-11T23:05:57.997Z",
+      "last_played": "2026-03-11T23:05:57.997Z"
+    },
+    "1WwZwdTICfaZI51BIIEN9z": {
+      "album_name": "Crush",
+      "artist": "Floating Points",
+      "total_tracks": 12,
+      "played_tracks": [
+        "78Ct2qlEtSMw3CG6zWwAyz"
+      ],
+      "first_played": "2026-03-11T23:03:09.211Z",
+      "last_played": "2026-03-11T23:03:09.211Z"
+    },
+    "7a129X2pYyMqHFfpKidRtr": {
+      "album_name": "Orbital",
+      "artist": "Orbital",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2CH4mc6qWAI3ejAdqpON9B"
+      ],
+      "first_played": "2026-03-11T22:59:57.042Z",
+      "last_played": "2026-03-11T22:59:57.042Z"
     }
   },
   "completed_albums": {
@@ -396971,7 +397109,280 @@
       "image_url": "https://coverartarchive.org/release/8903ead0-aad6-4e24-9901-03712380a13b/front",
       "listen_history": [],
       "source": "musicbrainz"
+    },
+    "Orbital - Orbital 2": {
+      "artist": "Orbital",
+      "artist_mbid": "f3e2a7d9-c6bb-4848-95e5-04c0a1e2f511",
+      "name": "Orbital",
+      "release_group_mbid": "9686eb3f-2137-3e21-b0a9-ac463831ed64",
+      "label": "London Music Stream",
+      "release_year": 1991,
+      "release_month": 9,
+      "release_day": 30,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "The Moebius",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Dorn",
+              "vocal",
+              "spoken vocals"
+            ]
+          ],
+          "recording_mbid": "6bf00ce5-58a9-4283-9842-f0460bf64048"
+        },
+        {
+          "position": "2",
+          "title": "Speed Freak",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "af2f8f6a-914e-418e-ad26-7d5710d9b87f"
+        },
+        {
+          "position": "3",
+          "title": "Oolaa",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f703712b-7a49-4886-984c-38688e25e1ef"
+        },
+        {
+          "position": "4",
+          "title": "Desert Storm",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "0e904c6f-fa8a-4135-91cf-6fa3fca5a848"
+        },
+        {
+          "position": "5",
+          "title": "Fahrenheit 303",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f54c4036-388b-4ebc-b54b-f47cabac2317"
+        },
+        {
+          "position": "6",
+          "title": "Steel Cube Idolatry",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "03cd70d2-6f0e-44f2-903a-5b0b2a8f8b80"
+        },
+        {
+          "position": "7",
+          "title": "High Rise",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "18f981f8-6a4b-4188-b015-e41691bad43b"
+        },
+        {
+          "position": "8",
+          "title": "Chime",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4e46af16-8968-4b86-a8b9-37f99dd91085"
+        },
+        {
+          "position": "9",
+          "title": "Midnight",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "adf3000e-8849-4e55-ab25-63f204ac0bab"
+        },
+        {
+          "position": "10",
+          "title": "Belfast",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "74d6885a-8c0f-497c-b49d-561cb9e29cc4"
+        },
+        {
+          "position": "11",
+          "title": "I Think It\u2019s Disgusting",
+          "credits": [
+            [
+              "Tim Hunt",
+              "engineer",
+              ""
+            ],
+            [
+              "Herbert Lesch",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Orbital",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "85c40bec-8363-49e3-92bc-122d28aa7f32"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "techno",
+        "electronica",
+        "ambient techno",
+        "club/dance"
+      ],
+      "image_url": "https://coverartarchive.org/release/bad11a43-0e31-4939-8117-13999a45515b/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-11T22:18:15.825Z"
+      ]
     }
   },
-  "most_recently_listened": []
+  "most_recently_listened": [
+    "Orbital - Orbital 2"
+  ]
 }
