@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-12T02:00:55.766Z",
+  "last_checked": "2026-03-12T14:20:56.916Z",
   "albums_in_progress": {
     "3a3Yp0PRguSTH3dBOeWRyZ": {
       "album_name": "Halcyon Digest",
@@ -48,20 +48,6 @@
       ],
       "first_played": "2026-03-10T17:09:52.589Z",
       "last_played": "2026-03-10T17:09:52.589Z"
-    },
-    "1XFNz6KIvLyIsLFOiLRKqP": {
-      "album_name": "Crooked Rain, Crooked Rain",
-      "artist": "Pavement",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4tBl1xhBg5PETpBvFnQmGl",
-        "1CwQqhPYxz73UYKD7ybYGd",
-        "6PVsZG7ZLbCjodCNtbQNfb",
-        "3QVtDnXU5zqGWxWDFBMiDj",
-        "6jR6FMCEoWGdEpFVRlMZM7"
-      ],
-      "first_played": "2026-03-10T17:03:34.966Z",
-      "last_played": "2026-03-10T14:15:13.295Z"
     },
     "4h99OhINkm39y6qs7dYOwM": {
       "album_name": "Under the Western Freeway",
@@ -164,17 +150,6 @@
       ],
       "first_played": "2026-03-10T16:04:34.780Z",
       "last_played": "2026-03-10T14:30:49.558Z"
-    },
-    "602kxdvR8Ful5nYe57Vxzb": {
-      "album_name": "Ego Tripping at the Gates of Hell",
-      "artist": "The Flaming Lips",
-      "total_tracks": 8,
-      "played_tracks": [
-        "0koYgjpaT5V4KdUy08w00Y",
-        "2Sv64w6QMHiWN7yHrNBTSl"
-      ],
-      "first_played": "2026-03-10T16:00:03.301Z",
-      "last_played": "2026-03-10T14:19:38.281Z"
     },
     "3e9VtbXnl6tqrFKrnNyxaI": {
       "album_name": "If You're Feeling Sinister",
@@ -624,6 +599,26 @@
       ],
       "first_played": "2026-03-12T00:43:25.005Z",
       "last_played": "2026-03-12T00:43:25.005Z"
+    },
+    "4T7JGfRryhw5POaXalkApE": {
+      "album_name": "Geogaddi",
+      "artist": "Boards of Canada",
+      "total_tracks": 23,
+      "played_tracks": [
+        "1xR9H230902WMiJwH0d8X9",
+        "7qWHLT10dDsu8fCJZFkL5y",
+        "4EI8Hj2EeAUdvNMnY52PMj",
+        "5PwWkCS888xVopHOOTVtfY",
+        "46VGk02ZLerhw2SdV953zV",
+        "0JL61ePWULwvQzS5KHt7uY",
+        "4dB0PiQ8tgluiJbX1m1yYj",
+        "2KS7b9EbL3sPGswRf3seAZ",
+        "687l4FFeMyg6wJYO8LCX4b",
+        "3MF9cjIlg3R9osw3SgRmEb",
+        "6vM82JxGkOuGPuxg4GShI9"
+      ],
+      "first_played": "2026-03-12T14:20:56.916Z",
+      "last_played": "2026-03-12T13:50:04.314Z"
     }
   },
   "completed_albums": {
