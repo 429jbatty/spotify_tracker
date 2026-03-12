@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-12T20:03:28.925Z",
+  "last_checked": "2026-03-12T22:07:09.686Z",
   "albums_in_progress": {
     "1JYyYFJSYrXMHLe7Dz1B3W": {
       "album_name": "Orbital 2",
@@ -269,10 +269,13 @@
         "2hulWLdzjBexk2bxQpcUp7",
         "3WZl07ITusPN7bQY3vzGdx",
         "27LWYN5H4rfXlRz1vFNm63",
-        "7fEortZUGuuSKTAr8ZMrk1"
+        "7fEortZUGuuSKTAr8ZMrk1",
+        "0h8f0WKRn1vKky5LgfTjDU",
+        "7vJAglE0Vzjgy1GyeA7Vog"
       ],
       "first_played": "2026-03-12T18:00:01.135Z",
-      "last_played": "2026-03-12T19:49:58.935Z"
+      "last_played": "2026-03-12T21:03:37.348Z",
+      "completion_logged": true
     },
     "1bMzS9D1chZ57onK5mU8ea": {
       "album_name": "Under Tangled Silence",
@@ -367,6 +370,16 @@
       ],
       "first_played": "2026-03-12T16:41:16.413Z",
       "last_played": "2026-03-12T16:41:16.413Z"
+    },
+    "0KWZmGhxNlNMOQgi4LPWun": {
+      "album_name": "Farewell, Angelina",
+      "artist": "Joan Baez",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1rI0sMuAEeAOPihDEwPa3y"
+      ],
+      "first_played": "2026-03-12T22:07:09.686Z",
+      "last_played": "2026-03-12T22:07:09.686Z"
     }
   },
   "completed_albums": {
@@ -397675,9 +397688,216 @@
       "listen_history": [
         "2026-03-12T15:48:51.335Z"
       ]
+    },
+    "Joan Baez - Joan Baez": {
+      "artist": "Joan Baez",
+      "artist_mbid": "92d37892-6186-4459-9cc1-f0dde57652d0",
+      "name": "Joan Baez",
+      "release_group_mbid": "cf5060d3-563b-4fe4-8ac2-0804cea7cba8",
+      "label": "Euro Sound",
+      "release_year": 1998,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "We Shall Overcome",
+          "credits": {},
+          "recording_mbid": "f8830a91-bc64-4a2a-af82-444649a9cdf6"
+        },
+        {
+          "position": "2",
+          "title": "There but for Fortune",
+          "credits": [
+            [
+              "Joan Baez",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Maynard Solomon",
+              "producer",
+              ""
+            ],
+            [
+              "Joan Baez",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "28b80a3f-1037-4c61-912b-2ffb10859ab7"
+        },
+        {
+          "position": "3",
+          "title": "Love Is Just a Four Letter Word",
+          "credits": [
+            [
+              "Joe Bellamy",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Galen Senogles",
+              "mix",
+              "assistant"
+            ]
+          ],
+          "recording_mbid": "7ddf674f-7aee-4c94-b10e-dd594424ec7e"
+        },
+        {
+          "position": "4",
+          "title": "It\u2019s All Over Now, Baby Blue",
+          "credits": [
+            [
+              "Joan Baez",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Bruce Langhorne",
+              "instrument",
+              "additional, electric guitar"
+            ],
+            [
+              "Russ Savakus",
+              "instrument",
+              "additional, double bass"
+            ],
+            [
+              "Maynard Solomon",
+              "producer",
+              ""
+            ],
+            [
+              "Joan Baez",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "ecfbdec4-1d0e-43e4-b9b9-a24d457b8f4e"
+        },
+        {
+          "position": "5",
+          "title": "Farewell Angelina",
+          "credits": [
+            [
+              "Joan Baez",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Russ Savakus",
+              "instrument",
+              "additional, double bass"
+            ],
+            [
+              "Maynard Solomon",
+              "producer",
+              ""
+            ],
+            [
+              "Joan Baez",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "5c5e128d-c823-47a1-8cac-06bb299d2b51"
+        },
+        {
+          "position": "6",
+          "title": "The Night They Drove Old Dixie Down",
+          "credits": [
+            [
+              "Norbert Putnam",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "e66526df-8d67-448e-8d4b-28baac82d71f"
+        },
+        {
+          "position": "7",
+          "title": "Let It Be",
+          "credits": {},
+          "recording_mbid": "1e6c3712-6404-47b2-a7f7-8999346bdfa2"
+        },
+        {
+          "position": "8",
+          "title": "House of the Rising Sun",
+          "credits": [
+            [
+              "Joan Baez",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Joan Baez",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "cab780d4-d6c2-4cd0-b50d-b6f2ae0ce3ea"
+        },
+        {
+          "position": "9",
+          "title": "The Brand New Tennessee Waltz",
+          "credits": {},
+          "recording_mbid": "4fafd713-509d-4899-a665-a872da1f4de3"
+        },
+        {
+          "position": "10",
+          "title": "What Have They Done to the Rain",
+          "credits": {},
+          "recording_mbid": "ada65486-7b75-4bfc-88ad-b89e465c44d4"
+        },
+        {
+          "position": "11",
+          "title": "Eleanor Rigby",
+          "credits": [
+            [
+              "Peter Schickele",
+              "arranger",
+              ""
+            ],
+            [
+              "Maynard Solomon",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a57d775b-5ca1-49d9-9060-8ad6239c5819"
+        },
+        {
+          "position": "12",
+          "title": "Don\u2019t Think Twice Is All Right",
+          "credits": {},
+          "recording_mbid": "7a9713c4-f4ce-4b2a-8e3c-396bec796f42"
+        },
+        {
+          "position": "13",
+          "title": "Blessed Are...",
+          "credits": {},
+          "recording_mbid": "c01a318d-a0ee-4cac-ae76-12d41b029bee"
+        },
+        {
+          "position": "14",
+          "title": "Help Me Make It Through the Night",
+          "credits": {},
+          "recording_mbid": "0804fffc-faa9-4968-be5c-237925e2200e"
+        }
+      ],
+      "tags": [
+        "folk"
+      ],
+      "image_url": "https://coverartarchive.org/release/98e1db94-170c-4f0c-82a6-db31e719246f/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-12T21:03:37.348Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Joan Baez - Joan Baez",
     "Barker - Stochastic Drift",
     "Boards of Canada - Geogaddi",
     "Orbital - Orbital 2"
