@@ -1,7 +1,7 @@
 // components/DecadeBar.jsx
 import React from "react";
 
-function DecadeBar({ decadeData, chartHeight, currentMax, width, isSelected }) {
+function DecadeBars({ decadeData, chartHeight, currentMax, width, isSelected }) {
   const barHeight = (decadeData.count / currentMax) * chartHeight; // simple relative height
   return (
     <rect
@@ -14,4 +14,4 @@ function DecadeBar({ decadeData, chartHeight, currentMax, width, isSelected }) {
   );
 }
 
-export default DecadeBar;
+export default DecadeBars;

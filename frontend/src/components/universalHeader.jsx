@@ -15,7 +15,7 @@ function UniversalHeader({ view, setView }) {
     <div className="relative flex justify-between items-center h-50 px-6">
 
         {/* Left: App Title */}
-        <h1 className="text-5xl font-extrabold tracking-tight text-mauve-700 drop-shadow-lg">
+        <h1 className="text-5xl font-extrabold tracking-tight text-mauve-600 drop-shadow-lg">
         Vinyl Vault
         </h1>
 

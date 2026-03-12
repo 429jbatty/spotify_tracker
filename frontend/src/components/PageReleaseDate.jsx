@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import ReleaseDateChart from "./ReleaseDateChart";
 import AlbumTable from "./AlbumTable";
-import ChartToggleButton from "./ChartToggleButton";
 
 function AlbumTimeView({ albums }) {
   const [filter, setFilter] = useState({ decade: null, year: null });
@@ -21,17 +20,20 @@ function AlbumTimeView({ albums }) {
   const resetFilter = () => setFilter({ decade: null, year: null });
 
   return (
-    <div>
-      <h2>Release Dates</h2>
-      <ChartToggleButton mode={chartMode} onToggle={() => setChartMode(chartMode === "decade" ? "year" : "decade")} />
-      <ReleaseDateChart
-        albums={albums}
-        selectedFilter={filter}
-        onSelect={(decade, year = null) => setFilter({ decade, year })}
-        onReset={resetFilter}
-        chartMode={chartMode}
-      />
-      <AlbumTable albums={filteredAlbums} />
+    <div className="space-y-8">
+      <div>
+        <ReleaseDateChart
+          albums={albums}
+          selectedFilter={filter}
+          onSelect={(decade, year = null) => setFilter({ decade, year })}
+          onReset={resetFilter}
+          chartMode={chartMode}
+          onToggle={(mode) => setChartMode(mode)} // <- parent controls state
+        />
+      </div>
+      <div>
+        <AlbumTable albums={filteredAlbums} />
+      </div>
     </div>
   );
 }
