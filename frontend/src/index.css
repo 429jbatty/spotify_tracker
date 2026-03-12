@@ -1,12 +1,9 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
 
-@tailwind base;
 
-@custom-variant dark (&:is(.dark *));
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/inter";
 
 :root {
     --background: oklch(1 0 0);
