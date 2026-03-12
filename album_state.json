@@ -1,19 +1,6 @@
 {
-  "last_checked": "2026-03-12T16:25:50.338Z",
+  "last_checked": "2026-03-12T18:00:01.135Z",
   "albums_in_progress": {
-    "3a3Yp0PRguSTH3dBOeWRyZ": {
-      "album_name": "Halcyon Digest",
-      "artist": "Deerhunter",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1dYM5FPrZSKgtx2xsdW5Xs",
-        "4xV2mE4rbiE2jVpEoynhFu",
-        "0qIjFOa3hO4DUzcXZOKhlU",
-        "1vkYr7OwGCzUWcxeCdIg3f"
-      ],
-      "first_played": "2026-03-10T17:19:02.715Z",
-      "last_played": "2026-03-10T18:14:44.064Z"
-    },
     "5MoaDbFw4nrm2P7Om1on3b": {
       "album_name": "Give Up (Deluxe 10th Anniversary Edition)",
       "artist": "The Postal Service",
@@ -39,16 +26,6 @@
       "first_played": "2026-03-10T17:11:53.079Z",
       "last_played": "2026-03-10T18:58:22.069Z"
     },
-    "41R93VsCmTTCprOwXJz8eG": {
-      "album_name": "In a Priest Driven Ambulance",
-      "artist": "The Flaming Lips",
-      "total_tracks": 10,
-      "played_tracks": [
-        "22SvpcIGwTqcA1psV0AyGz"
-      ],
-      "first_played": "2026-03-10T17:09:52.589Z",
-      "last_played": "2026-03-10T17:09:52.589Z"
-    },
     "3V18DIKvRuwdxc2LE4wuac": {
       "album_name": "I Can Hear The Heart Beating As One",
       "artist": "Yo La Tengo",
@@ -59,39 +36,6 @@
       ],
       "first_played": "2026-03-10T16:52:15.001Z",
       "last_played": "2026-03-10T18:42:32.690Z"
-    },
-    "4Gucn0d30QiZSrXrcNVjhk": {
-      "album_name": "Embryonic",
-      "artist": "The Flaming Lips",
-      "total_tracks": 18,
-      "played_tracks": [
-        "3Zp3USxEQ90N4od238p2b5"
-      ],
-      "first_played": "2026-03-10T16:43:35.667Z",
-      "last_played": "2026-03-10T16:43:35.667Z"
-    },
-    "2S3ybnf5C9v8X3M2kl4nvL": {
-      "album_name": "The Sophtware Slump",
-      "artist": "Grandaddy",
-      "total_tracks": 11,
-      "played_tracks": [
-        "34v8Er9dYb7WJ7g89hfVYY"
-      ],
-      "first_played": "2026-03-10T16:30:16.568Z",
-      "last_played": "2026-03-10T16:30:16.568Z"
-    },
-    "1yfJqxKKXG320vhqLfUEeC": {
-      "album_name": "The Mollusk",
-      "artist": "Ween",
-      "total_tracks": 14,
-      "played_tracks": [
-        "3fsnRK4dEe7NykXL5anAGp",
-        "5wYAof2gsaOvwNJ4PWZWxP",
-        "1Vi8bCaz8AqucqF88ffnqI",
-        "0IGV3sRIl91200R1kW3rGo"
-      ],
-      "first_played": "2026-03-10T16:25:58.132Z",
-      "last_played": "2026-03-10T17:38:04.407Z"
     },
     "3e9VtbXnl6tqrFKrnNyxaI": {
       "album_name": "If You're Feeling Sinister",
@@ -131,16 +75,6 @@
       "first_played": "2026-03-10T15:26:42.800Z",
       "last_played": "2026-03-10T19:12:55.488Z"
     },
-    "1ldF9hxaYcrQvvlIl5E4VY": {
-      "album_name": "You & Me",
-      "artist": "The Walkmen",
-      "total_tracks": 14,
-      "played_tracks": [
-        "0enroZxRyOZjRMLTMjfheq"
-      ],
-      "first_played": "2026-03-10T18:18:38.846Z",
-      "last_played": "2026-03-10T18:18:38.846Z"
-    },
     "7iSKF89UecuufP4t7LXYkt": {
       "album_name": "Quebec",
       "artist": "Ween",
@@ -151,76 +85,6 @@
       ],
       "first_played": "2026-03-10T18:08:14.475Z",
       "last_played": "2026-03-10T18:31:47.801Z"
-    },
-    "4H8NX3ovAZdY2iJmwSNqlw": {
-      "album_name": "American Head",
-      "artist": "The Flaming Lips",
-      "total_tracks": 13,
-      "played_tracks": [
-        "4M1IQ6dTFqgtrRHlEqYDAH"
-      ],
-      "first_played": "2026-03-10T18:04:35.819Z",
-      "last_played": "2026-03-10T18:04:35.819Z"
-    },
-    "2AJqzRQltkneduxKsqmgYJ": {
-      "album_name": "Emperor Tomato Ketchup (Expanded Edition)",
-      "artist": "Stereolab",
-      "total_tracks": 28,
-      "played_tracks": [
-        "0atchYBOarx9klLwbqKeaR"
-      ],
-      "first_played": "2026-03-10T18:00:54.998Z",
-      "last_played": "2026-03-10T18:00:54.998Z"
-    },
-    "1DMMv1Kmoli3Y9fVEZDUVC": {
-      "album_name": "\u00c1g\u00e6tis byrjun",
-      "artist": "Sigur R\u00f3s",
-      "total_tracks": 10,
-      "played_tracks": [
-        "2f4zQEtyo2gja8Kok7sNEc"
-      ],
-      "first_played": "2026-03-10T17:56:11.513Z",
-      "last_played": "2026-03-10T17:56:11.513Z"
-    },
-    "64TDaAbxgO0TmKZrIavdLg": {
-      "album_name": "Person Pitch",
-      "artist": "Panda Bear",
-      "total_tracks": 7,
-      "played_tracks": [
-        "6ID2kAZjCkilJGb041DEUO"
-      ],
-      "first_played": "2026-03-10T17:48:24.874Z",
-      "last_played": "2026-03-10T17:48:24.874Z"
-    },
-    "6w7XFtdCQf871KU40Ot1Ra": {
-      "album_name": "The Three E.P.'s",
-      "artist": "The Beta Band",
-      "total_tracks": 12,
-      "played_tracks": [
-        "14v8jznoR89bjfgmVWvCrh"
-      ],
-      "first_played": "2026-03-10T17:44:24.039Z",
-      "last_played": "2026-03-10T17:44:24.039Z"
-    },
-    "151mT9g0fDHVfpmWeYk4Wx": {
-      "album_name": "Dots And Loops (Expanded Edition)",
-      "artist": "Stereolab",
-      "total_tracks": 24,
-      "played_tracks": [
-        "6Wi3gizHOtRi7DSsX3XWZA"
-      ],
-      "first_played": "2026-03-10T17:30:53.345Z",
-      "last_played": "2026-03-10T17:30:53.345Z"
-    },
-    "6ZB8qaR9JNuS0Q0bG1nbcH": {
-      "album_name": "Funeral",
-      "artist": "Arcade Fire",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0O8Ymlu03OqEX5XU5p8Rw3"
-      ],
-      "first_played": "2026-03-10T17:25:23.124Z",
-      "last_played": "2026-03-10T17:25:23.124Z"
     },
     "4jVVAenBaHRF8w0MV6qKw7": {
       "album_name": "Yankee Hotel Foxtrot (Expanded Edition)",
@@ -541,6 +405,120 @@
       ],
       "first_played": "2026-03-12T15:01:58.778Z",
       "last_played": "2026-03-12T15:01:58.778Z"
+    },
+    "734AFYo34Q1zRpg9N8E2Ho": {
+      "album_name": "Joan Baez",
+      "artist": "Joan Baez",
+      "total_tracks": 16,
+      "played_tracks": [
+        "7rL6dZzydhWSimA6TouJ6K",
+        "75DHk0YU3iu2G6ukTPIzlb",
+        "2VyKXzrtialaXBc4uIA58Z",
+        "5et1Cm8WX18X4eoORUcyap",
+        "49uBVeaM3ixGD8VIeqh9KI",
+        "1eZTRfESsrayUmRKGIuory",
+        "3lqxFhPsfNl2DSmqEogdH2",
+        "3AuVZyDw1VhjjLfHZR4ba3",
+        "6OBvN19uhEDXFBJkCwL58h",
+        "7cOXUx0Q5PYafyNFriFajr",
+        "2hulWLdzjBexk2bxQpcUp7"
+      ],
+      "first_played": "2026-03-12T18:00:01.135Z",
+      "last_played": "2026-03-12T17:17:15.730Z"
+    },
+    "1bMzS9D1chZ57onK5mU8ea": {
+      "album_name": "Under Tangled Silence",
+      "artist": "DjRUM",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0TARvOmoJKlol6DM1ENNVF",
+        "4EqJGKB8ptzxBbbwFimdI3",
+        "41Y0ch6R3jzpJOZv6nhf9Z"
+      ],
+      "first_played": "2026-03-12T17:14:27.200Z",
+      "last_played": "2026-03-12T16:31:46.906Z"
+    },
+    "7BtKJygiB0ZJsgZSxQd7M8": {
+      "album_name": "Colonial Patterns",
+      "artist": "Huerco S.",
+      "total_tracks": 14,
+      "played_tracks": [
+        "15SVhc7cMhhuvWSQrmKLJf"
+      ],
+      "first_played": "2026-03-12T17:11:49.712Z",
+      "last_played": "2026-03-12T17:11:49.712Z"
+    },
+    "64oJXgQT2KXGVD4RTDWH18": {
+      "album_name": "You Always Will Be",
+      "artist": "Dylan Henner",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0mksOuXzuIwtCf1VmlDmtT"
+      ],
+      "first_played": "2026-03-12T17:07:59.711Z",
+      "last_played": "2026-03-12T17:07:59.711Z"
+    },
+    "4nOjUCw5rOroJp1JHcLZau": {
+      "album_name": "Tranquilizer",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 15,
+      "played_tracks": [
+        "0xv9W6FVNsaUyqtjqZex0X"
+      ],
+      "first_played": "2026-03-12T17:04:12.778Z",
+      "last_played": "2026-03-12T17:04:12.778Z"
+    },
+    "6iiPfNevxyjC2Gx68MqLIZ": {
+      "album_name": "Gift Songs",
+      "artist": "Jefre Cantu-Ledesma",
+      "total_tracks": 5,
+      "played_tracks": [
+        "3b7ah0L8jpFbvovlu9vr6I",
+        "68OeGljkU3FOmkpU53yx2m"
+      ],
+      "first_played": "2026-03-12T17:00:07.083Z",
+      "last_played": "2026-03-12T16:39:01.320Z"
+    },
+    "5F3YJdIjGHhnUVuD96G1mz": {
+      "album_name": "Utility",
+      "artist": "Barker",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2ERAIt1xo5UkIOkA5NRS4n",
+        "6iONWf08G1lUjIVjUsar9K"
+      ],
+      "first_played": "2026-03-12T16:55:57.889Z",
+      "last_played": "2026-03-12T16:35:24.595Z"
+    },
+    "51CQQ3tQLRZlZJZ5jcpoGE": {
+      "album_name": "Endlessness",
+      "artist": "Nala Sinephro",
+      "total_tracks": 10,
+      "played_tracks": [
+        "54px5UxG3Q4rk65mTGsMdH"
+      ],
+      "first_played": "2026-03-12T16:46:35.824Z",
+      "last_played": "2026-03-12T16:46:35.824Z"
+    },
+    "7ePZ3EZLrbIXyms6fc9hJd": {
+      "album_name": "Vanities",
+      "artist": "Malibu",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5ZebvXqUPgYK4i5Hw4XkmW"
+      ],
+      "first_played": "2026-03-12T16:43:16.436Z",
+      "last_played": "2026-03-12T16:43:16.436Z"
+    },
+    "0zL30K7hlasu2LygmuK5EA": {
+      "album_name": "Steep Stims",
+      "artist": "Clark",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7qqXGvIXJeQopPy8wAq2X2"
+      ],
+      "first_played": "2026-03-12T16:41:16.413Z",
+      "last_played": "2026-03-12T16:41:16.413Z"
     }
   },
   "completed_albums": {
