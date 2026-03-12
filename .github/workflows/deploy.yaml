@@ -1,15 +1,16 @@
 name: Build and Deploy React Frontend
 
-# Trigger on push to main branch (or change branch as needed)
 on:
+  # Trigger on push to main branch (or change branch as needed)
   push:
     branches:
-      - main # adjust if your main branch has a different name
-    # Optional: only trigger if certain paths changed
-    # paths:
-    #   - 'src/**'
-    #   - 'public/**'
-  workflow_dispatch: {} # allows manual trigger
+      - main
+
+  # Trigger when the "Update JSON every 2 hours" workflow completes
+  workflow_run:
+    workflows: ["Update JSON every 2 hours"] # exact name of your JSON workflow
+    types:
+      - completed
 
 jobs:
   build-and-deploy:
