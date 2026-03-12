@@ -5,7 +5,7 @@ import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
 import Dashboard from "./components/Dashboard";
 import normalizeAlbums from "./services/albumNormalizer";
-import ViewSwitcher from "./components/ViewSwitcher";
+import Header from "./components/universalHeader";
 
 function App() {
   const [data, setData] = useState(null);
@@ -50,8 +50,7 @@ function App() {
 
   return (
     <div style={{ padding: "2rem" }}>
-      <h1>Completed Albums</h1>
-      <ViewSwitcher view={view} setView={setView} />
+      <Header view={view} setView={setView} />
 
       {/* search box (don't render on dashboard) */}
       {view !== "dashboard" && (
