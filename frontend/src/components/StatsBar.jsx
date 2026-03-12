@@ -6,21 +6,13 @@ function StatsBar({ albums }) {
   const artistSet = new Set(albumList.map(a => a.artist));
   const totalArtists = artistSet.size;
   const avgAlbumsPerArtist =
-    totalArtists === 0
-      ? 0
-      : (totalAlbums / totalArtists).toFixed(2);
-
-  const stats = {
-    totalAlbums,
-    totalArtists,
-    avgAlbumsPerArtist,
-  };
+    totalArtists === 0 ? 0 : (totalAlbums / totalArtists).toFixed(2);
 
   return (
-    <div style={{ display: "flex", gap: "1rem", marginBottom: "2rem" }}>
-      <StatCard title="Total Albums" value={stats.totalAlbums} />
-      <StatCard title="Total Artists" value={stats.totalArtists} />
-      <StatCard title="Avg Albums/Artist" value={stats.avgAlbumsPerArtist} />
+    <div className="flex flex-col md:flex-row gap-4 mb-8">
+      <StatCard title="Total Albums" value={totalAlbums} color="text-orange-500" />
+      <StatCard title="Total Artists" value={totalArtists} color="text-neutral-500" />
+      <StatCard title="Avg Albums/Artist" value={avgAlbumsPerArtist} color="text-neutral-500" />
     </div>
   );
 }

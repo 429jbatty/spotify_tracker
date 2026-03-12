@@ -3,44 +3,49 @@ import { Button } from "@/components/ui/button";
 
 function UniversalHeader({ view, setView }) {
   return (
-    <header className="border-b border-slate-200 bg-gradient-to-r from-slate-50 via-slate-50 to-emerald-50 shadow-sm">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+    <header className="relative w-full">
+
+    {/* Horizontal sunburst gradient */}
+    <div className="absolute inset-0 bg-gradient-to-r from-yellow-200 via-orange-300 to-red-400"></div>
+
+    {/* Vertical fade overlay */}
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/100"></div>
+
+    {/* Content */}
+    <div className="relative flex justify-between items-center h-50 px-6">
 
         {/* Left: App Title */}
-        <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-900 to-emerald-700 bg-clip-text text-transparent">
-          Album Tracker
+        <h1 className="text-5xl font-extrabold tracking-tight text-mauve-700 drop-shadow-lg">
+        Vinyl Vault
         </h1>
 
         {/* Center: View Navigation */}
         <Tabs value={view} onValueChange={setView}>
-          <TabsList className="bg-slate-100 p-1">
+        <TabsList className="bg-white/30 backdrop-blur-sm rounded-xl p-1">
+            {["dashboard", "table", "card", "timeline"].map((v) => (
             <TabsTrigger
-              value="dashboard"
-              className="relative px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm hover:text-emerald-600"
+                key={v}
+                value={v}
+                className="relative px-4 py-2 text-sm font-medium transition-all 
+                        data-[state=active]:bg-white/80 
+                        data-[state=active]:text-orange-600 
+                        data-[state=active]:shadow-md 
+                        hover:text-orange-500 rounded-lg"
             >
-              Dashboard
+                {v === "dashboard" ? "Dashboard" : v === "table" ? "All" : v === "card" ? "Cards" : "Release Dates"}
             </TabsTrigger>
-            <TabsTrigger
-              value="table"
-              className="relative px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm hover:text-emerald-600"
-            >
-              All
-            </TabsTrigger>
-            <TabsTrigger
-              value="card"
-              className="relative px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm hover:text-emerald-600"
-            >
-              Cards
-            </TabsTrigger>
-            <TabsTrigger
-              value="timeline"
-              className="relative px-4 py-2 text-sm font-medium transition-all data-[state=active]:bg-white data-[state=active]:text-emerald-700 data-[state=active]:shadow-sm hover:text-emerald-600"
-            >
-              Release Dates
-            </TabsTrigger>
-          </TabsList>
+            ))}
+        </TabsList>
         </Tabs>
-      </div>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-2">
+        <Button variant="outline" size="sm" className="text-orange-600 border-orange-400 hover:bg-orange-50">
+            Add Album
+        </Button>
+        </div>
+
+    </div>
     </header>
   );
 }

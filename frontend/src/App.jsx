@@ -49,13 +49,20 @@ function App() {
   );
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <Header view={view} setView={setView} />
+    <div>
 
-      {/* search box (don't render on dashboard) */}
-      {view !== "dashboard" && (
-        <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-      )}
+      {/* vertical stack header and search bar */}
+      <div className="flex flex-col gap-4">
+        {/* Header with tabs */}
+        <Header view={view} setView={setView} />
+
+        {/* Search box (skip on dashboard) */}
+        {view !== "dashboard" && (
+          <div className="px-6">
+            <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          </div>
+        )}
+      </div>
 
       {/* Conditional rendering based on selected view */}
       {view === "dashboard" && <Dashboard albums={data.completed_albums} ids={data.most_recently_listened} />}

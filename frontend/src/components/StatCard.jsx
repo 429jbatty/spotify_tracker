@@ -1,15 +1,15 @@
-function StatCard({ title, value }) {
+function StatCard({ title, value, color = "text-neutral-600" }) {
   return (
-    <div style={{
-      flex: 1,
-      border: "1px solid #ccc",
-      borderRadius: "8px",
-      padding: "1rem",
-      textAlign: "center",
-      marginRight: "0.5rem"
-    }}>
-      <div style={{ fontSize: "0.9rem", color: "#666" }}>{title}</div>
-      <div style={{ fontSize: "1.5rem", fontWeight: "bold" }}>{value}</div>
+    <div className="flex-1 rounded-xl bg-muted p-6 text-center shadow-sm">
+      {/* Title */}
+      <div className="text-sm font-medium text-muted-foreground">
+        {title}
+      </div>
+
+      {/* Value */}
+      <div className={`mt-2 text-3xl font-extrabold ${color}`}>
+        {value}
+      </div>
     </div>
   );
 }

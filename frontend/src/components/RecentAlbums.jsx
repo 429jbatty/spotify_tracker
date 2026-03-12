@@ -18,10 +18,12 @@ function RecentAlbums({ albums, ids }) {
     .filter(Boolean);
 
   return (
-    <div style={{ marginTop: "2rem" }}>
-      <h2>Recently Listened Albums</h2>
-      <AlbumCardList albums={recentAlbums} />
-    </div>
+  <div className="mt-12 px-6">
+    <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 drop-shadow-md mb-6">
+      Recent listens
+    </h2>
+    <AlbumCardList albums={recentAlbums} />
+  </div>
   );
 }
 
