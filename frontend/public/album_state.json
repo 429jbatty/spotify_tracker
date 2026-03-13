@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-13T16:11:20.751Z",
+  "last_checked": "2026-03-13T17:43:21.357Z",
   "albums_in_progress": {
     "1JYyYFJSYrXMHLe7Dz1B3W": {
       "album_name": "Orbital 2",
@@ -465,6 +465,37 @@
       ],
       "first_played": "2026-03-13T16:08:50.622Z",
       "last_played": "2026-03-13T16:08:50.622Z"
+    },
+    "1Qh1lG1yAjP3f8MeOuriGa": {
+      "album_name": "HELP(2)",
+      "artist": "War Child Records",
+      "total_tracks": 23,
+      "played_tracks": [
+        "0R9R2fD4C8yGHN2BdBA6hm",
+        "3aysr8fLK4g3qR6aaNITKM"
+      ],
+      "first_played": "2026-03-13T17:43:21.357Z",
+      "last_played": "2026-03-13T17:04:43.416Z"
+    },
+    "055CZXcGINxmZKxwQ9hroP": {
+      "album_name": "petal rock black",
+      "artist": "WILLOW",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0rfX5QNcW0Ne4IzdLNkfxA"
+      ],
+      "first_played": "2026-03-13T17:11:13.345Z",
+      "last_played": "2026-03-13T17:11:13.345Z"
+    },
+    "1YbqV9ng7vfzgGbhjR2FfQ": {
+      "album_name": "Cerulean",
+      "artist": "Danny L Harle",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0Ju4lqTas9lg3Q1oUmBWNM"
+      ],
+      "first_played": "2026-03-13T16:15:50.944Z",
+      "last_played": "2026-03-13T16:15:50.944Z"
     }
   },
   "completed_albums": {
