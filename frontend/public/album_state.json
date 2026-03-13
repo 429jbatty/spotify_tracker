@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-13T04:35:12.354Z",
+  "last_checked": "2026-03-13T05:14:43.184Z",
   "albums_in_progress": {
     "1JYyYFJSYrXMHLe7Dz1B3W": {
       "album_name": "Orbital 2",
@@ -435,10 +435,26 @@
         "4EC81w5nKG5tZlkHyKT2vO",
         "6SmV1Oo24nCZBPzIYkL4HZ",
         "4LD5p1sSp97yp86E2zDZwK",
-        "3Yub3anoLj8w58TVpEXUJv"
+        "3Yub3anoLj8w58TVpEXUJv",
+        "0j0majKoNlF7GkwA8xNQHG",
+        "3iohh4bLsUKefmjHw5jhbq",
+        "7r7yAFxq6CwakQB5NrJskh",
+        "1FnHpM2zimTALdIvuxFoNM",
+        "6hjVajm2JfjhXs803HqqMO"
       ],
       "first_played": "2026-03-13T04:35:12.354Z",
-      "last_played": "2026-03-13T04:14:11.648Z"
+      "last_played": "2026-03-13T04:40:41.772Z",
+      "completion_logged": true
+    },
+    "3C2MFZ2iHotUQOSBzdSvM7": {
+      "album_name": "Lonerism",
+      "artist": "Tame Impala",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6ewQE1dNPv9qqlnB1CxrvM"
+      ],
+      "first_played": "2026-03-13T05:14:43.184Z",
+      "last_played": "2026-03-13T05:14:43.184Z"
     }
   },
   "completed_albums": {
@@ -397999,9 +398015,376 @@
       "listen_history": [
         "2026-03-12T22:24:53.946Z"
       ]
+    },
+    "Tame Impala - InnerSpeaker": {
+      "artist": "Tame Impala",
+      "artist_mbid": "63aa26c3-d59b-4da4-84ac-716b54f1ef4d",
+      "name": "Innerspeaker",
+      "release_group_mbid": "0cfdeff7-4aa7-4df4-918d-88c9421cc512",
+      "label": "Modular Recordings",
+      "release_year": 2010,
+      "release_month": 5,
+      "release_day": 21,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "It Is Not Meant to Be",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "32f7093f-b29c-4626-aceb-2270e1db9d77"
+        },
+        {
+          "position": "2",
+          "title": "Desire Be Desire Go",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "3368975e-1af1-43f1-99e8-3b4d82a00823"
+        },
+        {
+          "position": "3",
+          "title": "Alter Ego",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "7a7f8825-532a-4586-93e4-8edfe3c958de"
+        },
+        {
+          "position": "4",
+          "title": "Lucidity",
+          "credits": [
+            [
+              "Tansie Bennets",
+              "instrument",
+              "handclaps"
+            ],
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "4ca701d7-a55a-4b24-933a-303e8d4e01d5"
+        },
+        {
+          "position": "5",
+          "title": "Why Won\u2019t You Make Up Your Mind?",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "db644461-3d63-4b80-9a95-435ccef31243"
+        },
+        {
+          "position": "6",
+          "title": "Solitude Is Bliss",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Jay Watson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "4d4525cb-1c7b-4b38-b859-758443c0727a"
+        },
+        {
+          "position": "7",
+          "title": "Island Walking",
+          "credits": {},
+          "recording_mbid": "4f72f0af-7fd8-4e66-890e-ea91393bfecb"
+        },
+        {
+          "position": "8",
+          "title": "Jeremy\u2019s Storm",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Dominic Simper",
+              "instrument",
+              "additional, effects"
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "5354f80a-9e4b-4641-a049-323c366464a2"
+        },
+        {
+          "position": "9",
+          "title": "Expectation",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Jay Watson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "fff0f746-1095-458b-8975-15901cbb8c7d"
+        },
+        {
+          "position": "10",
+          "title": "The Bold Arrow of Time",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Dominic Simper",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Jay Watson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "919f7476-c4fb-4ec5-9e00-c4f21746d336"
+        },
+        {
+          "position": "11",
+          "title": "Runway, Houses, City, Clouds",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Dominic Simper",
+              "instrument",
+              "additional, guitar"
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "041ee6fd-12c0-4f34-a4a0-77425410bdc5"
+        },
+        {
+          "position": "12",
+          "title": "I Don\u2019t Really Mind",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "recording",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "54f6ce65-45cd-4145-ab9a-a505eb3580a4"
+        }
+      ],
+      "tags": [
+        "rock",
+        "alternative rock",
+        "indie rock",
+        "psychedelic rock",
+        "psychedelic pop",
+        "garage rock revival",
+        "neo-psychedelia",
+        "garage psych",
+        "space rock revival"
+      ],
+      "image_url": "https://coverartarchive.org/release/0b18bdeb-8382-4b8f-94a3-b43e3e7ec6a4/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-13T04:40:41.772Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
     "Joan Baez - Joan Baez",
     "Barker - Stochastic Drift",
