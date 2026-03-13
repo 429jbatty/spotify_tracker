@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-13T17:43:21.357Z",
+  "last_checked": "2026-03-13T19:34:14.846Z",
   "albums_in_progress": {
     "1JYyYFJSYrXMHLe7Dz1B3W": {
       "album_name": "Orbital 2",
@@ -472,10 +472,11 @@
       "total_tracks": 23,
       "played_tracks": [
         "0R9R2fD4C8yGHN2BdBA6hm",
-        "3aysr8fLK4g3qR6aaNITKM"
+        "3aysr8fLK4g3qR6aaNITKM",
+        "6Ub872kT1aJKYj2PQr8Y2f"
       ],
       "first_played": "2026-03-13T17:43:21.357Z",
-      "last_played": "2026-03-13T17:04:43.416Z"
+      "last_played": "2026-03-13T19:08:07.713Z"
     },
     "055CZXcGINxmZKxwQ9hroP": {
       "album_name": "petal rock black",
@@ -496,6 +497,26 @@
       ],
       "first_played": "2026-03-13T16:15:50.944Z",
       "last_played": "2026-03-13T16:15:50.944Z"
+    },
+    "1RvJmGd47lKS4XMXs9j8hD": {
+      "album_name": "The Mountain",
+      "artist": "Gorillaz",
+      "total_tracks": 15,
+      "played_tracks": [
+        "6VflG4mpZSlpKnqNRL3NO9"
+      ],
+      "first_played": "2026-03-13T19:34:14.846Z",
+      "last_played": "2026-03-13T19:34:14.846Z"
+    },
+    "3Pbe5l1HHTUIHrzg61jdbU": {
+      "album_name": "A Mat in the Garden",
+      "artist": "Photokem",
+      "total_tracks": 6,
+      "played_tracks": [
+        "01WgGAjnSBOuWjRRHuVqnD"
+      ],
+      "first_played": "2026-03-13T19:24:31.592Z",
+      "last_played": "2026-03-13T19:24:31.592Z"
     }
   },
   "completed_albums": {
