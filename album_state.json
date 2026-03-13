@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-12T22:07:09.686Z",
+  "last_checked": "2026-03-12T23:30:13.747Z",
   "albums_in_progress": {
     "1JYyYFJSYrXMHLe7Dz1B3W": {
       "album_name": "Orbital 2",
@@ -380,6 +380,50 @@
       ],
       "first_played": "2026-03-12T22:07:09.686Z",
       "last_played": "2026-03-12T22:07:09.686Z"
+    },
+    "0ivDCaGwBmUHHatP2XDe0Y": {
+      "album_name": "Late Spring",
+      "artist": "Chihei Hatakeyama",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0wzzwxC7FdrDKtWOhABh78"
+      ],
+      "first_played": "2026-03-12T23:30:13.747Z",
+      "last_played": "2026-03-12T23:30:13.747Z"
+    },
+    "5MYywwJiVkvi7HouX6drKW": {
+      "album_name": "Tracing Back the Radiance",
+      "artist": "Jefre Cantu-Ledesma",
+      "total_tracks": 3,
+      "played_tracks": [
+        "6srZn9ddCWQErN0xDB1BCi"
+      ],
+      "first_played": "2026-03-12T23:19:22.785Z",
+      "last_played": "2026-03-12T23:19:22.785Z"
+    },
+    "15OVBQYlldnAnwLnEywCJA": {
+      "album_name": "Foreign Body",
+      "artist": "Mirrorring",
+      "total_tracks": 6,
+      "played_tracks": [
+        "2dcb0oTGP7FHHgv3Y9rVLU"
+      ],
+      "first_played": "2026-03-12T23:14:21.203Z",
+      "last_played": "2026-03-12T23:14:21.203Z"
+    },
+    "3wjaDfCkbngdwxN2lloyCB": {
+      "album_name": "After its own death / Walking in a spiral towards the house",
+      "artist": "Nivhek",
+      "total_tracks": 4,
+      "played_tracks": [
+        "4F8HlqT6gkJDytZwMwhtGE",
+        "6VAQq0NST9DpWDc7zretjm",
+        "4HvMB0OYldA6Zd0nmLgx5p",
+        "0JJmrRoNITYVgeJfk063n3"
+      ],
+      "first_played": "2026-03-12T23:07:14.651Z",
+      "last_played": "2026-03-12T22:24:53.946Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -397894,9 +397938,56 @@
       "listen_history": [
         "2026-03-12T21:03:37.348Z"
       ]
+    },
+    "Nivhek - After its own death / Walking in a spiral towards the house": {
+      "artist": "Nivhek",
+      "artist_mbid": "455d7ca3-629d-498c-93f3-9d428dbfe4e0",
+      "name": "After Its Own Death / Walking in a Spiral Towards the House",
+      "release_group_mbid": "a23791fe-603b-48ae-aebb-3991886a2b6e",
+      "label": "[no label]",
+      "release_year": 2019,
+      "release_month": 2,
+      "release_day": 8,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "After Its Own Death: Cloudmouth / blue room / Night\u2010Walking / Funeral Song",
+          "credits": {},
+          "recording_mbid": "c945b273-afad-4a08-991e-347f391a6504"
+        },
+        {
+          "position": "2",
+          "title": "After Its Own Death: Thirteen (version) / Crying Jar / Entry / Walking in a Spiral Towards the House / Weightless",
+          "credits": {},
+          "recording_mbid": "95fb8934-dc2f-4050-862e-27f1af0d1570"
+        },
+        {
+          "position": "3",
+          "title": "Walking in a Spiral Towards the House: Night\u2010Walking / Funeral Song",
+          "credits": {},
+          "recording_mbid": "3518fcf4-bf60-41e3-8960-800eda00ba8d"
+        },
+        {
+          "position": "4",
+          "title": "Walking in a Spiral Towards the House: Thirteen / Walking in a Spiral Towards the House",
+          "credits": {},
+          "recording_mbid": "e8d3ac82-3622-414a-b65e-47ee178f5123"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "ambient",
+        "experimental"
+      ],
+      "image_url": "https://coverartarchive.org/release/15bd4f50-326e-42cf-88d0-68dc8ecec886/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-12T22:24:53.946Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Nivhek - After its own death / Walking in a spiral towards the house",
     "Joan Baez - Joan Baez",
     "Barker - Stochastic Drift",
     "Boards of Canada - Geogaddi",
