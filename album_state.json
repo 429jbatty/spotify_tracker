@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-12T23:30:13.747Z",
+  "last_checked": "2026-03-13T04:35:12.354Z",
   "albums_in_progress": {
     "1JYyYFJSYrXMHLe7Dz1B3W": {
       "album_name": "Orbital 2",
@@ -424,6 +424,21 @@
       "first_played": "2026-03-12T23:07:14.651Z",
       "last_played": "2026-03-12T22:24:53.946Z",
       "completion_logged": true
+    },
+    "1DNSmmRLfv97Yjq7MTFWng": {
+      "album_name": "InnerSpeaker",
+      "artist": "Tame Impala",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2a2MbiJN2skOxohykOVcss",
+        "4SgcE7RxpK3ydWrjoAQH1K",
+        "4EC81w5nKG5tZlkHyKT2vO",
+        "6SmV1Oo24nCZBPzIYkL4HZ",
+        "4LD5p1sSp97yp86E2zDZwK",
+        "3Yub3anoLj8w58TVpEXUJv"
+      ],
+      "first_played": "2026-03-13T04:35:12.354Z",
+      "last_played": "2026-03-13T04:14:11.648Z"
     }
   },
   "completed_albums": {
