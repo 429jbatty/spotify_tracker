@@ -1,42 +1,6 @@
 {
-  "last_checked": "2026-03-14T16:08:16.594Z",
+  "last_checked": "2026-03-14T21:50:19.148Z",
   "albums_in_progress": {
-    "734AFYo34Q1zRpg9N8E2Ho": {
-      "album_name": "Joan Baez",
-      "artist": "Joan Baez",
-      "total_tracks": 16,
-      "played_tracks": [
-        "7rL6dZzydhWSimA6TouJ6K",
-        "75DHk0YU3iu2G6ukTPIzlb",
-        "2VyKXzrtialaXBc4uIA58Z",
-        "5et1Cm8WX18X4eoORUcyap",
-        "49uBVeaM3ixGD8VIeqh9KI",
-        "1eZTRfESsrayUmRKGIuory",
-        "3lqxFhPsfNl2DSmqEogdH2",
-        "3AuVZyDw1VhjjLfHZR4ba3",
-        "6OBvN19uhEDXFBJkCwL58h",
-        "7cOXUx0Q5PYafyNFriFajr",
-        "2hulWLdzjBexk2bxQpcUp7",
-        "3WZl07ITusPN7bQY3vzGdx",
-        "27LWYN5H4rfXlRz1vFNm63",
-        "7fEortZUGuuSKTAr8ZMrk1",
-        "0h8f0WKRn1vKky5LgfTjDU",
-        "7vJAglE0Vzjgy1GyeA7Vog"
-      ],
-      "first_played": "2026-03-12T18:00:01.135Z",
-      "last_played": "2026-03-12T21:03:37.348Z",
-      "completion_logged": true
-    },
-    "0KWZmGhxNlNMOQgi4LPWun": {
-      "album_name": "Farewell, Angelina",
-      "artist": "Joan Baez",
-      "total_tracks": 14,
-      "played_tracks": [
-        "1rI0sMuAEeAOPihDEwPa3y"
-      ],
-      "first_played": "2026-03-12T22:07:09.686Z",
-      "last_played": "2026-03-12T22:07:09.686Z"
-    },
     "0ivDCaGwBmUHHatP2XDe0Y": {
       "album_name": "Late Spring",
       "artist": "Chihei Hatakeyama",
@@ -173,6 +137,60 @@
       ],
       "first_played": "2026-03-13T19:24:31.592Z",
       "last_played": "2026-03-13T19:24:31.592Z"
+    },
+    "1nVnbkq96iZzBMp57Xzx1V": {
+      "album_name": "Evening Star",
+      "artist": "Robert Fripp, Brian Eno",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5Kp4uIt000uLfxYahTupG4"
+      ],
+      "first_played": "2026-03-14T21:50:19.148Z",
+      "last_played": "2026-03-14T21:50:19.148Z"
+    },
+    "0p7nH5bz0pWBor10osUBuD": {
+      "album_name": "R Plus Seven",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4TBVy5cFYGmK5BA3rdMGEQ"
+      ],
+      "first_played": "2026-03-14T21:49:10.052Z",
+      "last_played": "2026-03-14T21:49:10.052Z"
+    },
+    "5ma9r5NFV0poevmydI2qgO": {
+      "album_name": "Ambient 2: The Plateaux Of Mirror (Remastered 2004)",
+      "artist": "Harold Budd, Brian Eno",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0ycQOJSAh2HXg1DaKLGoRX"
+      ],
+      "first_played": "2026-03-14T21:44:04.203Z",
+      "last_played": "2026-03-14T21:44:04.203Z"
+    },
+    "1Km58i317Pm5bQR3wPHKcO": {
+      "album_name": "Apollo: Atmospheres And Soundtracks (Extended Edition)",
+      "artist": "Brian Eno",
+      "total_tracks": 23,
+      "played_tracks": [
+        "2iOzx4XrUNl9UiS0SdghEQ"
+      ],
+      "first_played": "2026-03-14T21:41:09.331Z",
+      "last_played": "2026-03-14T21:41:09.331Z"
+    },
+    "063f8Ej8rLVTz9KkjQKEMa": {
+      "album_name": "Ambient 1: Music For Airports (Remastered 2004)",
+      "artist": "Brian Eno",
+      "total_tracks": 4,
+      "played_tracks": [
+        "3QpN3dazIcMNqru0L1qLMt",
+        "5z1E46RvhI34TTM2FDMPrp",
+        "1Qr6LFKNBFNNa2y6nMDO31",
+        "3bCmDqflFBHijgJfvtqev5"
+      ],
+      "first_played": "2026-03-14T21:36:39.055Z",
+      "last_played": "2026-03-14T20:48:45.243Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -398099,9 +398117,160 @@
       "listen_history": [
         "2026-03-13T04:40:41.772Z"
       ]
+    },
+    "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)": {
+      "artist": "Brian Eno",
+      "artist_mbid": "ff95eb47-41c4-4f7f-a104-cdc30f02e872",
+      "name": "Ambient 1: Music for Airports",
+      "release_group_mbid": "5fdd6ba8-83c1-3a87-b378-d5f61dec5ddd",
+      "label": "EMI Marketing",
+      "release_year": 1978,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "1/1",
+          "credits": [
+            [
+              "Rhett Davies",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "engineer",
+              ""
+            ],
+            [
+              "Robert Wyatt",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b3735d1c-86b3-4f51-bc78-c624b549080b"
+        },
+        {
+          "position": "2",
+          "title": "2/1",
+          "credits": [
+            [
+              "Brian Eno",
+              "engineer",
+              ""
+            ],
+            [
+              "Dave Hutchins",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Christa Fast",
+              "vocal",
+              ""
+            ],
+            [
+              "Christine Gomez",
+              "vocal",
+              ""
+            ],
+            [
+              "Inge Zeininger",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "5f949e7c-cf3d-40b7-8cab-49e6212406d4"
+        },
+        {
+          "position": "3",
+          "title": "1/2",
+          "credits": [
+            [
+              "Brian Eno",
+              "engineer",
+              ""
+            ],
+            [
+              "Dave Hutchins",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Christa Fast",
+              "vocal",
+              ""
+            ],
+            [
+              "Christine Gomez",
+              "vocal",
+              ""
+            ],
+            [
+              "Inge Zeininger",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "f47637a2-489e-4675-af52-bf6b3b0a5e1c"
+        },
+        {
+          "position": "4",
+          "title": "2/2",
+          "credits": {},
+          "recording_mbid": "fffab06e-ece0-4da4-9222-685bc55536dd"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "synthpop",
+        "instrumental",
+        "ambient",
+        "concept album",
+        "mellow",
+        "meditative",
+        "minimal",
+        "progressive",
+        "hypnotic",
+        "minimalist",
+        "choral",
+        "ethereal",
+        "soft",
+        "atmospheric",
+        "calm",
+        "repetitive",
+        "soothing",
+        "minimalistic",
+        "peaceful",
+        "travel",
+        "sparse",
+        "generative music",
+        "aleatory"
+      ],
+      "image_url": "https://coverartarchive.org/release/adf01612-fe5d-47df-b436-a667a3d239d3/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-14T20:48:45.243Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
     "Joan Baez - Joan Baez",
