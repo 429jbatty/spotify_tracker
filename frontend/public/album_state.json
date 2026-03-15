@@ -1,50 +1,6 @@
 {
   "last_checked": "2026-03-14T21:50:19.148Z",
   "albums_in_progress": {
-    "0ivDCaGwBmUHHatP2XDe0Y": {
-      "album_name": "Late Spring",
-      "artist": "Chihei Hatakeyama",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0wzzwxC7FdrDKtWOhABh78"
-      ],
-      "first_played": "2026-03-12T23:30:13.747Z",
-      "last_played": "2026-03-12T23:30:13.747Z"
-    },
-    "5MYywwJiVkvi7HouX6drKW": {
-      "album_name": "Tracing Back the Radiance",
-      "artist": "Jefre Cantu-Ledesma",
-      "total_tracks": 3,
-      "played_tracks": [
-        "6srZn9ddCWQErN0xDB1BCi"
-      ],
-      "first_played": "2026-03-12T23:19:22.785Z",
-      "last_played": "2026-03-12T23:19:22.785Z"
-    },
-    "15OVBQYlldnAnwLnEywCJA": {
-      "album_name": "Foreign Body",
-      "artist": "Mirrorring",
-      "total_tracks": 6,
-      "played_tracks": [
-        "2dcb0oTGP7FHHgv3Y9rVLU"
-      ],
-      "first_played": "2026-03-12T23:14:21.203Z",
-      "last_played": "2026-03-12T23:14:21.203Z"
-    },
-    "3wjaDfCkbngdwxN2lloyCB": {
-      "album_name": "After its own death / Walking in a spiral towards the house",
-      "artist": "Nivhek",
-      "total_tracks": 4,
-      "played_tracks": [
-        "4F8HlqT6gkJDytZwMwhtGE",
-        "6VAQq0NST9DpWDc7zretjm",
-        "4HvMB0OYldA6Zd0nmLgx5p",
-        "0JJmrRoNITYVgeJfk063n3"
-      ],
-      "first_played": "2026-03-12T23:07:14.651Z",
-      "last_played": "2026-03-12T22:24:53.946Z",
-      "completion_logged": true
-    },
     "1DNSmmRLfv97Yjq7MTFWng": {
       "album_name": "InnerSpeaker",
       "artist": "Tame Impala",
