@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-15T16:11:02.302Z",
+  "last_checked": "2026-03-15T18:11:45.599Z",
   "albums_in_progress": {
     "1Qh1lG1yAjP3f8MeOuriGa": {
       "album_name": "HELP(2)",
@@ -12,26 +12,6 @@
       ],
       "first_played": "2026-03-13T17:43:21.357Z",
       "last_played": "2026-03-13T19:08:07.713Z"
-    },
-    "055CZXcGINxmZKxwQ9hroP": {
-      "album_name": "petal rock black",
-      "artist": "WILLOW",
-      "total_tracks": 12,
-      "played_tracks": [
-        "0rfX5QNcW0Ne4IzdLNkfxA"
-      ],
-      "first_played": "2026-03-13T17:11:13.345Z",
-      "last_played": "2026-03-13T17:11:13.345Z"
-    },
-    "1YbqV9ng7vfzgGbhjR2FfQ": {
-      "album_name": "Cerulean",
-      "artist": "Danny L Harle",
-      "total_tracks": 13,
-      "played_tracks": [
-        "0Ju4lqTas9lg3Q1oUmBWNM"
-      ],
-      "first_played": "2026-03-13T16:15:50.944Z",
-      "last_played": "2026-03-13T16:15:50.944Z"
     },
     "1RvJmGd47lKS4XMXs9j8hD": {
       "album_name": "The Mountain",
@@ -58,10 +38,11 @@
       "artist": "Robert Fripp, Brian Eno",
       "total_tracks": 10,
       "played_tracks": [
-        "5Kp4uIt000uLfxYahTupG4"
+        "5Kp4uIt000uLfxYahTupG4",
+        "6CHo2rZCwJ5v6JKLzdc8Fe"
       ],
       "first_played": "2026-03-14T21:50:19.148Z",
-      "last_played": "2026-03-14T21:50:19.148Z"
+      "last_played": "2026-03-15T17:00:23.472Z"
     },
     "0p7nH5bz0pWBor10osUBuD": {
       "album_name": "R Plus Seven",
@@ -78,10 +59,12 @@
       "artist": "Harold Budd, Brian Eno",
       "total_tracks": 10,
       "played_tracks": [
-        "0ycQOJSAh2HXg1DaKLGoRX"
+        "0ycQOJSAh2HXg1DaKLGoRX",
+        "244AfRQzVwSOzkkRHGPWge",
+        "1Z2OQ4XtLwrhQKGS9BA4wi"
       ],
       "first_played": "2026-03-14T21:44:04.203Z",
-      "last_played": "2026-03-14T21:44:04.203Z"
+      "last_played": "2026-03-15T16:54:53.705Z"
     },
     "1Km58i317Pm5bQR3wPHKcO": {
       "album_name": "Apollo: Atmospheres And Soundtracks (Extended Edition)",
@@ -100,10 +83,21 @@
         "4ZknuVR2jOpMOcfwWpsuEr",
         "080LoPrJwr8hTVgtd63ArO",
         "2uIb2kCEuYjSy9sC4snvJs",
-        "4S9j7mGGvqmHEJR3Xd9sU4"
+        "4S9j7mGGvqmHEJR3Xd9sU4",
+        "5Qpkug9gDa6yQAMzpIgaDL",
+        "3fstJkqRRAGRga8qDkuPEc",
+        "0ZDcoExPAec1FtG6Jsu593",
+        "0S4SayETIzijgYF0MUSiY7",
+        "3xnTaIguNF0l6vGIODnits",
+        "1i9y4UqEZXYjkcRtOvKb3W",
+        "3W84bJQ1zzpTML5ux6ss9s",
+        "4phZPrD6ypIxjnHJJFnnKs",
+        "7BMC0oIPMdURZ2GIhGTt0a",
+        "7lSDwJf1bH1AYxUJTxH8eG"
       ],
       "first_played": "2026-03-14T21:41:09.331Z",
-      "last_played": "2026-03-15T15:22:01.823Z"
+      "last_played": "2026-03-15T16:14:16.525Z",
+      "completion_logged": true
     },
     "063f8Ej8rLVTz9KkjQKEMa": {
       "album_name": "Ambient 1: Music For Airports (Remastered 2004)",
@@ -118,6 +112,119 @@
       "first_played": "2026-03-14T21:36:39.055Z",
       "last_played": "2026-03-14T20:48:45.243Z",
       "completion_logged": true
+    },
+    "3C2MFZ2iHotUQOSBzdSvM7": {
+      "album_name": "Lonerism",
+      "artist": "Tame Impala",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6ewQE1dNPv9qqlnB1CxrvM",
+        "7qU7vhCPKhkDiJYGoboISc",
+        "0YuePEX4KyfLIPMdNLPwgQ",
+        "2Gl1Qdx5Px5kVYe0PQoGI0"
+      ],
+      "first_played": "2026-03-15T18:11:45.599Z",
+      "last_played": "2026-03-15T17:58:09.788Z"
+    },
+    "0UcHfoo7KMso767JwePBMh": {
+      "album_name": "Lifeforms",
+      "artist": "The Future Sound Of London",
+      "total_tracks": 19,
+      "played_tracks": [
+        "6chMOLaH3UG7jd98wp4JdU"
+      ],
+      "first_played": "2026-03-15T17:54:00.971Z",
+      "last_played": "2026-03-15T17:54:00.971Z"
+    },
+    "5SSf6lNbSoaAUx6PxQVjlP": {
+      "album_name": "The Pearl",
+      "artist": "Harold Budd, Brian Eno",
+      "total_tracks": 11,
+      "played_tracks": [
+        "28KcS7Otucbm1uRQs8k21t"
+      ],
+      "first_played": "2026-03-15T17:51:13.161Z",
+      "last_played": "2026-03-15T17:51:13.161Z"
+    },
+    "1CNhM669xHzsZMF1yZ9WFg": {
+      "album_name": "Small Craft On A Milk Sea",
+      "artist": "Brian Eno, Jon Hopkins, Leo Abrahams",
+      "total_tracks": 16,
+      "played_tracks": [
+        "0Y7HYQH29Nmy1MOktAwyEo"
+      ],
+      "first_played": "2026-03-15T17:47:00.775Z",
+      "last_played": "2026-03-15T17:47:00.775Z"
+    },
+    "32Nl49izVyngH22kD1lrkk": {
+      "album_name": "Pop",
+      "artist": "GAS",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6XtiBZ34C9R5qvG9VBJBOJ"
+      ],
+      "first_played": "2026-03-15T17:43:58.304Z",
+      "last_played": "2026-03-15T17:43:58.304Z"
+    },
+    "0ivDCaGwBmUHHatP2XDe0Y": {
+      "album_name": "Late Spring",
+      "artist": "Chihei Hatakeyama",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0t2MexiRw1bps6t9llqmFv"
+      ],
+      "first_played": "2026-03-15T17:35:25.095Z",
+      "last_played": "2026-03-15T17:35:25.095Z"
+    },
+    "7H6gso8aBfKK7mlouLCsW3": {
+      "album_name": "Replica",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "49iAudu6ppGPFRCYJLhnjU"
+      ],
+      "first_played": "2026-03-15T17:31:25.314Z",
+      "last_played": "2026-03-15T17:31:25.314Z"
+    },
+    "42Lahj8mKJKxPgncRXPuPw": {
+      "album_name": "Ambient 3: Day Of Radiance",
+      "artist": "Laraaji, Brian Eno",
+      "total_tracks": 5,
+      "played_tracks": [
+        "0ernnlD3qqeZ4AXysXPkE6"
+      ],
+      "first_played": "2026-03-15T17:28:00.460Z",
+      "last_played": "2026-03-15T17:28:00.460Z"
+    },
+    "4JQ2igmQEWUihSRzWgTiCF": {
+      "album_name": "Narkopop",
+      "artist": "GAS",
+      "total_tracks": 11,
+      "played_tracks": [
+        "10FQBzFE4qRZA80nbMoqvj"
+      ],
+      "first_played": "2026-03-15T17:12:43.908Z",
+      "last_played": "2026-03-15T17:12:43.908Z"
+    },
+    "07Ckd8KDDxcbY5iUXjhuex": {
+      "album_name": "Tomorrow's Harvest",
+      "artist": "Boards of Canada",
+      "total_tracks": 17,
+      "played_tracks": [
+        "2wJWTSdRT4wgKAyrWtwiqA"
+      ],
+      "first_played": "2026-03-15T17:08:19.628Z",
+      "last_played": "2026-03-15T17:08:19.628Z"
+    },
+    "0cJJRJRZJlrTKQBZBoDZ7j": {
+      "album_name": "Returnal",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 8,
+      "played_tracks": [
+        "36hmE7NEtdCF02XTzQj3p0"
+      ],
+      "first_played": "2026-03-15T17:06:03.831Z",
+      "last_played": "2026-03-15T17:06:03.831Z"
     }
   },
   "completed_albums": {
@@ -398194,9 +398301,405 @@
       "listen_history": [
         "2026-03-14T20:48:45.243Z"
       ]
+    },
+    "Brian Eno - Apollo: Atmospheres And Soundtracks (Extended Edition)": {
+      "artist": "Brian Eno",
+      "artist_mbid": "ff95eb47-41c4-4f7f-a104-cdc30f02e872",
+      "name": "Apollo: Atmospheres & Soundtracks",
+      "release_group_mbid": "03fe7fe6-2d96-3b40-816d-885b5118107e",
+      "label": "UMC",
+      "release_year": 1983,
+      "release_month": 7,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Under Stars",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c63a1111-9ded-4a84-90e1-fa1198e3a704"
+        },
+        {
+          "position": "2",
+          "title": "The Secret Place",
+          "credits": [
+            [
+              "Brian Eno",
+              "arranger",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5d2ead22-0b0e-4c02-8b3d-a389375153e7"
+        },
+        {
+          "position": "3",
+          "title": "Matta",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "eb208376-03b5-423f-be7f-307e4ad1b457"
+        },
+        {
+          "position": "4",
+          "title": "Signals",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "60ac8669-70bd-44b7-a459-d1b076e24429"
+        },
+        {
+          "position": "5",
+          "title": "An Ending (Ascent)",
+          "credits": [
+            [
+              "Brian Eno",
+              "performer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "306442b9-13d3-4e7c-b2c9-dcbe12ad0b22"
+        },
+        {
+          "position": "6",
+          "title": "Under Stars II",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ce55f92a-7773-4291-ba3d-de2553dcd3a2"
+        },
+        {
+          "position": "7",
+          "title": "Drift",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1998243b-8c1f-42ff-be6c-dbae3563cb42"
+        },
+        {
+          "position": "8",
+          "title": "Silver Morning",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ac674491-de96-42b6-a508-00b43fd834ea"
+        },
+        {
+          "position": "9",
+          "title": "Deep Blue Day",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6e9800e2-aa38-4194-b4dc-19f0e4f595e7"
+        },
+        {
+          "position": "10",
+          "title": "Weightless",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ac192d17-07eb-4208-9526-1f21a3ea7be0"
+        },
+        {
+          "position": "11",
+          "title": "Always Returning",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8c1688b3-6c3d-4654-b7ed-2964e23616c8"
+        },
+        {
+          "position": "12",
+          "title": "Stars",
+          "credits": [
+            [
+              "Brian Eno",
+              "performer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "performer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b7475d10-661f-4618-8988-842c6b53f4dd"
+        },
+        {
+          "position": "1",
+          "title": "The End of a Thin Cord",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "122174da-6770-4199-a622-3f6ab6fc78c8"
+        },
+        {
+          "position": "2",
+          "title": "Capsule",
+          "credits": [
+            [
+              "Wayne Lorenz",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f7439a23-7e77-473b-ba22-48b82fba887d"
+        },
+        {
+          "position": "3",
+          "title": "At the Foot of a Ladder",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a6adb477-afb8-418e-afaa-6f64b16f66c6"
+        },
+        {
+          "position": "4",
+          "title": "Waking Up",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "75bb0abc-96fc-4063-adac-212a7cf8e583"
+        },
+        {
+          "position": "5",
+          "title": "Clear Desert Night",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "618c7084-6aa8-4409-b56d-607658e7e6cb"
+        },
+        {
+          "position": "6",
+          "title": "Over the Canaries",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6ac8d7ad-6ee9-43b2-80eb-0a1aebfe0c8a"
+        },
+        {
+          "position": "7",
+          "title": "Last Step From the Surface",
+          "credits": [
+            [
+              "Wayne Lorenz",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d19e896c-4f90-488e-89ca-8fd8b05fbecc"
+        },
+        {
+          "position": "8",
+          "title": "Fine\u2010Grained",
+          "credits": [
+            [
+              "Wayne Lorenz",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "71033985-d71f-45fd-ac67-5ea5a80978bf"
+        },
+        {
+          "position": "9",
+          "title": "Under the Moon",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "7180b0a5-4cc0-4e00-8275-42b1792c0550"
+        },
+        {
+          "position": "10",
+          "title": "Strange Quiet",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "bedc7fa5-9892-4ae8-bd2f-9b36aa82498b"
+        },
+        {
+          "position": "11",
+          "title": "Like I Was a Spectator",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "9977da20-6e8e-4fcc-8611-81c72ccaab8d"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "ambient",
+        "experimental",
+        "366",
+        "space ambient"
+      ],
+      "image_url": "https://coverartarchive.org/release/46f131df-47be-4e7d-ac0f-f77075cc8740/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-15T16:14:16.525Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Brian Eno - Apollo: Atmospheres And Soundtracks (Extended Edition)",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
