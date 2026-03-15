@@ -1,38 +1,6 @@
 {
-  "last_checked": "2026-03-15T18:11:45.599Z",
+  "last_checked": "2026-03-15T19:07:43.352Z",
   "albums_in_progress": {
-    "1Qh1lG1yAjP3f8MeOuriGa": {
-      "album_name": "HELP(2)",
-      "artist": "War Child Records",
-      "total_tracks": 23,
-      "played_tracks": [
-        "0R9R2fD4C8yGHN2BdBA6hm",
-        "3aysr8fLK4g3qR6aaNITKM",
-        "6Ub872kT1aJKYj2PQr8Y2f"
-      ],
-      "first_played": "2026-03-13T17:43:21.357Z",
-      "last_played": "2026-03-13T19:08:07.713Z"
-    },
-    "1RvJmGd47lKS4XMXs9j8hD": {
-      "album_name": "The Mountain",
-      "artist": "Gorillaz",
-      "total_tracks": 15,
-      "played_tracks": [
-        "6VflG4mpZSlpKnqNRL3NO9"
-      ],
-      "first_played": "2026-03-13T19:34:14.846Z",
-      "last_played": "2026-03-13T19:34:14.846Z"
-    },
-    "3Pbe5l1HHTUIHrzg61jdbU": {
-      "album_name": "A Mat in the Garden",
-      "artist": "Photokem",
-      "total_tracks": 6,
-      "played_tracks": [
-        "01WgGAjnSBOuWjRRHuVqnD"
-      ],
-      "first_played": "2026-03-13T19:24:31.592Z",
-      "last_played": "2026-03-13T19:24:31.592Z"
-    },
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
       "artist": "Robert Fripp, Brian Eno",
@@ -121,10 +89,19 @@
         "6ewQE1dNPv9qqlnB1CxrvM",
         "7qU7vhCPKhkDiJYGoboISc",
         "0YuePEX4KyfLIPMdNLPwgQ",
-        "2Gl1Qdx5Px5kVYe0PQoGI0"
+        "2Gl1Qdx5Px5kVYe0PQoGI0",
+        "7Jk2pg4g0c5rz5AfkEGMRp",
+        "33JMMgxQKL3zJsZeMNC3gR",
+        "4Klyx5dYqZV9YefSecDwDv",
+        "6qZjm61s6u8Ead9sWxCDro",
+        "2UYHP0RQqPFvue0Ygs5Amm",
+        "0LtOwyZoSNZKJWHqjzADpW",
+        "6IM45SqAURH6PrvziDs1RQ",
+        "0pJTrMWCiR0TuJ5FApIqrz"
       ],
       "first_played": "2026-03-15T18:11:45.599Z",
-      "last_played": "2026-03-15T17:58:09.788Z"
+      "last_played": "2026-03-15T18:16:57.533Z",
+      "completion_logged": true
     },
     "0UcHfoo7KMso767JwePBMh": {
       "album_name": "Lifeforms",
@@ -225,6 +202,36 @@
       ],
       "first_played": "2026-03-15T17:06:03.831Z",
       "last_played": "2026-03-15T17:06:03.831Z"
+    },
+    "4hnqM0JK4CM1phwfq1Ldyz": {
+      "album_name": "This Is Happening",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2073QOEC8rBtSyTsRyaWiP"
+      ],
+      "first_played": "2026-03-15T19:07:43.352Z",
+      "last_played": "2026-03-15T19:07:43.352Z"
+    },
+    "3XQMgEnLQnOMkFaJA9w6sZ": {
+      "album_name": "Veckatimest",
+      "artist": "Grizzly Bear",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5mIbLV3Aa4NcQDgMY4XgCT"
+      ],
+      "first_played": "2026-03-15T18:55:43.853Z",
+      "last_played": "2026-03-15T18:55:43.853Z"
+    },
+    "1DNSmmRLfv97Yjq7MTFWng": {
+      "album_name": "InnerSpeaker",
+      "artist": "Tame Impala",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6SmV1Oo24nCZBPzIYkL4HZ"
+      ],
+      "first_played": "2026-03-15T18:51:26.516Z",
+      "last_played": "2026-03-15T18:51:26.516Z"
     }
   },
   "completed_albums": {
