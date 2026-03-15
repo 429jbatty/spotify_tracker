@@ -10,7 +10,7 @@ import Header from "./components/universalHeader";
 function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [view, setView] = useState("table"); // "table", "card", "timeline", "dashboard"
+  const [view, setView] = useState("dashboard");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
