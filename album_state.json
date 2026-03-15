@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-15T19:07:43.352Z",
+  "last_checked": "2026-03-15T22:07:12.140Z",
   "albums_in_progress": {
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
@@ -232,6 +232,57 @@
       ],
       "first_played": "2026-03-15T18:51:26.516Z",
       "last_played": "2026-03-15T18:51:26.516Z"
+    },
+    "5vBpIxm8ws6pWyVmTWiGE1": {
+      "album_name": "Vespertine",
+      "artist": "Bj\u00f6rk",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0mc51xomEC6CZUZdB8xgQU"
+      ],
+      "first_played": "2026-03-15T22:07:12.140Z",
+      "last_played": "2026-03-15T22:07:12.140Z"
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7zyBL0LZndcnPXsbdhiqWp"
+      ],
+      "first_played": "2026-03-15T22:01:57.352Z",
+      "last_played": "2026-03-15T22:01:57.352Z"
+    },
+    "0v1sQbOCM2xDdIYA0XYapM": {
+      "album_name": "EUSEXUA Afterglow",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5RpENLVvKQCDWLkFRIeAHT"
+      ],
+      "first_played": "2026-03-15T21:59:41.452Z",
+      "last_played": "2026-03-15T21:59:41.452Z"
+    },
+    "3o1TOhMkU5FFMSJMDhXfdF": {
+      "album_name": "EUSEXUA",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4rMHek5bmv8XWHi4ByKjU2",
+        "3E0FBv982FkyTqfKu8K7AD",
+        "5kILHrfMHQ4eFHZqnu4yY3",
+        "5GmXpNIK6yGwTtKBITIqzK",
+        "41xQsowOhS2wpEEVWT4Wg0",
+        "3Si0hc3hxlehGK53jYjgVF",
+        "1CqyErlQstROOe9hAn93oI",
+        "13QINbzgh3yta5OGvB77Pl",
+        "2VeCDMFJMPg6S4P2EKRnyX",
+        "536rHxlVFXGJBO2xWE7HsV",
+        "6TeKbncyK62smlAvPy1dNa"
+      ],
+      "first_played": "2026-03-15T21:56:07.268Z",
+      "last_played": "2026-03-15T21:17:32.320Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -398703,9 +398754,846 @@
       "listen_history": [
         "2026-03-15T16:14:16.525Z"
       ]
+    },
+    "FKA twigs - EUSEXUA": {
+      "artist": "FKA twigs",
+      "artist_mbid": "1e4e9db7-5068-4a9c-bdd0-5777e47172c8",
+      "name": "EUSEXUA",
+      "release_group_mbid": "05c8e133-ba85-48cc-82c3-afcf0cc9e9ff",
+      "label": "Young",
+      "release_year": 2025,
+      "release_month": 1,
+      "release_day": 24,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Eusexua",
+          "credits": [
+            [
+              "Joseph Hartwell Jones",
+              "engineer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "[unknown]",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Bapari",
+              "producer",
+              "additional"
+            ],
+            [
+              "Eartheater",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Sasha",
+              "producer",
+              "additional"
+            ],
+            [
+              "Two Shell",
+              "producer",
+              "additional"
+            ],
+            [
+              "Eartheater",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "3b6f7ae3-520b-404f-877f-ee46a4ea3953"
+        },
+        {
+          "position": "2",
+          "title": "Girl Feels Good",
+          "credits": [
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "co"
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Felix Joseph",
+              "producer",
+              "co"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Alastair O\u2019Donnell",
+              "producer",
+              "co"
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "51cfaa29-c30a-4720-a152-cc4763776c09"
+        },
+        {
+          "position": "3",
+          "title": "Perfect Stranger",
+          "credits": [
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "[unknown]",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Alastair O\u2019Donnell",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "Stuart Price",
+              "producer",
+              "additional"
+            ],
+            [
+              "StarGate",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "d65b6f80-da11-4fe9-aa52-06a582d9a228"
+        },
+        {
+          "position": "4",
+          "title": "Drums of Death",
+          "credits": [
+            [
+              "Koreless",
+              "engineer",
+              ""
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Koreless",
+              "performer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ],
+            [
+              "Tintin Freeman",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "50bdeb2f-4382-4939-a38c-f86ac8640952"
+        },
+        {
+          "position": "5",
+          "title": "Room of Fools",
+          "credits": [
+            [
+              "Marius de Vries",
+              "conductor",
+              "strings"
+            ],
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "instrument arranger",
+              "strings"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Deutsches Filmorchester Babelsberg",
+              "performing orchestra",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Falko Duczmal",
+              "recording",
+              "strings"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "b31502d4-7cda-4d94-a444-1e2c7af3bacd"
+        },
+        {
+          "position": "6",
+          "title": "Sticky",
+          "credits": [
+            [
+              "Joseph Hartwell Jones",
+              "engineer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Felix Joseph",
+              "producer",
+              "additional"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              "additional"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "686c9757-aa0e-4c32-b7d9-3e36508b9725"
+        },
+        {
+          "position": "7",
+          "title": "Keep It, Hold It",
+          "credits": [
+            [
+              "Nadine Marshall",
+              "chorus master",
+              ""
+            ],
+            [
+              "Peter Walsh",
+              "engineer",
+              ""
+            ],
+            [
+              "Ben de Vries",
+              "instrument",
+              "additional, drums (drum set)"
+            ],
+            [
+              "Kelly Moran",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "additional"
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Nicolas Jaar",
+              "producer",
+              "additional"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ruth Adebiyi",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Ryan Carty",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ],
+            [
+              "J'Danah Marshall",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Nadine Marshall",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Nathan Palmer",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "7732b203-b1fb-4e24-822b-a6816e3105ee"
+        },
+        {
+          "position": "8",
+          "title": "Childlike Things",
+          "credits": [
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "North West",
+              "performer",
+              ""
+            ],
+            [
+              "Jeff Bhasker",
+              "producer",
+              "co"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "a205ae33-ac8d-485f-83e2-dcd00bb2d777"
+        },
+        {
+          "position": "9",
+          "title": "Striptease",
+          "credits": [
+            [
+              "Marius de Vries",
+              "arranger",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "conductor",
+              ""
+            ],
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Chris Ahn",
+              "instrument",
+              "cello"
+            ],
+            [
+              "Eugenia Choi",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Vanessa Freebairn\u2010Smith",
+              "instrument",
+              "cello"
+            ],
+            [
+              "Eric Gorfain",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Christian Hebel",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Luanne Homzy",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Mina Hong",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Benjamin Jacobson",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Julie Jung",
+              "instrument",
+              "cello"
+            ],
+            [
+              "David Low",
+              "instrument",
+              "cello"
+            ],
+            [
+              "Radu Pieptea",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Mark Robertson",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "Clemants",
+              "programming",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "recording",
+              ""
+            ],
+            [
+              "Justin Moshkevich",
+              "recording",
+              "strings"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "e9d7059d-237e-4183-8dd2-6c8b56d15853"
+        },
+        {
+          "position": "10",
+          "title": "24hr Dog",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Ethan P. Flynn",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "3ce5cf6f-736f-477b-baba-593d529f4a47"
+        },
+        {
+          "position": "11",
+          "title": "Wanderlust",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "[unknown]",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "[unknown]",
+              "producer",
+              "co"
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "co"
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "Stuart Price",
+              "producer",
+              "co"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "bdf3d077-814d-4f88-bc89-7d006723bc91"
+        }
+      ],
+      "tags": [
+        "trance",
+        "electronic",
+        "downtempo",
+        "pop",
+        "dance-pop",
+        "english",
+        "edm",
+        "art pop",
+        "alternative r&b",
+        "glitch pop",
+        "offizielle charts",
+        "1\u20134 wochen",
+        "ph_temp_checken",
+        "me 26\u201301",
+        "rs 26\u201302"
+      ],
+      "image_url": "https://coverartarchive.org/release/6b45e94a-c154-411e-b45f-2fd17de9fce4/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-15T21:17:32.320Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "FKA twigs - EUSEXUA",
     "Brian Eno - Apollo: Atmospheres And Soundtracks (Extended Edition)",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
