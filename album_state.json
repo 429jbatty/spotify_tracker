@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-16T04:57:39.852Z",
+  "last_checked": "2026-03-16T06:38:38.659Z",
   "albums_in_progress": {
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
@@ -347,10 +347,11 @@
       "total_tracks": 10,
       "played_tracks": [
         "3VxwkBVE8r8yDWVG56ABoM",
-        "4UAIVY0sQxOI9TVNU65ceo"
+        "4UAIVY0sQxOI9TVNU65ceo",
+        "2Umj7dZwXn8iZwbYMQv1d9"
       ],
       "first_played": "2026-03-16T04:57:39.852Z",
-      "last_played": "2026-03-16T04:43:43.958Z"
+      "last_played": "2026-03-16T05:56:20.922Z"
     },
     "5Iqbflz3ePwl7iW9oLCIZC": {
       "album_name": "Rain And Thunder",
@@ -398,6 +399,41 @@
       ],
       "first_played": "2026-03-16T04:06:41.286Z",
       "last_played": "2026-03-16T03:19:46.144Z"
+    },
+    "2FFBL9NtdFCmWdfzWsKtLP": {
+      "album_name": "Rain Sounds Symphony",
+      "artist": "NATURE, Vozterra, The Listening Planet",
+      "total_tracks": 14,
+      "played_tracks": [
+        "37LbtOFu19qeTJEHzbQlmm"
+      ],
+      "first_played": "2026-03-16T06:33:08.449Z",
+      "last_played": "2026-03-16T06:33:08.449Z"
+    },
+    "13iaFUi7nKjDRVkbBZI34o": {
+      "album_name": "Relaxing Thunder And Rain",
+      "artist": "Edy Boman",
+      "total_tracks": 9,
+      "played_tracks": [
+        "5zoJd7CLJu9a1HQUvz3im7",
+        "7n5ncfbPk2dfTiXBSJ6x4q",
+        "2YDxR0fz6fp2WPDLa9MGUZ"
+      ],
+      "first_played": "2026-03-16T05:46:20.353Z",
+      "last_played": "2026-03-16T05:32:06.277Z"
+    },
+    "7CQwwQVEFG1Rzqa05diUMU": {
+      "album_name": "Thunder And Rain Sounds To Fall Asleep",
+      "artist": "Pure Sleeping Vibes",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5D7CD8PRW6Q4CXgRfJbQN3",
+        "2wTE8ufbbdxti95Bn5rTb6",
+        "66H3e3qYePfUD4ZPtihnsp",
+        "12XpBUQ2SOUD8JRgfh4SZX"
+      ],
+      "first_played": "2026-03-16T05:25:20.046Z",
+      "last_played": "2026-03-16T05:06:24.786Z"
     }
   },
   "completed_albums": {
