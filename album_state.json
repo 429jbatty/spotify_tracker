@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-15T23:15:14.424Z",
+  "last_checked": "2026-03-16T04:57:39.852Z",
   "albums_in_progress": {
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
@@ -340,6 +340,64 @@
       ],
       "first_played": "2026-03-15T22:10:44.502Z",
       "last_played": "2026-03-15T22:10:44.502Z"
+    },
+    "3cweLFBfkdGYYihnXe3isB": {
+      "album_name": "Rain And Thunder Sounds For Sleep",
+      "artist": "Pure Sleeping Vibes",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3VxwkBVE8r8yDWVG56ABoM",
+        "4UAIVY0sQxOI9TVNU65ceo"
+      ],
+      "first_played": "2026-03-16T04:57:39.852Z",
+      "last_played": "2026-03-16T04:43:43.958Z"
+    },
+    "5Iqbflz3ePwl7iW9oLCIZC": {
+      "album_name": "Rain And Thunder",
+      "artist": "Edy Boman",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2PeFwSaGIHWWqNzWr57auw",
+        "6PLniv2hgNER49k0KI4Lij"
+      ],
+      "first_played": "2026-03-16T04:50:05.343Z",
+      "last_played": "2026-03-16T04:29:28.462Z"
+    },
+    "0nFIMpdeDoWR5IxXazXBiw": {
+      "album_name": "Heavy Rain And Thunder For Sleeping",
+      "artist": "Edy Boman",
+      "total_tracks": 9,
+      "played_tracks": [
+        "4SVeOVrQcnYEDOlsk1DJ48",
+        "0knTyOp06NgtS3vEM28ZNh"
+      ],
+      "first_played": "2026-03-16T04:36:15.817Z",
+      "last_played": "2026-03-16T04:22:02.887Z"
+    },
+    "46I3GBvff6xQNZ2ZmXgFdb": {
+      "album_name": "Under Nocturnal Clouds",
+      "artist": "Pure Sleeping Vibes",
+      "total_tracks": 8,
+      "played_tracks": [
+        "54yYZE8YUl4EOhBB0VbTFO"
+      ],
+      "first_played": "2026-03-16T04:14:25.608Z",
+      "last_played": "2026-03-16T04:14:25.608Z"
+    },
+    "5qyLcJKfw1eHWzwthcpXP3": {
+      "album_name": "Thunderstorm Sounds For Sleep",
+      "artist": "Edy Boman",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2uz6pG2EmJQ1oIGTfWZklf",
+        "2c2GBOQPSGSJlkCpp2nAug",
+        "3IVu2n6dbdu3DDtOdlVHkp",
+        "22nsKU2ijLBStNr3cuZwSR",
+        "2DPK398iDokWrioORCdXul",
+        "3qdDBn40nczbRjAAlYguoQ"
+      ],
+      "first_played": "2026-03-16T04:06:41.286Z",
+      "last_played": "2026-03-16T03:19:46.144Z"
     }
   },
   "completed_albums": {
