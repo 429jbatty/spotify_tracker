@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-16T06:38:38.659Z",
+  "last_checked": "2026-03-16T08:29:39.950Z",
   "albums_in_progress": {
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
@@ -405,10 +405,11 @@
       "artist": "NATURE, Vozterra, The Listening Planet",
       "total_tracks": 14,
       "played_tracks": [
-        "37LbtOFu19qeTJEHzbQlmm"
+        "37LbtOFu19qeTJEHzbQlmm",
+        "5BMTj9OLxbuXdlk1KwWcTA"
       ],
       "first_played": "2026-03-16T06:33:08.449Z",
-      "last_played": "2026-03-16T06:33:08.449Z"
+      "last_played": "2026-03-16T06:44:08.462Z"
     },
     "13iaFUi7nKjDRVkbBZI34o": {
       "album_name": "Relaxing Thunder And Rain",
@@ -434,6 +435,16 @@
       ],
       "first_played": "2026-03-16T05:25:20.046Z",
       "last_played": "2026-03-16T05:06:24.786Z"
+    },
+    "5EmHKVBfrBkmHT4PlOd39x": {
+      "album_name": "peaceful showers (rain)",
+      "artist": "oh, the joy.",
+      "total_tracks": 40,
+      "played_tracks": [
+        "7CLQUiUTBqBtjZHHkSVNuf"
+      ],
+      "first_played": "2026-03-16T08:08:08.565Z",
+      "last_played": "2026-03-16T08:08:08.565Z"
     }
   },
   "completed_albums": {
