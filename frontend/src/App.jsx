@@ -69,7 +69,7 @@ function App() {
         <Header view={view} setView={setView} />
 
         {/* Search box (skip on dashboard) */}
-        {(view === "dashboard" || view === "discovery") && (
+        {!(view === "dashboard" || view === "discovery") && (
           <div className="px-6">
             <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
