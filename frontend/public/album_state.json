@@ -1,67 +1,16 @@
 {
-  "last_checked": "2026-03-15T16:11:02.302Z",
+  "last_checked": "2026-03-15T23:15:14.424Z",
   "albums_in_progress": {
-    "1Qh1lG1yAjP3f8MeOuriGa": {
-      "album_name": "HELP(2)",
-      "artist": "War Child Records",
-      "total_tracks": 23,
-      "played_tracks": [
-        "0R9R2fD4C8yGHN2BdBA6hm",
-        "3aysr8fLK4g3qR6aaNITKM",
-        "6Ub872kT1aJKYj2PQr8Y2f"
-      ],
-      "first_played": "2026-03-13T17:43:21.357Z",
-      "last_played": "2026-03-13T19:08:07.713Z"
-    },
-    "055CZXcGINxmZKxwQ9hroP": {
-      "album_name": "petal rock black",
-      "artist": "WILLOW",
-      "total_tracks": 12,
-      "played_tracks": [
-        "0rfX5QNcW0Ne4IzdLNkfxA"
-      ],
-      "first_played": "2026-03-13T17:11:13.345Z",
-      "last_played": "2026-03-13T17:11:13.345Z"
-    },
-    "1YbqV9ng7vfzgGbhjR2FfQ": {
-      "album_name": "Cerulean",
-      "artist": "Danny L Harle",
-      "total_tracks": 13,
-      "played_tracks": [
-        "0Ju4lqTas9lg3Q1oUmBWNM"
-      ],
-      "first_played": "2026-03-13T16:15:50.944Z",
-      "last_played": "2026-03-13T16:15:50.944Z"
-    },
-    "1RvJmGd47lKS4XMXs9j8hD": {
-      "album_name": "The Mountain",
-      "artist": "Gorillaz",
-      "total_tracks": 15,
-      "played_tracks": [
-        "6VflG4mpZSlpKnqNRL3NO9"
-      ],
-      "first_played": "2026-03-13T19:34:14.846Z",
-      "last_played": "2026-03-13T19:34:14.846Z"
-    },
-    "3Pbe5l1HHTUIHrzg61jdbU": {
-      "album_name": "A Mat in the Garden",
-      "artist": "Photokem",
-      "total_tracks": 6,
-      "played_tracks": [
-        "01WgGAjnSBOuWjRRHuVqnD"
-      ],
-      "first_played": "2026-03-13T19:24:31.592Z",
-      "last_played": "2026-03-13T19:24:31.592Z"
-    },
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
       "artist": "Robert Fripp, Brian Eno",
       "total_tracks": 10,
       "played_tracks": [
-        "5Kp4uIt000uLfxYahTupG4"
+        "5Kp4uIt000uLfxYahTupG4",
+        "6CHo2rZCwJ5v6JKLzdc8Fe"
       ],
       "first_played": "2026-03-14T21:50:19.148Z",
-      "last_played": "2026-03-14T21:50:19.148Z"
+      "last_played": "2026-03-15T17:00:23.472Z"
     },
     "0p7nH5bz0pWBor10osUBuD": {
       "album_name": "R Plus Seven",
@@ -78,10 +27,12 @@
       "artist": "Harold Budd, Brian Eno",
       "total_tracks": 10,
       "played_tracks": [
-        "0ycQOJSAh2HXg1DaKLGoRX"
+        "0ycQOJSAh2HXg1DaKLGoRX",
+        "244AfRQzVwSOzkkRHGPWge",
+        "1Z2OQ4XtLwrhQKGS9BA4wi"
       ],
       "first_played": "2026-03-14T21:44:04.203Z",
-      "last_played": "2026-03-14T21:44:04.203Z"
+      "last_played": "2026-03-15T16:54:53.705Z"
     },
     "1Km58i317Pm5bQR3wPHKcO": {
       "album_name": "Apollo: Atmospheres And Soundtracks (Extended Edition)",
@@ -100,10 +51,21 @@
         "4ZknuVR2jOpMOcfwWpsuEr",
         "080LoPrJwr8hTVgtd63ArO",
         "2uIb2kCEuYjSy9sC4snvJs",
-        "4S9j7mGGvqmHEJR3Xd9sU4"
+        "4S9j7mGGvqmHEJR3Xd9sU4",
+        "5Qpkug9gDa6yQAMzpIgaDL",
+        "3fstJkqRRAGRga8qDkuPEc",
+        "0ZDcoExPAec1FtG6Jsu593",
+        "0S4SayETIzijgYF0MUSiY7",
+        "3xnTaIguNF0l6vGIODnits",
+        "1i9y4UqEZXYjkcRtOvKb3W",
+        "3W84bJQ1zzpTML5ux6ss9s",
+        "4phZPrD6ypIxjnHJJFnnKs",
+        "7BMC0oIPMdURZ2GIhGTt0a",
+        "7lSDwJf1bH1AYxUJTxH8eG"
       ],
       "first_played": "2026-03-14T21:41:09.331Z",
-      "last_played": "2026-03-15T15:22:01.823Z"
+      "last_played": "2026-03-15T16:14:16.525Z",
+      "completion_logged": true
     },
     "063f8Ej8rLVTz9KkjQKEMa": {
       "album_name": "Ambient 1: Music For Airports (Remastered 2004)",
@@ -118,6 +80,266 @@
       "first_played": "2026-03-14T21:36:39.055Z",
       "last_played": "2026-03-14T20:48:45.243Z",
       "completion_logged": true
+    },
+    "3C2MFZ2iHotUQOSBzdSvM7": {
+      "album_name": "Lonerism",
+      "artist": "Tame Impala",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6ewQE1dNPv9qqlnB1CxrvM",
+        "7qU7vhCPKhkDiJYGoboISc",
+        "0YuePEX4KyfLIPMdNLPwgQ",
+        "2Gl1Qdx5Px5kVYe0PQoGI0",
+        "7Jk2pg4g0c5rz5AfkEGMRp",
+        "33JMMgxQKL3zJsZeMNC3gR",
+        "4Klyx5dYqZV9YefSecDwDv",
+        "6qZjm61s6u8Ead9sWxCDro",
+        "2UYHP0RQqPFvue0Ygs5Amm",
+        "0LtOwyZoSNZKJWHqjzADpW",
+        "6IM45SqAURH6PrvziDs1RQ",
+        "0pJTrMWCiR0TuJ5FApIqrz"
+      ],
+      "first_played": "2026-03-15T18:11:45.599Z",
+      "last_played": "2026-03-15T18:16:57.533Z",
+      "completion_logged": true
+    },
+    "0UcHfoo7KMso767JwePBMh": {
+      "album_name": "Lifeforms",
+      "artist": "The Future Sound Of London",
+      "total_tracks": 19,
+      "played_tracks": [
+        "6chMOLaH3UG7jd98wp4JdU"
+      ],
+      "first_played": "2026-03-15T17:54:00.971Z",
+      "last_played": "2026-03-15T17:54:00.971Z"
+    },
+    "5SSf6lNbSoaAUx6PxQVjlP": {
+      "album_name": "The Pearl",
+      "artist": "Harold Budd, Brian Eno",
+      "total_tracks": 11,
+      "played_tracks": [
+        "28KcS7Otucbm1uRQs8k21t"
+      ],
+      "first_played": "2026-03-15T17:51:13.161Z",
+      "last_played": "2026-03-15T17:51:13.161Z"
+    },
+    "1CNhM669xHzsZMF1yZ9WFg": {
+      "album_name": "Small Craft On A Milk Sea",
+      "artist": "Brian Eno, Jon Hopkins, Leo Abrahams",
+      "total_tracks": 16,
+      "played_tracks": [
+        "0Y7HYQH29Nmy1MOktAwyEo"
+      ],
+      "first_played": "2026-03-15T17:47:00.775Z",
+      "last_played": "2026-03-15T17:47:00.775Z"
+    },
+    "32Nl49izVyngH22kD1lrkk": {
+      "album_name": "Pop",
+      "artist": "GAS",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6XtiBZ34C9R5qvG9VBJBOJ"
+      ],
+      "first_played": "2026-03-15T17:43:58.304Z",
+      "last_played": "2026-03-15T17:43:58.304Z"
+    },
+    "0ivDCaGwBmUHHatP2XDe0Y": {
+      "album_name": "Late Spring",
+      "artist": "Chihei Hatakeyama",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0t2MexiRw1bps6t9llqmFv"
+      ],
+      "first_played": "2026-03-15T17:35:25.095Z",
+      "last_played": "2026-03-15T17:35:25.095Z"
+    },
+    "7H6gso8aBfKK7mlouLCsW3": {
+      "album_name": "Replica",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "49iAudu6ppGPFRCYJLhnjU"
+      ],
+      "first_played": "2026-03-15T17:31:25.314Z",
+      "last_played": "2026-03-15T17:31:25.314Z"
+    },
+    "42Lahj8mKJKxPgncRXPuPw": {
+      "album_name": "Ambient 3: Day Of Radiance",
+      "artist": "Laraaji, Brian Eno",
+      "total_tracks": 5,
+      "played_tracks": [
+        "0ernnlD3qqeZ4AXysXPkE6"
+      ],
+      "first_played": "2026-03-15T17:28:00.460Z",
+      "last_played": "2026-03-15T17:28:00.460Z"
+    },
+    "4JQ2igmQEWUihSRzWgTiCF": {
+      "album_name": "Narkopop",
+      "artist": "GAS",
+      "total_tracks": 11,
+      "played_tracks": [
+        "10FQBzFE4qRZA80nbMoqvj"
+      ],
+      "first_played": "2026-03-15T17:12:43.908Z",
+      "last_played": "2026-03-15T17:12:43.908Z"
+    },
+    "07Ckd8KDDxcbY5iUXjhuex": {
+      "album_name": "Tomorrow's Harvest",
+      "artist": "Boards of Canada",
+      "total_tracks": 17,
+      "played_tracks": [
+        "2wJWTSdRT4wgKAyrWtwiqA"
+      ],
+      "first_played": "2026-03-15T17:08:19.628Z",
+      "last_played": "2026-03-15T17:08:19.628Z"
+    },
+    "0cJJRJRZJlrTKQBZBoDZ7j": {
+      "album_name": "Returnal",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 8,
+      "played_tracks": [
+        "36hmE7NEtdCF02XTzQj3p0"
+      ],
+      "first_played": "2026-03-15T17:06:03.831Z",
+      "last_played": "2026-03-15T17:06:03.831Z"
+    },
+    "4hnqM0JK4CM1phwfq1Ldyz": {
+      "album_name": "This Is Happening",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2073QOEC8rBtSyTsRyaWiP"
+      ],
+      "first_played": "2026-03-15T19:07:43.352Z",
+      "last_played": "2026-03-15T19:07:43.352Z"
+    },
+    "3XQMgEnLQnOMkFaJA9w6sZ": {
+      "album_name": "Veckatimest",
+      "artist": "Grizzly Bear",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5mIbLV3Aa4NcQDgMY4XgCT"
+      ],
+      "first_played": "2026-03-15T18:55:43.853Z",
+      "last_played": "2026-03-15T18:55:43.853Z"
+    },
+    "1DNSmmRLfv97Yjq7MTFWng": {
+      "album_name": "InnerSpeaker",
+      "artist": "Tame Impala",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6SmV1Oo24nCZBPzIYkL4HZ"
+      ],
+      "first_played": "2026-03-15T18:51:26.516Z",
+      "last_played": "2026-03-15T18:51:26.516Z"
+    },
+    "5vBpIxm8ws6pWyVmTWiGE1": {
+      "album_name": "Vespertine",
+      "artist": "Bj\u00f6rk",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0mc51xomEC6CZUZdB8xgQU"
+      ],
+      "first_played": "2026-03-15T22:07:12.140Z",
+      "last_played": "2026-03-15T22:07:12.140Z"
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7zyBL0LZndcnPXsbdhiqWp"
+      ],
+      "first_played": "2026-03-15T22:01:57.352Z",
+      "last_played": "2026-03-15T22:01:57.352Z"
+    },
+    "0v1sQbOCM2xDdIYA0XYapM": {
+      "album_name": "EUSEXUA Afterglow",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5RpENLVvKQCDWLkFRIeAHT"
+      ],
+      "first_played": "2026-03-15T21:59:41.452Z",
+      "last_played": "2026-03-15T21:59:41.452Z"
+    },
+    "3o1TOhMkU5FFMSJMDhXfdF": {
+      "album_name": "EUSEXUA",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4rMHek5bmv8XWHi4ByKjU2",
+        "3E0FBv982FkyTqfKu8K7AD",
+        "5kILHrfMHQ4eFHZqnu4yY3",
+        "5GmXpNIK6yGwTtKBITIqzK",
+        "41xQsowOhS2wpEEVWT4Wg0",
+        "3Si0hc3hxlehGK53jYjgVF",
+        "1CqyErlQstROOe9hAn93oI",
+        "13QINbzgh3yta5OGvB77Pl",
+        "2VeCDMFJMPg6S4P2EKRnyX",
+        "536rHxlVFXGJBO2xWE7HsV",
+        "6TeKbncyK62smlAvPy1dNa"
+      ],
+      "first_played": "2026-03-15T21:56:07.268Z",
+      "last_played": "2026-03-15T21:17:32.320Z",
+      "completion_logged": true
+    },
+    "070rEVRV6FWywkncMWLhs6": {
+      "album_name": "LP1",
+      "artist": "FKA twigs",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5sSV59D2IPCLxHFqzljMMO"
+      ],
+      "first_played": "2026-03-15T23:15:14.424Z",
+      "last_played": "2026-03-15T23:15:14.424Z"
+    },
+    "3G77BQuJy3jahjdkKQNNNM": {
+      "album_name": "CAPRISONGS",
+      "artist": "FKA twigs",
+      "total_tracks": 17,
+      "played_tracks": [
+        "6gkqX8E8lPuDIGqH5Fjm5J",
+        "7smsrHWCFPoXKkuVfCTqvm",
+        "1utTJXz5WzG0tONsJYKywl",
+        "2lMKT1E1BmYcRYSmglviRb",
+        "6rjnUkLj645A70RfJnCnPI",
+        "3xqtvSfofDvSMVwwSbuvKi",
+        "66fCNfMdIKsXOnSphorrwg",
+        "4EgGFRir6rg8sUSZewSrSg",
+        "5W2s4S60GoNsUthU51aUb8",
+        "4c9ygoZeMOjvu3uoLpIsl6",
+        "1xLQL0HgtfPnT3UpZr4mWC",
+        "51DyRlPy8pLq98H2f2g3pa",
+        "5dEJc0rHuTVxtl1xljDbRv",
+        "1GsSM1Fju5J1Fsu51jEsTg",
+        "6EeuY84I1Q3UJvpPN6iSzw",
+        "6kZsTttxl7h4BLGSRWQnTp",
+        "15TXFTdwGEEL4jH9erTRnK"
+      ],
+      "first_played": "2026-03-15T23:04:29.846Z",
+      "last_played": "2026-03-15T22:16:09.870Z",
+      "completion_logged": true
+    },
+    "0X5xnCnMafZT1sRIHnzAwP": {
+      "album_name": "Great Doubt",
+      "artist": "Astrid Sonne",
+      "total_tracks": 9,
+      "played_tracks": [
+        "1PDOit0Bd8geByHYAGvYaQ"
+      ],
+      "first_played": "2026-03-15T22:14:45.446Z",
+      "last_played": "2026-03-15T22:14:45.446Z"
+    },
+    "6Rv8V4QeLgfEC01czqJsiI": {
+      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
+      "artist": "SOPHIE",
+      "total_tracks": 9,
+      "played_tracks": [
+        "20vrVR0N1Y0zAJNmvnQJyg"
+      ],
+      "first_played": "2026-03-15T22:10:44.502Z",
+      "last_played": "2026-03-15T22:10:44.502Z"
     }
   },
   "completed_albums": {
@@ -397076,9 +397298,2137 @@
       "listen_history": [
         "2026-03-14T20:48:45.243Z"
       ]
+    },
+    "Brian Eno - Apollo: Atmospheres And Soundtracks (Extended Edition)": {
+      "artist": "Brian Eno",
+      "artist_mbid": "ff95eb47-41c4-4f7f-a104-cdc30f02e872",
+      "name": "Apollo: Atmospheres & Soundtracks",
+      "release_group_mbid": "03fe7fe6-2d96-3b40-816d-885b5118107e",
+      "label": "UMC",
+      "release_year": 1983,
+      "release_month": 7,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Under Stars",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c63a1111-9ded-4a84-90e1-fa1198e3a704"
+        },
+        {
+          "position": "2",
+          "title": "The Secret Place",
+          "credits": [
+            [
+              "Brian Eno",
+              "arranger",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5d2ead22-0b0e-4c02-8b3d-a389375153e7"
+        },
+        {
+          "position": "3",
+          "title": "Matta",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "eb208376-03b5-423f-be7f-307e4ad1b457"
+        },
+        {
+          "position": "4",
+          "title": "Signals",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "60ac8669-70bd-44b7-a459-d1b076e24429"
+        },
+        {
+          "position": "5",
+          "title": "An Ending (Ascent)",
+          "credits": [
+            [
+              "Brian Eno",
+              "performer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "306442b9-13d3-4e7c-b2c9-dcbe12ad0b22"
+        },
+        {
+          "position": "6",
+          "title": "Under Stars II",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ce55f92a-7773-4291-ba3d-de2553dcd3a2"
+        },
+        {
+          "position": "7",
+          "title": "Drift",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1998243b-8c1f-42ff-be6c-dbae3563cb42"
+        },
+        {
+          "position": "8",
+          "title": "Silver Morning",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ac674491-de96-42b6-a508-00b43fd834ea"
+        },
+        {
+          "position": "9",
+          "title": "Deep Blue Day",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6e9800e2-aa38-4194-b4dc-19f0e4f595e7"
+        },
+        {
+          "position": "10",
+          "title": "Weightless",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ac192d17-07eb-4208-9526-1f21a3ea7be0"
+        },
+        {
+          "position": "11",
+          "title": "Always Returning",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8c1688b3-6c3d-4654-b7ed-2964e23616c8"
+        },
+        {
+          "position": "12",
+          "title": "Stars",
+          "credits": [
+            [
+              "Brian Eno",
+              "performer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "performer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Lanois",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b7475d10-661f-4618-8988-842c6b53f4dd"
+        },
+        {
+          "position": "1",
+          "title": "The End of a Thin Cord",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "122174da-6770-4199-a622-3f6ab6fc78c8"
+        },
+        {
+          "position": "2",
+          "title": "Capsule",
+          "credits": [
+            [
+              "Wayne Lorenz",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f7439a23-7e77-473b-ba22-48b82fba887d"
+        },
+        {
+          "position": "3",
+          "title": "At the Foot of a Ladder",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a6adb477-afb8-418e-afaa-6f64b16f66c6"
+        },
+        {
+          "position": "4",
+          "title": "Waking Up",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "75bb0abc-96fc-4063-adac-212a7cf8e583"
+        },
+        {
+          "position": "5",
+          "title": "Clear Desert Night",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "618c7084-6aa8-4409-b56d-607658e7e6cb"
+        },
+        {
+          "position": "6",
+          "title": "Over the Canaries",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6ac8d7ad-6ee9-43b2-80eb-0a1aebfe0c8a"
+        },
+        {
+          "position": "7",
+          "title": "Last Step From the Surface",
+          "credits": [
+            [
+              "Wayne Lorenz",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d19e896c-4f90-488e-89ca-8fd8b05fbecc"
+        },
+        {
+          "position": "8",
+          "title": "Fine\u2010Grained",
+          "credits": [
+            [
+              "Wayne Lorenz",
+              "engineer",
+              ""
+            ],
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "71033985-d71f-45fd-ac67-5ea5a80978bf"
+        },
+        {
+          "position": "9",
+          "title": "Under the Moon",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "7180b0a5-4cc0-4e00-8275-42b1792c0550"
+        },
+        {
+          "position": "10",
+          "title": "Strange Quiet",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "bedc7fa5-9892-4ae8-bd2f-9b36aa82498b"
+        },
+        {
+          "position": "11",
+          "title": "Like I Was a Spectator",
+          "credits": [
+            [
+              "Brian Eno",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "9977da20-6e8e-4fcc-8611-81c72ccaab8d"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "ambient",
+        "experimental",
+        "366",
+        "space ambient"
+      ],
+      "image_url": "https://coverartarchive.org/release/46f131df-47be-4e7d-ac0f-f77075cc8740/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-15T16:14:16.525Z"
+      ]
+    },
+    "FKA twigs - EUSEXUA": {
+      "artist": "FKA twigs",
+      "artist_mbid": "1e4e9db7-5068-4a9c-bdd0-5777e47172c8",
+      "name": "EUSEXUA",
+      "release_group_mbid": "05c8e133-ba85-48cc-82c3-afcf0cc9e9ff",
+      "label": "Young",
+      "release_year": 2025,
+      "release_month": 1,
+      "release_day": 24,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Eusexua",
+          "credits": [
+            [
+              "Joseph Hartwell Jones",
+              "engineer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "[unknown]",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Bapari",
+              "producer",
+              "additional"
+            ],
+            [
+              "Eartheater",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Sasha",
+              "producer",
+              "additional"
+            ],
+            [
+              "Two Shell",
+              "producer",
+              "additional"
+            ],
+            [
+              "Eartheater",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "3b6f7ae3-520b-404f-877f-ee46a4ea3953"
+        },
+        {
+          "position": "2",
+          "title": "Girl Feels Good",
+          "credits": [
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "co"
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Felix Joseph",
+              "producer",
+              "co"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Alastair O\u2019Donnell",
+              "producer",
+              "co"
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "51cfaa29-c30a-4720-a152-cc4763776c09"
+        },
+        {
+          "position": "3",
+          "title": "Perfect Stranger",
+          "credits": [
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "[unknown]",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Alastair O\u2019Donnell",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "Stuart Price",
+              "producer",
+              "additional"
+            ],
+            [
+              "StarGate",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "d65b6f80-da11-4fe9-aa52-06a582d9a228"
+        },
+        {
+          "position": "4",
+          "title": "Drums of Death",
+          "credits": [
+            [
+              "Koreless",
+              "engineer",
+              ""
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Koreless",
+              "performer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ],
+            [
+              "Tintin Freeman",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "50bdeb2f-4382-4939-a38c-f86ac8640952"
+        },
+        {
+          "position": "5",
+          "title": "Room of Fools",
+          "credits": [
+            [
+              "Marius de Vries",
+              "conductor",
+              "strings"
+            ],
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "instrument arranger",
+              "strings"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Deutsches Filmorchester Babelsberg",
+              "performing orchestra",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Falko Duczmal",
+              "recording",
+              "strings"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "b31502d4-7cda-4d94-a444-1e2c7af3bacd"
+        },
+        {
+          "position": "6",
+          "title": "Sticky",
+          "credits": [
+            [
+              "Joseph Hartwell Jones",
+              "engineer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Felix Joseph",
+              "producer",
+              "additional"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              "additional"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "686c9757-aa0e-4c32-b7d9-3e36508b9725"
+        },
+        {
+          "position": "7",
+          "title": "Keep It, Hold It",
+          "credits": [
+            [
+              "Nadine Marshall",
+              "chorus master",
+              ""
+            ],
+            [
+              "Peter Walsh",
+              "engineer",
+              ""
+            ],
+            [
+              "Ben de Vries",
+              "instrument",
+              "additional, drums (drum set)"
+            ],
+            [
+              "Kelly Moran",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "additional"
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Nicolas Jaar",
+              "producer",
+              "additional"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ruth Adebiyi",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Ryan Carty",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ],
+            [
+              "J'Danah Marshall",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Nadine Marshall",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Nathan Palmer",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "7732b203-b1fb-4e24-822b-a6816e3105ee"
+        },
+        {
+          "position": "8",
+          "title": "Childlike Things",
+          "credits": [
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "North West",
+              "performer",
+              ""
+            ],
+            [
+              "Jeff Bhasker",
+              "producer",
+              "co"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "a205ae33-ac8d-485f-83e2-dcd00bb2d777"
+        },
+        {
+          "position": "9",
+          "title": "Striptease",
+          "credits": [
+            [
+              "Marius de Vries",
+              "arranger",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "conductor",
+              ""
+            ],
+            [
+              "Brad Lauchert",
+              "engineer",
+              "task"
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Chris Ahn",
+              "instrument",
+              "cello"
+            ],
+            [
+              "Eugenia Choi",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Vanessa Freebairn\u2010Smith",
+              "instrument",
+              "cello"
+            ],
+            [
+              "Eric Gorfain",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Christian Hebel",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Luanne Homzy",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Mina Hong",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Benjamin Jacobson",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Julie Jung",
+              "instrument",
+              "cello"
+            ],
+            [
+              "David Low",
+              "instrument",
+              "cello"
+            ],
+            [
+              "Radu Pieptea",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Mark Robertson",
+              "instrument",
+              "violin"
+            ],
+            [
+              "Jon Castelli",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "Clemants",
+              "programming",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "recording",
+              ""
+            ],
+            [
+              "Justin Moshkevich",
+              "recording",
+              "strings"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "e9d7059d-237e-4183-8dd2-6c8b56d15853"
+        },
+        {
+          "position": "10",
+          "title": "24hr Dog",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Ethan P. Flynn",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "3ce5cf6f-736f-477b-baba-593d529f4a47"
+        },
+        {
+          "position": "11",
+          "title": "Wanderlust",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "[unknown]",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Zach Pereyra",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Trey Station",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Anthony Vilchis",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "[unknown]",
+              "producer",
+              "co"
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "co"
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Ojivolta",
+              "producer",
+              ""
+            ],
+            [
+              "Stuart Price",
+              "producer",
+              "co"
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "bdf3d077-814d-4f88-bc89-7d006723bc91"
+        }
+      ],
+      "tags": [
+        "trance",
+        "electronic",
+        "downtempo",
+        "pop",
+        "dance-pop",
+        "english",
+        "edm",
+        "art pop",
+        "alternative r&b",
+        "glitch pop",
+        "offizielle charts",
+        "1\u20134 wochen",
+        "ph_temp_checken",
+        "me 26\u201301",
+        "rs 26\u201302"
+      ],
+      "image_url": "https://coverartarchive.org/release/6b45e94a-c154-411e-b45f-2fd17de9fce4/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-15T21:17:32.320Z"
+      ]
+    },
+    "FKA twigs - CAPRISONGS": {
+      "artist": "FKA twigs",
+      "artist_mbid": "1e4e9db7-5068-4a9c-bdd0-5777e47172c8",
+      "name": "CAPRISONGS",
+      "release_group_mbid": "edc8b011-6294-48b6-b064-67dfd1712c1b",
+      "label": "Young",
+      "release_year": 2022,
+      "release_month": 1,
+      "release_day": 14,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "ride the dragon",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              "co"
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Jeff Kleinman",
+              "producer",
+              "co"
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Sounwave",
+              "producer",
+              "co"
+            ]
+          ],
+          "recording_mbid": "6dc2bfd5-efb6-4304-ba89-11d77f5791a7"
+        },
+        {
+          "position": "2",
+          "title": "honda",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Pa Salieu",
+              "performer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Felix Joseph",
+              "producer",
+              ""
+            ],
+            [
+              "Alastair O\u2019Donnell",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6ee2d718-f66d-49d2-b321-a61d3faee9be"
+        },
+        {
+          "position": "3",
+          "title": "meta angel",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Rob Moose",
+              "instrument",
+              "strings"
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Roxy Lee",
+              "performer",
+              ""
+            ],
+            [
+              "Kash Powell",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              "co"
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Teo Halm",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              "co"
+            ]
+          ],
+          "recording_mbid": "091c7d50-25c2-4d28-8f74-e7df54191c21"
+        },
+        {
+          "position": "4",
+          "title": "tears in the club",
+          "credits": [
+            [
+              "Bryce Bordone",
+              "engineer",
+              ""
+            ],
+            [
+              "Shin Kamiyama",
+              "engineer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Serban Ghenea",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "The Weeknd",
+              "performer",
+              ""
+            ],
+            [
+              "Arca",
+              "producer",
+              ""
+            ],
+            [
+              "Cirkut",
+              "producer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "vocal",
+              ""
+            ],
+            [
+              "The Weeknd",
+              "vocal",
+              "guest"
+            ]
+          ],
+          "recording_mbid": "a6e94024-deef-4775-a6de-9977a792d729"
+        },
+        {
+          "position": "5",
+          "title": "oh my love",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Pau Riutort",
+              "producer",
+              "additional"
+            ],
+            [
+              "JJ Scheff",
+              "producer",
+              ""
+            ],
+            [
+              "Sara El Dabi",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Lous and the Yakuza",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Jemma Mayo",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Suzannah Pettigrew",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Abigail Sakari",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Alejandra Luisa Smits",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "e48c439a-f799-4207-a0f1-9505a9896b04"
+        },
+        {
+          "position": "6",
+          "title": "pamplemousse",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Teo Halm",
+              "producer",
+              "additional"
+            ],
+            [
+              "Koreless",
+              "producer",
+              "additional"
+            ],
+            [
+              "Louis Healy",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Matthew Healy",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "7cdeb3da-911c-4c9f-b1fb-6e8b56e44d1c"
+        },
+        {
+          "position": "7",
+          "title": "caprisongs interlude",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "Jonny Leslie",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "06b0759d-0395-40fc-97d5-de0ed95e2b1a"
+        },
+        {
+          "position": "8",
+          "title": "lightbeamers",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Marius de Vries",
+              "producer",
+              "co"
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Jasper Harris",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "7fc1b74e-4d4c-47bb-b220-4146ca80f63c"
+        },
+        {
+          "position": "9",
+          "title": "papi bones",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Jaycen Joshua",
+              "mix",
+              ""
+            ],
+            [
+              "Jacob Richards",
+              "mix",
+              "assistant"
+            ],
+            [
+              "DJ Riggins",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Mike Seaberg",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Shygirl",
+              "performer",
+              ""
+            ],
+            [
+              "Jonny Coffer",
+              "producer",
+              ""
+            ],
+            [
+              "Fakeguido",
+              "producer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "producer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              "additional"
+            ],
+            [
+              "Sega Bodega",
+              "producer",
+              "drum machine"
+            ],
+            [
+              "Dystopia",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Kaner Flex",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Movie Star Johnny",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "d1dc7fab-b371-48e5-9606-7c3d15064300"
+        },
+        {
+          "position": "10",
+          "title": "which way",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "Dystopia",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "eefd6c38-e827-4442-8199-6f242171e923"
+        },
+        {
+          "position": "11",
+          "title": "jealousy",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Fred again..",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Fred again..",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Fred again..",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Fred again..",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Jaycen Joshua",
+              "mix",
+              ""
+            ],
+            [
+              "Jacob Richards",
+              "mix",
+              "assistant"
+            ],
+            [
+              "DJ Riggins",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Mike Seaberg",
+              "mix",
+              "assistant"
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Rema",
+              "performer",
+              ""
+            ],
+            [
+              "Fred again..",
+              "producer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Richard \u201cP2J\u201d Isong",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              "additional"
+            ],
+            [
+              "Fred again..",
+              "programming",
+              ""
+            ],
+            [
+              "Rob Drauden",
+              "recording",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "116f143e-e864-4e87-9b29-f183dd962b01"
+        },
+        {
+          "position": "12",
+          "title": "careless",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Pau Riutort",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "Daniel Caesar",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Psymun",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4e6a9981-14ce-4738-a95b-fab6843b7874"
+        },
+        {
+          "position": "13",
+          "title": "minds of men",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Fakeguido",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Bak",
+              "producer",
+              "co"
+            ],
+            [
+              "Fakeguido",
+              "producer",
+              "additional"
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Jasper Harris",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "9e3682d4-4d20-4c5c-938e-96e702497acc"
+        },
+        {
+          "position": "14",
+          "title": "track girl interlude",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "Irene Agbontaen",
+              "performer",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Roxy Lee",
+              "performer",
+              ""
+            ],
+            [
+              "Kash Powell",
+              "performer",
+              ""
+            ],
+            [
+              "Tolani Shoneye",
+              "performer",
+              ""
+            ],
+            [
+              "Warren Ellis",
+              "producer",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c221eafe-07bb-4c26-a3a3-298ec004fb9a"
+        },
+        {
+          "position": "15",
+          "title": "darjeeling",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Jorja Smith",
+              "performer",
+              ""
+            ],
+            [
+              "Unknown T",
+              "performer",
+              ""
+            ],
+            [
+              "BKay",
+              "producer",
+              ""
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Psymun",
+              "producer",
+              ""
+            ],
+            [
+              "Riccardo Damian",
+              "recording",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "09887296-3ee5-4939-9fce-fb960d20fcd2"
+        },
+        {
+          "position": "16",
+          "title": "christi interlude",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "Koreless",
+              "producer",
+              ""
+            ],
+            [
+              "Christi Meshell",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "07e83520-8369-41e0-ad47-7aff2690e486"
+        },
+        {
+          "position": "17",
+          "title": "thank you song",
+          "credits": [
+            [
+              "Jonny Leslie",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Dean",
+              "mix",
+              ""
+            ],
+            [
+              "FKA twigs",
+              "performer",
+              ""
+            ],
+            [
+              "Arca",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ab6f8a89-5bd5-4c8f-afbb-1b5caa156971"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "pop",
+        "experimental",
+        "hip hop",
+        "spoken word",
+        "dance-pop",
+        "english",
+        "dancehall",
+        "uk hip hop",
+        "uk bass",
+        "r&b",
+        "contemporary r&b",
+        "art pop",
+        "alternative r&b",
+        "trap",
+        "glitch pop",
+        "afroswing",
+        "avant-garde pop",
+        "laut.de",
+        "plattentests.de",
+        "ph_3_stars"
+      ],
+      "image_url": "https://coverartarchive.org/release/333373c0-724b-4b2c-8f33-e2dc073a8994/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-15T22:16:09.870Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "FKA twigs - CAPRISONGS",
+    "FKA twigs - EUSEXUA",
+    "Brian Eno - Apollo: Atmospheres And Soundtracks (Extended Edition)",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
