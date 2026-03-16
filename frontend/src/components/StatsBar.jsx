@@ -9,10 +9,10 @@ function StatsBar({ albums }) {
     totalArtists === 0 ? 0 : (totalAlbums / totalArtists).toFixed(2);
 
   return (
-    <div className="flex flex-col md:flex-row gap-4 mb-8">
-      <StatCard title="Total Albums" value={totalAlbums} color="text-orange-500" />
-      <StatCard title="Total Artists" value={totalArtists} color="text-neutral-500" />
-      <StatCard title="Avg Albums/Artist" value={avgAlbumsPerArtist} color="text-neutral-500" />
+    <div className="flex flex-col md:flex-row gap-3 mb-8">
+      <StatCard title="Total Albums" value={totalAlbums} />
+      <StatCard title="Total Artists" value={totalArtists}/>
+      <StatCard title="Avg Albums/Artist" value={avgAlbumsPerArtist}/>
     </div>
   );
 }

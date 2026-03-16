@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import ReleaseDateChart from "./ReleaseDateChart";
 import AlbumTable from "./AlbumTable";
+import AlbumTimeline from "@/components/timeline/AlbumTimeline";
 
 function AlbumTimeView({ albums }) {
   const [filter, setFilter] = useState({ decade: null, year: null });
@@ -20,7 +21,7 @@ function AlbumTimeView({ albums }) {
   const resetFilter = () => setFilter({ decade: null, year: null });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       <div>
         <ReleaseDateChart
           albums={albums}
@@ -29,6 +30,7 @@ function AlbumTimeView({ albums }) {
           onReset={resetFilter}
           chartMode={chartMode}
           onToggle={(mode) => setChartMode(mode)} // <- parent controls state
+          chartHeight={400}
         />
       </div>
       <div>

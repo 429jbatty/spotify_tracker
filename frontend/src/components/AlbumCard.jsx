@@ -14,7 +14,6 @@ import { Badge } from "@/components/ui/badge";
 
 // Helper function to group album credits by category
 function groupAlbumCredits(album) {
-
   const categories = {
     Engineers: ["engineer", "mix"],
     Instrumentation: ["instrument"],
@@ -36,7 +35,6 @@ function groupAlbumCredits(album) {
       const [name, role, detail] = credit;
       const roleDetail = detail ? `${role}, ${detail}` : role;
 
-      // Determine category
       let category = "Other";
       for (const [catName, roles] of Object.entries(categories)) {
         if (roles.includes(role.toLowerCase())) {
@@ -45,13 +43,11 @@ function groupAlbumCredits(album) {
         }
       }
 
-      // Initialize person entry if needed
       if (!grouped[category][name]) grouped[category][name] = new Set();
       grouped[category][name].add(roleDetail);
     }
   }
 
-  // Convert Sets to arrays for rendering
   for (const category of Object.keys(grouped)) {
     for (const person of Object.keys(grouped[category])) {
       grouped[category][person] = Array.from(grouped[category][person]);
@@ -60,12 +56,13 @@ function groupAlbumCredits(album) {
 
   return grouped;
 }
-function AlbumInfoRow({ label, value, color = "orange" }) {
+
+function AlbumInfoRow({ label, value, color = "primary" }) {
   const colors = {
-    orange: "bg-orange-50 text-orange-700 hover:bg-orange-100",
-    gray: "bg-gray-50 text-gray-700 hover:bg-gray-100",
-    red: "bg-red-50 text-red-700 hover:bg-red-100",
-    blue: "bg-blue-50 text-blue-700 hover:bg-blue-100",
+    primary: "bg-primary/10 text-primary hover:bg-primary/20",
+    muted: "bg-muted text-foreground/80 hover:bg-muted/50",
+    accent: "bg-accent/10 text-accent hover:bg-accent/20",
+    destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
   };
 
   return (
@@ -91,10 +88,10 @@ function AlbumCard({ album }) {
   );
 
   return (
-    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg hover:border-amber-200 border border-slate-200">
-      <CardHeader className="p-0">
+    <Card className="group overflow-hidden transition-all duration-300 hover:shadow-lg border border-border bg-card">
+      <CardHeader className="p-0 bg-card">
         {/* Album Artwork */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-slate-100 to-amber-50 aspect-square">
+        <div className="relative overflow-hidden aspect-square bg-card">
           <img
             loading="lazy"
             src={album.image_url || `${BASE}placeholder_art.png`}
@@ -109,26 +106,26 @@ function AlbumCard({ album }) {
 
         {/* Title and Artist */}
         <div className="space-y-2 p-6">
-          <CardTitle className="line-clamp-2 text-xl font-bold text-slate-900">
+          <CardTitle className="line-clamp-2 text-xl font-bold text-foreground">
             {album.name}
           </CardTitle>
-          <p className="text-sm font-medium text-stone-700">{album.artist}</p>
+          <p className="text-sm font-medium text-foreground/70">{album.artist}</p>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4 p-6">
         {/* Info Grid */}
         <div className="space-y-3">
-          <AlbumInfoRow label="Release" value={album.release_date} color="orange" />
-          <AlbumInfoRow label="Label" value={album.label} color="gray" />
+          <AlbumInfoRow label="Release" value={album.release_date} color="primary" />
+          <AlbumInfoRow label="Label" value={album.label} color="muted" />
         </div>
 
         {/* Credits Section */}
         {hasCredits && (
-          <div className="border-t border-slate-200 pt-4">
+          <div className="border-t border-border pt-4">
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem value="credits" className="border-0">
-                <AccordionTrigger className="hover:no-underline py-2 px-0 hover:text-mauve-700 font-semibold text-slate-900 text-sm">
+                <AccordionTrigger className="hover:no-underline py-2 px-0 font-semibold text-foreground">
                   Credits
                 </AccordionTrigger>
                 <AccordionContent className="space-y-4 pb-0">
@@ -136,20 +133,14 @@ function AlbumCard({ album }) {
                     if (Object.keys(persons).length === 0) return null;
                     return (
                       <div key={groupName} className="space-y-2">
-                        <h4 className="text-xs font-semibold uppercase tracking-wide text-mauve-700">
+                        <h4 className="text-xs font-semibold uppercase tracking-wide text-foreground/70">
                           {groupName}
                         </h4>
                         <div className="space-y-1 ml-2">
                           {Object.entries(persons).map(([name, roles]) => (
-                            <div
-                              key={name}
-                              className="text-xs text-slate-700"
-                            >
+                            <div key={name} className="text-xs text-foreground/70">
                               <span className="font-medium">{name}</span>
-                              <span className="text-slate-500">
-                                {" — "}
-                                {roles.join(", ")}
-                              </span>
+                              <span className="text-foreground/50"> — {roles.join(", ")}</span>
                             </div>
                           ))}
                         </div>

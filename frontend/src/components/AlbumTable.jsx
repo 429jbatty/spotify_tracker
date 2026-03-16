@@ -12,27 +12,33 @@ import {
 function AlbumTable({ albums }) {
   const [sortBy, setSortBy] = useState("listen_history");
   const [ascending, setAscending] = useState(false);
+    
+  const albumArray = Object.entries(albums).map(([id, data]) => ({
+      id,
+      ...data
+    }));
 
-  const sortedAlbums = Object.entries(albums)
-    .map(([id, data]) => ({ id, ...data }))
-    .sort((a, b) => {
-      const aValue = a[sortBy];
-      const bValue = b[sortBy];
+  const sortedAlbums = albumArray.sort((a, b) => {
+    let aValue = a[sortBy];
+    let bValue = b[sortBy];
 
-      if (!isNaN(Date.parse(aValue))) {
-        return ascending
-          ? new Date(aValue) - new Date(bValue)
-          : new Date(bValue) - new Date(aValue);
-      }
+    if (aValue === null || aValue === undefined) return 1;
+    if (bValue === null || bValue === undefined) return -1;
 
-      if (typeof aValue === "number") {
-        return ascending ? aValue - bValue : bValue - aValue;
-      }
+    if (typeof aValue === "number") {
+      return ascending ? aValue - bValue : bValue - aValue;
+    }
 
-      return ascending
-        ? String(aValue).localeCompare(String(bValue))
-        : String(bValue).localeCompare(String(aValue));
-    });
+    if (sortBy === "latestListen") {
+      return ascending 
+        ? new Date(aValue) - new Date(bValue) 
+        : new Date(bValue) - new Date(aValue);
+    }
+
+    return ascending
+      ? String(aValue).localeCompare(String(bValue))
+      : String(bValue).localeCompare(String(aValue));
+  });
 
   const handleSort = (key) => {
     if (sortBy === key) setAscending(!ascending);
@@ -43,24 +49,24 @@ function AlbumTable({ albums }) {
   };
 
   const headers = [
-    { key: "image_url", label: "", sortable: false },
-    { key: "name", label: "Album", sortable: true },
-    { key: "artist", label: "Artist", sortable: true },
-    { key: "release_date", label: "Release Date", sortable: true },
-    { key: "label", label: "Label", sortable: true },
+    { key: "image_url", label: "", sortable: false, width: "w-[100px]" },
+    { key: "name", label: "Album", sortable: true, width: "w-[37%]" },
+    { key: "artist", label: "Artist", sortable: true, width: "w-[20%]" },
+    { key: "release_year", label: "Year", sortable: true, width: "w-[10%]" },
+    { key: "label", label: "Label", sortable: true, width: "w-[15%]" },
+    { key: "totalListens", label: "Listens", sortable: true, width: "w-[8%]" },
+    { key: "latestListen", label: "Last listen", sortable: true, width: "w-[10%]" },
   ];
 
   return (
     <div className="overflow-x-auto rounded-lg border border-border">
-      <Table className="w-full">
+      <Table className="w-full table-fixed bg-card">
         <TableHeader className="bg-muted">
           <TableRow>
             {headers.map((header) => (
               <TableHead
                 key={header.key}
-                className={`px-4 py-2 text-left text-sm font-medium select-none ${
-                  header.sortable ? "cursor-pointer" : ""
-                }`}
+                className={`py-2 text-left text-sm font-medium select-none text-foreground ${header.sortable ? "cursor-pointer" : ""} ${header.width}`}
                 onClick={header.sortable ? () => handleSort(header.key) : undefined}
               >
                 {header.label}{" "}
@@ -73,7 +79,7 @@ function AlbumTable({ albums }) {
             ))}
           </TableRow>
         </TableHeader>
-        <TableBody>
+        <TableBody className="bg-primary-foreground">
           {sortedAlbums.map((album) => (
             <AlbumRow key={album.id} albumId={album.id} album={album} />
           ))}

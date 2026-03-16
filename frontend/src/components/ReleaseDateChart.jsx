@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getNiceStep } from "./utils/chartUtils";
@@ -9,17 +9,28 @@ function ReleaseDateChart({
   onSelect,
   onReset,
   chartMode, // "decade" | "year"
-  onToggle, // new prop to control chart mode externally
-  chartWidth = 800,
-  chartHeight = 300
+  onToggle,
+  chartHeight = 300,
 }) {
   const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+  const barGap = 2;
+  const [hoveredBar, setHoveredBar] = useState(null);
+  const [chartWidth, setChartWidth] = useState(800);
+
+  // responsive chart width
+  useEffect(() => {
+    const handleResize = () => setChartWidth(window.innerWidth - 32); // padding
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const innerWidth = chartWidth - margin.left - margin.right;
   const innerHeight = chartHeight - margin.top - margin.bottom;
-  const barGap = 2;
 
-  const [hoveredBar, setHoveredBar] = useState(null);
-
+  // -----------------------
+  // Compute bars
+  // -----------------------
   const albumsPerDecade = useMemo(() => {
     const decadeMap = {};
     Object.values(albums).forEach((album) => {
@@ -51,7 +62,6 @@ function ReleaseDateChart({
       : allYears.map((y) => ({ label: y.year, count: y.count }));
 
   const currentMax = bars.length > 0 ? Math.max(...bars.map((b) => b.count)) : 1;
-
   const tickCount = 5;
   const step = getNiceStep(currentMax, tickCount);
   const niceMax = Math.ceil(currentMax / step) * step;
@@ -60,49 +70,51 @@ function ReleaseDateChart({
 
   const barWidth = bars.length > 0 ? innerWidth / bars.length - barGap : 0;
 
-  /* ============================================================
-     Theme Colors
-  ============================================================ */
-  const fillColor = "#ffc973"; // base bar
-  const selectedColor = "#ff6b3c"; // selected
-  const hoverColor = "#ff7f50"; // hover
-  const axisColor = "#666"; // subtle axis
-  const labelColor = "#333";
+  // -----------------------
+  // Theme colors
+  // -----------------------
+  const fillColor = "var(--chart-1)";
+  const selectedColor = "var(--primary)";
+  const hoverColor = "var(--primary)";
+  const axisColor = "var(--muted-foreground)";
+  const labelColor = "var(--foreground)";
 
   return (
-    <Card className="bg-gray-50 rounded-xl shadow-md p-4">
-      {/* Header + Toggle */}
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4">
-        <CardTitle className="text-lg font-bold text-foreground">
-          Album Releases
-        </CardTitle>
+    <Card className="bg-card rounded-xl shadow-md p-4 w-full">
+      {/* Header */}
+      <CardHeader className="relative w-full flex items-center justify-center pb-4">
 
-        {/* Chart Mode Toggle inside chart */}
-        <Tabs
-          value={chartMode}
-          onValueChange={(value) => onToggle(value)} // call parent to update
-          className="w-full sm:w-auto"
-        >
-          <TabsList className="grid grid-cols-2 rounded-lg bg-gray-100 p-1">
-            <TabsTrigger
-              value="year"
-              className="data-[state=active]:bg-orange-200 data-[state=active]:text-orange-700"
-            >
-              Year
-            </TabsTrigger>
-            <TabsTrigger
-              value="decade"
-              className="data-[state=active]:bg-orange-200 data-[state=active]:text-orange-700"
-            >
-              Decade
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+
+        {/* Chart Mode Tabs */}
+        <div className="absolute right-0 flex gap-2">
+          <Tabs value={chartMode} onValueChange={onToggle}>
+            <TabsList className="grid grid-cols-2 rounded-lg bg-muted p-1">
+              <TabsTrigger
+                value="year"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                Year
+              </TabsTrigger>
+              <TabsTrigger
+                value="decade"
+                className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              >
+                Decade
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
       </CardHeader>
 
       {/* Chart */}
-      <CardContent>
-        <svg width={chartWidth} height={chartHeight} onClick={onReset} style={{ cursor: "pointer" }}>
+      <CardContent className="w-full overflow-x-auto">
+        <svg
+          width="100%"
+          height={chartHeight}
+          viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+          onClick={onReset}
+          style={{ cursor: "pointer" }}
+        >
           <g transform={`translate(${margin.left}, ${margin.top})`}>
             {/* Y-Axis */}
             <g>
@@ -121,7 +133,14 @@ function ReleaseDateChart({
             </g>
 
             {/* X-Axis */}
-            <line x1={0} y1={innerHeight} x2={innerWidth} y2={innerHeight} stroke={axisColor} strokeWidth={1.5} />
+            <line
+              x1={0}
+              y1={innerHeight}
+              x2={innerWidth}
+              y2={innerHeight}
+              stroke={axisColor}
+              strokeWidth={1.5}
+            />
 
             {/* Bars */}
             {bars.map((bar, index) => {
@@ -151,24 +170,31 @@ function ReleaseDateChart({
                       transform: hoveredBar?.label === bar.label ? "scaleY(1.05)" : "scaleY(1)",
                       filter:
                         hoveredBar?.label === bar.label
-                          ? "drop-shadow(0 2px 6px rgba(255,107,60,0.5))"
+                          ? `drop-shadow(0 2px 6px ${hoverColor}80)`
                           : "none",
                     }}
-                    onMouseEnter={(e) =>
-                      setHoveredBar({
-                        label: bar.label,
-                        count: bar.count,
-                        x, // SVG relative
-                        y,
-                      })
+                    onMouseEnter={() =>
+                      setHoveredBar({ label: bar.label, count: bar.count, x, y })
                     }
                     onMouseLeave={() => setHoveredBar(null)}
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (chartMode === "decade") {
-                        onSelect(bar.label, null);
+
+                      const isAlreadySelected =
+                        chartMode === "decade"
+                          ? selectedFilter.decade === bar.label
+                          : selectedFilter.year === bar.label;
+
+                      if (isAlreadySelected) {
+                        // Unselect
+                        onSelect(null, null);
                       } else {
-                        onSelect(Math.floor(bar.label / 10) * 10, bar.label);
+                        // Select normally
+                        if (chartMode === "decade") {
+                          onSelect(bar.label, null);
+                        } else {
+                          onSelect(Math.floor(bar.label / 10) * 10, bar.label);
+                        }
                       }
                     }}
                   />
@@ -189,18 +215,53 @@ function ReleaseDateChart({
               );
             })}
 
-            {/* Tooltip inside SVG */}
-            {hoveredBar && (
-              <g transform={`translate(${hoveredBar.x + barWidth + 8}, ${hoveredBar.y})`} pointerEvents="none">
-                <rect x={0} y={-20} width={80} height={32} fill="white" stroke="#ccc" rx={4} ry={4} />
-                <text x={40} y={-8} textAnchor="middle" fontSize={10} fill="#333">
-                  {chartMode === "decade" ? "Decade" : "Year"}: {hoveredBar.label}
-                </text>
-                <text x={40} y={6} textAnchor="middle" fontSize={10} fill="#333">
-                  Count: {hoveredBar.count}
-                </text>
-              </g>
-            )}
+            {/* Tooltip */}
+            {hoveredBar && (() => {
+              const tooltipWidth = 80;
+              const tooltipHeight = 32;
+              const margin = 8;
+              let tooltipX = hoveredBar.x + barWidth + margin;
+              let tooltipAnchor = "middle";
+
+              // If tooltip would overflow right edge, position to the left
+              if (tooltipX + tooltipWidth > .85 * innerWidth) {
+                tooltipX = hoveredBar.x - tooltipWidth - margin;
+                tooltipAnchor = "middle"; // text still centered in rect
+              }
+
+              return (
+                <g transform={`translate(${tooltipX}, ${hoveredBar.y})`} pointerEvents="none">
+                  <rect
+                    x={0}
+                    y={-tooltipHeight / 2}
+                    width={tooltipWidth}
+                    height={tooltipHeight}
+                    fill="var(--muted)"
+                    stroke="var(--border)"
+                    rx={4}
+                    ry={4}
+                  />
+                  <text
+                    x={tooltipWidth / 2}
+                    y={-4}
+                    textAnchor={tooltipAnchor}
+                    fontSize={10}
+                    fill="var(--foreground)"
+                  >
+                    {chartMode === "decade" ? "Decade" : "Year"}: {hoveredBar.label}
+                  </text>
+                  <text
+                    x={tooltipWidth / 2}
+                    y={8}
+                    textAnchor={tooltipAnchor}
+                    fontSize={10}
+                    fill="var(--foreground)"
+                  >
+                    Count: {hoveredBar.count}
+                  </text>
+                </g>
+              );
+            })()}
           </g>
         </svg>
       </CardContent>

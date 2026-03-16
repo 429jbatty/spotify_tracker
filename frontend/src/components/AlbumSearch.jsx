@@ -2,7 +2,7 @@ import { Input } from "@/components/ui/input";
 
 function AlbumSearch({ searchTerm, setSearchTerm }) {
   return (
-    <div className="mb-4 w-full">
+    <div className="mb-4 w-full text-foreground">
       <Input
         type="text"
         placeholder="Search by album, artist, or label..."

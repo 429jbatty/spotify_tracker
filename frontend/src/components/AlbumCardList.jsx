@@ -4,7 +4,7 @@ function AlbumCardList({ albums }) {
   const albumArray = Object.entries(albums || {});
 
   if (albumArray.length === 0) {
-    return <p>No completed albums yet.</p>;
+    return <p className="text-foreground">No completed albums yet.</p>;
   }
 
   return (

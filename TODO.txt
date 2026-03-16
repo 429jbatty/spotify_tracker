@@ -1,4 +1,1 @@
-Shadcn components:
-
-Album table: datatable, pagination, scroll area (if needed)
-Add a +n in last week on dashboard
+discography completeness
