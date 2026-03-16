@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-16T10:25:38.129Z",
+  "last_checked": "2026-03-16T12:23:07.916Z",
   "albums_in_progress": {
     "1nVnbkq96iZzBMp57Xzx1V": {
       "album_name": "Evening Star",
@@ -406,10 +406,11 @@
       "total_tracks": 14,
       "played_tracks": [
         "37LbtOFu19qeTJEHzbQlmm",
-        "5BMTj9OLxbuXdlk1KwWcTA"
+        "5BMTj9OLxbuXdlk1KwWcTA",
+        "0l5tRwngl2fYOYnSEAJzLv"
       ],
       "first_played": "2026-03-16T06:33:08.449Z",
-      "last_played": "2026-03-16T06:44:08.462Z"
+      "last_played": "2026-03-16T11:39:07.859Z"
     },
     "13iaFUi7nKjDRVkbBZI34o": {
       "album_name": "Relaxing Thunder And Rain",
@@ -445,6 +446,26 @@
       ],
       "first_played": "2026-03-16T08:08:08.565Z",
       "last_played": "2026-03-16T08:08:08.565Z"
+    },
+    "2wvSQLGnfV2fvkLgUrbKDB": {
+      "album_name": "Calming Water and Nature",
+      "artist": "NatuREM",
+      "total_tracks": 16,
+      "played_tracks": [
+        "4iA69uEBQfAItJ9k4DttC0"
+      ],
+      "first_played": "2026-03-16T12:13:07.748Z",
+      "last_played": "2026-03-16T12:13:07.748Z"
+    },
+    "34eXFqczELpudpgS6M5QTS": {
+      "album_name": "Tranquil Rain Sounds",
+      "artist": "Noise and Nature",
+      "total_tracks": 10,
+      "played_tracks": [
+        "7hleOo6zmfPQVT4GHtLLco"
+      ],
+      "first_played": "2026-03-16T11:31:37.925Z",
+      "last_played": "2026-03-16T11:31:37.925Z"
     }
   },
   "completed_albums": {
