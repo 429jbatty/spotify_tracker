@@ -1,57 +1,6 @@
 {
   "last_checked": "2026-03-17T01:57:14.097Z",
   "albums_in_progress": {
-    "5vBpIxm8ws6pWyVmTWiGE1": {
-      "album_name": "Vespertine",
-      "artist": "Bj\u00f6rk",
-      "total_tracks": 12,
-      "played_tracks": [
-        "0mc51xomEC6CZUZdB8xgQU"
-      ],
-      "first_played": "2026-03-15T22:07:12.140Z",
-      "last_played": "2026-03-15T22:07:12.140Z"
-    },
-    "58PwJKq5KH2MjVt2Ih4nEt": {
-      "album_name": "choke enough",
-      "artist": "Oklou",
-      "total_tracks": 13,
-      "played_tracks": [
-        "7zyBL0LZndcnPXsbdhiqWp"
-      ],
-      "first_played": "2026-03-15T22:01:57.352Z",
-      "last_played": "2026-03-15T22:01:57.352Z"
-    },
-    "0v1sQbOCM2xDdIYA0XYapM": {
-      "album_name": "EUSEXUA Afterglow",
-      "artist": "FKA twigs",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5RpENLVvKQCDWLkFRIeAHT"
-      ],
-      "first_played": "2026-03-15T21:59:41.452Z",
-      "last_played": "2026-03-15T21:59:41.452Z"
-    },
-    "3o1TOhMkU5FFMSJMDhXfdF": {
-      "album_name": "EUSEXUA",
-      "artist": "FKA twigs",
-      "total_tracks": 11,
-      "played_tracks": [
-        "4rMHek5bmv8XWHi4ByKjU2",
-        "3E0FBv982FkyTqfKu8K7AD",
-        "5kILHrfMHQ4eFHZqnu4yY3",
-        "5GmXpNIK6yGwTtKBITIqzK",
-        "41xQsowOhS2wpEEVWT4Wg0",
-        "3Si0hc3hxlehGK53jYjgVF",
-        "1CqyErlQstROOe9hAn93oI",
-        "13QINbzgh3yta5OGvB77Pl",
-        "2VeCDMFJMPg6S4P2EKRnyX",
-        "536rHxlVFXGJBO2xWE7HsV",
-        "6TeKbncyK62smlAvPy1dNa"
-      ],
-      "first_played": "2026-03-15T21:56:07.268Z",
-      "last_played": "2026-03-15T21:17:32.320Z",
-      "completion_logged": true
-    },
     "070rEVRV6FWywkncMWLhs6": {
       "album_name": "LP1",
       "artist": "FKA twigs",
@@ -98,16 +47,6 @@
       ],
       "first_played": "2026-03-15T22:14:45.446Z",
       "last_played": "2026-03-15T22:14:45.446Z"
-    },
-    "6Rv8V4QeLgfEC01czqJsiI": {
-      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
-      "artist": "SOPHIE",
-      "total_tracks": 9,
-      "played_tracks": [
-        "20vrVR0N1Y0zAJNmvnQJyg"
-      ],
-      "first_played": "2026-03-15T22:10:44.502Z",
-      "last_played": "2026-03-15T22:10:44.502Z"
     },
     "3cweLFBfkdGYYihnXe3isB": {
       "album_name": "Rain And Thunder Sounds For Sleep",
