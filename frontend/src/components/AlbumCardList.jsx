@@ -1,4 +1,4 @@
-import AlbumCard from "./AlbumCard";
+import AlbumCardVertical from "./AlbumCardVertical";
 
 function AlbumCardList({ albums }) {
   const albumArray = Object.entries(albums || {});

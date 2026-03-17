@@ -1,6 +1,12 @@
 import { useState } from "react";
 import AlbumRow from "./AlbumRow";
 import {
+  Sheet,
+  SheetContent,
+} from "@/components/ui/sheet";
+
+import AlbumSidePanel from "./AlbumSidePanel"
+import {
   Table,
   TableBody,
   TableCell,
@@ -12,11 +18,14 @@ import {
 function AlbumTable({ albums }) {
   const [sortBy, setSortBy] = useState("listen_history");
   const [ascending, setAscending] = useState(false);
-    
+  const [selectedAlbum, setSelectedAlbum] = useState(null);
+  const [panelOpen, setPanelOpen] = useState(false);
+
+  
   const albumArray = Object.entries(albums).map(([id, data]) => ({
-      id,
-      ...data
-    }));
+    id,
+    ...data,
+  }));
 
   const sortedAlbums = albumArray.sort((a, b) => {
     let aValue = a[sortBy];
@@ -30,13 +39,13 @@ function AlbumTable({ albums }) {
     }
 
     if (sortBy === "latestListen") {
-      return ascending 
-        ? new Date(aValue) - new Date(bValue) 
+      return ascending
+        ? new Date(aValue) - new Date(bValue)
         : new Date(bValue) - new Date(aValue);
     }
 
     return ascending
-      ? String(aValue).localeCompare(String(bValue))
+      ? String(aValue).localeCompare(String(aValue))
       : String(bValue).localeCompare(String(aValue));
   });
 
@@ -46,6 +55,11 @@ function AlbumTable({ albums }) {
       setSortBy(key);
       setAscending(true);
     }
+  };
+
+  const handleRowClick = (album) => {
+    setSelectedAlbum(album);
+    setPanelOpen(true);
   };
 
   const headers = [
@@ -59,33 +73,53 @@ function AlbumTable({ albums }) {
   ];
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-border">
-      <Table className="w-full table-fixed bg-card">
-        <TableHeader className="bg-muted">
-          <TableRow>
-            {headers.map((header) => (
-              <TableHead
-                key={header.key}
-                className={`py-2 text-left text-sm font-medium select-none text-foreground ${header.sortable ? "cursor-pointer" : ""} ${header.width}`}
-                onClick={header.sortable ? () => handleSort(header.key) : undefined}
-              >
-                {header.label}{" "}
-                {header.sortable && sortBy === header.key
-                  ? ascending
-                    ? "▲"
-                    : "▼"
-                  : ""}
-              </TableHead>
+    <>
+      <div className="overflow-x-auto rounded-lg border border-border">
+        <Table className="w-full table-fixed bg-card">
+          <TableHeader className="bg-muted">
+            <TableRow>
+              {headers.map((header) => (
+                <TableHead
+                  key={header.key}
+                  className={`py-2 text-left text-sm font-medium select-none text-foreground ${header.sortable ? "cursor-pointer" : ""} ${header.width}`}
+                  onClick={header.sortable ? () => handleSort(header.key) : undefined}
+                >
+                  {header.label}{" "}
+                  {header.sortable && sortBy === header.key
+                    ? ascending
+                      ? "▲"
+                      : "▼"
+                    : ""}
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+
+          <TableBody className="bg-primary-foreground">
+            {sortedAlbums.map((album) => (
+              <AlbumRow
+                key={album.id}
+                albumId={album.id}
+                album={album}
+                onRowClick={() => handleRowClick(album)}
+              />
             ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody className="bg-primary-foreground">
-          {sortedAlbums.map((album) => (
-            <AlbumRow key={album.id} albumId={album.id} album={album} />
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableBody>
+        </Table>
+      </div>
+
+      <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
+        <SheetContent
+          side="right"
+          className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
+        >
+          {selectedAlbum && (
+            <AlbumSidePanel album={selectedAlbum} />
+          )}
+        </SheetContent>
+      </Sheet>
+
+    </>
   );
 }
 

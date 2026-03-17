@@ -1,6 +1,6 @@
 import { TableRow, TableCell } from "@/components/ui/table";
 
-function AlbumRow({ albumId, album }) {
+function AlbumRow({ albumId, album, onRowClick }) {
   const BASE = import.meta.env.BASE_URL;
 
   const formatDate = (isoString) => {
@@ -15,9 +15,9 @@ function AlbumRow({ albumId, album }) {
   return (
     <TableRow
       key={albumId}
+      onClick={onRowClick}
       className="group transition-colors duration-200 hover:bg-muted cursor-pointer border-b border-border"
     >
-      {/* Album Art */}
       <TableCell className="py-3 w-[100px]">
         <div className="relative overflow-hidden rounded-md border border-border w-12 h-12 bg-card shadow-sm">
           <img
@@ -33,7 +33,6 @@ function AlbumRow({ albumId, album }) {
         </div>
       </TableCell>
 
-      {/* Album Name */}
       <TableCell
         className="text-left text-foreground font-medium truncate max-w-0"
         title={album.name}
@@ -41,20 +40,25 @@ function AlbumRow({ albumId, album }) {
         {album.name}
       </TableCell>
 
-      {/* Artist */}
-      <TableCell className="text-foreground/70 truncate max-w-0">{album.artist}</TableCell>
+      <TableCell className="text-foreground/70 truncate max-w-0">
+        {album.artist}
+      </TableCell>
 
-      {/* Release Date */}
-      <TableCell className="text-foreground/60">{formatDate(album.release_date)}</TableCell>
+      <TableCell className="text-foreground/60">
+        {formatDate(album.release_date)}
+      </TableCell>
 
-      {/* Label */}
-      <TableCell className="text-foreground/60 truncate max-w-0">{album.label}</TableCell>
+      <TableCell className="text-foreground/60 truncate max-w-0">
+        {album.label}
+      </TableCell>
 
-      {/* Total Listens */}
-      <TableCell className="text-foreground/60">{album.totalListens}</TableCell>
+      <TableCell className="text-foreground/60">
+        {album.totalListens}
+      </TableCell>
 
-      {/* Latest Listen */}
-      <TableCell className="text-foreground/60 whitespace-nowrap">{formatDate(album.latestListen)}</TableCell>
+      <TableCell className="text-foreground/60 whitespace-nowrap">
+        {formatDate(album.latestListen)}
+      </TableCell>
     </TableRow>
   );
 }

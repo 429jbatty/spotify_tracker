@@ -77,7 +77,7 @@ function App() {
       </div>
 
       {/* Conditional rendering based on selected view */}
-      {view === "dashboard" && <Dashboard albums={processedAlbums} ids={data.most_recently_listened} />}
+      {/* {view === "dashboard" && <Dashboard albums={processedAlbums} ids={data.most_recently_listened} />} */}
       {view === "discovery" && <PageDiscovery albums={processedAlbums} />}
       {view === "table" && <AlbumTable albums={filteredAlbums}/>}
       {view === "timeline" && <AlbumTimeView albums={filteredAlbums}/>}

@@ -25,8 +25,8 @@ function UniversalHeader({ view, setView }) {
       <svg className="w-full h-full" preserveAspectRatio="none">
           <defs>
           <clipPath id="waveClip">
-              <rect x="20%" y="0%" width="22%" height="100%" />
-              <rect x="70%" y="0%" width="22%" height="100%" />
+              <rect x="20%" y="0%" width="26%" height="100%" />
+              <rect x="66%" y="0%" width="26%" height="100%" />
           </clipPath>
           </defs>
 
@@ -58,7 +58,8 @@ function UniversalHeader({ view, setView }) {
         {/* Navigation */}
         <Tabs value={view} onValueChange={setView}>
           <TabsList className="bg-background/30 backdrop-blur-sm rounded-xl p-1">
-            {["dashboard", "discovery", "table", "timeline"].map((v) => (
+            {/* {["dashboard", "discovery", "table", "timeline"].map((v) => ( */}
+            {["discovery", "table", "timeline"].map((v) => (
               <TabsTrigger
                 key={v}
                 value={v}

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import AlbumCard from "./AlbumCard";
+import AlbumCardVertical from "./AlbumCardVertical";
 import StatsBar from "./StatsBar";
 import DiscoveryLineChart from "./DiscoveryChart";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
@@ -12,7 +12,7 @@ const TIME_RANGES = {
 };
 
 export default function Discovery({ albums }) {
-  const [timeRange, setTimeRange] = useState("all");
+  const [timeRange, setTimeRange] = useState("7d");
 
   // Convert albums object to array
   const albumsArray = useMemo(() => Object.values(albums), [albums]);
@@ -104,16 +104,18 @@ export default function Discovery({ albums }) {
           </TabsList>
         </Tabs>
       </div>
-      
+
       <StatsBar albums={filteredAlbums} />
       <DiscoveryLineChart albums={filteredAlbums} timeRange={timeRange} />
 
       {/* --- Recent Discovery Feed --- */}
       <section className="space-y-4">
-        <h2 className="text-xl font-semibold">Recent Discoveries</h2>
+        <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground/50 to-foreground drop-shadow-md mb-6">
+          Recent Discoveries
+        </h2>        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {recentDiscoveries.map((album) => (
-            <AlbumCard
+            <AlbumCardVertical
               key={album.release_group_mbid}
               album={album}
               showNewArtistBadge={album.isNewArtist}
