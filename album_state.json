@@ -1,53 +1,6 @@
 {
-  "last_checked": "2026-03-17T01:57:14.097Z",
+  "last_checked": "2026-03-18T00:38:28.078Z",
   "albums_in_progress": {
-    "070rEVRV6FWywkncMWLhs6": {
-      "album_name": "LP1",
-      "artist": "FKA twigs",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5sSV59D2IPCLxHFqzljMMO"
-      ],
-      "first_played": "2026-03-15T23:15:14.424Z",
-      "last_played": "2026-03-15T23:15:14.424Z"
-    },
-    "3G77BQuJy3jahjdkKQNNNM": {
-      "album_name": "CAPRISONGS",
-      "artist": "FKA twigs",
-      "total_tracks": 17,
-      "played_tracks": [
-        "6gkqX8E8lPuDIGqH5Fjm5J",
-        "7smsrHWCFPoXKkuVfCTqvm",
-        "1utTJXz5WzG0tONsJYKywl",
-        "2lMKT1E1BmYcRYSmglviRb",
-        "6rjnUkLj645A70RfJnCnPI",
-        "3xqtvSfofDvSMVwwSbuvKi",
-        "66fCNfMdIKsXOnSphorrwg",
-        "4EgGFRir6rg8sUSZewSrSg",
-        "5W2s4S60GoNsUthU51aUb8",
-        "4c9ygoZeMOjvu3uoLpIsl6",
-        "1xLQL0HgtfPnT3UpZr4mWC",
-        "51DyRlPy8pLq98H2f2g3pa",
-        "5dEJc0rHuTVxtl1xljDbRv",
-        "1GsSM1Fju5J1Fsu51jEsTg",
-        "6EeuY84I1Q3UJvpPN6iSzw",
-        "6kZsTttxl7h4BLGSRWQnTp",
-        "15TXFTdwGEEL4jH9erTRnK"
-      ],
-      "first_played": "2026-03-15T23:04:29.846Z",
-      "last_played": "2026-03-15T22:16:09.870Z",
-      "completion_logged": true
-    },
-    "0X5xnCnMafZT1sRIHnzAwP": {
-      "album_name": "Great Doubt",
-      "artist": "Astrid Sonne",
-      "total_tracks": 9,
-      "played_tracks": [
-        "1PDOit0Bd8geByHYAGvYaQ"
-      ],
-      "first_played": "2026-03-15T22:14:45.446Z",
-      "last_played": "2026-03-15T22:14:45.446Z"
-    },
     "3cweLFBfkdGYYihnXe3isB": {
       "album_name": "Rain And Thunder Sounds For Sleep",
       "artist": "Pure Sleeping Vibes",
