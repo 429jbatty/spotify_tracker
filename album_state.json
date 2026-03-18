@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-18T06:29:42.429Z",
+  "last_checked": "2026-03-18T08:19:12.208Z",
   "albums_in_progress": {
     "5qyLcJKfw1eHWzwthcpXP3": {
       "album_name": "Thunderstorm Sounds For Sleep",
@@ -28,16 +28,6 @@
       ],
       "first_played": "2026-03-16T06:33:08.449Z",
       "last_played": "2026-03-16T13:26:08.088Z"
-    },
-    "5EmHKVBfrBkmHT4PlOd39x": {
-      "album_name": "peaceful showers (rain)",
-      "artist": "oh, the joy.",
-      "total_tracks": 40,
-      "played_tracks": [
-        "7CLQUiUTBqBtjZHHkSVNuf"
-      ],
-      "first_played": "2026-03-16T08:08:08.565Z",
-      "last_played": "2026-03-16T08:08:08.565Z"
     },
     "2wvSQLGnfV2fvkLgUrbKDB": {
       "album_name": "Calming Water and Nature",
@@ -78,6 +68,16 @@
       ],
       "first_played": "2026-03-18T06:00:42.681Z",
       "last_played": "2026-03-18T06:00:42.681Z"
+    },
+    "7FtankGXHvGLTAfWz5zDpc": {
+      "album_name": "Calm Sleep (Noise)",
+      "artist": "NatuREM",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2t59Nh57fvHOwfiV7aZwTn"
+      ],
+      "first_played": "2026-03-18T08:09:12.249Z",
+      "last_played": "2026-03-18T08:09:12.249Z"
     }
   },
   "completed_albums": {
