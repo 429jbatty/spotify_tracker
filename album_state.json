@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-18T16:28:29.960Z",
+  "last_checked": "2026-03-18T16:46:30.402Z",
   "albums_in_progress": {
     "5qyLcJKfw1eHWzwthcpXP3": {
       "album_name": "Thunderstorm Sounds For Sleep",
@@ -56,10 +56,24 @@
         "3YGFZ8rIsAA5zQvvoeCaW0",
         "658gtQhSGDuPtIlpCSqNek",
         "7jqyOefdf3A4zFKhTNVjVf",
-        "4Bbb5DAOZvlbxsNkjf8UQY"
+        "4Bbb5DAOZvlbxsNkjf8UQY",
+        "4lSvsybipCBR0KpA9SBrQx",
+        "5IbfCLQGS6RPmVg9FHFbPO",
+        "15lb3M395advtEyLKLAIy0"
       ],
       "first_played": "2026-03-18T16:28:29.960Z",
-      "last_played": "2026-03-18T15:07:30.752Z"
+      "last_played": "2026-03-18T16:34:31.223Z",
+      "completion_logged": true
+    },
+    "1WwZwdTICfaZI51BIIEN9z": {
+      "album_name": "Crush",
+      "artist": "Floating Points",
+      "total_tracks": 12,
+      "played_tracks": [
+        "78Ct2qlEtSMw3CG6zWwAyz"
+      ],
+      "first_played": "2026-03-18T16:46:30.402Z",
+      "last_played": "2026-03-18T16:46:30.402Z"
     }
   },
   "completed_albums": {
@@ -397018,9 +397032,85 @@
       "listen_history": [
         "2026-03-14T20:48:45.243Z"
       ]
+    },
+    "Floating Points - Cascade": {
+      "artist": "Floating Points",
+      "artist_mbid": "69d9c5ba-7bba-4cb7-ab32-8ccc48ad4f97",
+      "name": "Cascade",
+      "release_group_mbid": "70410894-5005-4fac-a254-c82912a069cc",
+      "label": "Ninja Tune",
+      "release_year": 2024,
+      "release_month": 9,
+      "release_day": 13,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Vocoder (club mix)",
+          "credits": {},
+          "recording_mbid": "b8ca66e2-7697-43f8-b00c-2c20591f0397"
+        },
+        {
+          "position": "2",
+          "title": "Key103",
+          "credits": {},
+          "recording_mbid": "29143267-399b-41bf-9c3b-f98ca01d8915"
+        },
+        {
+          "position": "3",
+          "title": "Birth4000",
+          "credits": {},
+          "recording_mbid": "1384029d-7919-4a35-8044-16a78d16dcbb"
+        },
+        {
+          "position": "4",
+          "title": "Del oro",
+          "credits": {},
+          "recording_mbid": "33cc794d-1aca-44b6-af3d-6309a503ad93"
+        },
+        {
+          "position": "5",
+          "title": "Fast Forward",
+          "credits": {},
+          "recording_mbid": "c12ecf37-3788-41a7-9802-6e4240676ec1"
+        },
+        {
+          "position": "6",
+          "title": "Ocotillo",
+          "credits": {},
+          "recording_mbid": "eeb27f23-bdb5-4af7-982c-0c0404d70d1b"
+        },
+        {
+          "position": "7",
+          "title": "Afflecks Palace",
+          "credits": {},
+          "recording_mbid": "5a3603e0-532a-422c-8e0b-366bfe4c98f1"
+        },
+        {
+          "position": "8",
+          "title": "Tilt Shift",
+          "credits": {},
+          "recording_mbid": "4a59ce70-d897-4750-8c1f-dceb4b3cdff1"
+        },
+        {
+          "position": "9",
+          "title": "Ablaze",
+          "credits": {},
+          "recording_mbid": "78ab663a-74c8-4b5b-b6f4-f3d1bf947cbb"
+        }
+      ],
+      "tags": [
+        "tech house",
+        "progressive house"
+      ],
+      "image_url": "https://coverartarchive.org/release/eede7c8f-9120-4a8f-af4c-d7bc601e33e4/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-18T16:34:31.223Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Floating Points - Cascade",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
