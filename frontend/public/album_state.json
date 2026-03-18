@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-18T16:46:30.402Z",
+  "last_checked": "2026-03-18T19:35:30.500Z",
   "albums_in_progress": {
     "5qyLcJKfw1eHWzwthcpXP3": {
       "album_name": "Thunderstorm Sounds For Sleep",
@@ -74,6 +74,100 @@
       ],
       "first_played": "2026-03-18T16:46:30.402Z",
       "last_played": "2026-03-18T16:46:30.402Z"
+    },
+    "4yvoTv5xoYbWzHGpVxGClR": {
+      "album_name": "EUSEXUA",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2M70msrBXSDbd741JhoJyN"
+      ],
+      "first_played": "2026-03-18T19:35:30.500Z",
+      "last_played": "2026-03-18T19:35:30.500Z"
+    },
+    "20BKSOzIQSHI4kLQIzPslN": {
+      "album_name": "ICONOCLASTS",
+      "artist": "Anna von Hausswolff",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3phjX4po8KRDwLfYFBtKiP"
+      ],
+      "first_played": "2026-03-18T19:22:24.251Z",
+      "last_played": "2026-03-18T19:22:24.251Z"
+    },
+    "1DKZiCIxfbZB5I1p7JhXym": {
+      "album_name": "Escaper",
+      "artist": "Sarah Kinsley",
+      "total_tracks": 12,
+      "played_tracks": [
+        "360TFPz9VbmLrr3F0wzCVO"
+      ],
+      "first_played": "2026-03-18T19:15:10.993Z",
+      "last_played": "2026-03-18T19:15:10.993Z"
+    },
+    "6Rv8V4QeLgfEC01czqJsiI": {
+      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
+      "artist": "SOPHIE",
+      "total_tracks": 9,
+      "played_tracks": [
+        "7ub14NqqyR1MDUTXyFBTzO"
+      ],
+      "first_played": "2026-03-18T19:11:44.293Z",
+      "last_played": "2026-03-18T19:11:44.293Z"
+    },
+    "3zjvJv9tqkQ5kdX9pOpT6U": {
+      "album_name": "Powders",
+      "artist": "Eartheater",
+      "total_tracks": 9,
+      "played_tracks": [
+        "3JeSix4ZwQgja1rt30PPQH"
+      ],
+      "first_played": "2026-03-18T19:07:50.695Z",
+      "last_played": "2026-03-18T19:07:50.695Z"
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6aUr8iLB8hfp9z2xMv1X5X"
+      ],
+      "first_played": "2026-03-18T19:03:39.200Z",
+      "last_played": "2026-03-18T19:03:39.200Z"
+    },
+    "0v1sQbOCM2xDdIYA0XYapM": {
+      "album_name": "EUSEXUA Afterglow",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2s9jJzbd988ltBhwn6ZhXo"
+      ],
+      "first_played": "2026-03-18T19:00:09.760Z",
+      "last_played": "2026-03-18T19:00:09.760Z"
+    },
+    "3o1TOhMkU5FFMSJMDhXfdF": {
+      "album_name": "EUSEXUA",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4rMHek5bmv8XWHi4ByKjU2",
+        "3E0FBv982FkyTqfKu8K7AD",
+        "5kILHrfMHQ4eFHZqnu4yY3",
+        "5GmXpNIK6yGwTtKBITIqzK",
+        "41xQsowOhS2wpEEVWT4Wg0"
+      ],
+      "first_played": "2026-03-18T18:57:08.982Z",
+      "last_played": "2026-03-18T18:41:11.670Z"
+    },
+    "51CQQ3tQLRZlZJZ5jcpoGE": {
+      "album_name": "Endlessness",
+      "artist": "Nala Sinephro",
+      "total_tracks": 10,
+      "played_tracks": [
+        "66O3YWGFyDk1UWhi8BTGMF"
+      ],
+      "first_played": "2026-03-18T18:36:26.234Z",
+      "last_played": "2026-03-18T18:36:26.234Z"
     }
   },
   "completed_albums": {
