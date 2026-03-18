@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-18T02:46:17.355Z",
+  "last_checked": "2026-03-18T04:29:39.864Z",
   "albums_in_progress": {
     "3cweLFBfkdGYYihnXe3isB": {
       "album_name": "Rain And Thunder Sounds For Sleep",
@@ -12,38 +12,6 @@
       ],
       "first_played": "2026-03-16T04:57:39.852Z",
       "last_played": "2026-03-16T05:56:20.922Z"
-    },
-    "5Iqbflz3ePwl7iW9oLCIZC": {
-      "album_name": "Rain And Thunder",
-      "artist": "Edy Boman",
-      "total_tracks": 8,
-      "played_tracks": [
-        "2PeFwSaGIHWWqNzWr57auw",
-        "6PLniv2hgNER49k0KI4Lij"
-      ],
-      "first_played": "2026-03-16T04:50:05.343Z",
-      "last_played": "2026-03-16T04:29:28.462Z"
-    },
-    "0nFIMpdeDoWR5IxXazXBiw": {
-      "album_name": "Heavy Rain And Thunder For Sleeping",
-      "artist": "Edy Boman",
-      "total_tracks": 9,
-      "played_tracks": [
-        "4SVeOVrQcnYEDOlsk1DJ48",
-        "0knTyOp06NgtS3vEM28ZNh"
-      ],
-      "first_played": "2026-03-16T04:36:15.817Z",
-      "last_played": "2026-03-16T04:22:02.887Z"
-    },
-    "46I3GBvff6xQNZ2ZmXgFdb": {
-      "album_name": "Under Nocturnal Clouds",
-      "artist": "Pure Sleeping Vibes",
-      "total_tracks": 8,
-      "played_tracks": [
-        "54yYZE8YUl4EOhBB0VbTFO"
-      ],
-      "first_played": "2026-03-16T04:14:25.608Z",
-      "last_played": "2026-03-16T04:14:25.608Z"
     },
     "5qyLcJKfw1eHWzwthcpXP3": {
       "album_name": "Thunderstorm Sounds For Sleep",
@@ -127,6 +95,16 @@
       ],
       "first_played": "2026-03-16T11:31:37.925Z",
       "last_played": "2026-03-16T11:31:37.925Z"
+    },
+    "2ClgRK6O3Z0qdoHrMWE3Kf": {
+      "album_name": "Baby Sleep Noise",
+      "artist": "Exodar",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5GQqp24qVLaCWzxa6de1AE"
+      ],
+      "first_played": "2026-03-18T03:35:39.827Z",
+      "last_played": "2026-03-18T03:35:39.827Z"
     }
   },
   "completed_albums": {
