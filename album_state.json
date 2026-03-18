@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-18T13:42:09.303Z",
+  "last_checked": "2026-03-18T16:28:29.960Z",
   "albums_in_progress": {
     "5qyLcJKfw1eHWzwthcpXP3": {
       "album_name": "Thunderstorm Sounds For Sleep",
@@ -45,6 +45,21 @@
       ],
       "first_played": "2026-03-18T08:09:12.249Z",
       "last_played": "2026-03-18T08:29:12.203Z"
+    },
+    "4IYnAmZ8GvmNFF2ZxxKT8L": {
+      "album_name": "Cascade",
+      "artist": "Floating Points",
+      "total_tracks": 9,
+      "played_tracks": [
+        "4mVsLqaJtptz3QBzbuTiCS",
+        "1pgK78vWoIm9cPhMKIola3",
+        "3YGFZ8rIsAA5zQvvoeCaW0",
+        "658gtQhSGDuPtIlpCSqNek",
+        "7jqyOefdf3A4zFKhTNVjVf",
+        "4Bbb5DAOZvlbxsNkjf8UQY"
+      ],
+      "first_played": "2026-03-18T16:28:29.960Z",
+      "last_played": "2026-03-18T15:07:30.752Z"
     }
   },
   "completed_albums": {
