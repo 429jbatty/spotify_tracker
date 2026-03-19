@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-19T13:31:58.636Z",
+  "last_checked": "2026-03-19T16:05:42.547Z",
   "albums_in_progress": {
     "2ClgRK6O3Z0qdoHrMWE3Kf": {
       "album_name": "Baby Sleep Noise",
@@ -153,6 +153,21 @@
       ],
       "first_played": "2026-03-18T18:36:26.234Z",
       "last_played": "2026-03-18T18:36:26.234Z"
+    },
+    "0ofdTvYtx4LpsVjemJt71X": {
+      "album_name": "Lotus",
+      "artist": "Little Simz",
+      "total_tracks": 13,
+      "played_tracks": [
+        "1DOagLRXZ5KtZ1GLuTceSq",
+        "05n0mwlh1y3cwjGmHnfVjh",
+        "6jJTlYkddJONCQQVzWFzcQ",
+        "1MQKhg5Kbn3cd07LQ5JPRK",
+        "3m9g8ua3M51JvqmS8rh6bS",
+        "20kfSemlOU2CpCmh7GRSRv"
+      ],
+      "first_played": "2026-03-19T16:05:42.547Z",
+      "last_played": "2026-03-19T15:14:24.688Z"
     }
   },
   "completed_albums": {
