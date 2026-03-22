@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-22T15:21:38.537Z",
+  "last_checked": "2026-03-22T17:39:41.183Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -10,6 +10,78 @@
       ],
       "first_played": "2026-03-22T04:32:18.667Z",
       "last_played": "2026-03-22T04:32:18.667Z"
+    },
+    "3G77BQuJy3jahjdkKQNNNM": {
+      "album_name": "CAPRISONGS",
+      "artist": "FKA twigs",
+      "total_tracks": 17,
+      "played_tracks": [
+        "6gkqX8E8lPuDIGqH5Fjm5J"
+      ],
+      "first_played": "2026-03-22T17:39:41.183Z",
+      "last_played": "2026-03-22T17:39:41.183Z"
+    },
+    "6Rv8V4QeLgfEC01czqJsiI": {
+      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
+      "artist": "SOPHIE",
+      "total_tracks": 9,
+      "played_tracks": [
+        "5djCX0bDd96N89Ayv5Y8Y2"
+      ],
+      "first_played": "2026-03-22T17:27:28.733Z",
+      "last_played": "2026-03-22T17:27:28.733Z"
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6IlgcHz7O34fOhHYOe77kR"
+      ],
+      "first_played": "2026-03-22T17:23:33.632Z",
+      "last_played": "2026-03-22T17:23:33.632Z"
+    },
+    "4OeA68LyLKcKR4g4DYkc5t": {
+      "album_name": "Arcadia",
+      "artist": "Ramona Lisa",
+      "total_tracks": 11,
+      "played_tracks": [
+        "3Q8u4XHuLjt2yjuM4ufoVd"
+      ],
+      "first_played": "2026-03-22T17:20:47.871Z",
+      "last_played": "2026-03-22T17:20:47.871Z"
+    },
+    "25ktFe8igqIwv9aRbkdnTS": {
+      "album_name": "Desire, I Want To Turn Into You: Everasking Edition",
+      "artist": "Caroline Polachek",
+      "total_tracks": 20,
+      "played_tracks": [
+        "3RRGqoQw0xUWz2OhyNu8Lk"
+      ],
+      "first_played": "2026-03-22T17:17:24.836Z",
+      "last_played": "2026-03-22T17:17:24.836Z"
+    },
+    "22PkV1Le9P3X4RY4xtmK0q": {
+      "album_name": "Desire, I Want To Turn Into You",
+      "artist": "Caroline Polachek",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4JPF8Te7Jo3AuI2vKqrRUV",
+        "2x8zUjRP6z5N2GmZ13zU76",
+        "3JYayrgDyMYVrpMdcn5HxF",
+        "7y4aQuePr8SgBH14rXzheh",
+        "5KE5Inz4uZKGb2EzETaOEe",
+        "0RVn3A5FHQ8OgiIxuRkepW",
+        "6GqesoY3jZD9BqT1v4UEmk",
+        "77ySu72hStpWbl3EZZiXzJ",
+        "203bhpOhWluOytYjvwQfl7",
+        "40tRJ8bMkIkXh8vhHKQsoX",
+        "4Q5LWPIKCuV6LRdDeqOYM7",
+        "4bp2wYweUPvsBrQfntdYcr"
+      ],
+      "first_played": "2026-03-22T17:13:04.864Z",
+      "last_played": "2026-03-22T16:31:32.389Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -397043,9 +397115,470 @@
       "listen_history": [
         "2026-03-18T16:34:31.223Z"
       ]
+    },
+    "Caroline Polachek - Desire, I Want To Turn Into You": {
+      "artist": "Caroline Polachek",
+      "artist_mbid": "d8f43dc5-4613-48ac-8c23-a62b82f8c67a",
+      "name": "Desire, I Want to Turn Into You",
+      "release_group_mbid": "20bbd8b3-35fa-4a29-9a94-13f4f01bf9ca",
+      "label": "Perpetual Novice",
+      "release_year": 2023,
+      "release_month": 1,
+      "release_day": 31,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Welcome to My Island",
+          "credits": [
+            [
+              "Caroline Polachek",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Nigro",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Jim\u2010E Stack",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "1039772f-59ce-451e-91c5-4c7f2d66b5e3"
+        },
+        {
+          "position": "2",
+          "title": "Pretty in Possible",
+          "credits": [
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Nigro",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "f4ccf727-6d1e-4a5d-b985-c0c03385ad51"
+        },
+        {
+          "position": "3",
+          "title": "Bunny Is a Rider",
+          "credits": [
+            [
+              "Danny L Harle",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Geoff Swan",
+              "mix",
+              ""
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Nico Harle",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "7bbbc4f7-6f61-4996-bd4b-3e64501a9f43"
+        },
+        {
+          "position": "4",
+          "title": "Sunset",
+          "credits": [
+            [
+              "Marc Fern\u00e1ndez",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Samuel Organ",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Geoff Swan",
+              "mix",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Sega Bodega",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "d5409622-638c-485c-8ebe-1baff8523f7a"
+        },
+        {
+          "position": "5",
+          "title": "Crude Drawing of an Angel",
+          "credits": [
+            [
+              "Danny L Harle",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "f098d9a9-b209-4412-aa08-f22f2de05643"
+        },
+        {
+          "position": "6",
+          "title": "I Believe",
+          "credits": [
+            [
+              "Macks Faulkron",
+              "engineer",
+              ""
+            ],
+            [
+              "Br\u00ecghde Chaimbeul",
+              "instrument",
+              "bagpipe"
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Cameron Gower Poole",
+              "producer",
+              "task"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "632a7a04-1a24-427e-8c39-6939139fc765"
+        },
+        {
+          "position": "7",
+          "title": "Fly to You",
+          "credits": [
+            [
+              "Miquel Mestres",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Geoff Swan",
+              "mix",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              "additional"
+            ],
+            [
+              "Grimes",
+              "producer",
+              ""
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Daniel Nigro",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Dido",
+              "vocal",
+              ""
+            ],
+            [
+              "Grimes",
+              "vocal",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "ce96a535-2ff7-4a04-8479-e84c6ea8774d"
+        },
+        {
+          "position": "8",
+          "title": "Blood and Butter",
+          "credits": [
+            [
+              "Macks Faulkron",
+              "engineer",
+              ""
+            ],
+            [
+              "Kirin J Callinan",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Br\u00ecghde Chaimbeul",
+              "instrument",
+              "bagpipe"
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Cameron Gower Poole",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "239d5074-2fb1-4d0c-ac1e-24568d767c45"
+        },
+        {
+          "position": "9",
+          "title": "Hopedrunk Everasking",
+          "credits": [
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "56c5e4a2-f47a-4007-8127-4a8158061459"
+        },
+        {
+          "position": "10",
+          "title": "Butterfly Net",
+          "credits": [
+            [
+              "Macks Faulkron",
+              "engineer",
+              ""
+            ],
+            [
+              "Danny L Harle",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Cameron Gower Poole",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Trinity Boys Choir",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "5f5bebdf-1837-4910-ac2b-55a7e16d1c08"
+        },
+        {
+          "position": "11",
+          "title": "Smoke",
+          "credits": [
+            [
+              "Matthew Horton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "6879ff04-436a-4df3-9db1-2060c8a32595"
+        },
+        {
+          "position": "12",
+          "title": "Billions",
+          "credits": [
+            [
+              "Geoff Swan",
+              "mix",
+              ""
+            ],
+            [
+              "Danny L Harle",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "producer",
+              ""
+            ],
+            [
+              "Caroline Polachek",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Trinity Boys Choir",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "ff6bc8f8-a964-4f9b-b169-6bfe0d99cf0d"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "downtempo",
+        "synthpop",
+        "pop",
+        "indie pop",
+        "leftfield",
+        "alternative pop",
+        "uk garage",
+        "english",
+        "art pop",
+        "offizielle charts",
+        "1\u20134 wochen"
+      ],
+      "image_url": "https://coverartarchive.org/release/fee77552-7209-43fb-9bd9-609599aec466/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-22T16:31:32.389Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Caroline Polachek - Desire, I Want To Turn Into You",
     "Floating Points - Cascade",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
