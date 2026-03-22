@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-20T14:39:46.195Z",
+  "last_checked": "2026-03-22T04:42:31.480Z",
   "albums_in_progress": {
     "7Ah40XNSL08oO3p0RAGro8": {
       "album_name": "Summertime Dream",
@@ -10,6 +10,16 @@
       ],
       "first_played": "2026-03-20T14:39:46.195Z",
       "last_played": "2026-03-20T14:39:46.195Z"
+    },
+    "7FtankGXHvGLTAfWz5zDpc": {
+      "album_name": "Calm Sleep (Noise)",
+      "artist": "NatuREM",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2t59Nh57fvHOwfiV7aZwTn"
+      ],
+      "first_played": "2026-03-22T04:32:18.667Z",
+      "last_played": "2026-03-22T04:32:18.667Z"
     }
   },
   "completed_albums": {
