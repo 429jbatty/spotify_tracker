@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-23T16:23:52.246Z",
+  "last_checked": "2026-03-23T17:44:04.021Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -90,10 +90,20 @@
       "played_tracks": [
         "09JmpOX5co0ZIw175ZNAaR",
         "6oMZhY0f1ReI6AJDDYfuSb",
-        "10JBTQWG3h2CoSxaCMrqTX"
+        "10JBTQWG3h2CoSxaCMrqTX",
+        "1WMMzf0o1gD5dyyYhJ46fO",
+        "4u38tY4PrF3tP3yjGStIrG",
+        "6f4TUUHjfRjYkyrM5KSoJ4",
+        "5oHUNjvZtKrCAj5AdkUl3N",
+        "6wrghEVSwMULdtVldbsVKu",
+        "2aAuyfOSWwBh4wx4j4N2yA",
+        "4qOVrwuraYTdYEfp8rIr8T",
+        "2Q5gRhlFhA6abWnE8n6E7Z",
+        "06v8tgWzxxOpxneBXRm3U1"
       ],
       "first_played": "2026-03-23T16:23:52.246Z",
-      "last_played": "2026-03-23T16:18:15.778Z"
+      "last_played": "2026-03-23T16:26:02.767Z",
+      "completion_logged": true
     },
     "6okC12pcFeLZOifXdunuhQ": {
       "album_name": "Gord's Gold",
@@ -174,6 +184,117 @@
       "first_played": "2026-03-23T15:51:53.620Z",
       "last_played": "2026-03-23T14:56:03.194Z",
       "completion_logged": true
+    },
+    "4JCybsNZUXWrK2Jpyn12Ni": {
+      "album_name": "\"Awaken, My Love!\"",
+      "artist": "Childish Gambino",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4l5ioHe897vm5VZa242bvK",
+        "0NkkbKSzQ50mAoSUbQpgLw"
+      ],
+      "first_played": "2026-03-23T17:44:04.021Z",
+      "last_played": "2026-03-23T17:33:13.249Z"
+    },
+    "53cxrg7kbFQxDizY0kcDQo": {
+      "album_name": "Parallelograms",
+      "artist": "Linda Perhacs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6LRX4u7auZzD52OUIB1xly"
+      ],
+      "first_played": "2026-03-23T17:26:28.276Z",
+      "last_played": "2026-03-23T17:26:28.276Z"
+    },
+    "3PkdGRruLnJ9zCtANiDrpB": {
+      "album_name": "Buffalo Springfield",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4WLFwsgF6aJSjstHF4nFWa"
+      ],
+      "first_played": "2026-03-23T17:23:33.165Z",
+      "last_played": "2026-03-23T17:23:33.165Z"
+    },
+    "3O9LYeSXXEypjdptHMghUg": {
+      "album_name": "Diamonds & Rust",
+      "artist": "Joan Baez",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4O0sGJdqpHMaWz7KoVd7tb"
+      ],
+      "first_played": "2026-03-23T17:20:48.011Z",
+      "last_played": "2026-03-23T17:20:48.011Z"
+    },
+    "5XresJcJBgYkVQE9PATjli": {
+      "album_name": "In the Wind",
+      "artist": "Peter, Paul and Mary",
+      "total_tracks": 12,
+      "played_tracks": [
+        "23AXSvQQkKT5urLRi8z3uC"
+      ],
+      "first_played": "2026-03-23T17:16:05.633Z",
+      "last_played": "2026-03-23T17:16:05.633Z"
+    },
+    "3QeVaRbnGA1zMlGoBQmSFp": {
+      "album_name": "The Journeymen",
+      "artist": "The Journeymen",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1Vpgnjf33Uun9WdMh5KwcO"
+      ],
+      "first_played": "2026-03-23T17:12:48.432Z",
+      "last_played": "2026-03-23T17:12:48.432Z"
+    },
+    "7d4POkYBpW8zKTcZvNEyxa": {
+      "album_name": "Early Morning Rain",
+      "artist": "Ian & Sylvia",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4GV5wmFd0G5NW8lQK9aVvP"
+      ],
+      "first_played": "2026-03-23T17:09:34.307Z",
+      "last_played": "2026-03-23T17:09:34.307Z"
+    },
+    "0iO91QmtRa5h2wRZ0CNAzS": {
+      "album_name": "Jessica Pratt",
+      "artist": "Jessica Pratt",
+      "total_tracks": 11,
+      "played_tracks": [
+        "57WGADwXrn3y0ds6sRz77l"
+      ],
+      "first_played": "2026-03-23T17:05:39.486Z",
+      "last_played": "2026-03-23T17:05:39.486Z"
+    },
+    "7hez8jibf36E66GHpFkWz7": {
+      "album_name": "Buffalo Springfield Again",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3uVmR6oQq0NluVZXkipKHV"
+      ],
+      "first_played": "2026-03-23T17:01:21.729Z",
+      "last_played": "2026-03-23T17:01:21.729Z"
+    },
+    "0KWZmGhxNlNMOQgi4LPWun": {
+      "album_name": "Farewell, Angelina",
+      "artist": "Joan Baez",
+      "total_tracks": 14,
+      "played_tracks": [
+        "7kFN6oceID4DUi29EjIYmi"
+      ],
+      "first_played": "2026-03-23T16:57:35.375Z",
+      "last_played": "2026-03-23T16:57:35.375Z"
+    },
+    "3CDM5os6kA4y6mYYGukMIZ": {
+      "album_name": "Album 1700",
+      "artist": "Peter, Paul and Mary",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6ZSTinOwx5dKFYc6iYyGDn"
+      ],
+      "first_played": "2026-03-23T16:54:05.938Z",
+      "last_played": "2026-03-23T16:54:05.938Z"
     }
   },
   "completed_albums": {
@@ -397667,9 +397788,157 @@
       "listen_history": [
         "2026-03-22T16:31:32.389Z"
       ]
+    },
+    "Peter, Paul and Mary - Peter, Paul and Mary": {
+      "artist": "Peter, Paul & Mary",
+      "artist_mbid": "3d621c94-2356-4532-ad52-79e0ef73e20c",
+      "name": "Peter, Paul & Mary",
+      "release_group_mbid": "b3b28475-7195-477b-af27-20e41b0d5de6",
+      "label": "Falcon Neue Medien",
+      "release_year": 1993,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Puff, the Magic Dragon",
+          "credits": [
+            [
+              "Milt Okun",
+              "conductor",
+              ""
+            ],
+            [
+              "Albert Grossman",
+              "producer",
+              ""
+            ],
+            [
+              "Bill Schwartau",
+              "recording",
+              ""
+            ],
+            [
+              "Noel Paul Stookey",
+              "vocal",
+              ""
+            ],
+            [
+              "Mary Travers",
+              "vocal",
+              ""
+            ],
+            [
+              "Peter Yarrow",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "db4cdf3c-8323-4a60-82d6-eb21db44d951"
+        },
+        {
+          "position": "2",
+          "title": "This Land Is Your Land",
+          "credits": {},
+          "recording_mbid": "188b656b-32b4-4d08-bd4c-410ed69704d1"
+        },
+        {
+          "position": "3",
+          "title": "Lemon Tree",
+          "credits": {},
+          "recording_mbid": "7198ac21-d6aa-4fc1-8ac4-aee82851105c"
+        },
+        {
+          "position": "4",
+          "title": "Where Have All the Flowers Gone",
+          "credits": {},
+          "recording_mbid": "b421fffa-f20f-4201-832e-f660f800386f"
+        },
+        {
+          "position": "5",
+          "title": "500 Miles",
+          "credits": {},
+          "recording_mbid": "870c136f-6dd2-4106-bfec-75e1ccd79304"
+        },
+        {
+          "position": "6",
+          "title": "Early in the Morning",
+          "credits": {},
+          "recording_mbid": "5790a108-79e6-4c8c-89d3-b146f4b31056"
+        },
+        {
+          "position": "7",
+          "title": "A Soalin'",
+          "credits": {},
+          "recording_mbid": "7f4e6fa3-8c7d-4023-8149-93d32924ad40"
+        },
+        {
+          "position": "8",
+          "title": "If I Had a Hammer",
+          "credits": {},
+          "recording_mbid": "43a60fc1-31c9-4394-bd09-66c09ab58874"
+        },
+        {
+          "position": "9",
+          "title": "Blowin' in the Wind",
+          "credits": {},
+          "recording_mbid": "c1a208c0-c5bd-491c-9419-5957db505bef"
+        },
+        {
+          "position": "10",
+          "title": "Don't Think Twice",
+          "credits": {},
+          "recording_mbid": "2ce9fd31-8eb1-4648-bc90-394761b9c473"
+        },
+        {
+          "position": "11",
+          "title": "Settle Down (Goin' Down That Highway)",
+          "credits": {},
+          "recording_mbid": "2bc16705-4040-4e04-99a4-c7609b612c6a"
+        },
+        {
+          "position": "12",
+          "title": "Morning Train",
+          "credits": {},
+          "recording_mbid": "0cd2ba73-30a7-40b2-9dac-910d96a2843e"
+        },
+        {
+          "position": "13",
+          "title": "Cruel War",
+          "credits": {},
+          "recording_mbid": "759777e4-c628-4845-99b0-66828a8193ec"
+        },
+        {
+          "position": "14",
+          "title": "Flora",
+          "credits": {},
+          "recording_mbid": "b7f8a65f-3545-4417-995d-7b52e0dd91b4"
+        },
+        {
+          "position": "15",
+          "title": "Big Boat",
+          "credits": {},
+          "recording_mbid": "c95d57ec-3623-4b0e-bf2c-875d7a5a9a8a"
+        },
+        {
+          "position": "16",
+          "title": "Tiny Sparrow",
+          "credits": {},
+          "recording_mbid": "197c023b-b3bc-4832-892d-b6fa8067c5cd"
+        }
+      ],
+      "tags": [
+        "folk"
+      ],
+      "image_url": "https://coverartarchive.org/release/1521b1b1-3b43-4c0d-9d7e-0e6559aa1567/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-23T16:26:02.767Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Peter, Paul and Mary - Peter, Paul and Mary",
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Floating Points - Cascade",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
