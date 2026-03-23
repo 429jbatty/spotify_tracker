@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-23T14:12:30.216Z",
+  "last_checked": "2026-03-23T16:23:52.246Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -81,6 +81,98 @@
       ],
       "first_played": "2026-03-22T17:13:04.864Z",
       "last_played": "2026-03-22T16:31:32.389Z",
+      "completion_logged": true
+    },
+    "1cRbbPxFMpHFeYIkLqqzBo": {
+      "album_name": "Peter, Paul and Mary",
+      "artist": "Peter, Paul and Mary",
+      "total_tracks": 12,
+      "played_tracks": [
+        "09JmpOX5co0ZIw175ZNAaR",
+        "6oMZhY0f1ReI6AJDDYfuSb",
+        "10JBTQWG3h2CoSxaCMrqTX"
+      ],
+      "first_played": "2026-03-23T16:23:52.246Z",
+      "last_played": "2026-03-23T16:18:15.778Z"
+    },
+    "6okC12pcFeLZOifXdunuhQ": {
+      "album_name": "Gord's Gold",
+      "artist": "Gordon Lightfoot",
+      "total_tracks": 22,
+      "played_tracks": [
+        "1TZteKaf5z3P3i87jyB8jc"
+      ],
+      "first_played": "2026-03-23T16:16:12.243Z",
+      "last_played": "2026-03-23T16:16:12.243Z"
+    },
+    "6DlSUW5gmq6Byc3osKDJ2p": {
+      "album_name": "Can't Buy A Thrill",
+      "artist": "Steely Dan",
+      "total_tracks": 10,
+      "played_tracks": [
+        "7y5nJToPWMjtJLcLEGxyGf"
+      ],
+      "first_played": "2026-03-23T16:13:24.753Z",
+      "last_played": "2026-03-23T16:13:24.753Z"
+    },
+    "00MudAJNGTxCUkQrtRz2hY": {
+      "album_name": "Last Time Around",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0ipGD86bKFARjKvVnOu6QW"
+      ],
+      "first_played": "2026-03-23T16:05:11.927Z",
+      "last_played": "2026-03-23T16:05:11.927Z"
+    },
+    "7q86S3pRwfE5sWVWa8x1ye": {
+      "album_name": "Blessed Are...",
+      "artist": "Joan Baez",
+      "total_tracks": 23,
+      "played_tracks": [
+        "0uHYplBhwLYey7f9qAmnSM"
+      ],
+      "first_played": "2026-03-23T16:02:49.670Z",
+      "last_played": "2026-03-23T16:02:49.670Z"
+    },
+    "16lsqxMjRUFOBo2jocsy1C": {
+      "album_name": "Summer Breeze",
+      "artist": "Seals and Crofts",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3B0ms7Xlxl16tRztKHpcu9"
+      ],
+      "first_played": "2026-03-23T15:59:23.644Z",
+      "last_played": "2026-03-23T15:59:23.644Z"
+    },
+    "4vrkh5jKpCrBlBEVzvrFp4": {
+      "album_name": "Summer Side of Life",
+      "artist": "Gordon Lightfoot",
+      "total_tracks": 11,
+      "played_tracks": [
+        "3mo4sOUqa5CM8UoKaxObmI"
+      ],
+      "first_played": "2026-03-23T15:55:58.122Z",
+      "last_played": "2026-03-23T15:55:58.122Z"
+    },
+    "2IPD9EcNjUmsHvqULDMU9Y": {
+      "album_name": "Sundown",
+      "artist": "Gordon Lightfoot",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5xgF4hCmdivz1sn1Tag0qH",
+        "4yStXASgQ87oF1Oi1LuYem",
+        "59EupkPF0AA5nu0qDo5FlK",
+        "0SjnBEHZVXgCKvOrpvzL2k",
+        "2aWxDsPrW9boRYyWLF6sst",
+        "5ZyrB9pniONtujLACrGKCH",
+        "71Rzm3Oj0TThGj6IpfTsu1",
+        "3wP6uw79NiiLp0D7mk5dpR",
+        "6wDQzfFFIkiUqjuGlq77b3",
+        "3ayP2t2qMgIqj8Yy1xHtaa"
+      ],
+      "first_played": "2026-03-23T15:51:53.620Z",
+      "last_played": "2026-03-23T14:56:03.194Z",
       "completion_logged": true
     }
   },
