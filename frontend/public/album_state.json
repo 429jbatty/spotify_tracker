@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-24T04:07:19.100Z",
+  "last_checked": "2026-03-24T14:31:50.389Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -602,6 +602,26 @@
       ],
       "first_played": "2026-03-24T01:01:10.655Z",
       "last_played": "2026-03-24T01:01:10.655Z"
+    },
+    "4LH4d3cOWNNsVw41Gqt2kv": {
+      "album_name": "The Dark Side of the Moon",
+      "artist": "Pink Floyd",
+      "total_tracks": 10,
+      "played_tracks": [
+        "574y1r7o2tRA009FW0LE7v"
+      ],
+      "first_played": "2026-03-24T14:31:50.389Z",
+      "last_played": "2026-03-24T14:31:50.389Z"
+    },
+    "2ClgRK6O3Z0qdoHrMWE3Kf": {
+      "album_name": "Baby Sleep Noise",
+      "artist": "Exodar",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5GQqp24qVLaCWzxa6de1AE"
+      ],
+      "first_played": "2026-03-24T14:30:37.357Z",
+      "last_played": "2026-03-24T14:30:37.357Z"
     }
   },
   "completed_albums": {
