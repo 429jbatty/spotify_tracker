@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-24T15:31:34.732Z",
+  "last_checked": "2026-03-24T19:45:34.700Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -580,6 +580,56 @@
       ],
       "first_played": "2026-03-24T15:21:10.417Z",
       "last_played": "2026-03-24T15:21:10.417Z"
+    },
+    "6oNqOeW4FADs5D8fEXOT2n": {
+      "album_name": "Paris 1919 (Deluxe Edition)",
+      "artist": "John Cale",
+      "total_tracks": 16,
+      "played_tracks": [
+        "4049hr5UsNQEFInx9HpMI4"
+      ],
+      "first_played": "2026-03-24T19:45:34.700Z",
+      "last_played": "2026-03-24T19:45:34.700Z"
+    },
+    "2v6ANhWhZBUKkg6pJJBs3B": {
+      "album_name": "What's Going On",
+      "artist": "Marvin Gaye",
+      "total_tracks": 9,
+      "played_tracks": [
+        "3IDc87lrpEHWFBASmgTgFV"
+      ],
+      "first_played": "2026-03-24T19:41:34.590Z",
+      "last_played": "2026-03-24T19:41:34.590Z"
+    },
+    "1NzOdSkSNmBhhg72KlNcsE": {
+      "album_name": "An Overview on Phenomenal Nature",
+      "artist": "Cassandra Jenkins",
+      "total_tracks": 7,
+      "played_tracks": [
+        "3ArnNhm8z0ScjDKfGHSBRk"
+      ],
+      "first_played": "2026-03-24T19:38:04.454Z",
+      "last_played": "2026-03-24T19:38:04.454Z"
+    },
+    "6DMUAqxiFfLdqXv0vqcrQA": {
+      "album_name": "blink-182",
+      "artist": "blink-182",
+      "total_tracks": 15,
+      "played_tracks": [
+        "1e1krgHCTUGDhhIgsRVHJ0"
+      ],
+      "first_played": "2026-03-24T19:29:04.266Z",
+      "last_played": "2026-03-24T19:29:04.266Z"
+    },
+    "712X8QUI6uWg1JxHmz0l4I": {
+      "album_name": "Future Hearts",
+      "artist": "All Time Low",
+      "total_tracks": 13,
+      "played_tracks": [
+        "1SeefzwSDiFCjRWaBslRIj"
+      ],
+      "first_played": "2026-03-24T19:21:04.432Z",
+      "last_played": "2026-03-24T19:21:04.432Z"
     }
   },
   "completed_albums": {
