@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-23T21:18:11.670Z",
+  "last_checked": "2026-03-24T00:33:33.591Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -197,10 +197,13 @@
         "3vQ4T78TTMOjQXGfXVKQJo",
         "64HVhNulgXVUhlDh2wQPiW",
         "6tyS9WO74s7Q1fvyNaiQxN",
-        "3icv5yfawQSwRPwVvBdHas"
+        "3icv5yfawQSwRPwVvBdHas",
+        "0LZguZAhdvKzUC9Qlt67EM",
+        "2EBhNNIqdbejkNqqOnok4c"
       ],
       "first_played": "2026-03-23T17:44:04.021Z",
-      "last_played": "2026-03-23T21:18:11.670Z"
+      "last_played": "2026-03-23T22:34:05.853Z",
+      "completion_logged": true
     },
     "53cxrg7kbFQxDizY0kcDQo": {
       "album_name": "Parallelograms",
@@ -301,6 +304,183 @@
       ],
       "first_played": "2026-03-23T16:54:05.938Z",
       "last_played": "2026-03-23T16:54:05.938Z"
+    },
+    "0GqpoHJREPp0iuXK3HzrHk": {
+      "album_name": "Houses of the Holy (Remaster)",
+      "artist": "Led Zeppelin",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2eDdFHgqNJltzlvlZFVDWd",
+        "3JLrri1xSCui3bzITDJbkk",
+        "2e61kmae4HhbuS9hYONQ0A"
+      ],
+      "first_played": "2026-03-24T00:33:33.591Z",
+      "last_played": "2026-03-24T00:21:02.745Z"
+    },
+    "0NvirtaDCaZU5PAW1O5FDE": {
+      "album_name": "Humanz (Deluxe)",
+      "artist": "Gorillaz",
+      "total_tracks": 26,
+      "played_tracks": [
+        "04zxGiXcmNQ0m9oDXtwo18"
+      ],
+      "first_played": "2026-03-24T00:10:14.068Z",
+      "last_played": "2026-03-24T00:10:14.068Z"
+    },
+    "1mrhahrlJu5JfzgeV6Cy8t": {
+      "album_name": "Take Me To Your Leader",
+      "artist": "King Geedorah",
+      "total_tracks": 13,
+      "played_tracks": [
+        "3dX0c7tK7bnaUMhZlr6sIC",
+        "4kVxStqN7DeoZje5aidAn3",
+        "1R28m5eWk1EV9FQ3puWrUp"
+      ],
+      "first_played": "2026-03-24T00:05:36.826Z",
+      "last_played": "2026-03-23T23:04:24.740Z"
+    },
+    "2qCyMMQ785sPH4Yx25GQZ8": {
+      "album_name": "Z",
+      "artist": "SZA",
+      "total_tracks": 10,
+      "played_tracks": [
+        "7sg9ToL94GAiksETi5GZGz"
+      ],
+      "first_played": "2026-03-24T00:02:27.915Z",
+      "last_played": "2026-03-24T00:02:27.915Z"
+    },
+    "7DtpLngwHYD5j0lZlMFuwU": {
+      "album_name": "Kauai",
+      "artist": "Childish Gambino",
+      "total_tracks": 7,
+      "played_tracks": [
+        "17LwoPsrxQwzjlk9wiYhYL",
+        "7w3aNXae9u0JnpqFXfdm3k"
+      ],
+      "first_played": "2026-03-23T23:58:32.468Z",
+      "last_played": "2026-03-23T22:48:40.253Z"
+    },
+    "6ofJrAZaaX0iWTXYXObUxE": {
+      "album_name": "Thee Sacred Souls",
+      "artist": "Thee Sacred Souls",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3kedYiw0PflZpyQcDzBLKK",
+        "3W4xqKFMKBauuU517t8NIb"
+      ],
+      "first_played": "2026-03-23T23:55:22.161Z",
+      "last_played": "2026-03-23T22:56:30.735Z"
+    },
+    "71il7FSiyfneqGZa4VlIcy": {
+      "album_name": "Yesterday's Tomorrow",
+      "artist": "Phony Ppl",
+      "total_tracks": 15,
+      "played_tracks": [
+        "60HpaTQbK4hX0kthzUjRZ9"
+      ],
+      "first_played": "2026-03-23T23:51:49.850Z",
+      "last_played": "2026-03-23T23:51:49.850Z"
+    },
+    "31qVWUdRrlb8thMvts0yYL": {
+      "album_name": "The Slow Rush",
+      "artist": "Tame Impala",
+      "total_tracks": 12,
+      "played_tracks": [
+        "666PdikRnUzdvjT9p5wWND"
+      ],
+      "first_played": "2026-03-23T23:47:58.766Z",
+      "last_played": "2026-03-23T23:47:58.766Z"
+    },
+    "7vHBQDqwzB7uDvoE5bncMM": {
+      "album_name": "Drunk",
+      "artist": "Thundercat",
+      "total_tracks": 23,
+      "played_tracks": [
+        "6qXNCWY49AaZ5nfp9AJIc5"
+      ],
+      "first_played": "2026-03-23T23:42:31.879Z",
+      "last_played": "2026-03-23T23:42:31.879Z"
+    },
+    "5ceB3rxgXqIRpsOvVzTG28": {
+      "album_name": "Aquemini",
+      "artist": "Outkast",
+      "total_tracks": 16,
+      "played_tracks": [
+        "1KQymTxNJfWk6vCD5ywKW2"
+      ],
+      "first_played": "2026-03-23T23:39:52.811Z",
+      "last_played": "2026-03-23T23:39:52.811Z"
+    },
+    "5h0KYWMZIg8xT6eRGYkNMh": {
+      "album_name": "Because the Internet",
+      "artist": "Childish Gambino",
+      "total_tracks": 19,
+      "played_tracks": [
+        "0RDKUURGxghQIpKRpwIbpp",
+        "4A32tQkqdNxhP3vom3TqWe"
+      ],
+      "first_played": "2026-03-23T23:36:15.435Z",
+      "last_played": "2026-03-23T23:11:14.798Z"
+    },
+    "7HlxxaJOHK0ArY4Ae4Qfc7": {
+      "album_name": "Apolonio",
+      "artist": "Omar Apollo",
+      "total_tracks": 9,
+      "played_tracks": [
+        "7dJN4NWQuqCjWwIT3UwOps"
+      ],
+      "first_played": "2026-03-23T23:30:22.411Z",
+      "last_played": "2026-03-23T23:30:22.411Z"
+    },
+    "1uE3dRPe3SrGdNhd1nWlSa": {
+      "album_name": "Bird's Eye",
+      "artist": "Ravyn Lenae",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4jaNeCjRjTCekyaErvjnRX"
+      ],
+      "first_played": "2026-03-23T23:23:49.197Z",
+      "last_played": "2026-03-23T23:23:49.197Z"
+    },
+    "7ILMBbALGEfm3cKNPxP5v2": {
+      "album_name": "JOECHILLWORLD",
+      "artist": "Devon Hendryx",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3qEiRteJYV6lISyANIQh7a"
+      ],
+      "first_played": "2026-03-23T23:20:32.591Z",
+      "last_played": "2026-03-23T23:20:32.591Z"
+    },
+    "59GRmAvlGs7KjLizFnV7Y9": {
+      "album_name": "It Is What It Is",
+      "artist": "Thundercat",
+      "total_tracks": 15,
+      "played_tracks": [
+        "7qaQK6Eatz1KQFs1VZx2YR"
+      ],
+      "first_played": "2026-03-23T23:14:26.182Z",
+      "last_played": "2026-03-23T23:14:26.182Z"
+    },
+    "1amYhlukNF8WdaQC3gKkgL": {
+      "album_name": "The Now Now",
+      "artist": "Gorillaz",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4fjzDf54eBNOlW45mNe14U"
+      ],
+      "first_played": "2026-03-23T23:01:05.692Z",
+      "last_played": "2026-03-23T23:01:05.692Z"
+    },
+    "4Hai0uVzRbyTSaTPzxTY4e": {
+      "album_name": "French Exit",
+      "artist": "TV Girl",
+      "total_tracks": 12,
+      "played_tracks": [
+        "21LkHnuxPxVrOZ5gCaG7aM"
+      ],
+      "first_played": "2026-03-23T22:52:09.342Z",
+      "last_played": "2026-03-23T22:52:09.342Z"
     }
   },
   "completed_albums": {
@@ -397941,9 +398121,908 @@
       "listen_history": [
         "2026-03-23T16:26:02.767Z"
       ]
+    },
+    "Childish Gambino - \"Awaken, My Love!\"": {
+      "artist": "Childish Gambino",
+      "artist_mbid": "7fb57fba-a6ef-44c2-abab-2fa3bdee607e",
+      "name": "\u201cAwaken, My Love!\u201d",
+      "release_group_mbid": "fd817615-3d43-4f07-9509-d0a46b2bc278",
+      "label": "Glassnote",
+      "release_year": 2016,
+      "release_month": 12,
+      "release_day": 2,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Me and Your Mama",
+          "credits": [
+            [
+              "Thomas Drayton",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Donald Glover",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Per Gunnar Juliusson",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Per Gunnar Juliusson",
+              "instrument",
+              "Rhodes piano"
+            ],
+            [
+              "Zac Rae",
+              "instrument",
+              "Hammond organ"
+            ],
+            [
+              "Zac Rae",
+              "instrument",
+              "Moog"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Lynette Williams",
+              "instrument",
+              "organ"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              "co"
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Black Party",
+              "programming",
+              "membranophone"
+            ],
+            [
+              "John Armstrong",
+              "recording",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ],
+            [
+              "Brent Jones and The Best Life Singers",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "0d432f1e-60d7-40bd-b52a-2b89b1332d08"
+        },
+        {
+          "position": "2",
+          "title": "Have Some Love",
+          "credits": [
+            [
+              "Donald Glover",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Sam Sugarman",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Lynette Williams",
+              "instrument",
+              "Hammond organ"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              "additional"
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ],
+            [
+              "Brent Jones and The Best Life Singers",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "d54e7be4-7bfc-4910-822f-cdf096c32ade"
+        },
+        {
+          "position": "3",
+          "title": "Boogieman",
+          "credits": [
+            [
+              "Donald Glover",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar, guitar, Rhodes piano, synthesizer"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "programming",
+              "membranophone"
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "798ef77f-6609-4981-aa95-ecd36e206f0d"
+        },
+        {
+          "position": "4",
+          "title": "Zombies",
+          "credits": [
+            [
+              "Donald Glover",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "harpsichord"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass synthesizer"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "guitar, solo"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "Rhodes piano"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "effects"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              "additional"
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ],
+            [
+              "Brent Jones and The Best Life Singers",
+              "vocal",
+              "choir vocals"
+            ],
+            [
+              "Kari Faux",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "20f29d3a-692b-4f2e-bb2b-af29b4224312"
+        },
+        {
+          "position": "5",
+          "title": "Riot",
+          "credits": [
+            [
+              "Zac Rae",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              "additional"
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ],
+            [
+              "Sofia Hoops",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "cb69afdb-195c-4c66-bf0a-dabe1a9abbbe"
+        },
+        {
+          "position": "6",
+          "title": "Redbone",
+          "credits": [
+            [
+              "Donald Glover",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Donald Glover",
+              "instrument",
+              "glockenspiel"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "Rhodes piano"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "Wurlitzer electric piano"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "banjo"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              "additional"
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "7408f11c-6c4e-41e5-b81b-6a15bf6cb268"
+        },
+        {
+          "position": "7",
+          "title": "California",
+          "credits": [
+            [
+              "Donald Glover",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar, guitar, Hammond organ, percussion, Wurlitzer electric piano"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "drums (drum set), percussion"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "1f2a570b-75d4-40cc-b414-8bc3a3af9742"
+        },
+        {
+          "position": "8",
+          "title": "Terrified",
+          "credits": [
+            [
+              "Thomas Drayton",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Donald Glover",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Donald Glover",
+              "instrument",
+              "glockenspiel"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Per Gunnar Juliusson",
+              "instrument",
+              "Rhodes piano"
+            ],
+            [
+              "Zac Rae",
+              "instrument",
+              "Hammond organ"
+            ],
+            [
+              "Zac Rae",
+              "instrument",
+              "Moog"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Andrew Dawson",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "programming",
+              "membranophone"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "programming",
+              "synthesizer"
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "JD McCrary",
+              "vocal",
+              "solo"
+            ]
+          ],
+          "recording_mbid": "990c3a6e-137a-4012-9dcd-fc5d2304af87"
+        },
+        {
+          "position": "9",
+          "title": "Baby Boy",
+          "credits": [
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar, Wurlitzer electric piano"
+            ],
+            [
+              "Chris Hartz",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Ray Suen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Lynette Williams",
+              "instrument",
+              "clavinet, Hammond organ"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "8e310e73-33d4-4b80-afaf-620d064749e7"
+        },
+        {
+          "position": "10",
+          "title": "The Night Me and Your Mama Met",
+          "credits": [
+            [
+              "Gary Clark Jr.",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Donald Glover",
+              "instrument",
+              "glockenspiel"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Brent Jones and The Best Life Singers",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "314326c2-95e9-4047-aa36-9842ecbe352e"
+        },
+        {
+          "position": "11",
+          "title": "Stand Tall",
+          "credits": [
+            [
+              "Julie Burkert",
+              "instrument",
+              "flute"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "Rhodes piano"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Dan Higgins",
+              "instrument",
+              "clarinet"
+            ],
+            [
+              "Steve Kujala",
+              "instrument",
+              "flute"
+            ],
+            [
+              "Steve Kujala",
+              "instrument",
+              "flute"
+            ],
+            [
+              "Phillip O\u2019Connor",
+              "instrument",
+              "clarinet"
+            ],
+            [
+              "Thomas Parish",
+              "instrument arranger",
+              "woodwind"
+            ],
+            [
+              "Donald Glover",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "mix",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "mix",
+              ""
+            ],
+            [
+              "Ludwig G\u00f6ransson",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Fogel",
+              "recording",
+              ""
+            ],
+            [
+              "Riley Mackin",
+              "recording",
+              ""
+            ],
+            [
+              "Ruben Rivera",
+              "recording",
+              ""
+            ],
+            [
+              "Donald Glover",
+              "vocal",
+              ""
+            ],
+            [
+              "Brent Jones and The Best Life Singers",
+              "vocal",
+              "choir vocals"
+            ]
+          ],
+          "recording_mbid": "004cf3eb-b668-4ade-b22a-87cb488830cd"
+        }
+      ],
+      "tags": [
+        "rap",
+        "hip hop",
+        "usa",
+        "funk",
+        "hiphop",
+        "neo soul",
+        "psychedelic soul",
+        "r&b",
+        "contemporary r&b",
+        "hiphop; r&b",
+        "musikexpress.de",
+        "ph_4_stars"
+      ],
+      "image_url": "https://coverartarchive.org/release/25171347-3475-4181-a3b3-cc2fc479d9fe/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-23T22:34:05.853Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Childish Gambino - \"Awaken, My Love!\"",
     "Peter, Paul and Mary - Peter, Paul and Mary",
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Floating Points - Cascade",
@@ -397952,7 +399031,6 @@
     "Nivhek - After its own death / Walking in a spiral towards the house",
     "Joan Baez - Joan Baez",
     "Barker - Stochastic Drift",
-    "Boards of Canada - Geogaddi",
-    "Orbital - Orbital 2"
+    "Boards of Canada - Geogaddi"
   ]
 }
