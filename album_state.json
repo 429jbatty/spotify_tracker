@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-24T00:33:33.591Z",
+  "last_checked": "2026-03-24T01:50:17.720Z",
   "albums_in_progress": {
     "7FtankGXHvGLTAfWz5zDpc": {
       "album_name": "Calm Sleep (Noise)",
@@ -120,10 +120,12 @@
       "artist": "Steely Dan",
       "total_tracks": 10,
       "played_tracks": [
-        "7y5nJToPWMjtJLcLEGxyGf"
+        "7y5nJToPWMjtJLcLEGxyGf",
+        "1CZR9j4cF4r2uuCpiMdsX5",
+        "5nTxjFOvyjXoOIqcZsiy5E"
       ],
       "first_played": "2026-03-23T16:13:24.753Z",
-      "last_played": "2026-03-23T16:13:24.753Z"
+      "last_played": "2026-03-24T01:18:10.194Z"
     },
     "00MudAJNGTxCUkQrtRz2hY": {
       "album_name": "Last Time Around",
@@ -220,10 +222,11 @@
       "artist": "Buffalo Springfield",
       "total_tracks": 12,
       "played_tracks": [
-        "4WLFwsgF6aJSjstHF4nFWa"
+        "4WLFwsgF6aJSjstHF4nFWa",
+        "1qRA5BS78u3gME0loMl9AA"
       ],
       "first_played": "2026-03-23T17:23:33.165Z",
-      "last_played": "2026-03-23T17:23:33.165Z"
+      "last_played": "2026-03-24T01:09:53.289Z"
     },
     "3O9LYeSXXEypjdptHMghUg": {
       "album_name": "Diamonds & Rust",
@@ -312,10 +315,16 @@
       "played_tracks": [
         "2eDdFHgqNJltzlvlZFVDWd",
         "3JLrri1xSCui3bzITDJbkk",
-        "2e61kmae4HhbuS9hYONQ0A"
+        "2e61kmae4HhbuS9hYONQ0A",
+        "0AqjkVFqa1ujle4Lb1k9wR",
+        "0GRBFjza23Im7Xb16c9AaK",
+        "5uUhS7XDkyycNa5FaNfPGT",
+        "43doj2cumGe9W3p5ucxaoH",
+        "7IgBLFklu75pp8Y1vphChS"
       ],
       "first_played": "2026-03-24T00:33:33.591Z",
-      "last_played": "2026-03-24T00:21:02.745Z"
+      "last_played": "2026-03-24T00:36:50.201Z",
+      "completion_logged": true
     },
     "0NvirtaDCaZU5PAW1O5FDE": {
       "album_name": "Humanz (Deluxe)",
@@ -481,6 +490,117 @@
       ],
       "first_played": "2026-03-23T22:52:09.342Z",
       "last_played": "2026-03-23T22:52:09.342Z"
+    },
+    "0bpkbOTq89x7p0SzPf7BaL": {
+      "album_name": "ASMR Crinkle Sounds",
+      "artist": "ASMR 4 U",
+      "total_tracks": 20,
+      "played_tracks": [
+        "7BrR9xnpDKyAj0XvwIKHlS",
+        "12jezSNb2FcyHTMpLiJXEW"
+      ],
+      "first_played": "2026-03-24T01:50:17.720Z",
+      "last_played": "2026-03-24T01:45:46.858Z"
+    },
+    "6P5QHz4XtxOmS5EuiGIPut": {
+      "album_name": "Led Zeppelin III (Remaster)",
+      "artist": "Led Zeppelin",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4ywWJqYKOwaVVh9xXARWUS"
+      ],
+      "first_played": "2026-03-24T01:45:40.544Z",
+      "last_played": "2026-03-24T01:45:40.544Z"
+    },
+    "5dVZpNJraoqCo3BssinMoo": {
+      "album_name": "Fear of Music (Deluxe Version)",
+      "artist": "Talking Heads",
+      "total_tracks": 15,
+      "played_tracks": [
+        "7CqleiaEqHVazV19P532X9"
+      ],
+      "first_played": "2026-03-24T01:42:26.281Z",
+      "last_played": "2026-03-24T01:42:26.281Z"
+    },
+    "6k1iylSzWOs7SgavxlJ8kt": {
+      "album_name": "Electric Warrior [Expanded & Remastered]",
+      "artist": "T. Rex",
+      "total_tracks": 18,
+      "played_tracks": [
+        "79dQwpXjJ4t3pILysdqFyB"
+      ],
+      "first_played": "2026-03-24T01:35:15.430Z",
+      "last_played": "2026-03-24T01:35:15.430Z"
+    },
+    "3W6CI0Lw7lElAPID2Fd3B4": {
+      "album_name": "Disraeli Gears (Deluxe Edition)",
+      "artist": "Cream",
+      "total_tracks": 40,
+      "played_tracks": [
+        "0GxV3poTM7Z7fKSUqy5qFw"
+      ],
+      "first_played": "2026-03-24T01:31:34.448Z",
+      "last_played": "2026-03-24T01:31:34.448Z"
+    },
+    "5ZPvG6hav71Uqmlgs85xbE": {
+      "album_name": "A Space in Time (Deluxe Version)",
+      "artist": "Ten Years After",
+      "total_tracks": 20,
+      "played_tracks": [
+        "7n3WO6ESKS1uCI9fgkGs66"
+      ],
+      "first_played": "2026-03-24T01:28:47.943Z",
+      "last_played": "2026-03-24T01:28:47.943Z"
+    },
+    "26tH0kjUhkxBEd3ipGkx3Y": {
+      "album_name": "Physical Graffiti (Deluxe Edition)",
+      "artist": "Led Zeppelin",
+      "total_tracks": 22,
+      "played_tracks": [
+        "0d0Z9qFbTIgDSZtImluTAy"
+      ],
+      "first_played": "2026-03-24T01:25:03.753Z",
+      "last_played": "2026-03-24T01:25:03.753Z"
+    },
+    "0r7o2FeARRr23EZ0TJ0a8S": {
+      "album_name": "Talking Heads '77",
+      "artist": "Talking Heads",
+      "total_tracks": 11,
+      "played_tracks": [
+        "06JKOTOoHXuuKkiSBDdU6n"
+      ],
+      "first_played": "2026-03-24T01:20:59.330Z",
+      "last_played": "2026-03-24T01:20:59.330Z"
+    },
+    "6r7LZXAVueS5DqdrvXJJK7": {
+      "album_name": "Paranoid (Remaster)",
+      "artist": "Black Sabbath",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2VDg6h3Qr3F8UuFVInQxE6"
+      ],
+      "first_played": "2026-03-24T01:14:22.280Z",
+      "last_played": "2026-03-24T01:14:22.280Z"
+    },
+    "468ZwCchVtzEbt9BHmXopb": {
+      "album_name": "Meddle",
+      "artist": "Pink Floyd",
+      "total_tracks": 6,
+      "played_tracks": [
+        "7AalBKBoLDR4UmRYRJpdbj"
+      ],
+      "first_played": "2026-03-24T01:07:19.584Z",
+      "last_played": "2026-03-24T01:07:19.584Z"
+    },
+    "44Ig8dzqOkvkGDzaUof9lK": {
+      "album_name": "Led Zeppelin IV (Deluxe Edition)",
+      "artist": "Led Zeppelin",
+      "total_tracks": 16,
+      "played_tracks": [
+        "5NnZ4JJxWiqqhYNu3rwmFj"
+      ],
+      "first_played": "2026-03-24T01:01:10.655Z",
+      "last_played": "2026-03-24T01:01:10.655Z"
     }
   },
   "completed_albums": {
@@ -399019,9 +399139,399 @@
       "listen_history": [
         "2026-03-23T22:34:05.853Z"
       ]
+    },
+    "Led Zeppelin - Houses of the Holy (Remaster)": {
+      "artist": "Led Zeppelin",
+      "artist_mbid": "678d88b2-87b0-403b-b63d-5da7465aecc3",
+      "name": "Houses of the Holy",
+      "release_group_mbid": "9b5006e5-b276-3a05-bcdd-8d986842320b",
+      "label": "Atlantic",
+      "release_year": 1973,
+      "release_month": 3,
+      "release_day": 28,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "The Song Remains the Same",
+          "credits": [
+            [
+              "Eddie Kramer",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Keith Harwood",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "0d16494f-2ba4-4f4f-adf9-ae1f3ee1673d"
+        },
+        {
+          "position": "2",
+          "title": "The Rain Song",
+          "credits": [
+            [
+              "Eddie Kramer",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass, mellotron"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Keith Harwood",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "ff650e55-0136-4bb5-bbe5-dc429edae5c5"
+        },
+        {
+          "position": "3",
+          "title": "Over the Hills and Far Away",
+          "credits": [
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eddie Kramer",
+              "mix",
+              ""
+            ],
+            [
+              "Eddie Kramer",
+              "recording",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "f52edb9a-aff7-4ff9-ba76-85b84399ff9b"
+        },
+        {
+          "position": "4",
+          "title": "The Crunge",
+          "credits": [
+            [
+              "Eddie Kramer",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass, synthesizer"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eddie Kramer",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "8b8216e5-137b-4ebd-a94f-a29fb7a3f014"
+        },
+        {
+          "position": "5",
+          "title": "Dancing Days",
+          "credits": [
+            [
+              "Eddie Kramer",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass, organ"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eddie Kramer",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "f6603ffa-54c7-4e5b-a744-70a13a1c9dc3"
+        },
+        {
+          "position": "6",
+          "title": "D\u2019yer Mak\u2019er",
+          "credits": [
+            [
+              "Eddie Kramer",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass, piano"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eddie Kramer",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "0cfbca12-01e1-4014-932e-e634293ba770"
+        },
+        {
+          "position": "7",
+          "title": "No Quarter",
+          "credits": [
+            [
+              "Andy Johns",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "grand piano"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass synthesizer"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Andy Johns",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "2822a034-283d-4082-8464-6189ff29fbb9"
+        },
+        {
+          "position": "8",
+          "title": "The Ocean",
+          "credits": [
+            [
+              "Eddie Kramer",
+              "engineer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "John Paul Jones",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Jimmy Page",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eddie Kramer",
+              "mix",
+              ""
+            ],
+            [
+              "Jimmy Page",
+              "producer",
+              ""
+            ],
+            [
+              "John Bonham",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "John Paul Jones",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Robert Plant",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "9868d850-a37b-4e03-b097-8e2b5d26429c"
+        }
+      ],
+      "tags": [
+        "rock",
+        "heavy metal",
+        "hard rock",
+        "folk rock",
+        "blues rock",
+        "am\u00e9ricain",
+        "classic rock",
+        "album rock",
+        "arena rock",
+        "blues-rock",
+        "british metal",
+        "1973",
+        "should be public domain",
+        "pop/rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/c1809ddd-cf39-45ab-8753-1ba0b5c3bc17/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-24T00:36:50.201Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Led Zeppelin - Houses of the Holy (Remaster)",
     "Childish Gambino - \"Awaken, My Love!\"",
     "Peter, Paul and Mary - Peter, Paul and Mary",
     "Caroline Polachek - Desire, I Want To Turn Into You",
@@ -399030,7 +399540,6 @@
     "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
     "Joan Baez - Joan Baez",
-    "Barker - Stochastic Drift",
-    "Boards of Canada - Geogaddi"
+    "Barker - Stochastic Drift"
   ]
 }
