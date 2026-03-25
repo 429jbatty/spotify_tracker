@@ -1,38 +1,6 @@
 {
-  "last_checked": "2026-03-25T04:26:33.863Z",
+  "last_checked": "2026-03-25T16:27:37.249Z",
   "albums_in_progress": {
-    "1cRbbPxFMpHFeYIkLqqzBo": {
-      "album_name": "Peter, Paul and Mary",
-      "artist": "Peter, Paul and Mary",
-      "total_tracks": 12,
-      "played_tracks": [
-        "09JmpOX5co0ZIw175ZNAaR",
-        "6oMZhY0f1ReI6AJDDYfuSb",
-        "10JBTQWG3h2CoSxaCMrqTX",
-        "1WMMzf0o1gD5dyyYhJ46fO",
-        "4u38tY4PrF3tP3yjGStIrG",
-        "6f4TUUHjfRjYkyrM5KSoJ4",
-        "5oHUNjvZtKrCAj5AdkUl3N",
-        "6wrghEVSwMULdtVldbsVKu",
-        "2aAuyfOSWwBh4wx4j4N2yA",
-        "4qOVrwuraYTdYEfp8rIr8T",
-        "2Q5gRhlFhA6abWnE8n6E7Z",
-        "06v8tgWzxxOpxneBXRm3U1"
-      ],
-      "first_played": "2026-03-23T16:23:52.246Z",
-      "last_played": "2026-03-23T16:26:02.767Z",
-      "completion_logged": true
-    },
-    "6okC12pcFeLZOifXdunuhQ": {
-      "album_name": "Gord's Gold",
-      "artist": "Gordon Lightfoot",
-      "total_tracks": 22,
-      "played_tracks": [
-        "1TZteKaf5z3P3i87jyB8jc"
-      ],
-      "first_played": "2026-03-23T16:16:12.243Z",
-      "last_played": "2026-03-23T16:16:12.243Z"
-    },
     "6DlSUW5gmq6Byc3osKDJ2p": {
       "album_name": "Can't Buy A Thrill",
       "artist": "Steely Dan",
@@ -44,66 +12,6 @@
       ],
       "first_played": "2026-03-23T16:13:24.753Z",
       "last_played": "2026-03-24T01:18:10.194Z"
-    },
-    "00MudAJNGTxCUkQrtRz2hY": {
-      "album_name": "Last Time Around",
-      "artist": "Buffalo Springfield",
-      "total_tracks": 12,
-      "played_tracks": [
-        "0ipGD86bKFARjKvVnOu6QW"
-      ],
-      "first_played": "2026-03-23T16:05:11.927Z",
-      "last_played": "2026-03-23T16:05:11.927Z"
-    },
-    "7q86S3pRwfE5sWVWa8x1ye": {
-      "album_name": "Blessed Are...",
-      "artist": "Joan Baez",
-      "total_tracks": 23,
-      "played_tracks": [
-        "0uHYplBhwLYey7f9qAmnSM"
-      ],
-      "first_played": "2026-03-23T16:02:49.670Z",
-      "last_played": "2026-03-23T16:02:49.670Z"
-    },
-    "16lsqxMjRUFOBo2jocsy1C": {
-      "album_name": "Summer Breeze",
-      "artist": "Seals and Crofts",
-      "total_tracks": 10,
-      "played_tracks": [
-        "3B0ms7Xlxl16tRztKHpcu9"
-      ],
-      "first_played": "2026-03-23T15:59:23.644Z",
-      "last_played": "2026-03-23T15:59:23.644Z"
-    },
-    "4vrkh5jKpCrBlBEVzvrFp4": {
-      "album_name": "Summer Side of Life",
-      "artist": "Gordon Lightfoot",
-      "total_tracks": 11,
-      "played_tracks": [
-        "3mo4sOUqa5CM8UoKaxObmI"
-      ],
-      "first_played": "2026-03-23T15:55:58.122Z",
-      "last_played": "2026-03-23T15:55:58.122Z"
-    },
-    "2IPD9EcNjUmsHvqULDMU9Y": {
-      "album_name": "Sundown",
-      "artist": "Gordon Lightfoot",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5xgF4hCmdivz1sn1Tag0qH",
-        "4yStXASgQ87oF1Oi1LuYem",
-        "59EupkPF0AA5nu0qDo5FlK",
-        "0SjnBEHZVXgCKvOrpvzL2k",
-        "2aWxDsPrW9boRYyWLF6sst",
-        "5ZyrB9pniONtujLACrGKCH",
-        "71Rzm3Oj0TThGj6IpfTsu1",
-        "3wP6uw79NiiLp0D7mk5dpR",
-        "6wDQzfFFIkiUqjuGlq77b3",
-        "3ayP2t2qMgIqj8Yy1xHtaa"
-      ],
-      "first_played": "2026-03-23T15:51:53.620Z",
-      "last_played": "2026-03-23T14:56:03.194Z",
-      "completion_logged": true
     },
     "4JCybsNZUXWrK2Jpyn12Ni": {
       "album_name": "\"Awaken, My Love!\"",
@@ -630,6 +538,53 @@
       ],
       "first_played": "2026-03-24T20:51:36.804Z",
       "last_played": "2026-03-24T20:51:36.804Z"
+    },
+    "6bzqUICBtzct7TiQC8if9s": {
+      "album_name": "If You Could Read My Mind",
+      "artist": "Gordon Lightfoot",
+      "total_tracks": 11,
+      "played_tracks": [
+        "57ct8jKi6trntXiRV0NnXi"
+      ],
+      "first_played": "2026-03-25T16:27:37.249Z",
+      "last_played": "2026-03-25T16:27:37.249Z"
+    },
+    "69P9Ro0W286yLFgYwrGVN0": {
+      "album_name": "Elton John",
+      "artist": "Elton John",
+      "total_tracks": 30,
+      "played_tracks": [
+        "3gSoNTSGedgEAdaVfTPTnM"
+      ],
+      "first_played": "2026-03-25T16:23:48.496Z",
+      "last_played": "2026-03-25T16:23:48.496Z"
+    },
+    "5WupqgR68HfuHt3BMJtgun": {
+      "album_name": "Goodbye Yellow Brick Road (Remastered)",
+      "artist": "Elton John",
+      "total_tracks": 17,
+      "played_tracks": [
+        "3U05P1UcqaOFHlaZ0Wk8d7",
+        "0Gvc5Ii3duAifGy2QaFDVt",
+        "6DlqxXju2H2mb0NcwgAFRM",
+        "12yHvSYFXI7PGzNecUvIDu",
+        "2fYxpSFhg95sBwaGp5JlFU",
+        "4gad1qhsqNL63n9OyCDsjL",
+        "7L1d7xwCkOZRQ5yMluNNB3",
+        "6376udcVByOCGHmiJ9kijq",
+        "7sGL3k2M6FiWFP9x83wiLA",
+        "3kiUD1IZ5icXuyKI1Rwh8j",
+        "5uyAeakIkHyTSW88uCD0M4",
+        "6sGjJmzgxvfNqLyp8yd0TH",
+        "4oXPKd1nCTONb2O9NEWjUn",
+        "4IRHwIZHzlHT1FQpRa5RdE",
+        "5Wj1rJnCLpMHdLaxsFtJLs",
+        "1L9fzw2pXprOqtemTwtxXF",
+        "5NERbS7923kF471NLKDZkB"
+      ],
+      "first_played": "2026-03-25T16:20:27.291Z",
+      "last_played": "2026-03-25T15:15:31.879Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -399557,9 +399512,897 @@
       "listen_history": [
         "2026-03-24T00:36:50.201Z"
       ]
+    },
+    "Elton John - Goodbye Yellow Brick Road (Remastered)": {
+      "artist": "Elton John",
+      "artist_mbid": "b83bc61f-8451-4a5d-8b8e-7e9ed295e822",
+      "name": "Goodbye Yellow Brick Road",
+      "release_group_mbid": "80df0f1b-4ce7-348a-aa1b-0d31ebff111a",
+      "label": "Mercury Records",
+      "release_year": 1973,
+      "release_month": 10,
+      "release_day": 5,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Funeral for a Friend / Love Lies Bleeding",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "David Hentschel",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "membranophone"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Davey Johnstone",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Dee Murray",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Nigel Olsson",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "db96638f-c1b3-414a-b1df-bd25fec812c0"
+        },
+        {
+          "position": "2",
+          "title": "Candle in the Wind",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Davey Johnstone",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Dee Murray",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Nigel Olsson",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "a57af2bd-9226-468e-8d86-1b2265fc4ef1"
+        },
+        {
+          "position": "3",
+          "title": "Bennie and the Jets",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "organ, piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "5df9640d-217a-4480-bdc8-8173d137dd54"
+        },
+        {
+          "position": "4",
+          "title": "Goodbye Yellow Brick Road",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Del Newman",
+              "orchestrator",
+              ""
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Davey Johnstone",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Dee Murray",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Nigel Olsson",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "e492bc5b-469e-497b-903d-64a9713deee0"
+        },
+        {
+          "position": "5",
+          "title": "This Song Has No Title",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "electric piano, farfisa, mellotron, piano"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "22abe160-0342-49da-934a-97f963563717"
+        },
+        {
+          "position": "6",
+          "title": "Grey Seal",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "electric piano, mellotron, piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "congas, drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "325eb5d5-970a-441d-9a9f-07b3f0327616"
+        },
+        {
+          "position": "7",
+          "title": "Jamaica Jerk\u2011Off",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "organ"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Prince Rhino",
+              "vocal",
+              "other vocals"
+            ]
+          ],
+          "recording_mbid": "f5a9f313-121d-42fe-a1f3-e244591bfb5d"
+        },
+        {
+          "position": "8",
+          "title": "I\u2019ve Seen That Movie Too",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "membranophone"
+            ],
+            [
+              "Del Newman",
+              "orchestrator",
+              ""
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "f82a6021-a2ab-4fab-be8e-2f57851c7d8d"
+        },
+        {
+          "position": "9",
+          "title": "Sweet Painted Lady",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set), tambourine"
+            ],
+            [
+              "Del Newman",
+              "orchestrator",
+              ""
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "a2f5a915-eb71-4b6e-aecb-a43347315058"
+        },
+        {
+          "position": "10",
+          "title": "The Ballad of Danny Bailey (1909\u201334)",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Del Newman",
+              "orchestrator",
+              ""
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Davey Johnstone",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Dee Murray",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Nigel Olsson",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "87ab63f4-f557-4160-8ff4-d9bef0507ccd"
+        },
+        {
+          "position": "11",
+          "title": "Dirty Little Girl",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "electric piano, mellotron"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "93389136-4657-44c5-829d-ce2e231a21e9"
+        },
+        {
+          "position": "12",
+          "title": "All the Girls Love Alice",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "tambourine"
+            ],
+            [
+              "David Hentschel",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Kiki Dee",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "75cc3191-0af1-4690-a53c-5b4fd8f49e5a"
+        },
+        {
+          "position": "13",
+          "title": "Your Sister Can\u2019t Twist (but She Can Rock \u2019n\u2019 Roll)",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "farfisa, piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar, slide guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Davey Johnstone",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Dee Murray",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Nigel Olsson",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "87796b4c-ca10-47bc-a608-299401674653"
+        },
+        {
+          "position": "14",
+          "title": "Saturday Night\u2019s Alright for Fighting",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "f8f27c10-47d7-40dc-a0a1-49eaba96d8ca"
+        },
+        {
+          "position": "15",
+          "title": "Roy Rogers",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "acoustic guitar, steel guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Del Newman",
+              "orchestrator",
+              ""
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "ba687861-c45a-4eb3-995e-1dd0bb51215d"
+        },
+        {
+          "position": "16",
+          "title": "Social Disease",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Leroy Gomez",
+              "instrument",
+              "saxophone"
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "banjo, electric guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ]
+          ],
+          "recording_mbid": "082f5909-5a8a-4115-bb9d-2ebf66958cc1"
+        },
+        {
+          "position": "17",
+          "title": "Harmony",
+          "credits": [
+            [
+              "David Hentschel",
+              "engineer",
+              ""
+            ],
+            [
+              "Elton John",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Davey Johnstone",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Dee Murray",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Nigel Olsson",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Del Newman",
+              "orchestrator",
+              ""
+            ],
+            [
+              "Gus Dudgeon",
+              "producer",
+              ""
+            ],
+            [
+              "Elton John",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Davey Johnstone",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Dee Murray",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Nigel Olsson",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "b0a5811c-c53a-4253-be28-716a8398db4e"
+        }
+      ],
+      "tags": [
+        "rock",
+        "pop",
+        "progressive rock",
+        "singer-songwriter",
+        "glam rock",
+        "classic rock",
+        "christmas",
+        "album rock",
+        "soft rock",
+        "adult contemporary",
+        "pop rock",
+        "piano rock",
+        "bennie and the jets",
+        "singer/songwriter",
+        "rock & roll",
+        "pop/rock",
+        "contemporary pop/rock",
+        "rock/pop",
+        "double album"
+      ],
+      "image_url": "https://coverartarchive.org/release/8af52dac-357c-4d07-adb3-e28f636c7b12/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-03-25T15:15:31.879Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Elton John - Goodbye Yellow Brick Road (Remastered)",
     "Led Zeppelin - Houses of the Holy (Remaster)",
     "Childish Gambino - \"Awaken, My Love!\"",
     "Peter, Paul and Mary - Peter, Paul and Mary",
@@ -399568,7 +400411,6 @@
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
     "Tame Impala - InnerSpeaker",
     "Nivhek - After its own death / Walking in a spiral towards the house",
-    "Joan Baez - Joan Baez",
-    "Barker - Stochastic Drift"
+    "Joan Baez - Joan Baez"
   ]
 }
