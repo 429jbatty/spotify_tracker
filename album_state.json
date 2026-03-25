@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-25T16:27:37.249Z",
+  "last_checked": "2026-03-25T17:08:22.421Z",
   "albums_in_progress": {
     "6DlSUW5gmq6Byc3osKDJ2p": {
       "album_name": "Can't Buy A Thrill",
@@ -33,16 +33,6 @@
       "last_played": "2026-03-23T22:34:05.853Z",
       "completion_logged": true
     },
-    "53cxrg7kbFQxDizY0kcDQo": {
-      "album_name": "Parallelograms",
-      "artist": "Linda Perhacs",
-      "total_tracks": 11,
-      "played_tracks": [
-        "6LRX4u7auZzD52OUIB1xly"
-      ],
-      "first_played": "2026-03-23T17:26:28.276Z",
-      "last_played": "2026-03-23T17:26:28.276Z"
-    },
     "3PkdGRruLnJ9zCtANiDrpB": {
       "album_name": "Buffalo Springfield",
       "artist": "Buffalo Springfield",
@@ -53,86 +43,6 @@
       ],
       "first_played": "2026-03-23T17:23:33.165Z",
       "last_played": "2026-03-24T01:09:53.289Z"
-    },
-    "3O9LYeSXXEypjdptHMghUg": {
-      "album_name": "Diamonds & Rust",
-      "artist": "Joan Baez",
-      "total_tracks": 11,
-      "played_tracks": [
-        "4O0sGJdqpHMaWz7KoVd7tb"
-      ],
-      "first_played": "2026-03-23T17:20:48.011Z",
-      "last_played": "2026-03-23T17:20:48.011Z"
-    },
-    "5XresJcJBgYkVQE9PATjli": {
-      "album_name": "In the Wind",
-      "artist": "Peter, Paul and Mary",
-      "total_tracks": 12,
-      "played_tracks": [
-        "23AXSvQQkKT5urLRi8z3uC"
-      ],
-      "first_played": "2026-03-23T17:16:05.633Z",
-      "last_played": "2026-03-23T17:16:05.633Z"
-    },
-    "3QeVaRbnGA1zMlGoBQmSFp": {
-      "album_name": "The Journeymen",
-      "artist": "The Journeymen",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1Vpgnjf33Uun9WdMh5KwcO"
-      ],
-      "first_played": "2026-03-23T17:12:48.432Z",
-      "last_played": "2026-03-23T17:12:48.432Z"
-    },
-    "7d4POkYBpW8zKTcZvNEyxa": {
-      "album_name": "Early Morning Rain",
-      "artist": "Ian & Sylvia",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4GV5wmFd0G5NW8lQK9aVvP"
-      ],
-      "first_played": "2026-03-23T17:09:34.307Z",
-      "last_played": "2026-03-23T17:09:34.307Z"
-    },
-    "0iO91QmtRa5h2wRZ0CNAzS": {
-      "album_name": "Jessica Pratt",
-      "artist": "Jessica Pratt",
-      "total_tracks": 11,
-      "played_tracks": [
-        "57WGADwXrn3y0ds6sRz77l"
-      ],
-      "first_played": "2026-03-23T17:05:39.486Z",
-      "last_played": "2026-03-23T17:05:39.486Z"
-    },
-    "7hez8jibf36E66GHpFkWz7": {
-      "album_name": "Buffalo Springfield Again",
-      "artist": "Buffalo Springfield",
-      "total_tracks": 10,
-      "played_tracks": [
-        "3uVmR6oQq0NluVZXkipKHV"
-      ],
-      "first_played": "2026-03-23T17:01:21.729Z",
-      "last_played": "2026-03-23T17:01:21.729Z"
-    },
-    "0KWZmGhxNlNMOQgi4LPWun": {
-      "album_name": "Farewell, Angelina",
-      "artist": "Joan Baez",
-      "total_tracks": 14,
-      "played_tracks": [
-        "7kFN6oceID4DUi29EjIYmi"
-      ],
-      "first_played": "2026-03-23T16:57:35.375Z",
-      "last_played": "2026-03-23T16:57:35.375Z"
-    },
-    "3CDM5os6kA4y6mYYGukMIZ": {
-      "album_name": "Album 1700",
-      "artist": "Peter, Paul and Mary",
-      "total_tracks": 12,
-      "played_tracks": [
-        "6ZSTinOwx5dKFYc6iYyGDn"
-      ],
-      "first_played": "2026-03-23T16:54:05.938Z",
-      "last_played": "2026-03-23T16:54:05.938Z"
     },
     "0GqpoHJREPp0iuXK3HzrHk": {
       "album_name": "Houses of the Holy (Remaster)",
@@ -354,10 +264,11 @@
       "artist": "T. Rex",
       "total_tracks": 18,
       "played_tracks": [
-        "79dQwpXjJ4t3pILysdqFyB"
+        "79dQwpXjJ4t3pILysdqFyB",
+        "7s0JCFIi0pif9bLnEaEwS7"
       ],
       "first_played": "2026-03-24T01:35:15.430Z",
-      "last_played": "2026-03-24T01:35:15.430Z"
+      "last_played": "2026-03-25T16:40:58.976Z"
     },
     "3W6CI0Lw7lElAPID2Fd3B4": {
       "album_name": "Disraeli Gears (Deluxe Edition)",
@@ -585,6 +496,76 @@
       "first_played": "2026-03-25T16:20:27.291Z",
       "last_played": "2026-03-25T15:15:31.879Z",
       "completion_logged": true
+    },
+    "1pa0QvYjLsiYWQlkMvqPZL": {
+      "album_name": "Walking Man (2019 Remaster)",
+      "artist": "James Taylor",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5CHX5fuINGV2Y7T4sDKdUJ"
+      ],
+      "first_played": "2026-03-25T17:08:22.421Z",
+      "last_played": "2026-03-25T17:08:22.421Z"
+    },
+    "4XfN871nBIz6obaUDEzZXm": {
+      "album_name": "Pretzel Logic",
+      "artist": "Steely Dan",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0xLrMI4R2xTwRHWV3UQCAZ"
+      ],
+      "first_played": "2026-03-25T16:57:41.249Z",
+      "last_played": "2026-03-25T16:57:41.249Z"
+    },
+    "12n11cgnpjXKLeqrnIERoS": {
+      "album_name": "Tapestry",
+      "artist": "Carole King",
+      "total_tracks": 12,
+      "played_tracks": [
+        "12q3V8ShACq2PSWINMc2rC"
+      ],
+      "first_played": "2026-03-25T16:53:04.761Z",
+      "last_played": "2026-03-25T16:53:04.761Z"
+    },
+    "2ei2X6ghPnw7YRwQtAH075": {
+      "album_name": "Honky Chateau",
+      "artist": "Elton John",
+      "total_tracks": 11,
+      "played_tracks": [
+        "1plcM0XlbKdjND7Ufokuzb"
+      ],
+      "first_played": "2026-03-25T16:49:13.005Z",
+      "last_played": "2026-03-25T16:49:13.005Z"
+    },
+    "0E5IKYhiKgbYQkmfsFonbZ": {
+      "album_name": "America",
+      "artist": "America",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4Anh5Ti55P6SXG3H94QLqV"
+      ],
+      "first_played": "2026-03-25T16:43:55.429Z",
+      "last_played": "2026-03-25T16:43:55.429Z"
+    },
+    "4dKdxly4ji1vfl7sEYuqBe": {
+      "album_name": "Dire Straits",
+      "artist": "Dire Straits",
+      "total_tracks": 9,
+      "played_tracks": [
+        "5EoD2H4HEX3lQd0l7CsHA1"
+      ],
+      "first_played": "2026-03-25T16:36:52.741Z",
+      "last_played": "2026-03-25T16:36:52.741Z"
+    },
+    "1hOK2ey9W76x9GnftSRgrw": {
+      "album_name": "Aja",
+      "artist": "Steely Dan",
+      "total_tracks": 7,
+      "played_tracks": [
+        "1QgLpUJsmrLG61KDVGT0Ux"
+      ],
+      "first_played": "2026-03-25T16:32:10.671Z",
+      "last_played": "2026-03-25T16:32:10.671Z"
     }
   },
   "completed_albums": {
