@@ -1,29 +1,6 @@
 {
-  "last_checked": "2026-03-26T00:11:03.940Z",
+  "last_checked": "2026-03-26T03:04:40.176Z",
   "albums_in_progress": {
-    "6DlSUW5gmq6Byc3osKDJ2p": {
-      "album_name": "Can't Buy A Thrill",
-      "artist": "Steely Dan",
-      "total_tracks": 10,
-      "played_tracks": [
-        "7y5nJToPWMjtJLcLEGxyGf",
-        "1CZR9j4cF4r2uuCpiMdsX5",
-        "5nTxjFOvyjXoOIqcZsiy5E"
-      ],
-      "first_played": "2026-03-23T16:13:24.753Z",
-      "last_played": "2026-03-24T01:18:10.194Z"
-    },
-    "3PkdGRruLnJ9zCtANiDrpB": {
-      "album_name": "Buffalo Springfield",
-      "artist": "Buffalo Springfield",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4WLFwsgF6aJSjstHF4nFWa",
-        "1qRA5BS78u3gME0loMl9AA"
-      ],
-      "first_played": "2026-03-23T17:23:33.165Z",
-      "last_played": "2026-03-24T01:09:53.289Z"
-    },
     "0bpkbOTq89x7p0SzPf7BaL": {
       "album_name": "ASMR Crinkle Sounds",
       "artist": "ASMR 4 U",
@@ -36,26 +13,6 @@
       "first_played": "2026-03-24T01:50:17.720Z",
       "last_played": "2026-03-24T04:07:19.100Z"
     },
-    "6P5QHz4XtxOmS5EuiGIPut": {
-      "album_name": "Led Zeppelin III (Remaster)",
-      "artist": "Led Zeppelin",
-      "total_tracks": 10,
-      "played_tracks": [
-        "4ywWJqYKOwaVVh9xXARWUS"
-      ],
-      "first_played": "2026-03-24T01:45:40.544Z",
-      "last_played": "2026-03-24T01:45:40.544Z"
-    },
-    "5dVZpNJraoqCo3BssinMoo": {
-      "album_name": "Fear of Music (Deluxe Version)",
-      "artist": "Talking Heads",
-      "total_tracks": 15,
-      "played_tracks": [
-        "7CqleiaEqHVazV19P532X9"
-      ],
-      "first_played": "2026-03-24T01:42:26.281Z",
-      "last_played": "2026-03-24T01:42:26.281Z"
-    },
     "6k1iylSzWOs7SgavxlJ8kt": {
       "album_name": "Electric Warrior [Expanded & Remastered]",
       "artist": "T. Rex",
@@ -66,76 +23,6 @@
       ],
       "first_played": "2026-03-24T01:35:15.430Z",
       "last_played": "2026-03-25T16:40:58.976Z"
-    },
-    "3W6CI0Lw7lElAPID2Fd3B4": {
-      "album_name": "Disraeli Gears (Deluxe Edition)",
-      "artist": "Cream",
-      "total_tracks": 40,
-      "played_tracks": [
-        "0GxV3poTM7Z7fKSUqy5qFw"
-      ],
-      "first_played": "2026-03-24T01:31:34.448Z",
-      "last_played": "2026-03-24T01:31:34.448Z"
-    },
-    "5ZPvG6hav71Uqmlgs85xbE": {
-      "album_name": "A Space in Time (Deluxe Version)",
-      "artist": "Ten Years After",
-      "total_tracks": 20,
-      "played_tracks": [
-        "7n3WO6ESKS1uCI9fgkGs66"
-      ],
-      "first_played": "2026-03-24T01:28:47.943Z",
-      "last_played": "2026-03-24T01:28:47.943Z"
-    },
-    "26tH0kjUhkxBEd3ipGkx3Y": {
-      "album_name": "Physical Graffiti (Deluxe Edition)",
-      "artist": "Led Zeppelin",
-      "total_tracks": 22,
-      "played_tracks": [
-        "0d0Z9qFbTIgDSZtImluTAy"
-      ],
-      "first_played": "2026-03-24T01:25:03.753Z",
-      "last_played": "2026-03-24T01:25:03.753Z"
-    },
-    "0r7o2FeARRr23EZ0TJ0a8S": {
-      "album_name": "Talking Heads '77",
-      "artist": "Talking Heads",
-      "total_tracks": 11,
-      "played_tracks": [
-        "06JKOTOoHXuuKkiSBDdU6n"
-      ],
-      "first_played": "2026-03-24T01:20:59.330Z",
-      "last_played": "2026-03-24T01:20:59.330Z"
-    },
-    "6r7LZXAVueS5DqdrvXJJK7": {
-      "album_name": "Paranoid (Remaster)",
-      "artist": "Black Sabbath",
-      "total_tracks": 8,
-      "played_tracks": [
-        "2VDg6h3Qr3F8UuFVInQxE6"
-      ],
-      "first_played": "2026-03-24T01:14:22.280Z",
-      "last_played": "2026-03-24T01:14:22.280Z"
-    },
-    "468ZwCchVtzEbt9BHmXopb": {
-      "album_name": "Meddle",
-      "artist": "Pink Floyd",
-      "total_tracks": 6,
-      "played_tracks": [
-        "7AalBKBoLDR4UmRYRJpdbj"
-      ],
-      "first_played": "2026-03-24T01:07:19.584Z",
-      "last_played": "2026-03-24T01:07:19.584Z"
-    },
-    "44Ig8dzqOkvkGDzaUof9lK": {
-      "album_name": "Led Zeppelin IV (Deluxe Edition)",
-      "artist": "Led Zeppelin",
-      "total_tracks": 16,
-      "played_tracks": [
-        "5NnZ4JJxWiqqhYNu3rwmFj"
-      ],
-      "first_played": "2026-03-24T01:01:10.655Z",
-      "last_played": "2026-03-24T01:01:10.655Z"
     },
     "4LH4d3cOWNNsVw41Gqt2kv": {
       "album_name": "The Dark Side of the Moon",
