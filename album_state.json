@@ -1,37 +1,6 @@
 {
-  "last_checked": "2026-03-27T16:22:20.878Z",
+  "last_checked": "2026-03-27T16:38:50.748Z",
   "albums_in_progress": {
-    "6k1iylSzWOs7SgavxlJ8kt": {
-      "album_name": "Electric Warrior [Expanded & Remastered]",
-      "artist": "T. Rex",
-      "total_tracks": 18,
-      "played_tracks": [
-        "79dQwpXjJ4t3pILysdqFyB",
-        "7s0JCFIi0pif9bLnEaEwS7"
-      ],
-      "first_played": "2026-03-24T01:35:15.430Z",
-      "last_played": "2026-03-25T16:40:58.976Z"
-    },
-    "6bzqUICBtzct7TiQC8if9s": {
-      "album_name": "If You Could Read My Mind",
-      "artist": "Gordon Lightfoot",
-      "total_tracks": 11,
-      "played_tracks": [
-        "57ct8jKi6trntXiRV0NnXi"
-      ],
-      "first_played": "2026-03-25T16:27:37.249Z",
-      "last_played": "2026-03-25T16:27:37.249Z"
-    },
-    "69P9Ro0W286yLFgYwrGVN0": {
-      "album_name": "Elton John",
-      "artist": "Elton John",
-      "total_tracks": 30,
-      "played_tracks": [
-        "3gSoNTSGedgEAdaVfTPTnM"
-      ],
-      "first_played": "2026-03-25T16:23:48.496Z",
-      "last_played": "2026-03-25T16:23:48.496Z"
-    },
     "5WupqgR68HfuHt3BMJtgun": {
       "album_name": "Goodbye Yellow Brick Road (Remastered)",
       "artist": "Elton John",
@@ -58,76 +27,6 @@
       "first_played": "2026-03-25T16:20:27.291Z",
       "last_played": "2026-03-26T15:02:38.331Z",
       "completion_logged": true
-    },
-    "1pa0QvYjLsiYWQlkMvqPZL": {
-      "album_name": "Walking Man (2019 Remaster)",
-      "artist": "James Taylor",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5CHX5fuINGV2Y7T4sDKdUJ"
-      ],
-      "first_played": "2026-03-25T17:08:22.421Z",
-      "last_played": "2026-03-25T17:08:22.421Z"
-    },
-    "4XfN871nBIz6obaUDEzZXm": {
-      "album_name": "Pretzel Logic",
-      "artist": "Steely Dan",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0xLrMI4R2xTwRHWV3UQCAZ"
-      ],
-      "first_played": "2026-03-25T16:57:41.249Z",
-      "last_played": "2026-03-25T16:57:41.249Z"
-    },
-    "12n11cgnpjXKLeqrnIERoS": {
-      "album_name": "Tapestry",
-      "artist": "Carole King",
-      "total_tracks": 12,
-      "played_tracks": [
-        "12q3V8ShACq2PSWINMc2rC"
-      ],
-      "first_played": "2026-03-25T16:53:04.761Z",
-      "last_played": "2026-03-25T16:53:04.761Z"
-    },
-    "2ei2X6ghPnw7YRwQtAH075": {
-      "album_name": "Honky Chateau",
-      "artist": "Elton John",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1plcM0XlbKdjND7Ufokuzb"
-      ],
-      "first_played": "2026-03-25T16:49:13.005Z",
-      "last_played": "2026-03-25T16:49:13.005Z"
-    },
-    "0E5IKYhiKgbYQkmfsFonbZ": {
-      "album_name": "America",
-      "artist": "America",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4Anh5Ti55P6SXG3H94QLqV"
-      ],
-      "first_played": "2026-03-25T16:43:55.429Z",
-      "last_played": "2026-03-25T16:43:55.429Z"
-    },
-    "4dKdxly4ji1vfl7sEYuqBe": {
-      "album_name": "Dire Straits",
-      "artist": "Dire Straits",
-      "total_tracks": 9,
-      "played_tracks": [
-        "5EoD2H4HEX3lQd0l7CsHA1"
-      ],
-      "first_played": "2026-03-25T16:36:52.741Z",
-      "last_played": "2026-03-25T16:36:52.741Z"
-    },
-    "1hOK2ey9W76x9GnftSRgrw": {
-      "album_name": "Aja",
-      "artist": "Steely Dan",
-      "total_tracks": 7,
-      "played_tracks": [
-        "1QgLpUJsmrLG61KDVGT0Ux"
-      ],
-      "first_played": "2026-03-25T16:32:10.671Z",
-      "last_played": "2026-03-25T16:32:10.671Z"
     },
     "1qDA0jVhj4ZTjGHmpbmmwa": {
       "album_name": "Slowdive",
