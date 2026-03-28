@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-28T16:09:40.698Z",
+  "last_checked": "2026-03-28T17:56:47.383Z",
   "albums_in_progress": {
     "2akjxkzFolkeV72Yyv5KrM": {
       "album_name": "Court and Spark",
@@ -9,10 +9,88 @@
         "5RI0qk5rSvAJwCwxtDSKKM",
         "2by5mqpQ1ZP2G5FOIccMnu",
         "0tVzXGFyNPusa1VkHmYDLd",
-        "2l8kERLPqgP7p94Duj9nqH"
+        "2l8kERLPqgP7p94Duj9nqH",
+        "71erzpH89KI95te7DTPOrG",
+        "6xnWOh2QmFsggTxGsaPv7X",
+        "4C1jo6AbILMbE4TlAjXfVl",
+        "5sybv7y6pikPOhTxTgXfvc",
+        "3eH95cySq82dDtpwrGCCfQ",
+        "27VoOUIDXAAgmEXSjOJ1gD",
+        "0jRKHKZhHZpN4Q1GHF7YZt"
       ],
       "first_played": "2026-03-28T16:09:40.698Z",
-      "last_played": "2026-03-28T16:01:00.974Z"
+      "last_played": "2026-03-28T16:13:05.361Z",
+      "completion_logged": true
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6g2m5644ZTXBzxSt0z5Qwa"
+      ],
+      "first_played": "2026-03-28T17:53:47.028Z",
+      "last_played": "2026-03-28T17:53:47.028Z"
+    },
+    "2HIwUmdxEl7SeWa1ndH5wC": {
+      "album_name": "Pop 2",
+      "artist": "Charli xcx",
+      "total_tracks": 10,
+      "played_tracks": [
+        "64xw3gXNMWv4wNXjF6tnXr"
+      ],
+      "first_played": "2026-03-28T17:49:17.290Z",
+      "last_played": "2026-03-28T17:49:17.290Z"
+    },
+    "0rmhjUgoVa17LZuS8xWQ3v": {
+      "album_name": "Pure Heroine",
+      "artist": "Lorde",
+      "total_tracks": 10,
+      "played_tracks": [
+        "51QEyJI5M7uyd8DOh9tqQY"
+      ],
+      "first_played": "2026-03-28T17:44:47.426Z",
+      "last_played": "2026-03-28T17:44:47.426Z"
+    },
+    "4ClyeVlAKJJViIyfVW0yQD": {
+      "album_name": "Pang",
+      "artist": "Caroline Polachek",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5B6Kjha6RRIMWGN7zGsAaT"
+      ],
+      "first_played": "2026-03-28T17:40:47.112Z",
+      "last_played": "2026-03-28T17:40:47.112Z"
+    },
+    "5dVZpNJraoqCo3BssinMoo": {
+      "album_name": "Fear of Music (Deluxe Version)",
+      "artist": "Talking Heads",
+      "total_tracks": 15,
+      "played_tracks": [
+        "5IpKduzyTWSCebGXkfJ2Mm"
+      ],
+      "first_played": "2026-03-28T16:48:26.405Z",
+      "last_played": "2026-03-28T16:48:26.405Z"
+    },
+    "6ylurrLSklWvEYvlB3vy74": {
+      "album_name": "Keep On Doing",
+      "artist": "The Roches",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5DnZNGAsmClcLVnTOTRP1V"
+      ],
+      "first_played": "2026-03-28T16:44:24.996Z",
+      "last_played": "2026-03-28T16:44:24.996Z"
+    },
+    "1yyPagl5Z7wE6rmJoqv8wj": {
+      "album_name": "For the Roses",
+      "artist": "Joni Mitchell",
+      "total_tracks": 12,
+      "played_tracks": [
+        "45XSmn7yPZMTIgo9kdErh9"
+      ],
+      "first_played": "2026-03-28T16:39:32.787Z",
+      "last_played": "2026-03-28T16:39:32.787Z"
     }
   },
   "completed_albums": {
