@@ -1,32 +1,18 @@
 {
-  "last_checked": "2026-03-28T14:13:12.991Z",
+  "last_checked": "2026-03-28T16:09:40.698Z",
   "albums_in_progress": {
-    "5WupqgR68HfuHt3BMJtgun": {
-      "album_name": "Goodbye Yellow Brick Road (Remastered)",
-      "artist": "Elton John",
-      "total_tracks": 17,
+    "2akjxkzFolkeV72Yyv5KrM": {
+      "album_name": "Court and Spark",
+      "artist": "Joni Mitchell",
+      "total_tracks": 11,
       "played_tracks": [
-        "3U05P1UcqaOFHlaZ0Wk8d7",
-        "0Gvc5Ii3duAifGy2QaFDVt",
-        "6DlqxXju2H2mb0NcwgAFRM",
-        "12yHvSYFXI7PGzNecUvIDu",
-        "2fYxpSFhg95sBwaGp5JlFU",
-        "4gad1qhsqNL63n9OyCDsjL",
-        "7L1d7xwCkOZRQ5yMluNNB3",
-        "6376udcVByOCGHmiJ9kijq",
-        "7sGL3k2M6FiWFP9x83wiLA",
-        "3kiUD1IZ5icXuyKI1Rwh8j",
-        "5uyAeakIkHyTSW88uCD0M4",
-        "6sGjJmzgxvfNqLyp8yd0TH",
-        "4oXPKd1nCTONb2O9NEWjUn",
-        "4IRHwIZHzlHT1FQpRa5RdE",
-        "5Wj1rJnCLpMHdLaxsFtJLs",
-        "1L9fzw2pXprOqtemTwtxXF",
-        "5NERbS7923kF471NLKDZkB"
+        "5RI0qk5rSvAJwCwxtDSKKM",
+        "2by5mqpQ1ZP2G5FOIccMnu",
+        "0tVzXGFyNPusa1VkHmYDLd",
+        "2l8kERLPqgP7p94Duj9nqH"
       ],
-      "first_played": "2026-03-25T16:20:27.291Z",
-      "last_played": "2026-03-26T15:02:38.331Z",
-      "completion_logged": true
+      "first_played": "2026-03-28T16:09:40.698Z",
+      "last_played": "2026-03-28T16:01:00.974Z"
     }
   },
   "completed_albums": {
