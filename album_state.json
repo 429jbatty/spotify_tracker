@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-29T05:44:21.604Z",
+  "last_checked": "2026-03-29T16:02:36.403Z",
   "albums_in_progress": {
     "2akjxkzFolkeV72Yyv5KrM": {
       "album_name": "Court and Spark",
@@ -112,6 +112,20 @@
       ],
       "first_played": "2026-03-28T19:34:03.142Z",
       "last_played": "2026-03-28T19:31:35.120Z"
+    },
+    "107WsrBqn5xVPgystkziry": {
+      "album_name": "BLUE LIPS",
+      "artist": "ScHoolboy Q",
+      "total_tracks": 18,
+      "played_tracks": [
+        "4P8XKXpkJ2QGM442VUwfOX",
+        "7u1P36qRqrSNrXAp98cyp1",
+        "7CwO2esrH095tjxmJVMY2E",
+        "1pqG8egYsdWZiHSMT1QTaL",
+        "12AOsImtp5x0rCnoaE9QSl"
+      ],
+      "first_played": "2026-03-29T16:02:36.403Z",
+      "last_played": "2026-03-29T15:41:25.705Z"
     }
   },
   "completed_albums": {
