@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-31T16:23:36.844Z",
+  "last_checked": "2026-03-31T22:14:04.523Z",
   "albums_in_progress": {
     "7L7oMPboBCeyGLJVsHSWM2": {
       "album_name": "By the Time I Get to Phoenix",
@@ -45,6 +45,108 @@
       "first_played": "2026-03-31T16:12:52.148Z",
       "last_played": "2026-03-31T15:29:01.564Z",
       "completion_logged": true
+    },
+    "2JQDn2wgm2nLVxdWE0GJJa": {
+      "album_name": "Folksongs & Ballads",
+      "artist": "Tia Blake",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6hwvSseQYltJDb1d7JMbkj"
+      ],
+      "first_played": "2026-03-31T22:14:04.523Z",
+      "last_played": "2026-03-31T22:14:04.523Z"
+    },
+    "53cxrg7kbFQxDizY0kcDQo": {
+      "album_name": "Parallelograms",
+      "artist": "Linda Perhacs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6LRX4u7auZzD52OUIB1xly"
+      ],
+      "first_played": "2026-03-31T22:10:09.142Z",
+      "last_played": "2026-03-31T22:10:09.142Z"
+    },
+    "1FusZqUmmcNnaCm1O45gUW": {
+      "album_name": "See What Tomorrow Brings",
+      "artist": "Peter, Paul and Mary",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5wQYKIDmon1enyYNQNPm5p"
+      ],
+      "first_played": "2026-03-31T22:07:15.217Z",
+      "last_played": "2026-03-31T22:07:15.217Z"
+    },
+    "2gLirULn7YwSGINsyHSxxR": {
+      "album_name": "The Roches",
+      "artist": "The Roches",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4pFAcwTMrki6Etw4shsSVv"
+      ],
+      "first_played": "2026-03-31T22:04:06.568Z",
+      "last_played": "2026-03-31T22:04:06.568Z"
+    },
+    "1vz94WpXDVYIEGja8cjFNa": {
+      "album_name": "Blue",
+      "artist": "Joni Mitchell",
+      "total_tracks": 10,
+      "played_tracks": [
+        "7jeSFewaQLq8t2x8OZFQxZ"
+      ],
+      "first_played": "2026-03-31T22:00:37.063Z",
+      "last_played": "2026-03-31T22:00:37.063Z"
+    },
+    "0KWZmGhxNlNMOQgi4LPWun": {
+      "album_name": "Farewell, Angelina",
+      "artist": "Joan Baez",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1rI0sMuAEeAOPihDEwPa3y"
+      ],
+      "first_played": "2026-03-31T21:57:03.169Z",
+      "last_played": "2026-03-31T21:57:03.169Z"
+    },
+    "734AFYo34Q1zRpg9N8E2Ho": {
+      "album_name": "Joan Baez",
+      "artist": "Joan Baez",
+      "total_tracks": 16,
+      "played_tracks": [
+        "0h8f0WKRn1vKky5LgfTjDU",
+        "7vJAglE0Vzjgy1GyeA7Vog",
+        "3WZl07ITusPN7bQY3vzGdx",
+        "27LWYN5H4rfXlRz1vFNm63",
+        "7fEortZUGuuSKTAr8ZMrk1",
+        "7rL6dZzydhWSimA6TouJ6K",
+        "75DHk0YU3iu2G6ukTPIzlb",
+        "2VyKXzrtialaXBc4uIA58Z",
+        "5et1Cm8WX18X4eoORUcyap",
+        "49uBVeaM3ixGD8VIeqh9KI",
+        "1eZTRfESsrayUmRKGIuory",
+        "3lqxFhPsfNl2DSmqEogdH2",
+        "3AuVZyDw1VhjjLfHZR4ba3"
+      ],
+      "first_played": "2026-03-31T21:53:44.489Z",
+      "last_played": "2026-03-31T21:10:52.010Z"
+    },
+    "6lLE7TKQqMVNDVL353TGVk": {
+      "album_name": "Just A Little Sentimental",
+      "artist": "Marty Robbins",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7mc4pWv4OQXYvcLK8ib0Eu"
+      ],
+      "first_played": "2026-03-31T21:07:26.598Z",
+      "last_played": "2026-03-31T21:07:26.598Z"
+    },
+    "2lIZef4lzdvZkiiCzvPKj7": {
+      "album_name": "BRAT",
+      "artist": "Charli xcx",
+      "total_tracks": 15,
+      "played_tracks": [
+        "0CySZwyRJ0vyUqtSjM9i2k"
+      ],
+      "first_played": "2026-03-31T20:57:53.141Z",
+      "last_played": "2026-03-31T20:57:53.141Z"
     }
   },
   "completed_albums": {
