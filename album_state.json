@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-31T14:05:21.227Z",
+  "last_checked": "2026-03-31T16:23:36.844Z",
   "albums_in_progress": {
     "0rmhjUgoVa17LZuS8xWQ3v": {
       "album_name": "Pure Heroine",
@@ -44,6 +44,37 @@
       ],
       "first_played": "2026-03-31T01:29:57.913Z",
       "last_played": "2026-03-31T04:05:56.844Z"
+    },
+    "0qWcLfCZ8wtcoOdX14oGNI": {
+      "album_name": "Stranger in the Alps",
+      "artist": "Phoebe Bridgers",
+      "total_tracks": 11,
+      "played_tracks": [
+        "3rJDsZjIaCfJQSqRUvl0BM"
+      ],
+      "first_played": "2026-03-31T16:23:36.844Z",
+      "last_played": "2026-03-31T16:23:36.844Z"
+    },
+    "6Pp6qGEywDdofgFC1oFbSH": {
+      "album_name": "Punisher",
+      "artist": "Phoebe Bridgers",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0pJW1Xw3aY4Eh6k5iuBkfI",
+        "1WCjhRs2WBgyeGaybCX2Po",
+        "0Jm0RTOlF7DsbQ689QclaF",
+        "5BN59BDczcpxstFKILIH0q",
+        "46RNrAkGsqWTDrv2ZPOAbx",
+        "1scaOnahzG7o8pfwfsL784",
+        "2GDxR0ZGYqDQUElSQxBiNS",
+        "5LJ4ig9cMvjui3li1mrNRl",
+        "4vjvx7Zxkb4AltGcZ0BBvI",
+        "5bIgzvxvlefRUCQK9JPocF",
+        "0kjCtKby0lrHKmSxBa80Bq"
+      ],
+      "first_played": "2026-03-31T16:12:52.148Z",
+      "last_played": "2026-03-31T15:29:01.564Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
