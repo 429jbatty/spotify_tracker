@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-31T00:40:53.266Z",
+  "last_checked": "2026-03-31T01:29:57.913Z",
   "albums_in_progress": {
     "0rmhjUgoVa17LZuS8xWQ3v": {
       "album_name": "Pure Heroine",
@@ -30,6 +30,19 @@
       ],
       "first_played": "2026-03-29T16:02:36.403Z",
       "last_played": "2026-03-29T16:40:41.693Z"
+    },
+    "7L7oMPboBCeyGLJVsHSWM2": {
+      "album_name": "By the Time I Get to Phoenix",
+      "artist": "Injury Reserve",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6oCoAoJCIvU3YAHzYSXy2p",
+        "3qZTymkWpHt9JwICJKTjAZ",
+        "2gLco6poLosipqughuI7Rt",
+        "5s0oWj51ttqiINWWJynNPz"
+      ],
+      "first_played": "2026-03-31T01:29:57.913Z",
+      "last_played": "2026-03-31T01:17:16.321Z"
     }
   },
   "completed_albums": {
