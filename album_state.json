@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-03-31T22:14:04.523Z",
+  "last_checked": "2026-04-01T00:36:09.036Z",
   "albums_in_progress": {
     "7L7oMPboBCeyGLJVsHSWM2": {
       "album_name": "By the Time I Get to Phoenix",
@@ -51,60 +51,79 @@
       "artist": "Tia Blake",
       "total_tracks": 11,
       "played_tracks": [
-        "6hwvSseQYltJDb1d7JMbkj"
+        "6hwvSseQYltJDb1d7JMbkj",
+        "1bh2eqY9P0irUE0jrL7I72",
+        "0AlCdMRikUqnsR3wgavInW",
+        "5nXwuLCanMITQ6pbVD7SRn",
+        "6wc7N7wZ5cRORR2Jx2u8Rw",
+        "0u89poUfdddiQie8hBU72E"
       ],
       "first_played": "2026-03-31T22:14:04.523Z",
-      "last_played": "2026-03-31T22:14:04.523Z"
+      "last_played": "2026-03-31T22:33:58.330Z"
     },
     "53cxrg7kbFQxDizY0kcDQo": {
       "album_name": "Parallelograms",
       "artist": "Linda Perhacs",
       "total_tracks": 11,
       "played_tracks": [
-        "6LRX4u7auZzD52OUIB1xly"
+        "6LRX4u7auZzD52OUIB1xly",
+        "1ULOCQ9oYMNt47o9b335Tv",
+        "732WGiBVzJ03rWfxZnyhCx",
+        "2YmzLhrBrhPfzAA7BySWTi",
+        "0PSxgms5q4pEtRGXRw2oWK",
+        "1EY7zEIE32twYy7zL05WG2",
+        "2tBc2wnoYSNgpNLHzzNS0J"
       ],
       "first_played": "2026-03-31T22:10:09.142Z",
-      "last_played": "2026-03-31T22:10:09.142Z"
+      "last_played": "2026-03-31T22:31:01.947Z"
     },
     "1FusZqUmmcNnaCm1O45gUW": {
       "album_name": "See What Tomorrow Brings",
       "artist": "Peter, Paul and Mary",
       "total_tracks": 12,
       "played_tracks": [
-        "5wQYKIDmon1enyYNQNPm5p"
+        "5wQYKIDmon1enyYNQNPm5p",
+        "6FPwoNnpbqqIyiDyXhRPtZ"
       ],
       "first_played": "2026-03-31T22:07:15.217Z",
-      "last_played": "2026-03-31T22:07:15.217Z"
+      "last_played": "2026-03-31T22:27:17.880Z"
     },
     "2gLirULn7YwSGINsyHSxxR": {
       "album_name": "The Roches",
       "artist": "The Roches",
       "total_tracks": 10,
       "played_tracks": [
-        "4pFAcwTMrki6Etw4shsSVv"
+        "4pFAcwTMrki6Etw4shsSVv",
+        "5lb2yZPVZo0YHCqC46m56W",
+        "0SnQFWwCuvAyDCa8zpeE5p"
       ],
       "first_played": "2026-03-31T22:04:06.568Z",
-      "last_played": "2026-03-31T22:04:06.568Z"
+      "last_played": "2026-03-31T22:57:44.883Z"
     },
     "1vz94WpXDVYIEGja8cjFNa": {
       "album_name": "Blue",
       "artist": "Joni Mitchell",
       "total_tracks": 10,
       "played_tracks": [
-        "7jeSFewaQLq8t2x8OZFQxZ"
+        "7jeSFewaQLq8t2x8OZFQxZ",
+        "11dUk8E2z8Oj1JURwl7GJd",
+        "1yWIsH3TC51gmzvQxZNCQC",
+        "6NQRhp9Vv5RRySazV7ttBl",
+        "0bpXQ5CZ9rzAaGUSPKzI1r"
       ],
       "first_played": "2026-03-31T22:00:37.063Z",
-      "last_played": "2026-03-31T22:00:37.063Z"
+      "last_played": "2026-03-31T22:20:11.615Z"
     },
     "0KWZmGhxNlNMOQgi4LPWun": {
       "album_name": "Farewell, Angelina",
       "artist": "Joan Baez",
       "total_tracks": 14,
       "played_tracks": [
-        "1rI0sMuAEeAOPihDEwPa3y"
+        "1rI0sMuAEeAOPihDEwPa3y",
+        "6t5Z3MLqcNu471STaCpGPj"
       ],
       "first_played": "2026-03-31T21:57:03.169Z",
-      "last_played": "2026-03-31T21:57:03.169Z"
+      "last_played": "2026-03-31T23:23:06.478Z"
     },
     "734AFYo34Q1zRpg9N8E2Ho": {
       "album_name": "Joan Baez",
@@ -147,6 +166,149 @@
       ],
       "first_played": "2026-03-31T20:57:53.141Z",
       "last_played": "2026-03-31T20:57:53.141Z"
+    },
+    "00MudAJNGTxCUkQrtRz2hY": {
+      "album_name": "Last Time Around",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0ipGD86bKFARjKvVnOu6QW"
+      ],
+      "first_played": "2026-04-01T00:33:49.256Z",
+      "last_played": "2026-04-01T00:33:49.256Z"
+    },
+    "4WFbML0LdLr3b0u6rxn8Hw": {
+      "album_name": "Come From The Shadows",
+      "artist": "Joan Baez",
+      "total_tracks": 12,
+      "played_tracks": [
+        "29tEUK8T1WPH0jR5CHC3rf"
+      ],
+      "first_played": "2026-04-01T00:31:26.819Z",
+      "last_played": "2026-04-01T00:31:26.819Z"
+    },
+    "6EcqWi6PA9CbvtulGbEsPN": {
+      "album_name": "Songs Of Leonard Cohen",
+      "artist": "Leonard Cohen",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0cYC8CG70dKReF8fkqTBoH",
+        "4Hu4Cg35qxh3Uz7PAGj8de"
+      ],
+      "first_played": "2026-04-01T00:27:33.611Z",
+      "last_played": "2026-03-31T23:29:04.174Z"
+    },
+    "3QeVaRbnGA1zMlGoBQmSFp": {
+      "album_name": "The Journeymen",
+      "artist": "The Journeymen",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6PBUO3uKvnvyRRBQdhfJjW"
+      ],
+      "first_played": "2026-04-01T00:23:55.768Z",
+      "last_played": "2026-04-01T00:23:55.768Z"
+    },
+    "6nm7PbVdUxlYe4e9Vivj8v": {
+      "album_name": "Northern Journey",
+      "artist": "Ian & Sylvia",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7p5y7JQ03wjPkB8B6Vl6IG"
+      ],
+      "first_played": "2026-04-01T00:13:25.436Z",
+      "last_played": "2026-04-01T00:13:25.436Z"
+    },
+    "3O9LYeSXXEypjdptHMghUg": {
+      "album_name": "Diamonds & Rust",
+      "artist": "Joan Baez",
+      "total_tracks": 11,
+      "played_tracks": [
+        "68bDt56iZFYpszQC8o4Z4v",
+        "4jZ6cogfz7DCQNGzJhojp4",
+        "4O0sGJdqpHMaWz7KoVd7tb"
+      ],
+      "first_played": "2026-04-01T00:11:04.112Z",
+      "last_played": "2026-03-31T22:38:44.507Z"
+    },
+    "6O62Cqi0YqOytEbFmeLyjU": {
+      "album_name": "Chelsea Girl",
+      "artist": "Nico",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3uCkIqD0VzQUijbs8WIizs"
+      ],
+      "first_played": "2026-03-31T23:32:35.260Z",
+      "last_played": "2026-03-31T23:32:35.260Z"
+    },
+    "6cCp03A4Chf73IfXbJ1OcP": {
+      "album_name": "Ian And Sylvia",
+      "artist": "Ian & Sylvia",
+      "total_tracks": 13,
+      "played_tracks": [
+        "49jTQJYm92HDyESkrHwX0S"
+      ],
+      "first_played": "2026-03-31T23:10:43.238Z",
+      "last_played": "2026-03-31T23:10:43.238Z"
+    },
+    "7Aa6K4ZHlp25leELIKnGZu": {
+      "album_name": "Celebrations For A Grey Day",
+      "artist": "Mimi And Richard Fari\u00f1a",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5ySM9MBNrMGshyP9EXudQV"
+      ],
+      "first_played": "2026-03-31T23:07:42.379Z",
+      "last_played": "2026-03-31T23:07:42.379Z"
+    },
+    "05okUkdZoQT6MgJsfN7kwg": {
+      "album_name": "Joan Baez, Vol. 2",
+      "artist": "Joan Baez",
+      "total_tracks": 17,
+      "played_tracks": [
+        "5PLaAHbGpQ8DVfChRG2y2b"
+      ],
+      "first_played": "2026-03-31T23:01:07.647Z",
+      "last_played": "2026-03-31T23:01:07.647Z"
+    },
+    "7hez8jibf36E66GHpFkWz7": {
+      "album_name": "Buffalo Springfield Again",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3uVmR6oQq0NluVZXkipKHV"
+      ],
+      "first_played": "2026-03-31T22:50:51.026Z",
+      "last_played": "2026-03-31T22:50:51.026Z"
+    },
+    "6rg3WTvmv68Vd6tgR0yS0E": {
+      "album_name": "Song to a Seagull",
+      "artist": "Joni Mitchell",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0TUPxOcJc4R3PbWo8QwC3m"
+      ],
+      "first_played": "2026-03-31T22:43:22.734Z",
+      "last_played": "2026-03-31T22:43:22.734Z"
+    },
+    "7d4POkYBpW8zKTcZvNEyxa": {
+      "album_name": "Early Morning Rain",
+      "artist": "Ian & Sylvia",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4GV5wmFd0G5NW8lQK9aVvP"
+      ],
+      "first_played": "2026-03-31T22:24:09.376Z",
+      "last_played": "2026-03-31T22:24:09.376Z"
+    },
+    "7vELrwL2rJjzn5SzaxnYQN": {
+      "album_name": "5",
+      "artist": "Joan Baez",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0HFJcdmelJKFr87hc7Dq8i"
+      ],
+      "first_played": "2026-03-31T22:17:18.930Z",
+      "last_played": "2026-03-31T22:17:18.930Z"
     }
   },
   "completed_albums": {
