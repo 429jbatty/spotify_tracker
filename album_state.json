@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-02T16:23:07.754Z",
+  "last_checked": "2026-04-02T18:24:01.601Z",
   "albums_in_progress": {
     "2JQDn2wgm2nLVxdWE0GJJa": {
       "album_name": "Folksongs & Ballads",
@@ -271,10 +271,22 @@
       "artist": "Elliott Smith",
       "total_tracks": 12,
       "played_tracks": [
-        "05lmqBrKGLHAmqsADEuU9a"
+        "05lmqBrKGLHAmqsADEuU9a",
+        "4IKMZtDIqyQDA6a4YvsgpK",
+        "1mNOLSQw42abtI2VM7wVRI",
+        "02dNJoluauc40mVrZaQCs4",
+        "1aMafyDbpEw3a8FrVhwRlg",
+        "7rQJa4XaTfHuA4TVwU8m3Z",
+        "7krF2T7qvOTLjpGKx5zuR5",
+        "1pDIEcL6F2iZfgFbwmktw9",
+        "3SCgkLOzAf13rgHoempJs1",
+        "1JbUMtVkQuaAPdHOvncVTm",
+        "6L9uay2MM8qACwI1yQHnw2",
+        "7hg9DGPDztq8fjIr2YweZb"
       ],
       "first_played": "2026-04-02T16:23:07.754Z",
-      "last_played": "2026-04-02T16:23:07.754Z"
+      "last_played": "2026-04-02T16:26:50.935Z",
+      "completion_logged": true
     },
     "7eqBAR9pblivMBOI70q2um": {
       "album_name": "Homecoming",
@@ -310,6 +322,165 @@
       "first_played": "2026-04-02T16:08:30.031Z",
       "last_played": "2026-04-02T15:37:49.160Z",
       "completion_logged": true
+    },
+    "6Gym0ls2Eqkh1BtCOhBplN": {
+      "album_name": "Reading, Writing And Arithmetic",
+      "artist": "The Sundays",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6MJKD4yww06r6AskfnnMRQ"
+      ],
+      "first_played": "2026-04-02T18:24:01.601Z",
+      "last_played": "2026-04-02T18:24:01.601Z"
+    },
+    "4jVVAenBaHRF8w0MV6qKw7": {
+      "album_name": "Yankee Hotel Foxtrot (Expanded Edition)",
+      "artist": "Wilco",
+      "total_tracks": 29,
+      "played_tracks": [
+        "1KOHx0ddv17DsT9BNMv4fK",
+        "79PejwRETHS1VfsIlav43I",
+        "0UOxrpK8qWF9xQnYsOE6jE",
+        "7qTr6NXpNeVriU1jCbXqCg"
+      ],
+      "first_played": "2026-04-02T18:19:36.332Z",
+      "last_played": "2026-04-02T17:13:03.921Z"
+    },
+    "7JAh6mfXLsGojvj9a4fnDT": {
+      "album_name": "Bavarian Fruit Bread",
+      "artist": "Hope Sandoval & The Warm Inventions",
+      "total_tracks": 11,
+      "played_tracks": [
+        "7r1Vj3cDdHihXsTqBI3bpm"
+      ],
+      "first_played": "2026-04-02T18:16:26.456Z",
+      "last_played": "2026-04-02T18:16:26.456Z"
+    },
+    "6iP3HGmoRXFUrKiml2QVkz": {
+      "album_name": "It's A Wonderful Life",
+      "artist": "Sparklehorse",
+      "total_tracks": 14,
+      "played_tracks": [
+        "7yZF4VuAjjcXjcMbqwZtQc",
+        "2Js5pD5o76qihIjc8CB6US"
+      ],
+      "first_played": "2026-04-02T18:11:49.983Z",
+      "last_played": "2026-04-02T17:27:38.107Z"
+    },
+    "17q5eeNk3HAjX1gzQnkTX7": {
+      "album_name": "In the Aeroplane Over the Sea",
+      "artist": "Neutral Milk Hotel",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4QgMnTz4ceedQI3Ex6YkBT",
+        "7c6Z6ArJ07SdsHxFjuOJ6I",
+        "1NiAMp0CzUdG6e97VYRB1a"
+      ],
+      "first_played": "2026-04-02T18:07:35.306Z",
+      "last_played": "2026-04-02T17:03:12.925Z"
+    },
+    "7DC0pE943VR5tAKIvQXHts": {
+      "album_name": "Figure 8",
+      "artist": "Elliott Smith",
+      "total_tracks": 16,
+      "played_tracks": [
+        "4xrJ4ptfR0OL8PWF21Pdgu"
+      ],
+      "first_played": "2026-04-02T18:05:36.427Z",
+      "last_played": "2026-04-02T18:05:36.427Z"
+    },
+    "53s93tksSeBis2gL50AQPJ": {
+      "album_name": "The Natural Bridge",
+      "artist": "Silver Jews",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3qZ7FFlVGjdrWxicSJ1F4O"
+      ],
+      "first_played": "2026-04-02T18:02:00.430Z",
+      "last_played": "2026-04-02T18:02:00.430Z"
+    },
+    "4mhpbf7jYc0L1nBceoebIE": {
+      "album_name": "Among My Swan",
+      "artist": "Mazzy Star",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3rkMU90xsY5kDLOsl0lbrT",
+        "0dYOhXotUJibq5j61vZQVg"
+      ],
+      "first_played": "2026-04-02T17:54:17.960Z",
+      "last_played": "2026-04-02T17:09:10.981Z"
+    },
+    "2negjodS7ksoI1xH61BWva": {
+      "album_name": "Vivadixiesubmarinetransmissionplot",
+      "artist": "Sparklehorse",
+      "total_tracks": 16,
+      "played_tracks": [
+        "5y4hfZAWqWGiOpyvG90rgK",
+        "3vqjBVzQmi0rJdgIbdnW2x"
+      ],
+      "first_played": "2026-04-02T17:50:17.561Z",
+      "last_played": "2026-04-02T17:05:04.590Z"
+    },
+    "3HTsNBfZLfRXQTfdLeLVK1": {
+      "album_name": "On Avery Island",
+      "artist": "Neutral Milk Hotel",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1hkdSByn7q9G3cpuQ2Ormt"
+      ],
+      "first_played": "2026-04-02T17:46:44.885Z",
+      "last_played": "2026-04-02T17:46:44.885Z"
+    },
+    "6zbWzjBUvXvF16tg98OYck": {
+      "album_name": "Roman Candle",
+      "artist": "Elliott Smith",
+      "total_tracks": 9,
+      "played_tracks": [
+        "3zUkBorysSm42GV4akxnoB"
+      ],
+      "first_played": "2026-04-02T17:42:40.818Z",
+      "last_played": "2026-04-02T17:42:40.818Z"
+    },
+    "00Z7sMv2YhKb49u10ajvy4": {
+      "album_name": "Static & Silence",
+      "artist": "The Sundays",
+      "total_tracks": 12,
+      "played_tracks": [
+        "2RtOnuOdBiecnBoX8x9uoO",
+        "5UU9j2neitf1fZXJCKOfe7"
+      ],
+      "first_played": "2026-04-02T17:39:09.549Z",
+      "last_played": "2026-04-02T17:16:52.933Z"
+    },
+    "4AChnLbiWqxiotXz8kv6D7": {
+      "album_name": "The Boy With The Arab Strap",
+      "artist": "Belle and Sebastian",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4XjJmVeSPYw5LwXAsrWYIt"
+      ],
+      "first_played": "2026-04-02T17:31:14.903Z",
+      "last_played": "2026-04-02T17:31:14.903Z"
+    },
+    "4YRoxHoDrGw0LI5rxDH9Dl": {
+      "album_name": "From a Basement on the Hill",
+      "artist": "Elliott Smith",
+      "total_tracks": 15,
+      "played_tracks": [
+        "60763oPe4Ngyu1Q3jFZWHi"
+      ],
+      "first_played": "2026-04-02T17:20:50.544Z",
+      "last_played": "2026-04-02T17:20:50.544Z"
+    },
+    "1nGWgkinMkmX7BlAuC4umM": {
+      "album_name": "Elliott Smith",
+      "artist": "Elliott Smith",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1pTwsLvnN8xPULDGzRjnfd"
+      ],
+      "first_played": "2026-04-02T16:59:50.564Z",
+      "last_played": "2026-04-02T16:59:50.564Z"
     }
   },
   "completed_albums": {
