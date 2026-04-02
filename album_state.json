@@ -1,37 +1,6 @@
 {
-  "last_checked": "2026-04-01T21:55:23.536Z",
+  "last_checked": "2026-04-02T16:23:07.754Z",
   "albums_in_progress": {
-    "0qWcLfCZ8wtcoOdX14oGNI": {
-      "album_name": "Stranger in the Alps",
-      "artist": "Phoebe Bridgers",
-      "total_tracks": 11,
-      "played_tracks": [
-        "3rJDsZjIaCfJQSqRUvl0BM"
-      ],
-      "first_played": "2026-03-31T16:23:36.844Z",
-      "last_played": "2026-03-31T16:23:36.844Z"
-    },
-    "6Pp6qGEywDdofgFC1oFbSH": {
-      "album_name": "Punisher",
-      "artist": "Phoebe Bridgers",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0pJW1Xw3aY4Eh6k5iuBkfI",
-        "1WCjhRs2WBgyeGaybCX2Po",
-        "0Jm0RTOlF7DsbQ689QclaF",
-        "5BN59BDczcpxstFKILIH0q",
-        "46RNrAkGsqWTDrv2ZPOAbx",
-        "1scaOnahzG7o8pfwfsL784",
-        "2GDxR0ZGYqDQUElSQxBiNS",
-        "5LJ4ig9cMvjui3li1mrNRl",
-        "4vjvx7Zxkb4AltGcZ0BBvI",
-        "5bIgzvxvlefRUCQK9JPocF",
-        "0kjCtKby0lrHKmSxBa80Bq"
-      ],
-      "first_played": "2026-03-31T16:12:52.148Z",
-      "last_played": "2026-03-31T15:29:01.564Z",
-      "completion_logged": true
-    },
     "2JQDn2wgm2nLVxdWE0GJJa": {
       "album_name": "Folksongs & Ballads",
       "artist": "Tia Blake",
@@ -296,6 +265,51 @@
       ],
       "first_played": "2026-03-31T22:17:18.930Z",
       "last_played": "2026-03-31T22:17:18.930Z"
+    },
+    "5bmpvyP7UGqB4VuXmrJUMy": {
+      "album_name": "Either/Or",
+      "artist": "Elliott Smith",
+      "total_tracks": 12,
+      "played_tracks": [
+        "05lmqBrKGLHAmqsADEuU9a"
+      ],
+      "first_played": "2026-04-02T16:23:07.754Z",
+      "last_played": "2026-04-02T16:23:07.754Z"
+    },
+    "7eqBAR9pblivMBOI70q2um": {
+      "album_name": "Homecoming",
+      "artist": "America",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4IU1RL4BKvFyXtbTwaHAvW"
+      ],
+      "first_played": "2026-04-02T16:19:05.610Z",
+      "last_played": "2026-04-02T16:19:05.610Z"
+    },
+    "4LH4d3cOWNNsVw41Gqt2kv": {
+      "album_name": "The Dark Side of the Moon",
+      "artist": "Pink Floyd",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3TO7bbrUKrOSPGRTB5MeCz"
+      ],
+      "first_played": "2026-04-02T16:15:36.414Z",
+      "last_played": "2026-04-02T16:15:36.414Z"
+    },
+    "0bCAjiUamIFqKJsekOYuRw": {
+      "album_name": "Wish You Were Here",
+      "artist": "Pink Floyd",
+      "total_tracks": 5,
+      "played_tracks": [
+        "21j1PsCiTaO8ZW88UZrh3A",
+        "6mFkJmJqdDVQ1REhVfGgd1",
+        "3CmHvyZQQAGkKkTjTBFWN6",
+        "5VWC7v2dC2K0SIIjT9WTLN",
+        "6pnwfWyaWjQiHCKTiZLItr"
+      ],
+      "first_played": "2026-04-02T16:08:30.031Z",
+      "last_played": "2026-04-02T15:37:49.160Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
