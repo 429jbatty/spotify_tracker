@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-03T14:19:02.172Z",
+  "last_checked": "2026-04-03T15:56:44.878Z",
   "albums_in_progress": {
     "5bmpvyP7UGqB4VuXmrJUMy": {
       "album_name": "Either/Or",
@@ -435,6 +435,26 @@
       ],
       "first_played": "2026-04-02T20:27:12.256Z",
       "last_played": "2026-04-02T20:27:12.256Z"
+    },
+    "6ZB8qaR9JNuS0Q0bG1nbcH": {
+      "album_name": "Funeral",
+      "artist": "Arcade Fire",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0WZZJ0mDKIkLfL0710ssZt"
+      ],
+      "first_played": "2026-04-03T15:56:44.878Z",
+      "last_played": "2026-04-03T15:56:44.878Z"
+    },
+    "1R8kkopLT4IAxzMMkjic6X": {
+      "album_name": "Sound of Silver",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2VGDntFPvgvqSiUf9ITEfW"
+      ],
+      "first_played": "2026-04-03T15:52:06.026Z",
+      "last_played": "2026-04-03T15:52:06.026Z"
     }
   },
   "completed_albums": {
