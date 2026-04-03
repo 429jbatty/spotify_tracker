@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-03T15:56:44.878Z",
+  "last_checked": "2026-04-03T17:46:16.195Z",
   "albums_in_progress": {
     "5bmpvyP7UGqB4VuXmrJUMy": {
       "album_name": "Either/Or",
@@ -455,6 +455,36 @@
       ],
       "first_played": "2026-04-03T15:52:06.026Z",
       "last_played": "2026-04-03T15:52:06.026Z"
+    },
+    "4hnqM0JK4CM1phwfq1Ldyz": {
+      "album_name": "This Is Happening",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2073QOEC8rBtSyTsRyaWiP"
+      ],
+      "first_played": "2026-04-03T17:46:16.195Z",
+      "last_played": "2026-04-03T17:46:16.195Z"
+    },
+    "1f0rJg8ZztgalgPOlXm1hj": {
+      "album_name": "Starlite Walker",
+      "artist": "Silver Jews",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5menR5pgdVgIiLG2kbCxc9"
+      ],
+      "first_played": "2026-04-03T16:47:49.573Z",
+      "last_played": "2026-04-03T16:47:49.573Z"
+    },
+    "1ldF9hxaYcrQvvlIl5E4VY": {
+      "album_name": "You & Me",
+      "artist": "The Walkmen",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0enroZxRyOZjRMLTMjfheq"
+      ],
+      "first_played": "2026-04-03T16:44:49.615Z",
+      "last_played": "2026-04-03T16:38:53.019Z"
     }
   },
   "completed_albums": {
