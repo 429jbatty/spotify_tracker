@@ -1,48 +1,6 @@
 {
-  "last_checked": "2026-04-03T17:46:16.195Z",
+  "last_checked": "2026-04-04T17:44:13.315Z",
   "albums_in_progress": {
-    "5bmpvyP7UGqB4VuXmrJUMy": {
-      "album_name": "Either/Or",
-      "artist": "Elliott Smith",
-      "total_tracks": 12,
-      "played_tracks": [
-        "05lmqBrKGLHAmqsADEuU9a",
-        "4IKMZtDIqyQDA6a4YvsgpK",
-        "1mNOLSQw42abtI2VM7wVRI",
-        "02dNJoluauc40mVrZaQCs4",
-        "1aMafyDbpEw3a8FrVhwRlg",
-        "7rQJa4XaTfHuA4TVwU8m3Z",
-        "7krF2T7qvOTLjpGKx5zuR5",
-        "1pDIEcL6F2iZfgFbwmktw9",
-        "3SCgkLOzAf13rgHoempJs1",
-        "1JbUMtVkQuaAPdHOvncVTm",
-        "6L9uay2MM8qACwI1yQHnw2",
-        "7hg9DGPDztq8fjIr2YweZb"
-      ],
-      "first_played": "2026-04-02T16:23:07.754Z",
-      "last_played": "2026-04-02T16:26:50.935Z",
-      "completion_logged": true
-    },
-    "7eqBAR9pblivMBOI70q2um": {
-      "album_name": "Homecoming",
-      "artist": "America",
-      "total_tracks": 10,
-      "played_tracks": [
-        "4IU1RL4BKvFyXtbTwaHAvW"
-      ],
-      "first_played": "2026-04-02T16:19:05.610Z",
-      "last_played": "2026-04-02T16:19:05.610Z"
-    },
-    "4LH4d3cOWNNsVw41Gqt2kv": {
-      "album_name": "The Dark Side of the Moon",
-      "artist": "Pink Floyd",
-      "total_tracks": 10,
-      "played_tracks": [
-        "3TO7bbrUKrOSPGRTB5MeCz"
-      ],
-      "first_played": "2026-04-02T16:15:36.414Z",
-      "last_played": "2026-04-02T16:15:36.414Z"
-    },
     "6Gym0ls2Eqkh1BtCOhBplN": {
       "album_name": "Reading, Writing And Arithmetic",
       "artist": "The Sundays",
@@ -83,17 +41,6 @@
       ],
       "first_played": "2026-04-02T18:16:26.456Z",
       "last_played": "2026-04-02T20:17:17.689Z"
-    },
-    "6iP3HGmoRXFUrKiml2QVkz": {
-      "album_name": "It's A Wonderful Life",
-      "artist": "Sparklehorse",
-      "total_tracks": 14,
-      "played_tracks": [
-        "7yZF4VuAjjcXjcMbqwZtQc",
-        "2Js5pD5o76qihIjc8CB6US"
-      ],
-      "first_played": "2026-04-02T18:11:49.983Z",
-      "last_played": "2026-04-02T17:27:38.107Z"
     },
     "17q5eeNk3HAjX1gzQnkTX7": {
       "album_name": "In the Aeroplane Over the Sea",
@@ -184,17 +131,6 @@
       "first_played": "2026-04-02T17:42:40.818Z",
       "last_played": "2026-04-02T19:37:01.805Z"
     },
-    "00Z7sMv2YhKb49u10ajvy4": {
-      "album_name": "Static & Silence",
-      "artist": "The Sundays",
-      "total_tracks": 12,
-      "played_tracks": [
-        "2RtOnuOdBiecnBoX8x9uoO",
-        "5UU9j2neitf1fZXJCKOfe7"
-      ],
-      "first_played": "2026-04-02T17:39:09.549Z",
-      "last_played": "2026-04-02T17:16:52.933Z"
-    },
     "4AChnLbiWqxiotXz8kv6D7": {
       "album_name": "The Boy With The Arab Strap",
       "artist": "Belle and Sebastian",
@@ -205,26 +141,6 @@
       ],
       "first_played": "2026-04-02T17:31:14.903Z",
       "last_played": "2026-04-02T19:44:37.684Z"
-    },
-    "4YRoxHoDrGw0LI5rxDH9Dl": {
-      "album_name": "From a Basement on the Hill",
-      "artist": "Elliott Smith",
-      "total_tracks": 15,
-      "played_tracks": [
-        "60763oPe4Ngyu1Q3jFZWHi"
-      ],
-      "first_played": "2026-04-02T17:20:50.544Z",
-      "last_played": "2026-04-02T17:20:50.544Z"
-    },
-    "1nGWgkinMkmX7BlAuC4umM": {
-      "album_name": "Elliott Smith",
-      "artist": "Elliott Smith",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1pTwsLvnN8xPULDGzRjnfd"
-      ],
-      "first_played": "2026-04-02T16:59:50.564Z",
-      "last_played": "2026-04-02T16:59:50.564Z"
     },
     "4iEJq1LRPTy6q2kNUDKV3o": {
       "album_name": "Heavy Black Frame",
@@ -470,6 +386,25 @@
       ],
       "first_played": "2026-04-03T16:44:49.615Z",
       "last_played": "2026-04-03T16:38:53.019Z"
+    },
+    "0o1uFxZ1VTviqvNaYkTJek": {
+      "album_name": "The Freewheelin' Bob Dylan",
+      "artist": "Bob Dylan",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0ePDsEDDIPZNpbwRUEXKoX",
+        "7Ay1lHxhuM33NoXKsS0iom",
+        "4MNxOR2Fu4NqJ892UdYx0h",
+        "2WOjLF83vqjit2Zh4B69V3",
+        "7ny2ATvjtKszCpLpfsGnVQ",
+        "1xa66kvw6zwboiW7c8W9t8",
+        "7fzLfsWsXVvStzsk9yRfbG",
+        "7xVpkVkd1klTzLJEysIR7z",
+        "739sLmfUkVFoyPtb0C3263",
+        "18GiV1BaXzPVYpp9rmOg0E"
+      ],
+      "first_played": "2026-04-04T17:44:13.315Z",
+      "last_played": "2026-04-04T16:42:48.608Z"
     }
   },
   "completed_albums": {
