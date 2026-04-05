@@ -8,10 +8,7 @@ load_dotenv()
 STATE_FILE = os.environ.get("STATE_FILE")
 MANUAL_ENTRY_FILE = os.environ.get("MANUAL_ENTRY_FILE")
 GOOGLE_SHEETS_ENTRY_FILE = os.environ.get("GOOGLE_SHEETS_ENTRY_FILE")
-SOURCE_PRIORITY = {
-    "manual": 3,
-    "musicbrainz": 2,
-}
+SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}
 
 
 def load_state():
@@ -55,9 +52,12 @@ def get_local_credentials():
     }
 
 
-def merge_completed_albums_with_priority(start_state, *album_dicts):
+def merge_completed_albums_with_priority(start_state, **album_dicts):
     """
     Merge additional album dicts into a starting state using source priority.
+
+    Each kwarg name (e.g. spotify=..., discogs=...) is used to determine
+    priority via SOURCE_PRIORITY_BY_PARAM.
 
     Stats are measured relative to the start_state.
     """
@@ -70,11 +70,10 @@ def merge_completed_albums_with_priority(start_state, *album_dicts):
         "skipped_lower_priority": 0,
     }
 
-    for album_dict in album_dicts:
-        for key, record in album_dict.items():
+    for param_name, album_dict in album_dicts.items():
+        incoming_priority = SOURCE_PRIORITY_BY_PARAM.get(param_name, -1)
 
-            incoming_source = record.get("source")
-            incoming_priority = SOURCE_PRIORITY.get(incoming_source, -1)
+        for key, record in album_dict.items():
 
             if key not in merged:
                 merged[key] = record
@@ -83,27 +82,29 @@ def merge_completed_albums_with_priority(start_state, *album_dicts):
 
             existing_record = merged[key]
             existing_source = existing_record.get("source")
-            existing_priority = SOURCE_PRIORITY.get(existing_source, -1)
+            existing_priority = SOURCE_PRIORITY_BY_PARAM.get(existing_source, -1)
 
             if incoming_priority > existing_priority:
                 print(
                     f"[OVERWRITE] {key} | "
-                    f"{incoming_source} ({incoming_priority}) "
+                    f"{param_name} ({incoming_priority}) "
                     f"overrode {existing_source} ({existing_priority})"
                 )
                 merged[key] = record
                 stats["overwritten"] += 1
+
             elif incoming_priority == existing_priority:
                 print(
                     f"[EQUAL PRIORITY] {key} | "
-                    f"{incoming_source} ({incoming_priority}) "
+                    f"{param_name} ({incoming_priority}) "
                     f"tied with {existing_source} ({existing_priority}) - keeping existing"
                 )
                 stats["skipped_lower_priority"] += 1
+
             else:
                 print(
                     f"[SKIP] {key} | "
-                    f"{incoming_source} ({incoming_priority}) "
+                    f"{param_name} ({incoming_priority}) "
                     f"lost to {existing_source} ({existing_priority})"
                 )
                 stats["skipped_lower_priority"] += 1

@@ -105,18 +105,19 @@ def log_completed_album(state, album_id):
 
     if key not in state["completed_albums"]:
         album_metadata["listen_history"] = [listen_datetime]
-        state["completed_albums"][key] = album_metadata
         logging.info(f"New album logged: {artist} - {album_name}")
+        entry = {key: album_metadata}
 
     else:
         state["completed_albums"][key].setdefault("listen_history", []).append(
             listen_datetime
         )
         logging.info(f"Subsequent listen logged: {artist} - {album_name}")
+        entry = {key: state["completed_albums"][key]}
 
-    album_logged_data["completion_logged"] = True
+    entry[key]["completion_logged"] = True
 
-    return state
+    return entry
 
 
 def get_most_recently_listened(state: dict, num=10) -> list[str]:
@@ -128,10 +129,14 @@ def get_most_recently_listened(state: dict, num=10) -> list[str]:
 
     album_to_most_recent_listen = {}
     for key, album_data in albums.items():
-        history = album_data.get("listen_history", [])
-        if history:
-            most_recent_listen = max(parse_utc(dt) for dt in history)
-            album_to_most_recent_listen[key] = most_recent_listen
+        try:
+            history = album_data.get("listen_history", [])
+            if history:
+                most_recent_listen = max(parse_utc(dt) for dt in history)
+                album_to_most_recent_listen[key] = most_recent_listen
+        except Exception as e:
+            logging.warning(f"Error parsing listen history for {key}: {e}")
+            continue
 
     # get most recent num albums
     sorted_albums = sorted(

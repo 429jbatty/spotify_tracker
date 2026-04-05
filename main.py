@@ -57,19 +57,20 @@ def main():
     spotify_new_count = len(completed_album_ids)
     logging.info(f"Newly completed albums from Spotify: {spotify_new_count}")
 
-    # create new object with no completed albums but timestamp and all recent tracks
-    updated_albums_state = updated_tracks_state.copy()
-    updated_albums_state["completed_albums"] = {}
-
+    newly_completed_albums = {}
     for album_id in completed_album_ids:
-        updated_albums_state = tracking.log_completed_album(
-            updated_albums_state, album_id
-        )
+        # handles both initial and subsequent completions
+        new_entry = tracking.log_completed_album(updated_tracks_state, album_id)
+        newly_completed_albums = {**newly_completed_albums, **new_entry}
+
+    # create new object with no completed albums but timestamp and all recent tracks
+    base_state = updated_tracks_state.copy()
+    base_state["completed_albums"] = {}
 
     # Update last_checked
     if tracks:
         newest_timestamp = max(t["played_at"] for t in tracks)
-        updated_albums_state["last_checked"] = newest_timestamp
+        base_state["last_checked"] = newest_timestamp
 
     # Manual + Google Sheets
     if pull_bulk_google_sheets_data:
@@ -85,13 +86,13 @@ def main():
     logging.info(f"Manual completed albums loaded: {manual_count}")
 
     # Merge with priority logic
-    end_state = updated_albums_state.copy()
+    end_state = base_state.copy()
 
     end_state["completed_albums"] = util.merge_completed_albums_with_priority(
-        start_state.get("completed_albums", {}),  # start state
-        manual_entries["completed_albums"],
-        google_sheets_entries["completed_albums"],
-        updated_albums_state["completed_albums"],
+        start_state=start_state.get("completed_albums", {}),  # start state
+        manual=manual_entries["completed_albums"],
+        google_sheets=google_sheets_entries["completed_albums"],
+        updated=newly_completed_albums,
     )
 
     final_completed_count = len(end_state["completed_albums"])
