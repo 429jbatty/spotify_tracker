@@ -1,26 +1,6 @@
 {
-  "last_checked": "2026-04-05T05:16:31.551Z",
+  "last_checked": "2026-04-05T16:12:47.529Z",
   "albums_in_progress": {
-    "6ZB8qaR9JNuS0Q0bG1nbcH": {
-      "album_name": "Funeral",
-      "artist": "Arcade Fire",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0WZZJ0mDKIkLfL0710ssZt"
-      ],
-      "first_played": "2026-04-03T15:56:44.878Z",
-      "last_played": "2026-04-03T15:56:44.878Z"
-    },
-    "1R8kkopLT4IAxzMMkjic6X": {
-      "album_name": "Sound of Silver",
-      "artist": "LCD Soundsystem",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2VGDntFPvgvqSiUf9ITEfW"
-      ],
-      "first_played": "2026-04-03T15:52:06.026Z",
-      "last_played": "2026-04-03T15:52:06.026Z"
-    },
     "4hnqM0JK4CM1phwfq1Ldyz": {
       "album_name": "This Is Happening",
       "artist": "LCD Soundsystem",
@@ -87,6 +67,57 @@
       ],
       "first_played": "2026-04-05T03:27:30.375Z",
       "last_played": "2026-04-05T03:01:00.543Z"
+    },
+    "6r3sWdrXNAhqOgGlM5ZKNY": {
+      "album_name": "Playground In A Lake",
+      "artist": "Clark",
+      "total_tracks": 16,
+      "played_tracks": [
+        "3U8DW25FSajJzQXgApAJ0B"
+      ],
+      "first_played": "2026-04-05T16:12:47.529Z",
+      "last_played": "2026-04-05T16:12:47.529Z"
+    },
+    "4Lx8daXjNFODMthnNcRQUp": {
+      "album_name": "Sakura",
+      "artist": "Susumu Yokota",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1dNX6lUalqsdphlkFDMNGm",
+        "7mkAcqapVKVmRAEaX27tDx"
+      ],
+      "first_played": "2026-04-05T16:09:23.587Z",
+      "last_played": "2026-04-05T15:51:03.408Z"
+    },
+    "51HFfu3GhuXa4VUnlpJJy8": {
+      "album_name": "Space 1.8",
+      "artist": "Nala Sinephro",
+      "total_tracks": 8,
+      "played_tracks": [
+        "5xYR2G6YOEzX2X9asFUrOE"
+      ],
+      "first_played": "2026-04-05T16:06:45.415Z",
+      "last_played": "2026-04-05T16:06:45.415Z"
+    },
+    "6LZiNXaDvhzvnXUubVOmNU": {
+      "album_name": "Music Has The Right To Children",
+      "artist": "Boards of Canada",
+      "total_tracks": 18,
+      "played_tracks": [
+        "0sgzC3F93Dh76Yfj5gNUkT"
+      ],
+      "first_played": "2026-04-05T16:02:36.223Z",
+      "last_played": "2026-04-05T16:02:36.223Z"
+    },
+    "0p7nH5bz0pWBor10osUBuD": {
+      "album_name": "R Plus Seven",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4TBVy5cFYGmK5BA3rdMGEQ"
+      ],
+      "first_played": "2026-04-05T15:56:04.295Z",
+      "last_played": "2026-04-05T15:56:04.295Z"
     }
   },
   "completed_albums": {
