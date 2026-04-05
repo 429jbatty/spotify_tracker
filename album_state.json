@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-05T03:08:00.483Z",
+  "last_checked": "2026-04-05T03:34:35.043Z",
   "albums_in_progress": {
     "6ZB8qaR9JNuS0Q0bG1nbcH": {
       "album_name": "Funeral",
@@ -75,11 +75,17 @@
       "artist": "Joan Baez",
       "total_tracks": 16,
       "played_tracks": [
+        "2VyKXzrtialaXBc4uIA58Z",
+        "5et1Cm8WX18X4eoORUcyap",
+        "49uBVeaM3ixGD8VIeqh9KI",
+        "1eZTRfESsrayUmRKGIuory",
+        "3lqxFhPsfNl2DSmqEogdH2",
+        "3AuVZyDw1VhjjLfHZR4ba3",
         "6OBvN19uhEDXFBJkCwL58h",
         "7cOXUx0Q5PYafyNFriFajr",
         "2hulWLdzjBexk2bxQpcUp7"
       ],
-      "first_played": "2026-04-05T03:08:00.483Z",
+      "first_played": "2026-04-05T03:27:30.375Z",
       "last_played": "2026-04-05T03:01:00.543Z"
     }
   },
@@ -396475,8 +396481,10 @@
       "image_url": "https://coverartarchive.org/release/98e1db94-170c-4f0c-82a6-db31e719246f/front",
       "source": "musicbrainz",
       "listen_history": [
-        "2026-03-12T21:03:37.348Z"
-      ]
+        "2026-03-12T21:03:37.348Z",
+        "2026-04-05T03:01:00.543Z"
+      ],
+      "completion_logged": true
     },
     "Nivhek - After its own death / Walking in a spiral towards the house": {
       "artist": "Nivhek",
@@ -399895,9 +399903,256 @@
       "listen_history": [
         "2026-03-25T15:15:31.879Z"
       ]
+    },
+    "Bob Dylan - The Freewheelin' Bob Dylan": {
+      "artist": "Bob Dylan",
+      "artist_mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+      "name": "The Freewheelin\u2019 Bob Dylan",
+      "release_group_mbid": "169b62aa-c3a5-3ed9-bed1-cc47c4bc51ad",
+      "label": "Columbia",
+      "release_year": 1963,
+      "release_month": 5,
+      "release_day": 27,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Blowin\u2019 in the Wind",
+          "credits": [
+            [
+              "Bob Dylan",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Bob Dylan",
+              "instrument",
+              "harmonica"
+            ],
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ],
+            [
+              "Bob Dylan",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "62768a8e-6a71-4487-8d74-9a6128e058d8"
+        },
+        {
+          "position": "2",
+          "title": "Girl From the North Country",
+          "credits": [
+            [
+              "Tom Wilson",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "2f49dbd4-8957-4f9b-9830-a807dce92d8c"
+        },
+        {
+          "position": "3",
+          "title": "Masters of War",
+          "credits": [
+            [
+              "Tom Wilson",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5636d2b0-bcff-41fb-8989-d0841416b0de"
+        },
+        {
+          "position": "4",
+          "title": "Down the Highway",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d3e3341c-6d5a-4758-a7d1-cf100badc5b7"
+        },
+        {
+          "position": "5",
+          "title": "Bob Dylan\u2019s Blues",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "7187af5c-f409-4cf3-988d-2de1a38bdc58"
+        },
+        {
+          "position": "6",
+          "title": "Hard Rain\u2019s A\u2010Gonna Fall",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "90496ee0-1e7c-448b-88b9-6e61f3aa94e7"
+        },
+        {
+          "position": "7",
+          "title": "Don\u2019t Think Twice, It\u2019s All Right",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a2ac2b02-7c3e-4a75-a3d7-f829bd3f9df2"
+        },
+        {
+          "position": "8",
+          "title": "Bob Dylan\u2019s Dream",
+          "credits": [
+            [
+              "Tom Wilson",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d34dfda2-8f61-4fff-a0cb-37afe1528a4d"
+        },
+        {
+          "position": "9",
+          "title": "Oxford Town",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ff20360b-ce8b-46a4-baf6-0ea975c3d6a4"
+        },
+        {
+          "position": "10",
+          "title": "Talkin\u2019 World War III Blues",
+          "credits": [
+            [
+              "Tom Wilson",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ac0ee2db-d22b-48a8-95e2-3944e0b77fd8"
+        },
+        {
+          "position": "11",
+          "title": "Corrina, Corrina",
+          "credits": [
+            [
+              "Howard Collins",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Leonard Gaskin",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Bruce Langhorne",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Herb Lovelle",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dick Wellstood",
+              "instrument",
+              "piano"
+            ],
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f2954079-5b6d-4f40-9794-d2e653316818"
+        },
+        {
+          "position": "12",
+          "title": "Honey, Just Allow Me One More Chance",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "601dbcec-2e94-4217-90ff-58b48d0079e1"
+        },
+        {
+          "position": "13",
+          "title": "I Shall Be Free",
+          "credits": [
+            [
+              "John Hammond",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5a5d718a-ba8c-4835-936c-e7ba8625517f"
+        }
+      ],
+      "tags": [
+        "political",
+        "rock",
+        "folk",
+        "blues",
+        "protest",
+        "mellow",
+        "singer-songwriter",
+        "folk rock",
+        "acoustic",
+        "melodic",
+        "folk-rock",
+        "contemporary folk",
+        "conscious",
+        "melancholic",
+        "love",
+        "philosophical",
+        "should be public domain",
+        "male vocalist",
+        "poetic",
+        "playful",
+        "humorous",
+        "bittersweet",
+        "passionate",
+        "warm",
+        "introspective",
+        "singer/songwriter",
+        "autumn",
+        "folk revival",
+        "political folk"
+      ],
+      "image_url": "https://coverartarchive.org/release/85dd105e-0208-4be5-adb8-76c29d922771/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-04T16:42:48.608Z"
+      ],
+      "completion_logged": true
     }
   },
   "most_recently_listened": [
+    "Joan Baez - Joan Baez",
+    "Bob Dylan - The Freewheelin' Bob Dylan",
     "Elton John - Goodbye Yellow Brick Road (Remastered)",
     "Led Zeppelin - Houses of the Holy (Remaster)",
     "Childish Gambino - \"Awaken, My Love!\"",
@@ -399905,8 +400160,6 @@
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Floating Points - Cascade",
     "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
-    "Tame Impala - InnerSpeaker",
-    "Nivhek - After its own death / Walking in a spiral towards the house",
-    "Joan Baez - Joan Baez"
+    "Tame Impala - InnerSpeaker"
   ]
 }
