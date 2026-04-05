@@ -1,36 +1,6 @@
 {
-  "last_checked": "2026-04-05T16:12:47.529Z",
+  "last_checked": "2026-04-05T16:52:11.436Z",
   "albums_in_progress": {
-    "4hnqM0JK4CM1phwfq1Ldyz": {
-      "album_name": "This Is Happening",
-      "artist": "LCD Soundsystem",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2073QOEC8rBtSyTsRyaWiP"
-      ],
-      "first_played": "2026-04-03T17:46:16.195Z",
-      "last_played": "2026-04-03T17:46:16.195Z"
-    },
-    "1f0rJg8ZztgalgPOlXm1hj": {
-      "album_name": "Starlite Walker",
-      "artist": "Silver Jews",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5menR5pgdVgIiLG2kbCxc9"
-      ],
-      "first_played": "2026-04-03T16:47:49.573Z",
-      "last_played": "2026-04-03T16:47:49.573Z"
-    },
-    "1ldF9hxaYcrQvvlIl5E4VY": {
-      "album_name": "You & Me",
-      "artist": "The Walkmen",
-      "total_tracks": 14,
-      "played_tracks": [
-        "0enroZxRyOZjRMLTMjfheq"
-      ],
-      "first_played": "2026-04-03T16:44:49.615Z",
-      "last_played": "2026-04-03T16:38:53.019Z"
-    },
     "0o1uFxZ1VTviqvNaYkTJek": {
       "album_name": "The Freewheelin' Bob Dylan",
       "artist": "Bob Dylan",
@@ -84,10 +54,11 @@
       "total_tracks": 12,
       "played_tracks": [
         "1dNX6lUalqsdphlkFDMNGm",
-        "7mkAcqapVKVmRAEaX27tDx"
+        "7mkAcqapVKVmRAEaX27tDx",
+        "5oRHGXBUNsioP4HyhJl3hI"
       ],
       "first_played": "2026-04-05T16:09:23.587Z",
-      "last_played": "2026-04-05T15:51:03.408Z"
+      "last_played": "2026-04-05T16:30:36.248Z"
     },
     "51HFfu3GhuXa4VUnlpJJy8": {
       "album_name": "Space 1.8",
@@ -114,10 +85,51 @@
       "artist": "Oneohtrix Point Never",
       "total_tracks": 10,
       "played_tracks": [
-        "4TBVy5cFYGmK5BA3rdMGEQ"
+        "4TBVy5cFYGmK5BA3rdMGEQ",
+        "1FlN2fZo6ph7iQ8gkQYeep"
       ],
       "first_played": "2026-04-05T15:56:04.295Z",
-      "last_played": "2026-04-05T15:56:04.295Z"
+      "last_played": "2026-04-05T16:24:49.132Z"
+    },
+    "4IYnAmZ8GvmNFF2ZxxKT8L": {
+      "album_name": "Cascade",
+      "artist": "Floating Points",
+      "total_tracks": 9,
+      "played_tracks": [
+        "15lb3M395advtEyLKLAIy0"
+      ],
+      "first_played": "2026-04-05T16:52:11.436Z",
+      "last_played": "2026-04-05T16:52:11.436Z"
+    },
+    "0DFbQjp468sMiIMTrZdr5w": {
+      "album_name": "Spaces",
+      "artist": "Nils Frahm",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5626KdflSKfeDK7RJQfSrE"
+      ],
+      "first_played": "2026-04-05T16:38:55.502Z",
+      "last_played": "2026-04-05T16:38:55.502Z"
+    },
+    "2oJo7cB45gMVuRsaWNwDq2": {
+      "album_name": "Drukqs",
+      "artist": "Aphex Twin",
+      "total_tracks": 30,
+      "played_tracks": [
+        "6pHuMjk9O1G3XTTqbnpkTl"
+      ],
+      "first_played": "2026-04-05T16:20:33.770Z",
+      "last_played": "2026-04-05T16:20:33.770Z"
+    },
+    "4T7JGfRryhw5POaXalkApE": {
+      "album_name": "Geogaddi",
+      "artist": "Boards of Canada",
+      "total_tracks": 23,
+      "played_tracks": [
+        "7qWHLT10dDsu8fCJZFkL5y"
+      ],
+      "first_played": "2026-04-05T16:17:07.723Z",
+      "last_played": "2026-04-05T16:17:07.723Z"
     }
   },
   "completed_albums": {
