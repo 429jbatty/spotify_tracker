@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-04-07T12:56:42.634Z",
+  "last_checked": "2026-04-07T15:46:26.968Z",
   "albums_in_progress": {
-    "6r3sWdrXNAhqOgGlM5ZKNY": {
-      "album_name": "Playground In A Lake",
-      "artist": "Clark",
-      "total_tracks": 16,
-      "played_tracks": [
-        "3U8DW25FSajJzQXgApAJ0B"
-      ],
-      "first_played": "2026-04-05T16:12:47.529Z",
-      "last_played": "2026-04-05T16:12:47.529Z"
-    },
     "4Lx8daXjNFODMthnNcRQUp": {
       "album_name": "Sakura",
       "artist": "Susumu Yokota",
@@ -22,37 +12,6 @@
       ],
       "first_played": "2026-04-05T16:09:23.587Z",
       "last_played": "2026-04-05T16:30:36.248Z"
-    },
-    "51HFfu3GhuXa4VUnlpJJy8": {
-      "album_name": "Space 1.8",
-      "artist": "Nala Sinephro",
-      "total_tracks": 8,
-      "played_tracks": [
-        "5xYR2G6YOEzX2X9asFUrOE"
-      ],
-      "first_played": "2026-04-05T16:06:45.415Z",
-      "last_played": "2026-04-05T16:06:45.415Z"
-    },
-    "6LZiNXaDvhzvnXUubVOmNU": {
-      "album_name": "Music Has The Right To Children",
-      "artist": "Boards of Canada",
-      "total_tracks": 18,
-      "played_tracks": [
-        "0sgzC3F93Dh76Yfj5gNUkT"
-      ],
-      "first_played": "2026-04-05T16:02:36.223Z",
-      "last_played": "2026-04-05T16:02:36.223Z"
-    },
-    "0p7nH5bz0pWBor10osUBuD": {
-      "album_name": "R Plus Seven",
-      "artist": "Oneohtrix Point Never",
-      "total_tracks": 10,
-      "played_tracks": [
-        "4TBVy5cFYGmK5BA3rdMGEQ",
-        "1FlN2fZo6ph7iQ8gkQYeep"
-      ],
-      "first_played": "2026-04-05T15:56:04.295Z",
-      "last_played": "2026-04-05T16:24:49.132Z"
     },
     "4IYnAmZ8GvmNFF2ZxxKT8L": {
       "album_name": "Cascade",
@@ -79,26 +38,6 @@
       ],
       "first_played": "2026-04-05T16:38:55.502Z",
       "last_played": "2026-04-05T16:38:55.502Z"
-    },
-    "2oJo7cB45gMVuRsaWNwDq2": {
-      "album_name": "Drukqs",
-      "artist": "Aphex Twin",
-      "total_tracks": 30,
-      "played_tracks": [
-        "6pHuMjk9O1G3XTTqbnpkTl"
-      ],
-      "first_played": "2026-04-05T16:20:33.770Z",
-      "last_played": "2026-04-05T16:20:33.770Z"
-    },
-    "4T7JGfRryhw5POaXalkApE": {
-      "album_name": "Geogaddi",
-      "artist": "Boards of Canada",
-      "total_tracks": 23,
-      "played_tracks": [
-        "7qWHLT10dDsu8fCJZFkL5y"
-      ],
-      "first_played": "2026-04-05T16:17:07.723Z",
-      "last_played": "2026-04-05T16:17:07.723Z"
     },
     "7rXrjbrYcXG8EkqXpt0weK": {
       "album_name": "v2.0 (Deluxe Edition)",
@@ -129,6 +68,19 @@
       ],
       "first_played": "2026-04-06T16:48:12.719Z",
       "last_played": "2026-04-06T16:48:12.719Z"
+    },
+    "4HAqJpa6YWefRXdLVpk5S6": {
+      "album_name": "At War With the Mystics",
+      "artist": "The Flaming Lips",
+      "total_tracks": 15,
+      "played_tracks": [
+        "1Y2ItjlB7npTgyO0ZJsXSt",
+        "4d5mQel5LoTIqgFmHtXTU7",
+        "04nOwWktrlIrqalCY3QH0L",
+        "2mlIzqDE7RaMaMx1UPdsXL"
+      ],
+      "first_played": "2026-04-07T15:46:26.968Z",
+      "last_played": "2026-04-07T14:46:37.693Z"
     }
   },
   "completed_albums": {
