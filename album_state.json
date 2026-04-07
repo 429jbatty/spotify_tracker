@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-07T19:25:53.026Z",
+  "last_checked": "2026-04-07T21:59:04.803Z",
   "albums_in_progress": {
     "4IYnAmZ8GvmNFF2ZxxKT8L": {
       "album_name": "Cascade",
@@ -57,10 +57,26 @@
         "04nOwWktrlIrqalCY3QH0L",
         "2mlIzqDE7RaMaMx1UPdsXL",
         "47LeVYtPc9Uxchm5PxEwDB",
-        "5AuCLynBQNDla4xrVBP2Ct"
+        "5AuCLynBQNDla4xrVBP2Ct",
+        "3BVW5qESaf2Bun6n96bga6"
       ],
       "first_played": "2026-04-07T15:46:26.968Z",
-      "last_played": "2026-04-07T19:17:53.459Z"
+      "last_played": "2026-04-07T20:47:05.328Z"
+    },
+    "0ETFjACtuP2ADo6LFhL6HN": {
+      "album_name": "Abbey Road (Remastered)",
+      "artist": "The Beatles",
+      "total_tracks": 17,
+      "played_tracks": [
+        "3Z25k4ZF6QENy2d9YatsM5",
+        "0suLngfo7rJoetk7Ub6N8l",
+        "2mxByJWOajjiVsLWjNXvDJ",
+        "2S8xyNRJX1XQdo3qnTuovI",
+        "0pNeVovbiZHkulpGeOx1Gj",
+        "2EqlS6tkEnglzr7tkKAAYD"
+      ],
+      "first_played": "2026-04-07T21:59:04.803Z",
+      "last_played": "2026-04-07T20:52:05.161Z"
     }
   },
   "completed_albums": {
