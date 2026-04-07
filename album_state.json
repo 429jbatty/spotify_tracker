@@ -1,18 +1,6 @@
 {
   "last_checked": "2026-04-07T15:46:26.968Z",
   "albums_in_progress": {
-    "4Lx8daXjNFODMthnNcRQUp": {
-      "album_name": "Sakura",
-      "artist": "Susumu Yokota",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1dNX6lUalqsdphlkFDMNGm",
-        "7mkAcqapVKVmRAEaX27tDx",
-        "5oRHGXBUNsioP4HyhJl3hI"
-      ],
-      "first_played": "2026-04-05T16:09:23.587Z",
-      "last_played": "2026-04-05T16:30:36.248Z"
-    },
     "4IYnAmZ8GvmNFF2ZxxKT8L": {
       "album_name": "Cascade",
       "artist": "Floating Points",
@@ -28,16 +16,6 @@
       ],
       "first_played": "2026-04-05T16:52:11.436Z",
       "last_played": "2026-04-07T00:15:14.030Z"
-    },
-    "0DFbQjp468sMiIMTrZdr5w": {
-      "album_name": "Spaces",
-      "artist": "Nils Frahm",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5626KdflSKfeDK7RJQfSrE"
-      ],
-      "first_played": "2026-04-05T16:38:55.502Z",
-      "last_played": "2026-04-05T16:38:55.502Z"
     },
     "7rXrjbrYcXG8EkqXpt0weK": {
       "album_name": "v2.0 (Deluxe Edition)",
