@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-08T03:53:26.127Z",
+  "last_checked": "2026-04-08T16:28:07.163Z",
   "albums_in_progress": {
     "4IYnAmZ8GvmNFF2ZxxKT8L": {
       "album_name": "Cascade",
@@ -77,6 +77,64 @@
       ],
       "first_played": "2026-04-07T21:59:04.803Z",
       "last_played": "2026-04-07T20:52:05.161Z"
+    },
+    "7fxxzocbIaEUWejQiSusaH": {
+      "album_name": "Reach",
+      "artist": "Kneebody",
+      "total_tracks": 9,
+      "played_tracks": [
+        "4zl7djocUmY05tZG9l3zEL"
+      ],
+      "first_played": "2026-04-08T16:28:07.163Z",
+      "last_played": "2026-04-08T16:28:07.163Z"
+    },
+    "2a5JakUNQL6lsQjURKpZxu": {
+      "album_name": "Clarinet Concert for You, Vol. 4",
+      "artist": "Stuart Bogie",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6uJhTbHVijWuirNiUxUCQQ"
+      ],
+      "first_played": "2026-04-08T16:25:07.160Z",
+      "last_played": "2026-04-08T16:25:07.160Z"
+    },
+    "1UN3U6lY1qutuaX1x4UpEe": {
+      "album_name": "Luke Stewart & Jarvis Earnshaw Quartet",
+      "artist": "Luke Stewart, Jarvis Earnshaw",
+      "total_tracks": 6,
+      "played_tracks": [
+        "1MdgzASNcQNh4qBQ07EvUq"
+      ],
+      "first_played": "2026-04-08T16:21:37.235Z",
+      "last_played": "2026-04-08T16:21:37.235Z"
+    },
+    "2VuQg6fEdinbXjOzAAd681": {
+      "album_name": "Land's End Eternal",
+      "artist": "Cole Pulice",
+      "total_tracks": 6,
+      "played_tracks": [
+        "1Cie5gpYr6CrxHQ0avCSbz"
+      ],
+      "first_played": "2026-04-08T16:13:37.285Z",
+      "last_played": "2026-04-08T16:13:37.285Z"
+    },
+    "3ShtO5VCYa3ctlR5uzLWBa": {
+      "album_name": "Promises",
+      "artist": "Floating Points, Pharoah Sanders",
+      "total_tracks": 9,
+      "played_tracks": [
+        "1Q3TP11UOqOdj2w34Jdgno",
+        "0KRliRKOaqc3vT8t9noppI",
+        "5Zg3BH3Xipq3GQZCRyhAX8",
+        "5i0EqAX50KcKNgMDMHZndM",
+        "6lAsz2ai52QsfWX4f4PlqH",
+        "4JNMmiYUmLQiv83k96qNdT",
+        "2ZB1ms89d3xpy92gvTDQC5",
+        "5KqceyQkpADmpVrGW6armI",
+        "0QkT7SfXL9eR6tuQ7xb9ya"
+      ],
+      "first_played": "2026-04-08T16:09:20.776Z",
+      "last_played": "2026-04-08T15:29:07.440Z"
     }
   },
   "completed_albums": {
@@ -400138,9 +400196,93 @@
         "2026-04-04T16:42:48.608Z"
       ],
       "completion_logged": true
+    },
+    "Floating Points, Pharoah Sanders - Promises": {
+      "artist": "Floating Points",
+      "artist_mbid": "69d9c5ba-7bba-4cb7-ab32-8ccc48ad4f97",
+      "name": "Promises",
+      "release_group_mbid": "970f689d-1778-4953-b3ed-48d057625724",
+      "label": "Luaka Bop",
+      "release_year": 2020,
+      "release_month": 11,
+      "release_day": 24,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Promises: Movement 1",
+          "credits": {},
+          "recording_mbid": "37cc6da3-808a-460b-b09e-6f8e49311252"
+        },
+        {
+          "position": "2",
+          "title": "Promises: Movement 2",
+          "credits": {},
+          "recording_mbid": "0d3abd91-6a69-4841-a8c5-0ad7625feedc"
+        },
+        {
+          "position": "3",
+          "title": "Promises: Movement 3",
+          "credits": {},
+          "recording_mbid": "5175b60e-06f8-496e-b8b1-d6c3e99edbb3"
+        },
+        {
+          "position": "4",
+          "title": "Promises: Movement 4",
+          "credits": {},
+          "recording_mbid": "74edc67c-0a1d-4ad1-84fe-4ac0091118d3"
+        },
+        {
+          "position": "5",
+          "title": "Promises: Movement 5",
+          "credits": {},
+          "recording_mbid": "6d6f9441-3394-4f5c-997e-00a4d2cbff07"
+        },
+        {
+          "position": "6",
+          "title": "Promises: Movement 6",
+          "credits": {},
+          "recording_mbid": "358cfc17-3e51-4911-a1dd-1bd326d36f56"
+        },
+        {
+          "position": "7",
+          "title": "Promises: Movement 7",
+          "credits": {},
+          "recording_mbid": "1818f2cc-63ef-4169-9439-bad28c947524"
+        },
+        {
+          "position": "8",
+          "title": "Promises: Movement 8",
+          "credits": {},
+          "recording_mbid": "21df46cc-8671-4fbd-a93b-ed02e4c11820"
+        },
+        {
+          "position": "9",
+          "title": "Promises: Movement 9",
+          "credits": {},
+          "recording_mbid": "cac0a48b-2055-449d-ba65-1c8611776b80"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "instrumental",
+        "ambient",
+        "jazz",
+        "instrumental jazz",
+        "third stream",
+        "plattentests.de",
+        "musikexpress.de",
+        "ph_4_stars"
+      ],
+      "image_url": "https://coverartarchive.org/release/433aabc8-f42e-4400-a4ae-2f6322f05948/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-08T15:29:07.440Z"
+      ],
+      "completion_logged": true
     }
   },
   "most_recently_listened": [
+    "Floating Points, Pharoah Sanders - Promises",
     "Joan Baez - Joan Baez",
     "Bob Dylan - The Freewheelin' Bob Dylan",
     "Elton John - Goodbye Yellow Brick Road (Remastered)",
@@ -400149,7 +400291,6 @@
     "Peter, Paul and Mary - Peter, Paul and Mary",
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Floating Points - Cascade",
-    "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)",
-    "Tame Impala - InnerSpeaker"
+    "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)"
   ]
 }
