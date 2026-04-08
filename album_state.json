@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-08T16:32:37.111Z",
+  "last_checked": "2026-04-08T20:31:50.016Z",
   "albums_in_progress": {
     "4IYnAmZ8GvmNFF2ZxxKT8L": {
       "album_name": "Cascade",
@@ -115,6 +115,16 @@
       ],
       "first_played": "2026-04-08T16:32:37.111Z",
       "last_played": "2026-04-08T16:32:37.111Z"
+    },
+    "2xvGwQaDLmp6jYkA8hGgbe": {
+      "album_name": "Caput",
+      "artist": "Danny Scott Lane",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5y3IuJJpEYKJrLP4Wrfr6t"
+      ],
+      "first_played": "2026-04-08T20:31:50.016Z",
+      "last_played": "2026-04-08T20:31:50.016Z"
     }
   },
   "completed_albums": {
@@ -400256,6 +400266,7 @@
       "image_url": "https://coverartarchive.org/release/433aabc8-f42e-4400-a4ae-2f6322f05948/front",
       "source": "musicbrainz",
       "listen_history": [
+        "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z"
