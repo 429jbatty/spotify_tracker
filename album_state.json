@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-09T13:04:43.490Z",
+  "last_checked": "2026-04-09T20:06:03.500Z",
   "albums_in_progress": {
     "4HAqJpa6YWefRXdLVpk5S6": {
       "album_name": "At War With the Mystics",
@@ -109,6 +109,24 @@
       ],
       "first_played": "2026-04-08T20:31:50.016Z",
       "last_played": "2026-04-08T20:31:50.016Z"
+    },
+    "7Ln81p86r5cCsesd3KBWIY": {
+      "album_name": "Dragon New Warm Mountain I Believe In You",
+      "artist": "Big Thief",
+      "total_tracks": 20,
+      "played_tracks": [
+        "3pMTFpbool5GOxvoc2QJth",
+        "6qopJBPesEVIrIT0qMtbNs",
+        "5ZlfX4evbtQtONINsLADDR",
+        "6w1d6Zwf7aXALS4TRA26hy",
+        "3UN7R1teOKhmB8SnxtwiPK",
+        "3i7XRi2UyvGTdJawJRkVhd",
+        "3Q6VfeIZ1bTjWiNe2Or4LQ",
+        "32k3OLmeIWe93KY0QzMmZX",
+        "3HFBqhotJeEKHJzMEW31jZ"
+      ],
+      "first_played": "2026-04-09T20:06:03.500Z",
+      "last_played": "2026-04-09T19:24:33.475Z"
     }
   },
   "completed_albums": {
@@ -400250,6 +400268,7 @@
       "image_url": "https://coverartarchive.org/release/433aabc8-f42e-4400-a4ae-2f6322f05948/front",
       "source": "musicbrainz",
       "listen_history": [
+        "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
