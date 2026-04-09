@@ -1,37 +1,6 @@
 {
-  "last_checked": "2026-04-09T20:06:03.500Z",
+  "last_checked": "2026-04-09T21:15:22.266Z",
   "albums_in_progress": {
-    "4HAqJpa6YWefRXdLVpk5S6": {
-      "album_name": "At War With the Mystics",
-      "artist": "The Flaming Lips",
-      "total_tracks": 15,
-      "played_tracks": [
-        "1Y2ItjlB7npTgyO0ZJsXSt",
-        "4d5mQel5LoTIqgFmHtXTU7",
-        "04nOwWktrlIrqalCY3QH0L",
-        "2mlIzqDE7RaMaMx1UPdsXL",
-        "47LeVYtPc9Uxchm5PxEwDB",
-        "5AuCLynBQNDla4xrVBP2Ct",
-        "3BVW5qESaf2Bun6n96bga6"
-      ],
-      "first_played": "2026-04-07T15:46:26.968Z",
-      "last_played": "2026-04-07T20:47:05.328Z"
-    },
-    "0ETFjACtuP2ADo6LFhL6HN": {
-      "album_name": "Abbey Road (Remastered)",
-      "artist": "The Beatles",
-      "total_tracks": 17,
-      "played_tracks": [
-        "3Z25k4ZF6QENy2d9YatsM5",
-        "0suLngfo7rJoetk7Ub6N8l",
-        "2mxByJWOajjiVsLWjNXvDJ",
-        "2S8xyNRJX1XQdo3qnTuovI",
-        "0pNeVovbiZHkulpGeOx1Gj",
-        "2EqlS6tkEnglzr7tkKAAYD"
-      ],
-      "first_played": "2026-04-07T21:59:04.803Z",
-      "last_played": "2026-04-07T20:52:05.161Z"
-    },
     "7fxxzocbIaEUWejQiSusaH": {
       "album_name": "Reach",
       "artist": "Kneebody",
@@ -126,7 +95,7 @@
         "3HFBqhotJeEKHJzMEW31jZ"
       ],
       "first_played": "2026-04-09T20:06:03.500Z",
-      "last_played": "2026-04-09T19:24:33.475Z"
+      "last_played": "2026-04-09T21:15:22.266Z"
     }
   },
   "completed_albums": {
@@ -400268,6 +400237,7 @@
       "image_url": "https://coverartarchive.org/release/433aabc8-f42e-4400-a4ae-2f6322f05948/front",
       "source": "musicbrainz",
       "listen_history": [
+        "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
