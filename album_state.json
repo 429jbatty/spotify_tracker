@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-09T21:15:22.266Z",
+  "last_checked": "2026-04-10T01:32:35.250Z",
   "albums_in_progress": {
     "7fxxzocbIaEUWejQiSusaH": {
       "album_name": "Reach",
@@ -96,6 +96,17 @@
       ],
       "first_played": "2026-04-09T20:06:03.500Z",
       "last_played": "2026-04-09T21:15:22.266Z"
+    },
+    "06IJFUuCwW3iokYxgXjCYe": {
+      "album_name": "Jam On Revenge",
+      "artist": "Newcleus",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0tfTutKYlmP5HNu3WGImI9",
+        "1lB2kyB5h9ceZ388GBfC9L"
+      ],
+      "first_played": "2026-04-10T01:32:35.250Z",
+      "last_played": "2026-04-10T01:26:39.887Z"
     }
   },
   "completed_albums": {
@@ -400237,6 +400248,7 @@
       "image_url": "https://coverartarchive.org/release/433aabc8-f42e-4400-a4ae-2f6322f05948/front",
       "source": "musicbrainz",
       "listen_history": [
+        "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
