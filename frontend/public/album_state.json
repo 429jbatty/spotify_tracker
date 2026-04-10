@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-04-10T20:00:08.983Z",
+  "last_checked": "2026-04-10T21:36:06.345Z",
   "albums_in_progress": {
-    "2xvGwQaDLmp6jYkA8hGgbe": {
-      "album_name": "Caput",
-      "artist": "Danny Scott Lane",
-      "total_tracks": 12,
-      "played_tracks": [
-        "5y3IuJJpEYKJrLP4Wrfr6t"
-      ],
-      "first_played": "2026-04-08T20:31:50.016Z",
-      "last_played": "2026-04-08T20:31:50.016Z"
-    },
     "7Ln81p86r5cCsesd3KBWIY": {
       "album_name": "Dragon New Warm Mountain I Believe In You",
       "artist": "Big Thief",
@@ -230060,6 +230050,7 @@
       "listen_history": [
         "2026-04-10T15:26:46.943Z",
         "2026-04-10T15:26:46.943Z",
+        "2026-04-10T15:26:46.943Z",
         "2026-04-10T15:26:46.943Z"
       ],
       "source": "musicbrainz",
@@ -400637,6 +400628,7 @@
       "image_url": "https://coverartarchive.org/release/d4fe62bb-5a97-4013-a6e5-67db03be59a6/front",
       "source": "musicbrainz",
       "listen_history": [
+        "2026-04-10T18:33:08.634Z",
         "2026-04-10T18:33:08.634Z"
       ],
       "completion_logged": true
