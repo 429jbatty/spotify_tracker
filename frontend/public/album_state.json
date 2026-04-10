@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-10T12:23:30.797Z",
+  "last_checked": "2026-04-10T14:18:06.323Z",
   "albums_in_progress": {
     "7fxxzocbIaEUWejQiSusaH": {
       "album_name": "Reach",
@@ -107,6 +107,28 @@
       ],
       "first_played": "2026-04-10T01:32:35.250Z",
       "last_played": "2026-04-10T04:12:04.752Z"
+    },
+    "64TDaAbxgO0TmKZrIavdLg": {
+      "album_name": "Person Pitch",
+      "artist": "Panda Bear",
+      "total_tracks": 7,
+      "played_tracks": [
+        "7zm1d8Elb1dT2vAOzTuLat",
+        "0eYqbDgpsXtSWGyGlnovyu",
+        "4DjLXaUaqbm70uguXzDJmm"
+      ],
+      "first_played": "2026-04-10T14:18:06.323Z",
+      "last_played": "2026-04-10T13:51:48.642Z"
+    },
+    "50eixdXB4Z1CTZtu7wCfEA": {
+      "album_name": "abysskiss",
+      "artist": "Adrianne Lenker",
+      "total_tracks": 10,
+      "played_tracks": [
+        "197dwrbQhIhDTvtN6kGcvb"
+      ],
+      "first_played": "2026-04-10T13:25:35.607Z",
+      "last_played": "2026-04-10T13:25:35.607Z"
     }
   },
   "completed_albums": {
@@ -400248,6 +400270,7 @@
       "image_url": "https://coverartarchive.org/release/433aabc8-f42e-4400-a4ae-2f6322f05948/front",
       "source": "musicbrainz",
       "listen_history": [
+        "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
         "2026-04-08T15:29:07.440Z",
