@@ -1,36 +1,6 @@
 {
-  "last_checked": "2026-04-10T16:20:19.931Z",
+  "last_checked": "2026-04-10T17:35:38.544Z",
   "albums_in_progress": {
-    "7fxxzocbIaEUWejQiSusaH": {
-      "album_name": "Reach",
-      "artist": "Kneebody",
-      "total_tracks": 9,
-      "played_tracks": [
-        "4zl7djocUmY05tZG9l3zEL"
-      ],
-      "first_played": "2026-04-08T16:28:07.163Z",
-      "last_played": "2026-04-08T16:28:07.163Z"
-    },
-    "2a5JakUNQL6lsQjURKpZxu": {
-      "album_name": "Clarinet Concert for You, Vol. 4",
-      "artist": "Stuart Bogie",
-      "total_tracks": 7,
-      "played_tracks": [
-        "6uJhTbHVijWuirNiUxUCQQ"
-      ],
-      "first_played": "2026-04-08T16:25:07.160Z",
-      "last_played": "2026-04-08T16:25:07.160Z"
-    },
-    "2Kt7ghf0bOiz6Lp2w22rqM": {
-      "album_name": "In the Space Between",
-      "artist": "Thomas Markusson, Arve Henriksen, Helge Andreas Norbakken",
-      "total_tracks": 9,
-      "played_tracks": [
-        "17BgHB5I7LrHSG9jXI7nCM"
-      ],
-      "first_played": "2026-04-08T16:32:37.111Z",
-      "last_played": "2026-04-08T16:32:37.111Z"
-    },
     "2xvGwQaDLmp6jYkA8hGgbe": {
       "album_name": "Caput",
       "artist": "Danny Scott Lane",
@@ -102,10 +72,13 @@
       "total_tracks": 12,
       "played_tracks": [
         "0mqrA6xVKqeyxhlu9dV2am",
-        "0SwuCcwpFM6x4cu5zOvmi0"
+        "0SwuCcwpFM6x4cu5zOvmi0",
+        "7C4yHdqe6x2fF1LxpwzGHD",
+        "5D2lp16FQ0VIfLGRDn5jcG",
+        "7FWaqDbIq3OGZsC04CfuV9"
       ],
       "first_played": "2026-04-10T16:20:19.931Z",
-      "last_played": "2026-04-10T16:12:37.216Z"
+      "last_played": "2026-04-10T16:27:20.269Z"
     },
     "6uoeezh45SYEb8lcT8gDTY": {
       "album_name": "Another Green World (2004 Remaster)",
@@ -230045,6 +230018,7 @@
       ],
       "image_url": "https://coverartarchive.org/release/888cf2eb-30ea-4c38-b628-9d9b18b4d636/front",
       "listen_history": [
+        "2026-04-10T15:26:46.943Z",
         "2026-04-10T15:26:46.943Z"
       ],
       "source": "musicbrainz",
