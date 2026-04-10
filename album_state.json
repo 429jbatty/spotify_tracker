@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-10T14:18:06.323Z",
+  "last_checked": "2026-04-10T16:20:19.931Z",
   "albums_in_progress": {
     "7fxxzocbIaEUWejQiSusaH": {
       "album_name": "Reach",
@@ -20,44 +20,6 @@
       ],
       "first_played": "2026-04-08T16:25:07.160Z",
       "last_played": "2026-04-08T16:25:07.160Z"
-    },
-    "1UN3U6lY1qutuaX1x4UpEe": {
-      "album_name": "Luke Stewart & Jarvis Earnshaw Quartet",
-      "artist": "Luke Stewart, Jarvis Earnshaw",
-      "total_tracks": 6,
-      "played_tracks": [
-        "1MdgzASNcQNh4qBQ07EvUq"
-      ],
-      "first_played": "2026-04-08T16:21:37.235Z",
-      "last_played": "2026-04-08T16:21:37.235Z"
-    },
-    "2VuQg6fEdinbXjOzAAd681": {
-      "album_name": "Land's End Eternal",
-      "artist": "Cole Pulice",
-      "total_tracks": 6,
-      "played_tracks": [
-        "1Cie5gpYr6CrxHQ0avCSbz"
-      ],
-      "first_played": "2026-04-08T16:13:37.285Z",
-      "last_played": "2026-04-08T16:13:37.285Z"
-    },
-    "3ShtO5VCYa3ctlR5uzLWBa": {
-      "album_name": "Promises",
-      "artist": "Floating Points, Pharoah Sanders",
-      "total_tracks": 9,
-      "played_tracks": [
-        "1Q3TP11UOqOdj2w34Jdgno",
-        "0KRliRKOaqc3vT8t9noppI",
-        "5Zg3BH3Xipq3GQZCRyhAX8",
-        "5i0EqAX50KcKNgMDMHZndM",
-        "6lAsz2ai52QsfWX4f4PlqH",
-        "4JNMmiYUmLQiv83k96qNdT",
-        "2ZB1ms89d3xpy92gvTDQC5",
-        "5KqceyQkpADmpVrGW6armI",
-        "0QkT7SfXL9eR6tuQ7xb9ya"
-      ],
-      "first_played": "2026-04-08T16:09:20.776Z",
-      "last_played": "2026-04-08T15:29:07.440Z"
     },
     "2Kt7ghf0bOiz6Lp2w22rqM": {
       "album_name": "In the Space Between",
@@ -115,10 +77,14 @@
       "played_tracks": [
         "7zm1d8Elb1dT2vAOzTuLat",
         "0eYqbDgpsXtSWGyGlnovyu",
-        "4DjLXaUaqbm70uguXzDJmm"
+        "4DjLXaUaqbm70uguXzDJmm",
+        "6J8fqvMu3gwPBwbgysO5sm",
+        "1RltJo16uDzpVCTxPvR2l8",
+        "0utrl59BlkDWyPUPMPaVQv",
+        "6ID2kAZjCkilJGb041DEUO"
       ],
       "first_played": "2026-04-10T14:18:06.323Z",
-      "last_played": "2026-04-10T13:51:48.642Z"
+      "last_played": "2026-04-10T15:26:46.943Z"
     },
     "50eixdXB4Z1CTZtu7wCfEA": {
       "album_name": "abysskiss",
@@ -129,6 +95,37 @@
       ],
       "first_played": "2026-04-10T13:25:35.607Z",
       "last_played": "2026-04-10T13:25:35.607Z"
+    },
+    "3miZDfDnP7SmOXAJXWdFmz": {
+      "album_name": "Paid In Full",
+      "artist": "Eric B. & Rakim",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0mqrA6xVKqeyxhlu9dV2am",
+        "0SwuCcwpFM6x4cu5zOvmi0"
+      ],
+      "first_played": "2026-04-10T16:20:19.931Z",
+      "last_played": "2026-04-10T16:12:37.216Z"
+    },
+    "6uoeezh45SYEb8lcT8gDTY": {
+      "album_name": "Another Green World (2004 Remaster)",
+      "artist": "Brian Eno",
+      "total_tracks": 14,
+      "played_tracks": [
+        "2d9KBVxb6bUfVCjjv1JAVe"
+      ],
+      "first_played": "2026-04-10T16:12:41.352Z",
+      "last_played": "2026-04-10T16:12:20.824Z"
+    },
+    "4iRqf2zoGhh7yO5evg1NYj": {
+      "album_name": "Panda Bear Meets The Grim Reaper",
+      "artist": "Panda Bear",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6kUs2GCl1LaGdkoBkzeKbR"
+      ],
+      "first_played": "2026-04-10T15:57:17.058Z",
+      "last_played": "2026-04-10T15:57:17.058Z"
     }
   },
   "completed_albums": {
@@ -230047,8 +230044,11 @@
         "rock and indie"
       ],
       "image_url": "https://coverartarchive.org/release/888cf2eb-30ea-4c38-b628-9d9b18b4d636/front",
-      "listen_history": [],
-      "source": "musicbrainz"
+      "listen_history": [
+        "2026-04-10T15:26:46.943Z"
+      ],
+      "source": "musicbrainz",
+      "completion_logged": true
     },
     "Panic! at the Disco - A Fever You Can\u2019t Sweat Out": {
       "artist": "Panic! at the Disco",
@@ -400299,6 +400299,7 @@
     }
   },
   "most_recently_listened": [
+    "Panda Bear - Person Pitch",
     "Floating Points, Pharoah Sanders - Promises",
     "Joan Baez - Joan Baez",
     "Bob Dylan - The Freewheelin' Bob Dylan",
@@ -400307,7 +400308,6 @@
     "Childish Gambino - \"Awaken, My Love!\"",
     "Peter, Paul and Mary - Peter, Paul and Mary",
     "Caroline Polachek - Desire, I Want To Turn Into You",
-    "Floating Points - Cascade",
-    "Brian Eno - Ambient 1: Music For Airports (Remastered 2004)"
+    "Floating Points - Cascade"
   ]
 }
