@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-11T15:49:17.346Z",
+  "last_checked": "2026-04-11T18:02:59.679Z",
   "albums_in_progress": {
     "7Ln81p86r5cCsesd3KBWIY": {
       "album_name": "Dragon New Warm Mountain I Believe In You",
@@ -140,7 +140,7 @@
         "6GXOriLcYRb1ZcIvoIK90y"
       ],
       "first_played": "2026-04-11T15:49:17.346Z",
-      "last_played": "2026-04-11T15:49:17.346Z"
+      "last_played": "2026-04-11T17:52:59.101Z"
     },
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -178,6 +178,16 @@
       "first_played": "2026-04-11T15:03:02.374Z",
       "last_played": "2026-04-11T14:42:28.633Z",
       "completion_logged": true
+    },
+    "6ylurrLSklWvEYvlB3vy74": {
+      "album_name": "Keep On Doing",
+      "artist": "The Roches",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5DnZNGAsmClcLVnTOTRP1V"
+      ],
+      "first_played": "2026-04-11T18:02:59.679Z",
+      "last_played": "2026-04-11T18:02:59.679Z"
     }
   },
   "completed_albums": {
