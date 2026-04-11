@@ -1,24 +1,6 @@
 {
-  "last_checked": "2026-04-11T18:02:59.679Z",
+  "last_checked": "2026-04-11T22:09:18.387Z",
   "albums_in_progress": {
-    "7Ln81p86r5cCsesd3KBWIY": {
-      "album_name": "Dragon New Warm Mountain I Believe In You",
-      "artist": "Big Thief",
-      "total_tracks": 20,
-      "played_tracks": [
-        "3pMTFpbool5GOxvoc2QJth",
-        "6qopJBPesEVIrIT0qMtbNs",
-        "5ZlfX4evbtQtONINsLADDR",
-        "6w1d6Zwf7aXALS4TRA26hy",
-        "3UN7R1teOKhmB8SnxtwiPK",
-        "3i7XRi2UyvGTdJawJRkVhd",
-        "3Q6VfeIZ1bTjWiNe2Or4LQ",
-        "32k3OLmeIWe93KY0QzMmZX",
-        "3HFBqhotJeEKHJzMEW31jZ"
-      ],
-      "first_played": "2026-04-09T20:06:03.500Z",
-      "last_played": "2026-04-09T21:15:22.266Z"
-    },
     "06IJFUuCwW3iokYxgXjCYe": {
       "album_name": "Jam On Revenge",
       "artist": "Newcleus",
@@ -188,6 +170,39 @@
       ],
       "first_played": "2026-04-11T18:02:59.679Z",
       "last_played": "2026-04-11T18:02:59.679Z"
+    },
+    "0h2EIHvezZdhH09U6n0V2A": {
+      "album_name": "Peaceful Slumber",
+      "artist": "The Slumbering One",
+      "total_tracks": 20,
+      "played_tracks": [
+        "59KeBLx5eJW9ZNcPjpsH2c",
+        "7Eg7ekIj1XI5nknQN9ZGRv",
+        "0gF1Avb6FP3MMFaKiblmvX",
+        "63XSwhhn7fbrlSZxL8Q7Nq"
+      ],
+      "first_played": "2026-04-11T22:09:18.387Z",
+      "last_played": "2026-04-11T22:02:43.712Z"
+    },
+    "784N0nKRBpp0badbUFThVZ": {
+      "album_name": "Peaceful Forest Sounds",
+      "artist": "Path to the Wild",
+      "total_tracks": 34,
+      "played_tracks": [
+        "4snISSBtMjkRIHufaTMfP7"
+      ],
+      "first_played": "2026-04-11T22:00:13.648Z",
+      "last_played": "2026-04-11T22:00:13.648Z"
+    },
+    "44iuWeTEtDDk9Ll3A7O8F2": {
+      "album_name": "On Your Own Love Again",
+      "artist": "Jessica Pratt",
+      "total_tracks": 9,
+      "played_tracks": [
+        "06W4Up9O6DlXaIUlr4aOhR"
+      ],
+      "first_played": "2026-04-11T21:37:17.215Z",
+      "last_played": "2026-04-11T21:37:17.215Z"
     }
   },
   "completed_albums": {
