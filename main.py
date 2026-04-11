@@ -57,10 +57,12 @@ def main():
     spotify_new_count = len(completed_album_ids)
     logging.info(f"Newly completed albums from Spotify: {spotify_new_count}")
 
+    # For all completed albums, log them and mark as logged in the state to prevent double logging on subsequent runs
     newly_completed_albums = {}
     for album_id in completed_album_ids:
         # handles both initial and subsequent completions
         new_entry = tracking.log_completed_album(updated_tracks_state, album_id)
+        updated_tracks_state["albums_in_progress"][album_id]["completion_logged"] = True
         newly_completed_albums = {**newly_completed_albums, **new_entry}
 
     # create new object with no completed albums but timestamp and all recent tracks

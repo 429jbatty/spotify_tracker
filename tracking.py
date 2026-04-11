@@ -115,8 +115,6 @@ def log_completed_album(state, album_id):
         logging.info(f"Subsequent listen logged: {artist} - {album_name}")
         entry = {key: state["completed_albums"][key]}
 
-    entry[key]["completion_logged"] = True
-
     return entry
 
 
