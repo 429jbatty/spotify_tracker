@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-11T05:10:37.410Z",
+  "last_checked": "2026-04-11T15:49:17.346Z",
   "albums_in_progress": {
     "7Ln81p86r5cCsesd3KBWIY": {
       "album_name": "Dragon New Warm Mountain I Believe In You",
@@ -44,7 +44,8 @@
         "6ID2kAZjCkilJGb041DEUO"
       ],
       "first_played": "2026-04-10T14:18:06.323Z",
-      "last_played": "2026-04-10T15:26:46.943Z"
+      "last_played": "2026-04-10T15:26:46.943Z",
+      "completion_logged": true
     },
     "50eixdXB4Z1CTZtu7wCfEA": {
       "album_name": "abysskiss",
@@ -75,7 +76,8 @@
         "20s3FayrStM8GY0m4dRFsw"
       ],
       "first_played": "2026-04-10T16:20:19.931Z",
-      "last_played": "2026-04-10T18:33:08.634Z"
+      "last_played": "2026-04-10T18:33:08.634Z",
+      "completion_logged": true
     },
     "6uoeezh45SYEb8lcT8gDTY": {
       "album_name": "Another Green World (2004 Remaster)",
@@ -129,6 +131,53 @@
       ],
       "first_played": "2026-04-10T19:13:38.710Z",
       "last_played": "2026-04-10T19:13:38.710Z"
+    },
+    "0h1ruavpzNOYbjwg5oC0fg": {
+      "album_name": "Bless The Weather",
+      "artist": "John Martyn",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6GXOriLcYRb1ZcIvoIK90y"
+      ],
+      "first_played": "2026-04-11T15:49:17.346Z",
+      "last_played": "2026-04-11T15:49:17.346Z"
+    },
+    "51VTfQlLnCp93wUzp1VZXY": {
+      "album_name": "Solid Air",
+      "artist": "John Martyn",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0wKUixDsA4jWvNKABO1Iwd",
+        "5IGBxNTeRBWWWbM1gBCo9M",
+        "0wfVke1yGl5joMxNrQ1jho",
+        "0Ov9u8GyAwgVK4jKD0ZI1U",
+        "37INkMCTOFcWXEQCAIq7On",
+        "0M0VR1YVgPQ4vNTfLyTDgb",
+        "59eTMgTT6aYgraB9jr4Tsc",
+        "6xtbFyWfrgrxOzzTg8EFuu",
+        "5uY5pS9OUbiGRr3F9DDDrH",
+        "2vy2V8CBCeVyyDW2mvKppY"
+      ],
+      "first_played": "2026-04-11T15:38:08.458Z",
+      "last_played": "2026-04-11T15:09:12.287Z",
+      "completion_logged": true
+    },
+    "66Y8VrfvHnwJSk2ahGOr32": {
+      "album_name": "Histoire de Melody Nelson",
+      "artist": "Serge Gainsbourg",
+      "total_tracks": 7,
+      "played_tracks": [
+        "1yoZmrLzKWM6DAhq6KqDTa",
+        "4h2H1twBzEuQygHdl60U5g",
+        "31neFSoQSUdPyZXRlfkrK5",
+        "3hrzEgajecVRzKMiwanOCu",
+        "33xf6NmBDTT20fuZoZjKt3",
+        "1wPNVQqGT9LG39nzeyzIvF",
+        "1fWUWwXvAxlLEwJOVq67zE"
+      ],
+      "first_played": "2026-04-11T15:03:02.374Z",
+      "last_played": "2026-04-11T14:42:28.633Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -230059,6 +230108,7 @@
         "2026-04-10T15:26:46.943Z",
         "2026-04-10T15:26:46.943Z",
         "2026-04-10T15:26:46.943Z",
+        "2026-04-10T15:26:46.943Z",
         "2026-04-10T15:26:46.943Z"
       ],
       "source": "musicbrainz",
@@ -400645,12 +400695,1001 @@
         "2026-04-10T18:33:08.634Z",
         "2026-04-10T18:33:08.634Z",
         "2026-04-10T18:33:08.634Z",
+        "2026-04-10T18:33:08.634Z",
         "2026-04-10T18:33:08.634Z"
       ],
       "completion_logged": true
+    },
+    "John Martyn - Solid Air": {
+      "artist": "John Martyn",
+      "artist_mbid": "e821a756-487f-4931-a02f-27cf11cec7bf",
+      "name": "Solid Air",
+      "release_group_mbid": "e1670336-f7b9-31b6-bd3c-77d8e8169cd9",
+      "label": "Island",
+      "release_year": 1973,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Solid Air",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "Tony Coe",
+              "instrument",
+              "saxophone"
+            ],
+            [
+              "Tristan Fry",
+              "instrument",
+              "vibraphone"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "6dcf5817-a827-424a-a15f-c2767c82a8af"
+        },
+        {
+          "position": "2",
+          "title": "Over the Hill",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "Sue Draheim",
+              "instrument",
+              "violin"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Simon Nicol",
+              "instrument",
+              "autoharp"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "Richard Thompson",
+              "instrument",
+              "mandolin"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "f374f415-7098-41b1-b61c-fd400e704564"
+        },
+        {
+          "position": "3",
+          "title": "Don\u2019t Want to Know",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "68d0111c-5895-4a58-ab9f-38ae1ecfbf69"
+        },
+        {
+          "position": "4",
+          "title": "I\u2019d Rather Be the Devil (Devil Got My Woman)",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "ee7948e6-31fc-4788-8860-6b0877a29350"
+        },
+        {
+          "position": "5",
+          "title": "Go Down Easy",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "5536f955-d1be-48ef-b55e-94dde0eae73b"
+        },
+        {
+          "position": "6",
+          "title": "Dreams by the Sea",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "Tony Coe",
+              "instrument",
+              "saxophone"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "73ee9ebc-5d8c-44c6-983a-5d24ffdbc276"
+        },
+        {
+          "position": "7",
+          "title": "May You Never",
+          "credits": [
+            [
+              "John Wood",
+              "engineer",
+              ""
+            ],
+            [
+              "Neemoi Acquaye",
+              "instrument",
+              "congas"
+            ],
+            [
+              "John \u201cRabbit\u201d Bundrick",
+              "instrument",
+              "clavinet, organ, piano"
+            ],
+            [
+              "John Martyn",
+              "instrument",
+              "acoustic guitar, electric guitar"
+            ],
+            [
+              "Dave Mattacks",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dave Pegg",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Danny Thompson",
+              "instrument",
+              "double bass"
+            ],
+            [
+              "John Martyn",
+              "producer",
+              ""
+            ],
+            [
+              "John Wood",
+              "producer",
+              ""
+            ],
+            [
+              "John Martyn",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "fd05e1aa-e70c-4f0b-988e-e4f7939e2469"
+        },
+        {
+          "position": "8",
+          "title": "The Man in the Station (album version)",
+          "credits": {},
+          "recording_mbid": "0e6a2250-3aa0-4e7a-b0f3-5adace05e3cd"
+        },
+        {
+          "position": "9",
+          "title": "The Easy Blues/Gentle Blues (album version)",
+          "credits": {},
+          "recording_mbid": "90d2597d-d4ad-4050-a0f6-3e6a1790c144"
+        },
+        {
+          "position": "1",
+          "title": "Solid Air (alternative take)",
+          "credits": {},
+          "recording_mbid": "9030b23f-639b-475a-bdfb-d0f20e03cbb7"
+        },
+        {
+          "position": "2",
+          "title": "Over the Hill (alternative take)",
+          "credits": {},
+          "recording_mbid": "678ffa10-2a67-45a5-929a-534a7c2a3a09"
+        },
+        {
+          "position": "3",
+          "title": "Don't Want to Know (alternative take)",
+          "credits": {},
+          "recording_mbid": "c3523649-30cb-437c-b745-2046d5bd3153"
+        },
+        {
+          "position": "4",
+          "title": "I'd Rather Be the Devil (Devil Got My Woman) (alternative take)",
+          "credits": {},
+          "recording_mbid": "829e14dd-f657-485e-8449-a0aba98d397d"
+        },
+        {
+          "position": "5",
+          "title": "Go Down Easy (alternative take)",
+          "credits": {},
+          "recording_mbid": "5c7f3009-f741-4283-97dc-9c2a9ed88ef1"
+        },
+        {
+          "position": "6",
+          "title": "Dreams by the Sea (alternative take)",
+          "credits": {},
+          "recording_mbid": "fd3e93e9-f085-482c-83bc-64f449f4a190"
+        },
+        {
+          "position": "7",
+          "title": "May You Never (alternative take)",
+          "credits": {},
+          "recording_mbid": "bdabe1b1-1539-4751-92cb-fc14b07279e9"
+        },
+        {
+          "position": "8",
+          "title": "The Man in the Station (alternative take)",
+          "credits": {},
+          "recording_mbid": "9a5174e6-433b-4590-aec3-4a1aaf3ff264"
+        },
+        {
+          "position": "9",
+          "title": "The Easy Blues/Gentle Blues (alternative take)",
+          "credits": {},
+          "recording_mbid": "e1b21408-945c-4bdc-80bd-99ed68d25959"
+        },
+        {
+          "position": "10",
+          "title": "Keep On (previously unreleased)",
+          "credits": {},
+          "recording_mbid": "e5e63833-4adf-49b5-b295-83b5899442d1"
+        },
+        {
+          "position": "11",
+          "title": "When It's Dark (demo)",
+          "credits": {},
+          "recording_mbid": "cd96747f-a0a7-4437-b853-fd1cc5e03f0e"
+        },
+        {
+          "position": "12",
+          "title": "In the Evening",
+          "credits": {},
+          "recording_mbid": "5898dedb-64bb-404b-8a14-cdf0dc5d0ec4"
+        },
+        {
+          "position": "13",
+          "title": "May You Never (single version)",
+          "credits": {},
+          "recording_mbid": "7a833de5-b7c0-4521-bd4b-bda72bfd2fd7"
+        },
+        {
+          "position": "14",
+          "title": "The Easy Blues (live)",
+          "credits": {},
+          "recording_mbid": "157405ea-581e-4845-9895-af9e6b8ef732"
+        },
+        {
+          "position": "15",
+          "title": "May You Never (live)",
+          "credits": {},
+          "recording_mbid": "45b58224-806b-4b18-8665-ea22804039ce"
+        },
+        {
+          "position": "16",
+          "title": "I'd Rather Be the Devil (Devil Got My Woman) (live version)",
+          "credits": {},
+          "recording_mbid": "93b7abec-03e1-4854-bd13-b4ab17753037"
+        },
+        {
+          "position": "1",
+          "title": "Solid Air (demo version)",
+          "credits": {},
+          "recording_mbid": "dba77bfd-abf8-4423-9974-0bccdc9d023d"
+        },
+        {
+          "position": "2",
+          "title": "Solid Air (instrumental version)",
+          "credits": {},
+          "recording_mbid": "fe249ffc-67a4-4a76-885f-cfb69ea84dc6"
+        },
+        {
+          "position": "3",
+          "title": "Over the Hill (demo version)",
+          "credits": {},
+          "recording_mbid": "4c3fa559-f3a3-4757-9638-af836557abd2"
+        },
+        {
+          "position": "4",
+          "title": "I'd Rather Be the Devil (Devil Got My Woman) (demo version)",
+          "credits": {},
+          "recording_mbid": "bde6d88a-fc79-478d-9f70-2ee5859b7a49"
+        },
+        {
+          "position": "5",
+          "title": "Go Down Easy (demo version)",
+          "credits": {},
+          "recording_mbid": "4bdbda4c-b105-41c2-bda7-815faa1e96d2"
+        },
+        {
+          "position": "6",
+          "title": "Go Down Easy (alternative take 2)",
+          "credits": {},
+          "recording_mbid": "1d1ca37a-7928-4693-9dfa-70112f54c7de"
+        },
+        {
+          "position": "7",
+          "title": "Dreams by the Sea (demo version)",
+          "credits": {},
+          "recording_mbid": "c064df87-7e46-42cb-b933-8d09ac884c53"
+        },
+        {
+          "position": "8",
+          "title": "May You Never (demo version)",
+          "credits": {},
+          "recording_mbid": "3d48169b-fddb-4c4e-8524-1c65641cc815"
+        }
+      ],
+      "tags": [
+        "rock",
+        "folk",
+        "folk rock",
+        "psychedelic rock",
+        "folk-rock",
+        "british folk rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/20d1ecaf-7d48-45ca-a892-589895c64bb3/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-11T15:09:12.287Z"
+      ]
+    },
+    "Serge Gainsbourg - Histoire de Melody Nelson": {
+      "artist": "Serge Gainsbourg",
+      "artist_mbid": "b21ef19b-c6aa-4775-90d3-3cc3e067ce6d",
+      "name": "Histoire de Melody Nelson",
+      "release_group_mbid": "431ae137-315a-3faa-8005-c959fc0d57e9",
+      "label": "Mercury Records",
+      "release_year": 1971,
+      "release_month": 3,
+      "release_day": 24,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Melody",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Jane Birkin",
+              "vocal",
+              "spoken vocals"
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "5fbdb7ef-ee9b-4523-914d-5033fba7abb5"
+        },
+        {
+          "position": "2",
+          "title": "Ballade de Melody Nelson",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Jane Birkin",
+              "vocal",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "29035889-1403-41ce-a162-c26cd0d8fef1"
+        },
+        {
+          "position": "3",
+          "title": "Valse de Melody",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "d13502fc-9cf8-4c97-8815-01731474831c"
+        },
+        {
+          "position": "4",
+          "title": "Ah ! Melody",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "ec512feb-c726-4dce-bee1-e374b4d18709"
+        },
+        {
+          "position": "5",
+          "title": "L\u2019H\u00f4tel particulier",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "acd901f5-5d6f-40ab-8ba2-6403d86634e8"
+        },
+        {
+          "position": "6",
+          "title": "En Melody",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              "spoken vocals"
+            ]
+          ],
+          "recording_mbid": "957439ad-5d74-4a13-8c0b-efa63a6f316a"
+        },
+        {
+          "position": "7",
+          "title": "Cargo culte",
+          "credits": [
+            [
+              "Jean-Claude Vannier",
+              "arranger",
+              ""
+            ],
+            [
+              "Jean-Claude Vannier",
+              "conductor",
+              ""
+            ],
+            [
+              "Jean-Claude Desmarty",
+              "producer",
+              ""
+            ],
+            [
+              "R\u00e9my Aucharles",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Jean-Claude Charvier",
+              "recording",
+              ""
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Serge Gainsbourg",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "7a460071-71f4-4c02-9586-3b4f9fb60fcb"
+        },
+        {
+          "position": "8",
+          "title": "Melody (prise compl\u00e8te)",
+          "credits": {},
+          "recording_mbid": "2b73249b-e99d-46ef-a2a3-e0be0a1f903e"
+        },
+        {
+          "position": "9",
+          "title": "Ballade de Melody Nelson (prise voix alternative)",
+          "credits": {},
+          "recording_mbid": "77dcd090-fcea-4ffa-b385-4802c29d2fb0"
+        },
+        {
+          "position": "10",
+          "title": "Valse de Melody (prise voix alternative)",
+          "credits": {},
+          "recording_mbid": "fa23821e-fe8c-409e-a9cb-f4e52b42d7eb"
+        },
+        {
+          "position": "11",
+          "title": "Ah ! Melody (prise voix alternative)",
+          "credits": {},
+          "recording_mbid": "105312a0-494a-490e-8717-c4730cdf50ad"
+        },
+        {
+          "position": "12",
+          "title": "Melody lit Babar (version de travail chant\u00e9e)",
+          "credits": {},
+          "recording_mbid": "269a67b0-4a3a-4054-99c9-69d1001fd2a0"
+        },
+        {
+          "position": "13",
+          "title": "Melody lit Babar (version de travail instrumentale)",
+          "credits": {},
+          "recording_mbid": "aa0ce32e-eb0e-40f6-91e4-e0efcdfceba8"
+        },
+        {
+          "position": "14",
+          "title": "L\u2019H\u00f4tel particulier (prise compl\u00e8te)",
+          "credits": {},
+          "recording_mbid": "9431ed33-fcb5-4661-b56a-49356d4b6236"
+        },
+        {
+          "position": "15",
+          "title": "En Melody (version solo de violon compl\u00e8te)",
+          "credits": {},
+          "recording_mbid": "fbbaab64-3504-4f06-ae97-deef051155bd"
+        },
+        {
+          "position": "16",
+          "title": "Cargo culte (version instrumentale)",
+          "credits": {},
+          "recording_mbid": "eacd939a-bc97-41b9-a395-d23b05f68b3f"
+        }
+      ],
+      "tags": [
+        "rock",
+        "pop",
+        "progressive rock",
+        "baroque pop",
+        "pop rock",
+        "symphonic rock",
+        "chanson",
+        "french pop",
+        "art pop"
+      ],
+      "image_url": "https://coverartarchive.org/release/66da708e-81ce-4ca9-8a83-40702d1d12b4/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-11T14:42:28.633Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "John Martyn - Solid Air",
+    "Serge Gainsbourg - Histoire de Melody Nelson",
     "Eric B. & Rakim - Paid In Full",
     "Panda Bear - Person Pitch",
     "Floating Points, Pharoah Sanders - Promises",
@@ -400658,8 +401697,6 @@
     "Bob Dylan - The Freewheelin' Bob Dylan",
     "Elton John - Goodbye Yellow Brick Road (Remastered)",
     "Led Zeppelin - Houses of the Holy (Remaster)",
-    "Childish Gambino - \"Awaken, My Love!\"",
-    "Peter, Paul and Mary - Peter, Paul and Mary",
-    "Caroline Polachek - Desire, I Want To Turn Into You"
+    "Childish Gambino - \"Awaken, My Love!\""
   ]
 }
