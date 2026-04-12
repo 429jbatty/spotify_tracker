@@ -1,23 +1,6 @@
 {
-  "last_checked": "2026-04-12T14:05:25.704Z",
+  "last_checked": "2026-04-12T16:13:57.602Z",
   "albums_in_progress": {
-    "64TDaAbxgO0TmKZrIavdLg": {
-      "album_name": "Person Pitch",
-      "artist": "Panda Bear",
-      "total_tracks": 7,
-      "played_tracks": [
-        "7zm1d8Elb1dT2vAOzTuLat",
-        "0eYqbDgpsXtSWGyGlnovyu",
-        "4DjLXaUaqbm70uguXzDJmm",
-        "6J8fqvMu3gwPBwbgysO5sm",
-        "1RltJo16uDzpVCTxPvR2l8",
-        "0utrl59BlkDWyPUPMPaVQv",
-        "6ID2kAZjCkilJGb041DEUO"
-      ],
-      "first_played": "2026-04-10T14:18:06.323Z",
-      "last_played": "2026-04-10T15:26:46.943Z",
-      "completion_logged": true
-    },
     "3miZDfDnP7SmOXAJXWdFmz": {
       "album_name": "Paid In Full",
       "artist": "Eric B. & Rakim",
@@ -39,26 +22,6 @@
       "first_played": "2026-04-10T16:20:19.931Z",
       "last_played": "2026-04-10T18:33:08.634Z",
       "completion_logged": true
-    },
-    "6uoeezh45SYEb8lcT8gDTY": {
-      "album_name": "Another Green World (2004 Remaster)",
-      "artist": "Brian Eno",
-      "total_tracks": 14,
-      "played_tracks": [
-        "2d9KBVxb6bUfVCjjv1JAVe"
-      ],
-      "first_played": "2026-04-10T16:12:41.352Z",
-      "last_played": "2026-04-10T16:12:20.824Z"
-    },
-    "4iRqf2zoGhh7yO5evg1NYj": {
-      "album_name": "Panda Bear Meets The Grim Reaper",
-      "artist": "Panda Bear",
-      "total_tracks": 13,
-      "played_tracks": [
-        "6kUs2GCl1LaGdkoBkzeKbR"
-      ],
-      "first_played": "2026-04-10T15:57:17.058Z",
-      "last_played": "2026-04-10T15:57:17.058Z"
     },
     "3tQd5mwBtVyxCoEo4htGAV": {
       "album_name": "Enter The Wu-Tang (36 Chambers) [Expanded Edition]",
@@ -120,7 +83,7 @@
         "2vy2V8CBCeVyyDW2mvKppY"
       ],
       "first_played": "2026-04-11T15:38:08.458Z",
-      "last_played": "2026-04-11T15:09:12.287Z",
+      "last_played": "2026-04-12T15:46:03.715Z",
       "completion_logged": true
     },
     "66Y8VrfvHnwJSk2ahGOr32": {
@@ -137,7 +100,7 @@
         "1fWUWwXvAxlLEwJOVq67zE"
       ],
       "first_played": "2026-04-11T15:03:02.374Z",
-      "last_played": "2026-04-11T14:42:28.633Z",
+      "last_played": "2026-04-12T15:16:06.511Z",
       "completion_logged": true
     },
     "6ylurrLSklWvEYvlB3vy74": {
@@ -239,6 +202,31 @@
       "first_played": "2026-04-11T23:41:43.504Z",
       "last_played": "2026-04-12T14:05:25.704Z",
       "completion_logged": true
+    },
+    "0NACl36sqipY6OZXOqy1At": {
+      "album_name": "Vu de l'ext\u00e9rieur",
+      "artist": "Serge Gainsbourg",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5cC9RZFMzrpbA9U1m4zSPm"
+      ],
+      "first_played": "2026-04-12T15:40:03.470Z",
+      "last_played": "2026-04-12T15:40:03.470Z"
+    },
+    "70V1kL7w7Q9pDU4I6zDjYE": {
+      "album_name": "The Colour of Spring",
+      "artist": "Talk Talk",
+      "total_tracks": 8,
+      "played_tracks": [
+        "4lnfEXAPQio0T6cM7GbHeb",
+        "03d3DCqwvt65Orfdomjs6e",
+        "0ruphKhPAkhZq4N0Fdrn0c",
+        "2iWTHXaFtRSMhd5OLpYD7f",
+        "2PeyQvyaViallofbtwS4PL",
+        "3wowK80ug94yqlI86A9Ej9"
+      ],
+      "first_played": "2026-04-12T15:07:44.158Z",
+      "last_played": "2026-04-12T14:40:06.489Z"
     }
   },
   "completed_albums": {
