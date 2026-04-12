@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-12T20:09:42.046Z",
+  "last_checked": "2026-04-12T22:11:26.819Z",
   "albums_in_progress": {
     "0h1ruavpzNOYbjwg5oC0fg": {
       "album_name": "Bless The Weather",
@@ -203,10 +203,11 @@
       "played_tracks": [
         "4Tw7Hxz9eSTrzcN98ijXni",
         "15BsNMDMeokJLkWF5OSuqj",
-        "7nviB40euH8GciNuOn7uci"
+        "7nviB40euH8GciNuOn7uci",
+        "47WhS6SrW8kFeJC4XEDEV6"
       ],
       "first_played": "2026-04-12T18:02:49.603Z",
-      "last_played": "2026-04-12T20:02:44.086Z"
+      "last_played": "2026-04-12T20:28:05.658Z"
     },
     "3xuh1Bg7FzKIV0vy0SHXH8": {
       "album_name": "A Collection",
@@ -322,10 +323,11 @@
       "total_tracks": 11,
       "played_tracks": [
         "7ltv44ZHoWGXOixA5c6aaR",
-        "2fmRRiEtWnaOClGh5pQ9Lb"
+        "2fmRRiEtWnaOClGh5pQ9Lb",
+        "57Z98SobLeJ7Cua0ScQf5F"
       ],
       "first_played": "2026-04-12T16:50:14.555Z",
-      "last_played": "2026-04-12T18:29:56.826Z"
+      "last_played": "2026-04-12T20:17:42.763Z"
     },
     "2yZXtlCUGjaOYBGc9qqeay": {
       "album_name": "Free",
@@ -363,20 +365,22 @@
       "artist": "Talk Talk",
       "total_tracks": 6,
       "played_tracks": [
-        "4k2CdsRopiwCKqO6rOSiVY"
+        "4k2CdsRopiwCKqO6rOSiVY",
+        "3SzoVeS9Eaxt6dmfXF0fPo"
       ],
       "first_played": "2026-04-12T16:29:02.233Z",
-      "last_played": "2026-04-12T16:29:02.233Z"
+      "last_played": "2026-04-12T20:15:52.435Z"
     },
     "7wpo5k9gqXQHfxISH1jatO": {
       "album_name": "Fred Neil",
       "artist": "Fred Neil",
       "total_tracks": 10,
       "played_tracks": [
-        "5yZzLyY9SMI3ZjdqpXWYDp"
+        "5yZzLyY9SMI3ZjdqpXWYDp",
+        "5j5jfVrbo9X5jcsHqv52zD"
       ],
       "first_played": "2026-04-12T19:58:21.594Z",
-      "last_played": "2026-04-12T19:58:21.594Z"
+      "last_played": "2026-04-12T20:21:43.917Z"
     },
     "70Qms7zJyzvldD5WSfXJwH": {
       "album_name": "Spencer Cullum's Coin Collection",
@@ -507,6 +511,46 @@
       ],
       "first_played": "2026-04-12T18:19:12.506Z",
       "last_played": "2026-04-12T18:19:12.506Z"
+    },
+    "5Rkrz0jdb5BvaLPSbcvZoe": {
+      "album_name": "Clapton",
+      "artist": "Eric Clapton",
+      "total_tracks": 16,
+      "played_tracks": [
+        "2lHtNlphp7hf5wZtJDGSbO"
+      ],
+      "first_played": "2026-04-12T22:11:26.819Z",
+      "last_played": "2026-04-12T22:11:26.819Z"
+    },
+    "2lORE9lVX7YUCZfiFVnKWa": {
+      "album_name": "Unplugged (Deluxe Edition) (Live)",
+      "artist": "Eric Clapton",
+      "total_tracks": 20,
+      "played_tracks": [
+        "6uAAm2TssOxDYMg2mPAkYJ",
+        "6Ld8Hvr4y75mrQmO7WHI76",
+        "1RNQueRJcMk0yBND6DsWW4",
+        "2Gq3GHn6A9cI7DjnDejUYt",
+        "7j47ezIQUUfUwFfg2PCeR9",
+        "78Ld60e2y57fRik5I7KwYf",
+        "7gHPfD86MHr94DFFQziO4Z",
+        "0XuDj6qH64RUAljehbd8O3",
+        "4vzySxUnrJN0D9ztZFN2Q6",
+        "6v8CskmNAAvz9tvxKfO8i1",
+        "713D0u0XMewrhWIQwjrlrd",
+        "7FjiZVgNVYJvaawlkxaq0i",
+        "2QWYJC0osgjCvPA0VqcMlv",
+        "5phbwzg5d2MqNAoc0435Zu",
+        "7sVxm1I8G8tTznXeirDEXm",
+        "09wkXiaJ2KJYX9M3SmToF8",
+        "3UqHlIBI771FNCiLY5MKrp",
+        "0qxtcJppuSsxsKmOIGbmpN",
+        "63FLIj5L2qTI2nSArBny5p",
+        "7d1knggour980ADiRlAcGo"
+      ],
+      "first_played": "2026-04-12T22:07:25.312Z",
+      "last_played": "2026-04-12T20:34:30.354Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -402079,9 +402123,1088 @@
       "listen_history": [
         "2026-04-11T22:44:13.553Z"
       ]
+    },
+    "Eric Clapton - Unplugged (Deluxe Edition) (Live)": {
+      "artist": "Eric Clapton",
+      "artist_mbid": "618b6900-0618-4f1e-b835-bccb17f84294",
+      "name": "Unplugged",
+      "release_group_mbid": "61c4a210-6e90-3d41-b6c1-fd2c7e4fb6ac",
+      "label": null,
+      "release_year": 1992,
+      "release_month": 8,
+      "release_day": 21,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Signe",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "19ec64ee-0c0c-449a-a42c-e3215c134797"
+        },
+        {
+          "position": "2",
+          "title": "Before You Accuse Me",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "249ca0e8-b3b1-4581-8747-b4e067e8e9a5"
+        },
+        {
+          "position": "3",
+          "title": "Hey Hey",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "5badc367-24ac-46d5-86f5-1fd692c92c2f"
+        },
+        {
+          "position": "4",
+          "title": "Tears in Heaven",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "c5a9a5a1-36a7-4d28-8c7f-0867206ba9da"
+        },
+        {
+          "position": "5",
+          "title": "Lonely Stranger",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "36554ab3-cf24-4f6c-a1f6-01a8b2fb2d19"
+        },
+        {
+          "position": "6",
+          "title": "Nobody Knows You When You\u2019re Down & Out",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "ab6d8aa5-b5c7-4b06-a10c-af78d499367c"
+        },
+        {
+          "position": "7",
+          "title": "Layla",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "6449f141-3455-404a-83b4-09d6ac744184"
+        },
+        {
+          "position": "8",
+          "title": "Running on Faith",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "ac421192-0adf-4c6b-899e-b087cf5587f2"
+        },
+        {
+          "position": "9",
+          "title": "Walkin\u2019 Blues",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "James \u201cJimbo\u201d Barton",
+              "recording",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "e6bdfb36-ca4b-4d4f-9b31-347cd30faf76"
+        },
+        {
+          "position": "10",
+          "title": "Alberta",
+          "credits": [
+            [
+              "Lead Belly",
+              "arranger",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "James \u201cJimbo\u201d Barton",
+              "recording",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "491ffbea-db4a-40bc-82af-e0eb408ee326"
+        },
+        {
+          "position": "11",
+          "title": "San Francisco Bay Blues",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "James \u201cJimbo\u201d Barton",
+              "recording",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "e4ea2d2a-31fa-4256-9239-30384425df40"
+        },
+        {
+          "position": "12",
+          "title": "Malted Milk",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "James \u201cJimbo\u201d Barton",
+              "recording",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "3654e77c-a6b5-47d7-8251-74cab7d1a2c5"
+        },
+        {
+          "position": "13",
+          "title": "Old Love",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "James \u201cJimbo\u201d Barton",
+              "recording",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "1b2d7026-07bb-459c-bf6e-f0d5fe109f24"
+        },
+        {
+          "position": "14",
+          "title": "Rollin\u2019 & Tumblin\u2019",
+          "credits": [
+            [
+              "Eric Clapton",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ray Cooper",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Nathan East",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Andy Fairweather\u2010Low",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Ferrone",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Steve Boyer",
+              "mix",
+              ""
+            ],
+            [
+              "Victor Deyglio",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Russ Titelman",
+              "producer",
+              ""
+            ],
+            [
+              "James \u201cJimbo\u201d Barton",
+              "recording",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "vocal",
+              ""
+            ],
+            [
+              "Nathan East",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Katie Kissoon",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Tessa Niles",
+              "vocal",
+              "background vocals"
+            ]
+          ],
+          "recording_mbid": "4b5c5d36-2efa-4e50-9a16-db23425eeb68"
+        }
+      ],
+      "tags": [
+        "rock",
+        "pop",
+        "blues",
+        "folk rock",
+        "acoustic",
+        "blues rock",
+        "classic rock",
+        "adult contemporary",
+        "english",
+        "blues-rock",
+        "acoustic blues",
+        "classic rock_rock_blues rock",
+        "pop/rock",
+        "contemporary pop/rock",
+        "offizielle charts",
+        "5+ wochen"
+      ],
+      "image_url": "https://coverartarchive.org/release/cddec9af-5561-41a5-a5be-a87e97d3838f/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-12T20:34:30.354Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
     "Soft Soundscapes - River",
     "The Slumbering One - Peaceful Slumber",
     "John Martyn - Solid Air",
@@ -402090,7 +403213,6 @@
     "Panda Bear - Person Pitch",
     "Floating Points, Pharoah Sanders - Promises",
     "Joan Baez - Joan Baez",
-    "Bob Dylan - The Freewheelin' Bob Dylan",
-    "Elton John - Goodbye Yellow Brick Road (Remastered)"
+    "Bob Dylan - The Freewheelin' Bob Dylan"
   ]
 }
