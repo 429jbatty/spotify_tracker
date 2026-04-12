@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-12T02:56:32.207Z",
+  "last_checked": "2026-04-12T14:05:25.704Z",
   "albums_in_progress": {
     "64TDaAbxgO0TmKZrIavdLg": {
       "album_name": "Person Pitch",
@@ -17,16 +17,6 @@
       "first_played": "2026-04-10T14:18:06.323Z",
       "last_played": "2026-04-10T15:26:46.943Z",
       "completion_logged": true
-    },
-    "50eixdXB4Z1CTZtu7wCfEA": {
-      "album_name": "abysskiss",
-      "artist": "Adrianne Lenker",
-      "total_tracks": 10,
-      "played_tracks": [
-        "197dwrbQhIhDTvtN6kGcvb"
-      ],
-      "first_played": "2026-04-10T13:25:35.607Z",
-      "last_played": "2026-04-10T13:25:35.607Z"
     },
     "3miZDfDnP7SmOXAJXWdFmz": {
       "album_name": "Paid In Full",
@@ -247,7 +237,7 @@
         "1LmD1Ms6BID66tjcrYAW88"
       ],
       "first_played": "2026-04-11T23:41:43.504Z",
-      "last_played": "2026-04-12T02:15:03.448Z",
+      "last_played": "2026-04-12T14:05:25.704Z",
       "completion_logged": true
     }
   },
