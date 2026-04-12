@@ -1,61 +1,6 @@
 {
-  "last_checked": "2026-04-12T18:14:19.679Z",
+  "last_checked": "2026-04-12T20:09:42.046Z",
   "albums_in_progress": {
-    "3miZDfDnP7SmOXAJXWdFmz": {
-      "album_name": "Paid In Full",
-      "artist": "Eric B. & Rakim",
-      "total_tracks": 12,
-      "played_tracks": [
-        "0mqrA6xVKqeyxhlu9dV2am",
-        "0SwuCcwpFM6x4cu5zOvmi0",
-        "7C4yHdqe6x2fF1LxpwzGHD",
-        "5D2lp16FQ0VIfLGRDn5jcG",
-        "7FWaqDbIq3OGZsC04CfuV9",
-        "65FZnTQnTLz2x99LdslyAf",
-        "51W2nMml9yqKbzU3c10wMg",
-        "4LFI2UzGl151YCHn9ktsOe",
-        "3a8r3EYOFZB7cT1OkK4zXF",
-        "6Y21fOnNPCGQ5w5SSW0qlH",
-        "0LxskSIEX09s9AVgH0kmhS",
-        "20s3FayrStM8GY0m4dRFsw"
-      ],
-      "first_played": "2026-04-10T16:20:19.931Z",
-      "last_played": "2026-04-10T18:33:08.634Z",
-      "completion_logged": true
-    },
-    "3tQd5mwBtVyxCoEo4htGAV": {
-      "album_name": "Enter The Wu-Tang (36 Chambers) [Expanded Edition]",
-      "artist": "Wu-Tang Clan",
-      "total_tracks": 15,
-      "played_tracks": [
-        "5wcY4XgawQ2se8VjDLhedQ",
-        "4LaiF2h7gsybmURceGYLqh",
-        "7IwURvEfVcdxUCjLKUu6sv",
-        "1v5cgIyffYtfEx0swttdoE"
-      ],
-      "first_played": "2026-04-10T20:00:08.983Z",
-      "last_played": "2026-04-10T19:24:08.633Z"
-    },
-    "5gvlpKnnINq8Z1YICdtiBt": {
-      "album_name": "Blowout Comb",
-      "artist": "Digable Planets",
-      "total_tracks": 13,
-      "played_tracks": [
-        "2YM9qQklVODlkC3T9YD0e0"
-      ],
-      "first_played": "2026-04-10T19:18:08.918Z",
-      "last_played": "2026-04-10T19:18:08.918Z"
-    },
-    "42p4dRDB24b9mvBmMb0QR9": {
-      "album_name": "Follow The Leader (Expanded Edition)",
-      "artist": "Eric B. & Rakim",
-      "total_tracks": 14,
-      "played_tracks": [
-        "0cSJGFChou7M6u2ju9SWN1"
-      ],
-      "first_played": "2026-04-10T19:13:38.710Z",
-      "last_played": "2026-04-10T19:13:38.710Z"
-    },
     "0h1ruavpzNOYbjwg5oC0fg": {
       "album_name": "Bless The Weather",
       "artist": "John Martyn",
@@ -257,20 +202,22 @@
       "total_tracks": 8,
       "played_tracks": [
         "4Tw7Hxz9eSTrzcN98ijXni",
-        "15BsNMDMeokJLkWF5OSuqj"
+        "15BsNMDMeokJLkWF5OSuqj",
+        "7nviB40euH8GciNuOn7uci"
       ],
       "first_played": "2026-04-12T18:02:49.603Z",
-      "last_played": "2026-04-12T17:38:36.037Z"
+      "last_played": "2026-04-12T20:02:44.086Z"
     },
     "3xuh1Bg7FzKIV0vy0SHXH8": {
       "album_name": "A Collection",
       "artist": "Anne Briggs",
       "total_tracks": 22,
       "played_tracks": [
-        "4OIYmyp6iRe5YvfPyECbhp"
+        "4OIYmyp6iRe5YvfPyECbhp",
+        "4nxIqXHvluAPRmYduYLUhF"
       ],
       "first_played": "2026-04-12T17:54:12.590Z",
-      "last_played": "2026-04-12T17:54:12.590Z"
+      "last_played": "2026-04-12T19:28:22.031Z"
     },
     "1O330PE8lc1dDXduHBwLXe": {
       "album_name": "It's So Hard To Tell Who's Going To Love You The Best",
@@ -278,10 +225,12 @@
       "total_tracks": 10,
       "played_tracks": [
         "4wACv3JAUdAzmRdGat6ZuK",
-        "09g4TuWLxMmrOTt1kzS47Z"
+        "09g4TuWLxMmrOTt1kzS47Z",
+        "230zJroeSW6KRYLeOswojb",
+        "31oCf8ib5WFynZtxYvIEVf"
       ],
       "first_played": "2026-04-12T17:50:15.159Z",
-      "last_played": "2026-04-12T17:02:31.290Z"
+      "last_played": "2026-04-12T18:22:47.677Z"
     },
     "0udQYUvwWS8PC6XGaVAMi0": {
       "album_name": "Bleecker And McDougal (US Release)",
@@ -298,10 +247,11 @@
       "artist": "F. J. McMahon",
       "total_tracks": 9,
       "played_tracks": [
-        "1NH6FdQ8V0Idg0UK5v9w7R"
+        "1NH6FdQ8V0Idg0UK5v9w7R",
+        "299aa9kZNZhCGIbf7YRLq0"
       ],
       "first_played": "2026-04-12T17:34:18.681Z",
-      "last_played": "2026-04-12T17:34:18.681Z"
+      "last_played": "2026-04-12T18:36:54.587Z"
     },
     "6GQLj4tvPqK3jjqTt1Lt5L": {
       "album_name": "Bop Till You Drop",
@@ -318,20 +268,23 @@
       "artist": "Jonathan Wilson",
       "total_tracks": 13,
       "played_tracks": [
-        "6MR187u56N9GHU0yj7gl7M"
+        "6MR187u56N9GHU0yj7gl7M",
+        "5SRisUuA5930xYHSfbcfaD"
       ],
       "first_played": "2026-04-12T17:25:26.741Z",
-      "last_played": "2026-04-12T17:25:26.741Z"
+      "last_played": "2026-04-12T20:06:46.816Z"
     },
     "78WlsSQKrX4suYf909Fcrm": {
       "album_name": "One World",
       "artist": "John Martyn",
       "total_tracks": 8,
       "played_tracks": [
-        "6VLWWTBbYZoo4x3srSKOwD"
+        "6VLWWTBbYZoo4x3srSKOwD",
+        "1sFh9LmPrsZarW5PqhOFD9",
+        "3xUy2aVFFSrQWJwDkVXBpF"
       ],
       "first_played": "2026-04-12T17:12:22.780Z",
-      "last_played": "2026-04-12T17:12:22.780Z"
+      "last_played": "2026-04-12T18:55:13.180Z"
     },
     "1L7I8uL1xroYdwUp2jxqGB": {
       "album_name": "The Lost Outlaw Album",
@@ -368,10 +321,11 @@
       "artist": "John Martyn",
       "total_tracks": 11,
       "played_tracks": [
-        "7ltv44ZHoWGXOixA5c6aaR"
+        "7ltv44ZHoWGXOixA5c6aaR",
+        "2fmRRiEtWnaOClGh5pQ9Lb"
       ],
       "first_played": "2026-04-12T16:50:14.555Z",
-      "last_played": "2026-04-12T16:50:14.555Z"
+      "last_played": "2026-04-12T18:29:56.826Z"
     },
     "2yZXtlCUGjaOYBGc9qqeay": {
       "album_name": "Free",
@@ -398,10 +352,11 @@
       "artist": "Ellen McIlwaine",
       "total_tracks": 10,
       "played_tracks": [
-        "6QsOupxzmw6Ao2PzX5MVVF"
+        "6QsOupxzmw6Ao2PzX5MVVF",
+        "308q4ESTa53qUZJTum9HBi"
       ],
       "first_played": "2026-04-12T16:32:07.288Z",
-      "last_played": "2026-04-12T16:32:07.288Z"
+      "last_played": "2026-04-12T19:07:01.722Z"
     },
     "4YXo7p7aubyVIbNLoVlBp9": {
       "album_name": "Spirit of Eden",
@@ -412,6 +367,146 @@
       ],
       "first_played": "2026-04-12T16:29:02.233Z",
       "last_played": "2026-04-12T16:29:02.233Z"
+    },
+    "7wpo5k9gqXQHfxISH1jatO": {
+      "album_name": "Fred Neil",
+      "artist": "Fred Neil",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5yZzLyY9SMI3ZjdqpXWYDp"
+      ],
+      "first_played": "2026-04-12T19:58:21.594Z",
+      "last_played": "2026-04-12T19:58:21.594Z"
+    },
+    "70Qms7zJyzvldD5WSfXJwH": {
+      "album_name": "Spencer Cullum's Coin Collection",
+      "artist": "Spencer Cullum",
+      "total_tracks": 9,
+      "played_tracks": [
+        "1od4U9gK0F261hoXNmi2Ow"
+      ],
+      "first_played": "2026-04-12T19:40:26.914Z",
+      "last_played": "2026-04-12T19:40:26.914Z"
+    },
+    "7Cm8zQw9gKY9p0rt1c8E7Z": {
+      "album_name": "Coles Corner (20th Anniversary Deluxe Edition)",
+      "artist": "Richard Hawley",
+      "total_tracks": 29,
+      "played_tracks": [
+        "5kuvTbcLqmlHrZr59q9B5M"
+      ],
+      "first_played": "2026-04-12T19:36:24.490Z",
+      "last_played": "2026-04-12T19:36:24.490Z"
+    },
+    "0Axyx0fquZIpucvFXpKL5S": {
+      "album_name": "Into Forever",
+      "artist": "Matthew Halsall, The Gondwana Orchestra",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0WRPiayNzPB5qboIyuQsmZ"
+      ],
+      "first_played": "2026-04-12T19:31:52.361Z",
+      "last_played": "2026-04-12T19:31:52.361Z"
+    },
+    "6VcH3fGiAZLbhTj9qYc18P": {
+      "album_name": "The Church With One Bell",
+      "artist": "John Martyn",
+      "total_tracks": 10,
+      "played_tracks": [
+        "08V2nQqzQGvAV5e0W0zRfr"
+      ],
+      "first_played": "2026-04-12T19:19:56.537Z",
+      "last_played": "2026-04-12T19:19:56.537Z"
+    },
+    "1JxjS2j8fA1JnMdh5DMV8c": {
+      "album_name": "Fairytale (Deluxe Expanded Edition)",
+      "artist": "Donovan",
+      "total_tracks": 18,
+      "played_tracks": [
+        "1M4Hmz15Nz0mhFCNBZlvqs"
+      ],
+      "first_played": "2026-04-12T19:14:11.670Z",
+      "last_played": "2026-04-12T19:14:11.670Z"
+    },
+    "00MudAJNGTxCUkQrtRz2hY": {
+      "album_name": "Last Time Around",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4o6jfrxQyekM5DpnWYLlMo"
+      ],
+      "first_played": "2026-04-12T19:11:16.903Z",
+      "last_played": "2026-04-12T19:11:16.903Z"
+    },
+    "7IpcJbVxLLEfW0KXB7ndE2": {
+      "album_name": "Five Leaves Left",
+      "artist": "Nick Drake",
+      "total_tracks": 10,
+      "played_tracks": [
+        "1drLQNS9D5z9lBP4DbtO2R"
+      ],
+      "first_played": "2026-04-12T19:03:06.341Z",
+      "last_played": "2026-04-12T19:03:06.341Z"
+    },
+    "361WxvSSHmMnPj8esSkIiJ": {
+      "album_name": "Hokey Pokey",
+      "artist": "Richard & Linda Thompson",
+      "total_tracks": 15,
+      "played_tracks": [
+        "4XzuIy1B2MSIMAJBZpgdqq"
+      ],
+      "first_played": "2026-04-12T18:59:01.162Z",
+      "last_played": "2026-04-12T18:59:01.162Z"
+    },
+    "7KvipdNbsp3CetEFcldq0l": {
+      "album_name": "River",
+      "artist": "Terry Reid",
+      "total_tracks": 7,
+      "played_tracks": [
+        "1U51fZur2ZG5oVxDQ6nNp7"
+      ],
+      "first_played": "2026-04-12T18:51:20.115Z",
+      "last_played": "2026-04-12T18:51:20.115Z"
+    },
+    "0zVtspcd49i55XA3LY1SSX": {
+      "album_name": "Truelove's Gutter",
+      "artist": "Richard Hawley",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2KSm2iIMPv95bHvoj8AjLc"
+      ],
+      "first_played": "2026-04-12T18:45:32.839Z",
+      "last_played": "2026-04-12T18:45:32.839Z"
+    },
+    "4tHTOAOfnaxjdLZud0rS5o": {
+      "album_name": "The Garden",
+      "artist": "Zero 7",
+      "total_tracks": 15,
+      "played_tracks": [
+        "1cUl1f6JjV3ehHI81hXypS"
+      ],
+      "first_played": "2026-04-12T18:33:49.939Z",
+      "last_played": "2026-04-12T18:33:49.939Z"
+    },
+    "2oYx947UgPPrsPfVLWUorC": {
+      "album_name": "Fear",
+      "artist": "John Cale",
+      "total_tracks": 9,
+      "played_tracks": [
+        "4jU7QYKyxlsMCmioO6inQ3"
+      ],
+      "first_played": "2026-04-12T18:26:13.998Z",
+      "last_played": "2026-04-12T18:26:13.998Z"
+    },
+    "7vvO6KrVczw5sckPbn1Gsy": {
+      "album_name": "Minnows",
+      "artist": "Marc Benno",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5dRs9xyhwXdr0v8eNYMWrf"
+      ],
+      "first_played": "2026-04-12T18:19:12.506Z",
+      "last_played": "2026-04-12T18:19:12.506Z"
     }
   },
   "completed_albums": {
