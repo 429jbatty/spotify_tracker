@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-11T22:09:18.387Z",
+  "last_checked": "2026-04-11T23:41:43.504Z",
   "albums_in_progress": {
     "06IJFUuCwW3iokYxgXjCYe": {
       "album_name": "Jam On Revenge",
@@ -179,10 +179,27 @@
         "59KeBLx5eJW9ZNcPjpsH2c",
         "7Eg7ekIj1XI5nknQN9ZGRv",
         "0gF1Avb6FP3MMFaKiblmvX",
-        "63XSwhhn7fbrlSZxL8Q7Nq"
+        "63XSwhhn7fbrlSZxL8Q7Nq",
+        "4gwvUhQISh8Hr1F5AYHaQ8",
+        "0By4iLUCoo61Ds3S8ippOK",
+        "5jxVV6ksvr2MsJHQ1jxUB9",
+        "32t9Vpe7qgOLhhCDkeC5AF",
+        "5UmrWEbRLqRe7z1d3C0bSE",
+        "5HVtmARpnzvQFYUAIdPEa8",
+        "1oT7twcAoXD7cC7e9yhCQs",
+        "0IIcLfoLWzO2t5aGJprAuu",
+        "64BcM26tNk4mck12RD47O2",
+        "0ZBAdv50oggcon5ta7kYa0",
+        "44GIBXo2GdakVC7PAJfcpb",
+        "3fYjqlblLIVKSYKYOXbQ3m",
+        "2ej7h5fRg2Vbe0r8Xw20Ib",
+        "6Rqu9HruOivaYBcY91ra0N",
+        "3BxheqWvkAIq8Bu84RyLX5",
+        "5NWmYWb2pEILK0O6565QzB"
       ],
       "first_played": "2026-04-11T22:09:18.387Z",
-      "last_played": "2026-04-11T22:02:43.712Z"
+      "last_played": "2026-04-11T22:11:13.631Z",
+      "completion_logged": true
     },
     "784N0nKRBpp0badbUFThVZ": {
       "album_name": "Peaceful Forest Sounds",
@@ -203,6 +220,45 @@
       ],
       "first_played": "2026-04-11T21:37:17.215Z",
       "last_played": "2026-04-11T21:37:17.215Z"
+    },
+    "0kMztT7xPc2b0N22UPwm36": {
+      "album_name": "River",
+      "artist": "Soft Soundscapes",
+      "total_tracks": 30,
+      "played_tracks": [
+        "4BupB9uwqPvYXUfmz8eKAO",
+        "5FQsWVhDzJYmx1jpE3nI0K",
+        "2USs5DnMZeEtSO39Or52pK",
+        "1tb0hY0BK7WsIcvLcGUZDK",
+        "08r59JX6Mpw1zHWnlVm9dU",
+        "0pqFPZR2V99YFzuSZfaPSb",
+        "3tdVIjMuiIWgRTJevSYKRo",
+        "7t1V4snIxG7BoUGqcri87M",
+        "7iDzIUHeFFdvAFLpKhdq3L",
+        "6EjeXlo1ffKm2rNUBBtCJ8",
+        "7mrquPuqXvxXETuMM8AK6F",
+        "6xvkdCgSR0P3fjw4cMx2UG",
+        "336mVfu15Z6kr367wte1Wr",
+        "0kFm9IeTAlpUcT3ivXtv9q",
+        "7K2MTHmcaEpr8rFJ8xLCNz",
+        "32QTH5tbtB6NQAfy1wmb7p",
+        "7vycqAHyGTGUiffnzURYGb",
+        "3nS38rSwiAiph0yuylpBJ7",
+        "5Bj3h2grWbygmjM7RjcTpY",
+        "5mlH3XGg6XRvHkGblLXFIL",
+        "5hhypv6hpVhgwDwrirsuqB",
+        "2ZzDwkP6QgOvW0bdI3i2iR",
+        "3piv1k50unk1P87yee5rv5",
+        "3WfskN4SqeQ9AId8FO2OVE",
+        "2L1N1AVadDq2gjVi0s5f1F",
+        "4PHuYtwZUEa7uUaLInlFP0",
+        "0Xr0GzcdpGW1WlP3a1Mdv0",
+        "5JNmF83zgdZDRUmkALkJVb",
+        "1KkH7DLYA5ddFBzTkBAiKj"
+      ],
+      "first_played": "2026-04-11T23:41:43.504Z",
+      "last_played": "2026-04-11T22:44:13.553Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -401710,9 +401766,76 @@
       "listen_history": [
         "2026-04-11T14:42:28.633Z"
       ]
+    },
+    "The Slumbering One - Peaceful Slumber": {
+      "artist": "The Longest Day",
+      "artist_mbid": "56642426-0e81-4810-9610-defba31291b3",
+      "name": "Slumber",
+      "release_group_mbid": "e0c71d37-617d-4997-a8b7-97ba68cae663",
+      "label": null,
+      "release_year": 2005,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Prologue",
+          "credits": {},
+          "recording_mbid": "3f1a13c7-607e-4136-bfd3-9dfe44a6b116"
+        },
+        {
+          "position": "2",
+          "title": "Silver",
+          "credits": {},
+          "recording_mbid": "e0c571d5-48cf-4f01-8fe1-d5d83738a4fd"
+        },
+        {
+          "position": "3",
+          "title": "Over Seas",
+          "credits": {},
+          "recording_mbid": "8400858b-d820-4d11-afd3-7397027a6e2e"
+        },
+        {
+          "position": "4",
+          "title": "Expect to Find",
+          "credits": {},
+          "recording_mbid": "65080911-b0b9-4e91-89ca-8c2c204985da"
+        },
+        {
+          "position": "5",
+          "title": "A New Sun",
+          "credits": {},
+          "recording_mbid": "aa22cddd-6d9a-4219-a0a9-4d5e342d7c96"
+        },
+        {
+          "position": "6",
+          "title": "Slumber",
+          "credits": {},
+          "recording_mbid": "5ae38216-8f41-451f-97ac-835df2b9dfc6"
+        },
+        {
+          "position": "7",
+          "title": "Epilogue",
+          "credits": {},
+          "recording_mbid": "c5bd4831-3b4a-447d-af54-55c943b62328"
+        }
+      ],
+      "tags": [],
+      "image_url": "https://coverartarchive.org/release/6e0e75ef-b888-42cc-9d26-e307c06bec34/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-11T22:11:13.631Z"
+      ]
+    },
+    "Soft Soundscapes - River": {
+      "listen_history": [
+        "2026-04-11T22:44:13.553Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Soft Soundscapes - River",
+    "The Slumbering One - Peaceful Slumber",
     "John Martyn - Solid Air",
     "Serge Gainsbourg - Histoire de Melody Nelson",
     "Eric B. & Rakim - Paid In Full",
@@ -401720,8 +401843,6 @@
     "Floating Points, Pharoah Sanders - Promises",
     "Joan Baez - Joan Baez",
     "Bob Dylan - The Freewheelin' Bob Dylan",
-    "Elton John - Goodbye Yellow Brick Road (Remastered)",
-    "Led Zeppelin - Houses of the Holy (Remaster)",
-    "Childish Gambino - \"Awaken, My Love!\""
+    "Elton John - Goodbye Yellow Brick Road (Remastered)"
   ]
 }
