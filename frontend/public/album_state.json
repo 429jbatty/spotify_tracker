@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-13T16:30:20.648Z",
+  "last_checked": "2026-04-13T18:28:16.816Z",
   "albums_in_progress": {
     "0h1ruavpzNOYbjwg5oC0fg": {
       "album_name": "Bless The Weather",
@@ -31,7 +31,7 @@
         "2vy2V8CBCeVyyDW2mvKppY"
       ],
       "first_played": "2026-04-11T15:38:08.458Z",
-      "last_played": "2026-04-13T15:20:20.384Z",
+      "last_played": "2026-04-13T17:30:24.250Z",
       "completion_logged": true
     },
     "66Y8VrfvHnwJSk2ahGOr32": {
@@ -50,16 +50,6 @@
       "first_played": "2026-04-11T15:03:02.374Z",
       "last_played": "2026-04-12T15:16:06.511Z",
       "completion_logged": true
-    },
-    "6ylurrLSklWvEYvlB3vy74": {
-      "album_name": "Keep On Doing",
-      "artist": "The Roches",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5DnZNGAsmClcLVnTOTRP1V"
-      ],
-      "first_played": "2026-04-11T18:02:59.679Z",
-      "last_played": "2026-04-11T18:02:59.679Z"
     },
     "0h2EIHvezZdhH09U6n0V2A": {
       "album_name": "Peaceful Slumber",
@@ -970,10 +960,43 @@
         "2vYs2cNX6qiyKOVjZmOXY4",
         "071uaFc0IvPO6jIMQCuNjA",
         "1rmRf4w12lQPt6MPPQ0Z7s",
-        "2WS2JHq2s5EVqNwwwTJnsW"
+        "2WS2JHq2s5EVqNwwwTJnsW",
+        "27fFI7lu5sOnf8o94k4WME",
+        "67gn853k6WAsvggiyOBvu6",
+        "3PAG5xJ6M8JYaqo4GjvZ4v",
+        "5NevyJnuHOmB5pk2ABSdkG",
+        "3vXIPNfoRXgu3PoWJBR7IQ",
+        "70prqovj5aUZHsPkSZJU8v",
+        "63NiD6qupPNR7jSGhd3q7V",
+        "7KGsQmDp90ANzfwEQqQn67"
       ],
       "first_played": "2026-04-13T16:30:20.648Z",
-      "last_played": "2026-04-13T16:20:50.919Z"
+      "last_played": "2026-04-13T16:33:50.734Z",
+      "completion_logged": true
+    },
+    "4cpVufUPv5g1vE2j10KJ2j": {
+      "album_name": "Bert Jansch",
+      "artist": "Bert Jansch",
+      "total_tracks": 15,
+      "played_tracks": [
+        "0Yc0Bp4Dqb3xhAH9EHvybL",
+        "2NKAqjzeDVg4ZG5OHdDITT",
+        "3OkgCbaCtc8LPOufoV8mbk",
+        "4Y7j0KxLcmqYw2Yagu5XRV",
+        "2BqgPxXXqnif1OgBrV0W1a",
+        "7o8DK0BdBlltwoQvHZhz8g",
+        "3nOHRKB0lTqYgQPBnOUcY3",
+        "7670Fg67h3y1J22hxEZDjd",
+        "1Iq5qRdnQ6D4n4fJlWDC6K",
+        "5H4Zrqld0NxZ02yIo236Ca",
+        "4TfEsQfVhQGBJ9r0fxr5lo",
+        "6K6DezXhlPRMRc9SEgkzGJ",
+        "61zwDPcs0Lvyyz2TPSnGdD",
+        "0iqPhVCZcJphW0YDSQxXx1"
+      ],
+      "first_played": "2026-04-13T18:28:16.816Z",
+      "last_played": "2026-04-13T17:52:14.753Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -403624,9 +403647,331 @@
       "listen_history": [
         "2026-04-12T20:34:30.354Z"
       ]
+    },
+    "Bridget St John - Songs For The Gentle Man": {
+      "artist": "Bridget St. John",
+      "artist_mbid": "db53fe45-d4a4-4b55-b74e-1ce069572704",
+      "name": "Songs for the Gentle Man",
+      "release_group_mbid": "fe939459-7a1d-3cd2-8020-b33f1649eb0e",
+      "label": "Dandelion Records",
+      "release_year": 1971,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "A Day Away",
+          "credits": {},
+          "recording_mbid": "94eae1ab-0af1-4d61-81a1-a1474eba7be9"
+        },
+        {
+          "position": "2",
+          "title": "City Crazy",
+          "credits": {},
+          "recording_mbid": "5b9d5774-404c-4fe2-8461-8842775e98d3"
+        },
+        {
+          "position": "3",
+          "title": "Early Morning Song",
+          "credits": {},
+          "recording_mbid": "877046ff-5cac-4cd8-b0b5-c9737bf1f968"
+        },
+        {
+          "position": "4",
+          "title": "Back to Stay",
+          "credits": {},
+          "recording_mbid": "0d9220b4-2b85-4dee-abf4-e9d84b218af3"
+        },
+        {
+          "position": "5",
+          "title": "Seagull-Sunday",
+          "credits": {},
+          "recording_mbid": "8b0d2aed-b0d2-4e71-b4a4-244db4b3c45e"
+        },
+        {
+          "position": "6",
+          "title": "If You'd Been There",
+          "credits": {},
+          "recording_mbid": "623d06f7-b074-489f-a4ac-249040dc1395"
+        },
+        {
+          "position": "7",
+          "title": "Song for the Laird of Connaught Hall, Part 2",
+          "credits": {},
+          "recording_mbid": "72a106f1-3ffc-4515-a5d8-97fded57a89d"
+        },
+        {
+          "position": "8",
+          "title": "Making Losing Better",
+          "credits": {},
+          "recording_mbid": "a647a7b6-85b0-4eb3-a7ee-374aa6316bab"
+        },
+        {
+          "position": "9",
+          "title": "The Lady and the Gentle Man",
+          "credits": {},
+          "recording_mbid": "ec36bae2-0eb7-44ea-ab28-a0a271a54514"
+        },
+        {
+          "position": "10",
+          "title": "Downderry Daze",
+          "credits": {},
+          "recording_mbid": "4ae2e3d5-34a2-4aed-a120-d83c2e2d7087"
+        },
+        {
+          "position": "11",
+          "title": "The Pebble and the Man",
+          "credits": {},
+          "recording_mbid": "f196105f-90ef-4628-855f-67af23b65f76"
+        },
+        {
+          "position": "12",
+          "title": "It Seems Very Strange",
+          "credits": {},
+          "recording_mbid": "79355e70-a139-47f2-bba0-2878573b361f"
+        },
+        {
+          "position": "13",
+          "title": "Suzanne",
+          "credits": {},
+          "recording_mbid": "87a5affc-b314-4fed-890b-1d578e277f61"
+        },
+        {
+          "position": "14",
+          "title": "There's a Place I Know",
+          "credits": {},
+          "recording_mbid": "c155f979-1a31-43a8-a34f-9600dca27fe0"
+        },
+        {
+          "position": "15",
+          "title": "Suzanne",
+          "credits": {},
+          "recording_mbid": "5b05126c-e520-4b04-94f4-2f7b92ba529f"
+        },
+        {
+          "position": "16",
+          "title": "There Is a Place I Know",
+          "credits": {},
+          "recording_mbid": "e18d52a0-6f40-46b5-b1dc-568b64e34635"
+        }
+      ],
+      "tags": [
+        "rock",
+        "folk",
+        "folk rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/e34a42e7-55c0-4b0e-9a85-6a339fbe2c1a/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-13T16:33:50.734Z"
+      ]
+    },
+    "Bert Jansch - Bert Jansch": {
+      "artist": "Bert Jansch",
+      "artist_mbid": "d7f95537-2b48-403d-9ac2-f1fc7aad0960",
+      "name": "Bert Jansch",
+      "release_group_mbid": "bf40678e-67a3-304e-9c80-1eae9dc1940a",
+      "label": "Sanctuary Records",
+      "release_year": 1965,
+      "release_month": 4,
+      "release_day": 16,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Strolling Down the Highway",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d8314550-a7b8-4556-8cdf-cd21dd7fe216"
+        },
+        {
+          "position": "2",
+          "title": "Smokey River",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ab79f40f-f9d9-43e4-8e40-1382bda2ae38"
+        },
+        {
+          "position": "3",
+          "title": "Oh How Your Love Is Strong",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c26ad7ea-a9c6-498f-8526-17c3fcd89d41"
+        },
+        {
+          "position": "4",
+          "title": "I Have No Time",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "773db97c-c9da-4a50-bc9a-7a2183444dcd"
+        },
+        {
+          "position": "5",
+          "title": "Finches",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d0b6b919-3369-47a9-9de3-7c933a3fbf3d"
+        },
+        {
+          "position": "6",
+          "title": "Rambling\u2019s Going to Be the Death of Me",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "514621d6-640a-42c5-a7af-baf53f07cd4f"
+        },
+        {
+          "position": "7",
+          "title": "Veronica",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "2ff099b7-c934-40d0-b1a7-279052e441e0"
+        },
+        {
+          "position": "8",
+          "title": "Needle of Death",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "953268b2-5b06-4903-8cf4-c37c044b6f15"
+        },
+        {
+          "position": "9",
+          "title": "Do You Hear Me Now?",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b093529e-b127-4d0e-86c8-f2a0b75d35ce"
+        },
+        {
+          "position": "10",
+          "title": "Alice\u2019s Wonderland",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "995e35a9-87e0-44c0-b39d-613a48a1faac"
+        },
+        {
+          "position": "11",
+          "title": "Running From Home",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4d1a4529-8c47-4344-9f02-b6ca53d56211"
+        },
+        {
+          "position": "12",
+          "title": "Courting Blues",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4a658b93-c684-4e21-a30f-2ab25502db78"
+        },
+        {
+          "position": "13",
+          "title": "Casbah",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "929edd4e-7af6-4822-b354-665652a3a240"
+        },
+        {
+          "position": "14",
+          "title": "Dreams of Love",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4a42ee85-fcb0-4460-bc70-f5686480a559"
+        },
+        {
+          "position": "15",
+          "title": "Angie",
+          "credits": [
+            [
+              "Bill Leader",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6c96fc3b-3286-4036-8323-987222ef6aa6"
+        }
+      ],
+      "tags": [
+        "folk",
+        "blues",
+        "folk-rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/a5270a9d-2a61-4796-ad94-8b3c8a3d3f0a/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-13T17:52:14.753Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Bert Jansch - Bert Jansch",
+    "Bridget St John - Songs For The Gentle Man",
     "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
     "Soft Soundscapes - River",
     "The Slumbering One - Peaceful Slumber",
@@ -403634,8 +403979,6 @@
     "Serge Gainsbourg - Histoire de Melody Nelson",
     "Eric B. & Rakim - Paid In Full",
     "Panda Bear - Person Pitch",
-    "Floating Points, Pharoah Sanders - Promises",
-    "Joan Baez - Joan Baez",
-    "Bob Dylan - The Freewheelin' Bob Dylan"
+    "Floating Points, Pharoah Sanders - Promises"
   ]
 }
