@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-13T13:03:02.611Z",
+  "last_checked": "2026-04-13T16:30:20.648Z",
   "albums_in_progress": {
     "0h1ruavpzNOYbjwg5oC0fg": {
       "album_name": "Bless The Weather",
@@ -31,7 +31,7 @@
         "2vy2V8CBCeVyyDW2mvKppY"
       ],
       "first_played": "2026-04-11T15:38:08.458Z",
-      "last_played": "2026-04-12T16:14:59.630Z",
+      "last_played": "2026-04-13T15:20:20.384Z",
       "completion_logged": true
     },
     "66Y8VrfvHnwJSk2ahGOr32": {
@@ -961,6 +961,19 @@
       ],
       "first_played": "2026-04-13T00:49:12.707Z",
       "last_played": "2026-04-13T00:49:12.707Z"
+    },
+    "2Y1kh9rJcUTzLQ2ToqZpLt": {
+      "album_name": "Songs For The Gentle Man",
+      "artist": "Bridget St John",
+      "total_tracks": 12,
+      "played_tracks": [
+        "2vYs2cNX6qiyKOVjZmOXY4",
+        "071uaFc0IvPO6jIMQCuNjA",
+        "1rmRf4w12lQPt6MPPQ0Z7s",
+        "2WS2JHq2s5EVqNwwwTJnsW"
+      ],
+      "first_played": "2026-04-13T16:30:20.648Z",
+      "last_played": "2026-04-13T16:20:50.919Z"
     }
   },
   "completed_albums": {
