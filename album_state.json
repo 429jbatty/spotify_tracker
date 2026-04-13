@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-12T22:11:26.819Z",
+  "last_checked": "2026-04-13T00:45:55.370Z",
   "albums_in_progress": {
     "0h1ruavpzNOYbjwg5oC0fg": {
       "album_name": "Bless The Weather",
@@ -517,10 +517,11 @@
       "artist": "Eric Clapton",
       "total_tracks": 16,
       "played_tracks": [
-        "2lHtNlphp7hf5wZtJDGSbO"
+        "2lHtNlphp7hf5wZtJDGSbO",
+        "1as81KphEOxPNBthbuzlcx"
       ],
       "first_played": "2026-04-12T22:11:26.819Z",
-      "last_played": "2026-04-12T22:11:26.819Z"
+      "last_played": "2026-04-13T00:21:48.509Z"
     },
     "2lORE9lVX7YUCZfiFVnKWa": {
       "album_name": "Unplugged (Deluxe Edition) (Live)",
@@ -551,6 +552,245 @@
       "first_played": "2026-04-12T22:07:25.312Z",
       "last_played": "2026-04-12T20:34:30.354Z",
       "completion_logged": true
+    },
+    "73cxqemPE6sVoCkwRuPU6E": {
+      "album_name": "461 Ocean Boulevard",
+      "artist": "Eric Clapton",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5v23zqATC3zspzQUbLW2CH"
+      ],
+      "first_played": "2026-04-13T00:45:55.370Z",
+      "last_played": "2026-04-13T00:45:55.370Z"
+    },
+    "0Ja5leAzA5UZPhQC07U10l": {
+      "album_name": "The London Howlin\u2019 Wolf Sessions (Deluxe Edition)",
+      "artist": "Howlin' Wolf",
+      "total_tracks": 28,
+      "played_tracks": [
+        "14RtX37onWzSyGDxrVEjnH",
+        "0cqZD5rEjMOnsYdxt6y9Pl",
+        "0aRpkN7kqJKjkzxv6ukKLI"
+      ],
+      "first_played": "2026-04-13T00:43:03.391Z",
+      "last_played": "2026-04-12T23:33:58.089Z"
+    },
+    "3tk9uyWCvfQbkmvROJGUXB": {
+      "album_name": "Rory Gallagher (Remastered 2017)",
+      "artist": "Rory Gallagher",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7o9eh3vfBkmVsXVP8lTW1y"
+      ],
+      "first_played": "2026-04-13T00:39:32.779Z",
+      "last_played": "2026-04-13T00:39:32.779Z"
+    },
+    "31q47gQszFt0CddSyMksgO": {
+      "album_name": "Willy And The Poor Boys (Expanded Edition)",
+      "artist": "Creedence Clearwater Revival",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4YDIm7KU50tf4lXVC4EBzc"
+      ],
+      "first_played": "2026-04-13T00:35:52.250Z",
+      "last_played": "2026-04-13T00:35:52.250Z"
+    },
+    "4dKdxly4ji1vfl7sEYuqBe": {
+      "album_name": "Dire Straits",
+      "artist": "Dire Straits",
+      "total_tracks": 9,
+      "played_tracks": [
+        "5EoD2H4HEX3lQd0l7CsHA1",
+        "2whYf5duw5d3N48wEseuXJ"
+      ],
+      "first_played": "2026-04-13T00:30:44.988Z",
+      "last_played": "2026-04-12T23:08:21.641Z"
+    },
+    "2IPD9EcNjUmsHvqULDMU9Y": {
+      "album_name": "Sundown",
+      "artist": "Gordon Lightfoot",
+      "total_tracks": 10,
+      "played_tracks": [
+        "2aWxDsPrW9boRYyWLF6sst"
+      ],
+      "first_played": "2026-04-13T00:26:03.942Z",
+      "last_played": "2026-04-13T00:26:03.942Z"
+    },
+    "3ArSFkv4OQOosOvYTrZNIl": {
+      "album_name": "Come Away With Me (Super Deluxe Edition)",
+      "artist": "Norah Jones",
+      "total_tracks": 44,
+      "played_tracks": [
+        "6Ji1sHZczmntLaTrQa1uLg",
+        "4cOtcRXI3a2v1gEsI1Meeo",
+        "3oBsEd0mQKKge4HSSt5yV8"
+      ],
+      "first_played": "2026-04-13T00:12:13.834Z",
+      "last_played": "2026-04-12T22:47:12.288Z"
+    },
+    "3W45Tazulh4zb48uL1RV8H": {
+      "album_name": "Blues Breakers",
+      "artist": "John Mayall & The Bluesbreakers",
+      "total_tracks": 14,
+      "played_tracks": [
+        "2JKD9oKIZIu4uSjbeGe6MM",
+        "1yx0UAempBSrsmJn7BU4Iu"
+      ],
+      "first_played": "2026-04-13T00:08:16.714Z",
+      "last_played": "2026-04-12T23:41:54.208Z"
+    },
+    "6HEOoO8aHq5M88OA4teVY1": {
+      "album_name": "Communiqu\u00e9",
+      "artist": "Dire Straits",
+      "total_tracks": 9,
+      "played_tracks": [
+        "02azRC7CeBJbFuMJwHYpou",
+        "6fg1xaDxkuQVJjwrgjx837",
+        "6cSqru6PFkJkpCrG2JhrFM"
+      ],
+      "first_played": "2026-04-13T00:05:06.558Z",
+      "last_played": "2026-04-12T22:42:42.103Z"
+    },
+    "3fIftPnF4eb7gkg2lFS1TV": {
+      "album_name": "Deuces Wild",
+      "artist": "B.B. King",
+      "total_tracks": 17,
+      "played_tracks": [
+        "1bursm5ZnNHQS55a23h7kR"
+      ],
+      "first_played": "2026-04-12T23:59:16.082Z",
+      "last_played": "2026-04-12T23:59:16.082Z"
+    },
+    "6rwY78ocBwZYi3OhapYyfw": {
+      "album_name": "Roy Buchanan",
+      "artist": "Roy Buchanan",
+      "total_tracks": 8,
+      "played_tracks": [
+        "1ZBsdS9S7ZItIj6x6a6cNG"
+      ],
+      "first_played": "2026-04-12T23:48:57.907Z",
+      "last_played": "2026-04-12T23:48:57.907Z"
+    },
+    "7GaAXgbFSpcJOiLlFGYyOL": {
+      "album_name": "Feels Like Home",
+      "artist": "Norah Jones",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0AMKZWRgdFfGYYTxiWrwwH",
+        "3URb74mrpnRWY1HtTBEUKH"
+      ],
+      "first_played": "2026-04-12T23:45:24.025Z",
+      "last_played": "2026-04-12T22:26:27.138Z"
+    },
+    "07MKKQbBRGIfz9uvsl3jxc": {
+      "album_name": "Stories",
+      "artist": "John Mayall & The Bluesbreakers",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1fmFCWcjWVyx5UxXRWhbMT"
+      ],
+      "first_played": "2026-04-12T23:16:18.448Z",
+      "last_played": "2026-04-12T23:16:18.448Z"
+    },
+    "1HiG0ukRmFPN13EVcf98Jx": {
+      "album_name": "Sweet Baby James (2019 Remaster)",
+      "artist": "James Taylor",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2OBaVeRFXblWxoZHC4sryf"
+      ],
+      "first_played": "2026-04-12T23:02:57.293Z",
+      "last_played": "2026-04-12T23:02:57.293Z"
+    },
+    "5P2ZoNb6NJL7P5VexrQOeg": {
+      "album_name": "From the Cradle",
+      "artist": "Eric Clapton",
+      "total_tracks": 16,
+      "played_tracks": [
+        "1NoVZTFVu8ee6z09u6xlEn"
+      ],
+      "first_played": "2026-04-12T22:59:32.401Z",
+      "last_played": "2026-04-12T22:59:32.401Z"
+    },
+    "5vxBOzakDbJleNA1rbA7FQ": {
+      "album_name": "Couldn't Stand The Weather (Legacy Edition)",
+      "artist": "Stevie Ray Vaughan",
+      "total_tracks": 32,
+      "played_tracks": [
+        "7zto61V8ySp03Qi6X1LU2X"
+      ],
+      "first_played": "2026-04-12T22:56:25.386Z",
+      "last_played": "2026-04-12T22:56:25.386Z"
+    },
+    "50o7kf2wLwVmOTVYJOTplm": {
+      "album_name": "Rubber Soul (Remastered 2009)",
+      "artist": "The Beatles",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1H7gMYGykdtwZOV6s1N0by"
+      ],
+      "first_played": "2026-04-12T22:44:50.175Z",
+      "last_played": "2026-04-12T22:44:50.175Z"
+    },
+    "1hOK2ey9W76x9GnftSRgrw": {
+      "album_name": "Aja",
+      "artist": "Steely Dan",
+      "total_tracks": 7,
+      "played_tracks": [
+        "4rJMVlcWta53qxlr4b5zrF"
+      ],
+      "first_played": "2026-04-12T22:38:27.911Z",
+      "last_played": "2026-04-12T22:38:27.911Z"
+    },
+    "3Xgt0D7DlSQ5HluyECu33i": {
+      "album_name": "Backless",
+      "artist": "Eric Clapton",
+      "total_tracks": 10,
+      "played_tracks": [
+        "1oar8gdDX5yHWzVstAHDav"
+      ],
+      "first_played": "2026-04-12T22:32:52.934Z",
+      "last_played": "2026-04-12T22:32:52.934Z"
+    },
+    "2qmP1z6Tehnaz5DpE67Jlz": {
+      "album_name": "Boomer's Story",
+      "artist": "Ry Cooder",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3bmwgb0bn0ccYwgCTIUtHF"
+      ],
+      "first_played": "2026-04-12T22:29:51.592Z",
+      "last_played": "2026-04-12T22:29:51.592Z"
+    },
+    "0W7HPruS0tgYvP6qnH5QV4": {
+      "album_name": "Missing...Presumed Having A Good Time",
+      "artist": "The Notting Hillbillies",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0cWxphpV2CeCKnieTzygAn"
+      ],
+      "first_played": "2026-04-12T22:22:56.038Z",
+      "last_played": "2026-04-12T22:22:56.038Z"
+    },
+    "0ORgLm6BMFVpLGS4Q5SKMZ": {
+      "album_name": "On Every Street (Remaster)",
+      "artist": "Dire Straits",
+      "total_tracks": 12,
+      "played_tracks": [
+        "56UGmtxJM3tvF1jQIJahlr"
+      ],
+      "first_played": "2026-04-12T22:18:25.464Z",
+      "last_played": "2026-04-12T22:18:25.464Z"
+    },
+    "4XfN871nBIz6obaUDEzZXm": {
+      "album_name": "Pretzel Logic",
+      "artist": "Steely Dan",
+      "total_tracks": 11,
+      "played_tracks": [
+        "1u42hFacJ1Bs8H9GX2O8z3"
+      ],
+      "first_played": "2026-04-12T22:14:34.098Z",
+      "last_played": "2026-04-12T22:14:34.098Z"
     }
   },
   "completed_albums": {
