@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-14T16:29:31.389Z",
+  "last_checked": "2026-04-14T17:15:30.599Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -20,26 +20,6 @@
       "first_played": "2026-04-11T15:38:08.458Z",
       "last_played": "2026-04-14T00:49:40.947Z",
       "completion_logged": true
-    },
-    "2X0L9mwLuMqAK8rf965Vmi": {
-      "album_name": "Coming From Reality",
-      "artist": "Rodr\u00edguez",
-      "total_tracks": 10,
-      "played_tracks": [
-        "1cXXHKH2kMDmtOEK73q6sf"
-      ],
-      "first_played": "2026-04-12T18:14:19.679Z",
-      "last_played": "2026-04-12T18:14:19.679Z"
-    },
-    "4EUJpUUKkFMIzq10y3CbvZ": {
-      "album_name": "The Miraculous Hump Returns From The Moon",
-      "artist": "Sopwith Camel",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6l5Rzt6HhkL89NhWLOGom0"
-      ],
-      "first_played": "2026-04-12T18:10:52.524Z",
-      "last_played": "2026-04-12T18:10:52.524Z"
     },
     "1r8M1X0QFZw0bMMnBvwOXA": {
       "album_name": "Mark Hollis",
@@ -65,29 +45,6 @@
       "first_played": "2026-04-12T17:54:12.590Z",
       "last_played": "2026-04-12T19:28:22.031Z"
     },
-    "1O330PE8lc1dDXduHBwLXe": {
-      "album_name": "It's So Hard To Tell Who's Going To Love You The Best",
-      "artist": "Karen Dalton",
-      "total_tracks": 10,
-      "played_tracks": [
-        "4wACv3JAUdAzmRdGat6ZuK",
-        "09g4TuWLxMmrOTt1kzS47Z",
-        "230zJroeSW6KRYLeOswojb",
-        "31oCf8ib5WFynZtxYvIEVf"
-      ],
-      "first_played": "2026-04-12T17:50:15.159Z",
-      "last_played": "2026-04-12T18:22:47.677Z"
-    },
-    "0udQYUvwWS8PC6XGaVAMi0": {
-      "album_name": "Bleecker And McDougal (US Release)",
-      "artist": "Fred Neil",
-      "total_tracks": 13,
-      "played_tracks": [
-        "46wDI2wGZgW2BrO37OUD5k"
-      ],
-      "first_played": "2026-04-12T17:47:07.883Z",
-      "last_played": "2026-04-12T17:47:07.883Z"
-    },
     "7xWtIMu5yHtVcLJajoQtHP": {
       "album_name": "Spirit of the Golden Juice",
       "artist": "F. J. McMahon",
@@ -98,16 +55,6 @@
       ],
       "first_played": "2026-04-12T17:34:18.681Z",
       "last_played": "2026-04-12T18:36:54.587Z"
-    },
-    "6GQLj4tvPqK3jjqTt1Lt5L": {
-      "album_name": "Bop Till You Drop",
-      "artist": "Ry Cooder",
-      "total_tracks": 9,
-      "played_tracks": [
-        "0bLerWMXrGBlQ9kFcxnQQJ"
-      ],
-      "first_played": "2026-04-12T17:30:11.953Z",
-      "last_played": "2026-04-12T17:30:11.953Z"
     },
     "6lFFZrQwB0UbcTYhyzgjOG": {
       "album_name": "Gentle Spirit",
@@ -135,38 +82,8 @@
         "0aNXg5K8p3nDTv6px52Fr3"
       ],
       "first_played": "2026-04-12T17:12:22.780Z",
-      "last_played": "2026-04-14T15:47:01.491Z",
+      "last_played": "2026-04-14T16:41:00.732Z",
       "completion_logged": true
-    },
-    "1L7I8uL1xroYdwUp2jxqGB": {
-      "album_name": "The Lost Outlaw Album",
-      "artist": "Hoover",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2HLYtqXktRhjmgttwLs0W3"
-      ],
-      "first_played": "2026-04-12T17:06:06.510Z",
-      "last_played": "2026-04-12T17:06:06.510Z"
-    },
-    "3d9RN0L9pQ79tJrHo2fNbG": {
-      "album_name": "Honky Tonk Angel (Expanded Edition)",
-      "artist": "Ellen McIlwaine",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0n0ciaddRLUUqTFmtPxHXe"
-      ],
-      "first_played": "2026-04-12T16:59:54.135Z",
-      "last_played": "2026-04-12T16:59:54.135Z"
-    },
-    "3NEa40lY9rNpSIALSIKn79": {
-      "album_name": "Laughing Stock",
-      "artist": "Talk Talk",
-      "total_tracks": 6,
-      "played_tracks": [
-        "3xViFAeMraq0E875zyOXfd"
-      ],
-      "first_played": "2026-04-12T16:56:15.051Z",
-      "last_played": "2026-04-12T16:56:15.051Z"
     },
     "0BVlSpYyW4lsdm4sf0eLBH": {
       "album_name": "Sunday's Child",
@@ -179,26 +96,6 @@
       ],
       "first_played": "2026-04-12T16:50:14.555Z",
       "last_played": "2026-04-12T20:17:42.763Z"
-    },
-    "2yZXtlCUGjaOYBGc9qqeay": {
-      "album_name": "Free",
-      "artist": "Free",
-      "total_tracks": 9,
-      "played_tracks": [
-        "7iA3xHruObBBOiqYRUVKTD"
-      ],
-      "first_played": "2026-04-12T16:41:50.860Z",
-      "last_played": "2026-04-12T16:41:50.860Z"
-    },
-    "2gLirULn7YwSGINsyHSxxR": {
-      "album_name": "The Roches",
-      "artist": "The Roches",
-      "total_tracks": 10,
-      "played_tracks": [
-        "3cPtZw0oqMEkKlGSF0SLkc"
-      ],
-      "first_played": "2026-04-12T16:37:52.469Z",
-      "last_played": "2026-04-12T16:37:52.469Z"
     },
     "48ZQUb3tHat3E45x3O2znt": {
       "album_name": "We The People",
@@ -342,26 +239,6 @@
       ],
       "first_played": "2026-04-12T18:33:49.939Z",
       "last_played": "2026-04-12T18:33:49.939Z"
-    },
-    "2oYx947UgPPrsPfVLWUorC": {
-      "album_name": "Fear",
-      "artist": "John Cale",
-      "total_tracks": 9,
-      "played_tracks": [
-        "4jU7QYKyxlsMCmioO6inQ3"
-      ],
-      "first_played": "2026-04-12T18:26:13.998Z",
-      "last_played": "2026-04-12T18:26:13.998Z"
-    },
-    "7vvO6KrVczw5sckPbn1Gsy": {
-      "album_name": "Minnows",
-      "artist": "Marc Benno",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5dRs9xyhwXdr0v8eNYMWrf"
-      ],
-      "first_played": "2026-04-12T18:19:12.506Z",
-      "last_played": "2026-04-12T18:19:12.506Z"
     },
     "5Rkrz0jdb5BvaLPSbcvZoe": {
       "album_name": "Clapton",
@@ -832,7 +709,7 @@
         "7KGsQmDp90ANzfwEQqQn67"
       ],
       "first_played": "2026-04-13T16:30:20.648Z",
-      "last_played": "2026-04-13T16:33:50.734Z",
+      "last_played": "2026-04-14T17:11:00.939Z",
       "completion_logged": true
     },
     "4cpVufUPv5g1vE2j10KJ2j": {
