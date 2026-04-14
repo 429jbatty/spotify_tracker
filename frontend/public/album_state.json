@@ -1,19 +1,6 @@
 {
-  "last_checked": "2026-04-14T01:23:40.090Z",
+  "last_checked": "2026-04-14T16:29:31.389Z",
   "albums_in_progress": {
-    "0h1ruavpzNOYbjwg5oC0fg": {
-      "album_name": "Bless The Weather",
-      "artist": "John Martyn",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6GXOriLcYRb1ZcIvoIK90y",
-        "5RWITT5KhrHgn1Mg4mq5zV",
-        "6AoRzLc5g0In20QVyNyLfp",
-        "63WbJxYBODw1DLLPQHOO5A"
-      ],
-      "first_played": "2026-04-11T15:49:17.346Z",
-      "last_played": "2026-04-12T16:19:57.167Z"
-    },
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
       "artist": "John Martyn",
@@ -33,33 +20,6 @@
       "first_played": "2026-04-11T15:38:08.458Z",
       "last_played": "2026-04-14T00:49:40.947Z",
       "completion_logged": true
-    },
-    "66Y8VrfvHnwJSk2ahGOr32": {
-      "album_name": "Histoire de Melody Nelson",
-      "artist": "Serge Gainsbourg",
-      "total_tracks": 7,
-      "played_tracks": [
-        "1yoZmrLzKWM6DAhq6KqDTa",
-        "4h2H1twBzEuQygHdl60U5g",
-        "31neFSoQSUdPyZXRlfkrK5",
-        "3hrzEgajecVRzKMiwanOCu",
-        "33xf6NmBDTT20fuZoZjKt3",
-        "1wPNVQqGT9LG39nzeyzIvF",
-        "1fWUWwXvAxlLEwJOVq67zE"
-      ],
-      "first_played": "2026-04-11T15:03:02.374Z",
-      "last_played": "2026-04-12T15:16:06.511Z",
-      "completion_logged": true
-    },
-    "0NACl36sqipY6OZXOqy1At": {
-      "album_name": "Vu de l'ext\u00e9rieur",
-      "artist": "Serge Gainsbourg",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5cC9RZFMzrpbA9U1m4zSPm"
-      ],
-      "first_played": "2026-04-12T15:40:03.470Z",
-      "last_played": "2026-04-12T15:40:03.470Z"
     },
     "2X0L9mwLuMqAK8rf965Vmi": {
       "album_name": "Coming From Reality",
@@ -167,10 +127,16 @@
       "played_tracks": [
         "6VLWWTBbYZoo4x3srSKOwD",
         "1sFh9LmPrsZarW5PqhOFD9",
-        "3xUy2aVFFSrQWJwDkVXBpF"
+        "3xUy2aVFFSrQWJwDkVXBpF",
+        "2VU4zJeEHgqC2pwPEEpavd",
+        "1hpDHz6EmVIK4L0jCdDW8M",
+        "54v6prmNNU6M6tXJpPiCyn",
+        "3zMfOc8wHiwElTvknDO4kl",
+        "0aNXg5K8p3nDTv6px52Fr3"
       ],
       "first_played": "2026-04-12T17:12:22.780Z",
-      "last_played": "2026-04-12T18:55:13.180Z"
+      "last_played": "2026-04-14T15:47:01.491Z",
+      "completion_logged": true
     },
     "1L7I8uL1xroYdwUp2jxqGB": {
       "album_name": "The Lost Outlaw Album",
@@ -403863,9 +403829,89 @@
       "listen_history": [
         "2026-04-13T17:52:14.753Z"
       ]
+    },
+    "John Martyn - One World": {
+      "artist": "John Martyn",
+      "artist_mbid": "e821a756-487f-4931-a02f-27cf11cec7bf",
+      "name": "One World",
+      "release_group_mbid": "a30af693-6896-3620-a603-2be0d0945584",
+      "label": "Island",
+      "release_year": 1977,
+      "release_month": 11,
+      "release_day": 4,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Dealer",
+          "credits": {},
+          "recording_mbid": "f8193961-f6ff-49ff-b73b-09c372f71ca3"
+        },
+        {
+          "position": "2",
+          "title": "One World",
+          "credits": {},
+          "recording_mbid": "16b375e7-a2ce-4b50-86c0-1d84b1beb1e1"
+        },
+        {
+          "position": "3",
+          "title": "Smiling Stranger",
+          "credits": {},
+          "recording_mbid": "74b2c242-bf94-412c-b0dc-66826ab25582"
+        },
+        {
+          "position": "4",
+          "title": "Big Muff",
+          "credits": {},
+          "recording_mbid": "71b95a5a-a42f-4e47-b1a1-83dc7799c8cd"
+        },
+        {
+          "position": "5",
+          "title": "Couldn\u2019t Love You More",
+          "credits": {},
+          "recording_mbid": "a2de7eef-85ce-4429-962c-e85a294bfa26"
+        },
+        {
+          "position": "6",
+          "title": "Certain Surprise",
+          "credits": {},
+          "recording_mbid": "ca45f4e6-4ee0-49c2-ad07-e4b073af4cdc"
+        },
+        {
+          "position": "7",
+          "title": "Dancing",
+          "credits": {},
+          "recording_mbid": "24232134-d046-4666-a14a-910a2fd18736"
+        },
+        {
+          "position": "8",
+          "title": "Small Hours",
+          "credits": [
+            [
+              "Chris Blackwell",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "70a663e0-0983-4f4b-abdd-ec2741ab5326"
+        }
+      ],
+      "tags": [
+        "rock",
+        "electronic",
+        "folk rock",
+        "folk-rock",
+        "soft rock",
+        "progressive folk"
+      ],
+      "image_url": "https://coverartarchive.org/release/8d1cc9a7-68ac-4753-bf78-815f3f9966e9/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-14T15:47:01.491Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "John Martyn - One World",
     "Bert Jansch - Bert Jansch",
     "Bridget St John - Songs For The Gentle Man",
     "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
@@ -403874,7 +403920,6 @@
     "John Martyn - Solid Air",
     "Serge Gainsbourg - Histoire de Melody Nelson",
     "Eric B. & Rakim - Paid In Full",
-    "Panda Bear - Person Pitch",
-    "Floating Points, Pharoah Sanders - Promises"
+    "Panda Bear - Person Pitch"
   ]
 }
