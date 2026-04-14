@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-14T17:15:30.599Z",
+  "last_checked": "2026-04-14T21:43:51.998Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -20,19 +20,6 @@
       "first_played": "2026-04-11T15:38:08.458Z",
       "last_played": "2026-04-14T00:49:40.947Z",
       "completion_logged": true
-    },
-    "1r8M1X0QFZw0bMMnBvwOXA": {
-      "album_name": "Mark Hollis",
-      "artist": "Mark Hollis",
-      "total_tracks": 8,
-      "played_tracks": [
-        "4Tw7Hxz9eSTrzcN98ijXni",
-        "15BsNMDMeokJLkWF5OSuqj",
-        "7nviB40euH8GciNuOn7uci",
-        "47WhS6SrW8kFeJC4XEDEV6"
-      ],
-      "first_played": "2026-04-12T18:02:49.603Z",
-      "last_played": "2026-04-12T20:28:05.658Z"
     },
     "78WlsSQKrX4suYf909Fcrm": {
       "album_name": "One World",
@@ -62,36 +49,6 @@
       ],
       "first_played": "2026-04-12T22:11:26.819Z",
       "last_played": "2026-04-13T00:21:48.509Z"
-    },
-    "2lORE9lVX7YUCZfiFVnKWa": {
-      "album_name": "Unplugged (Deluxe Edition) (Live)",
-      "artist": "Eric Clapton",
-      "total_tracks": 20,
-      "played_tracks": [
-        "6uAAm2TssOxDYMg2mPAkYJ",
-        "6Ld8Hvr4y75mrQmO7WHI76",
-        "1RNQueRJcMk0yBND6DsWW4",
-        "2Gq3GHn6A9cI7DjnDejUYt",
-        "7j47ezIQUUfUwFfg2PCeR9",
-        "78Ld60e2y57fRik5I7KwYf",
-        "7gHPfD86MHr94DFFQziO4Z",
-        "0XuDj6qH64RUAljehbd8O3",
-        "4vzySxUnrJN0D9ztZFN2Q6",
-        "6v8CskmNAAvz9tvxKfO8i1",
-        "713D0u0XMewrhWIQwjrlrd",
-        "7FjiZVgNVYJvaawlkxaq0i",
-        "2QWYJC0osgjCvPA0VqcMlv",
-        "5phbwzg5d2MqNAoc0435Zu",
-        "7sVxm1I8G8tTznXeirDEXm",
-        "09wkXiaJ2KJYX9M3SmToF8",
-        "3UqHlIBI771FNCiLY5MKrp",
-        "0qxtcJppuSsxsKmOIGbmpN",
-        "63FLIj5L2qTI2nSArBny5p",
-        "7d1knggour980ADiRlAcGo"
-      ],
-      "first_played": "2026-04-12T22:07:25.312Z",
-      "last_played": "2026-04-12T20:34:30.354Z",
-      "completion_logged": true
     },
     "73cxqemPE6sVoCkwRuPU6E": {
       "album_name": "461 Ocean Boulevard",
@@ -312,26 +269,6 @@
       "first_played": "2026-04-12T22:22:56.038Z",
       "last_played": "2026-04-12T22:22:56.038Z"
     },
-    "0ORgLm6BMFVpLGS4Q5SKMZ": {
-      "album_name": "On Every Street (Remaster)",
-      "artist": "Dire Straits",
-      "total_tracks": 12,
-      "played_tracks": [
-        "56UGmtxJM3tvF1jQIJahlr"
-      ],
-      "first_played": "2026-04-12T22:18:25.464Z",
-      "last_played": "2026-04-12T22:18:25.464Z"
-    },
-    "4XfN871nBIz6obaUDEzZXm": {
-      "album_name": "Pretzel Logic",
-      "artist": "Steely Dan",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1u42hFacJ1Bs8H9GX2O8z3"
-      ],
-      "first_played": "2026-04-12T22:14:34.098Z",
-      "last_played": "2026-04-12T22:14:34.098Z"
-    },
     "5WKUL88usO5Y8cfbh2EQdu": {
       "album_name": "Tom Tom Club",
       "artist": "Tom Tom Club",
@@ -521,7 +458,7 @@
         "7KGsQmDp90ANzfwEQqQn67"
       ],
       "first_played": "2026-04-13T16:30:20.648Z",
-      "last_played": "2026-04-14T17:11:00.939Z",
+      "last_played": "2026-04-14T20:35:11.451Z",
       "completion_logged": true
     },
     "4cpVufUPv5g1vE2j10KJ2j": {
@@ -548,6 +485,136 @@
       "first_played": "2026-04-13T18:28:16.816Z",
       "last_played": "2026-04-13T18:40:13.101Z",
       "completion_logged": true
+    },
+    "3AMHMM2aNG6k3d7ybcQ5bY": {
+      "album_name": "Definitely Maybe (Deluxe Edition Remastered)",
+      "artist": "Oasis",
+      "total_tracks": 44,
+      "played_tracks": [
+        "4jJfa4mO5JjV9Tz2aAxE2M"
+      ],
+      "first_played": "2026-04-14T21:43:51.998Z",
+      "last_played": "2026-04-14T21:43:51.998Z"
+    },
+    "03kOqFjrxiwkgvj2ExN6ii": {
+      "album_name": "Move Along",
+      "artist": "The All-American Rejects",
+      "total_tracks": 13,
+      "played_tracks": [
+        "55B1oLZNIH8M8lYyDdxG49"
+      ],
+      "first_played": "2026-04-14T21:23:32.941Z",
+      "last_played": "2026-04-14T21:23:32.941Z"
+    },
+    "6o38CdD7CUlZDCFhjZYLDH": {
+      "album_name": "It's Almost Dry",
+      "artist": "Pusha T",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3Wx98ijEDnsxyMYePCuFNI"
+      ],
+      "first_played": "2026-04-14T21:20:32.943Z",
+      "last_played": "2026-04-14T21:20:32.943Z"
+    },
+    "5Dbax7G8SWrP9xyzkOvy2F": {
+      "album_name": "The Wall",
+      "artist": "Pink Floyd",
+      "total_tracks": 26,
+      "played_tracks": [
+        "5A7eooPKJHtr0UJmatjH4a"
+      ],
+      "first_played": "2026-04-14T21:17:32.828Z",
+      "last_played": "2026-04-14T21:17:32.828Z"
+    },
+    "3SiI1WQgcU7ViL7YylIF7U": {
+      "album_name": "Sights & Sounds",
+      "artist": "Arbour",
+      "total_tracks": 17,
+      "played_tracks": [
+        "0cY8ArMba3ZBflBSl3fLNI"
+      ],
+      "first_played": "2026-04-14T21:16:32.725Z",
+      "last_played": "2026-04-14T21:16:32.725Z"
+    },
+    "2UCWsnmZEVg9HhnMeKTsim": {
+      "album_name": "All Killer, No Filler",
+      "artist": "Sum 41",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4KacUpvbA3Mfo05gttTjhN"
+      ],
+      "first_played": "2026-04-14T21:15:03.288Z",
+      "last_played": "2026-04-14T21:15:03.288Z"
+    },
+    "4E7bV0pzG0LciBSWTszra6": {
+      "album_name": "X&Y",
+      "artist": "Coldplay",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7LVHVU3tWfcxj5aiPFEW4Q"
+      ],
+      "first_played": "2026-04-14T21:06:33.013Z",
+      "last_played": "2026-04-14T21:06:33.013Z"
+    },
+    "77CZUF57sYqgtznUe3OikQ": {
+      "album_name": "I Love My Computer",
+      "artist": "Ninajirachi",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0CVbCtcdXAIw00YBXXbneu"
+      ],
+      "first_played": "2026-04-14T21:01:33.216Z",
+      "last_played": "2026-04-14T21:01:33.216Z"
+    },
+    "0YF8PfcGbsKg5IaFyPnlyY": {
+      "album_name": "Ventura",
+      "artist": "Anderson .Paak",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4SBVWkRIMJ6WBCYPvr5Bwr"
+      ],
+      "first_played": "2026-04-14T20:57:33.468Z",
+      "last_played": "2026-04-14T20:57:33.468Z"
+    },
+    "7dqpveMVcWgbzqYrOdkFTD": {
+      "album_name": "Care Package",
+      "artist": "Drake",
+      "total_tracks": 17,
+      "played_tracks": [
+        "1qyFlfPREPbRcS2BNszdYI"
+      ],
+      "first_played": "2026-04-14T20:54:02.782Z",
+      "last_played": "2026-04-14T20:54:02.782Z"
+    },
+    "6D9I7GZsqc3pwDg3DFrtjs": {
+      "album_name": "Eat A Peach",
+      "artist": "Allman Brothers Band",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2WPLFvAldG0GG6Ad3Xa0TO"
+      ],
+      "first_played": "2026-04-14T20:49:33.084Z",
+      "last_played": "2026-04-14T20:49:33.084Z"
+    },
+    "5PW8nAtvf2HV8RYZFd4IrX": {
+      "album_name": "Born To Die - The Paradise Edition",
+      "artist": "Lana Del Rey",
+      "total_tracks": 23,
+      "played_tracks": [
+        "4O9dZs2B0ilk4PEfX2bPEv"
+      ],
+      "first_played": "2026-04-14T20:45:32.950Z",
+      "last_played": "2026-04-14T20:45:32.950Z"
+    },
+    "4qqdOkr3Ff3kN8GxoxvRES": {
+      "album_name": "For Melancholy Brunettes (& sad women)",
+      "artist": "Japanese Breakfast",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5JVEWVNVv8OYILCkHZkwvK"
+      ],
+      "first_played": "2026-04-14T20:41:32.812Z",
+      "last_played": "2026-04-14T20:41:32.812Z"
     }
   },
   "completed_albums": {
