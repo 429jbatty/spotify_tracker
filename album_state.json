@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-14T21:43:51.998Z",
+  "last_checked": "2026-04-15T16:24:35.206Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -215,6 +215,37 @@
       ],
       "first_played": "2026-04-14T20:41:32.812Z",
       "last_played": "2026-04-14T20:41:32.812Z"
+    },
+    "7IpcJbVxLLEfW0KXB7ndE2": {
+      "album_name": "Five Leaves Left",
+      "artist": "Nick Drake",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3Uh7rAb7F0XGVpEEDwfH1k"
+      ],
+      "first_played": "2026-04-15T16:24:35.206Z",
+      "last_played": "2026-04-15T16:24:35.206Z"
+    },
+    "5mwOo1zikswhmfHvtqVSXg": {
+      "album_name": "Pink Moon",
+      "artist": "Nick Drake",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6meH4I9A4WZtD3z8hnQKqr",
+        "47s4suMScnmNQ2Vu4e0blc",
+        "2ZwgXfgkcnO9I2UQI6wQFh",
+        "2tlhnUxHtYDqu0i9KIraUu",
+        "0SRtzKvwd4Z7SBTonUbw6d",
+        "2s89qv9maW8RMCoaxtvNtn",
+        "4A1t2K9lsLZWb5oHAtT9xs",
+        "4Cg0paoTgxlo2LC85HKaab",
+        "5ir0VEsMI7cLhN6SEiaKol",
+        "5QUeSXjTMHbq1fW5da2waF",
+        "4KROoGIaPaR1pBHPnR3bwC"
+      ],
+      "first_played": "2026-04-15T16:20:24.332Z",
+      "last_played": "2026-04-15T15:20:58.690Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -217964,7 +217995,9 @@
         "british folk rock"
       ],
       "image_url": "https://coverartarchive.org/release/8fc8c213-6de1-4552-8196-1c65989c389d/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-15T15:20:58.690Z"
+      ],
       "source": "musicbrainz"
     },
     "Nick Drake - Five Leaves Left": {
@@ -403267,6 +403300,7 @@
     }
   },
   "most_recently_listened": [
+    "Nick Drake - Pink Moon",
     "John Martyn - One World",
     "Bert Jansch - Bert Jansch",
     "Bridget St John - Songs For The Gentle Man",
@@ -403275,7 +403309,6 @@
     "The Slumbering One - Peaceful Slumber",
     "John Martyn - Solid Air",
     "Serge Gainsbourg - Histoire de Melody Nelson",
-    "Eric B. & Rakim - Paid In Full",
-    "Panda Bear - Person Pitch"
+    "Eric B. & Rakim - Paid In Full"
   ]
 }
