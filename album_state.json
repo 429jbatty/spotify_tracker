@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-15T16:24:35.206Z",
+  "last_checked": "2026-04-15T18:14:40.331Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -221,10 +221,11 @@
       "artist": "Nick Drake",
       "total_tracks": 10,
       "played_tracks": [
-        "3Uh7rAb7F0XGVpEEDwfH1k"
+        "3Uh7rAb7F0XGVpEEDwfH1k",
+        "20FLGZPgMHXlU0VpQ0HpxN"
       ],
       "first_played": "2026-04-15T16:24:35.206Z",
-      "last_played": "2026-04-15T16:24:35.206Z"
+      "last_played": "2026-04-15T17:18:23.223Z"
     },
     "5mwOo1zikswhmfHvtqVSXg": {
       "album_name": "Pink Moon",
@@ -246,6 +247,88 @@
       "first_played": "2026-04-15T16:20:24.332Z",
       "last_played": "2026-04-15T15:20:58.690Z",
       "completion_logged": true
+    },
+    "6O62Cqi0YqOytEbFmeLyjU": {
+      "album_name": "Chelsea Girl",
+      "artist": "Nico",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5yeK60qK7eN7UuCvfu8hvi"
+      ],
+      "first_played": "2026-04-15T18:14:40.331Z",
+      "last_played": "2026-04-15T18:14:40.331Z"
+    },
+    "7DC0pE943VR5tAKIvQXHts": {
+      "album_name": "Figure 8",
+      "artist": "Elliott Smith",
+      "total_tracks": 16,
+      "played_tracks": [
+        "4xfAVJL8R7mVYbDk8a9xOY"
+      ],
+      "first_played": "2026-04-15T17:28:22.963Z",
+      "last_played": "2026-04-15T17:28:22.963Z"
+    },
+    "53cxrg7kbFQxDizY0kcDQo": {
+      "album_name": "Parallelograms",
+      "artist": "Linda Perhacs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "1EY7zEIE32twYy7zL05WG2",
+        "0PSxgms5q4pEtRGXRw2oWK"
+      ],
+      "first_played": "2026-04-15T17:26:23.166Z",
+      "last_played": "2026-04-15T17:03:55.600Z"
+    },
+    "1klALx0u4AavZNEvC4LrTL": {
+      "album_name": "The Beatles (Remastered)",
+      "artist": "The Beatles",
+      "total_tracks": 30,
+      "played_tracks": [
+        "5FnpXVgDOk2sLT58qM22Of",
+        "6TjUg1cTUzWHbal6yQAi7c"
+      ],
+      "first_played": "2026-04-15T17:23:53.285Z",
+      "last_played": "2026-04-15T16:34:05.177Z"
+    },
+    "7JAh6mfXLsGojvj9a4fnDT": {
+      "album_name": "Bavarian Fruit Bread",
+      "artist": "Hope Sandoval & The Warm Inventions",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0OVvantI7wPKGnZM7gcJxa"
+      ],
+      "first_played": "2026-04-15T17:21:07.207Z",
+      "last_played": "2026-04-15T17:21:07.207Z"
+    },
+    "0iO91QmtRa5h2wRZ0CNAzS": {
+      "album_name": "Jessica Pratt",
+      "artist": "Jessica Pratt",
+      "total_tracks": 11,
+      "played_tracks": [
+        "57WGADwXrn3y0ds6sRz77l"
+      ],
+      "first_played": "2026-04-15T17:12:23.030Z",
+      "last_played": "2026-04-15T17:12:23.030Z"
+    },
+    "0zI2zWeDTMPZpVM3APGMTB": {
+      "album_name": "Desertshore",
+      "artist": "Nico",
+      "total_tracks": 8,
+      "played_tracks": [
+        "4XbVSkmhMaegga3UDg5J7p"
+      ],
+      "first_played": "2026-04-15T17:07:52.991Z",
+      "last_played": "2026-04-15T17:07:52.991Z"
+    },
+    "734AFYo34Q1zRpg9N8E2Ho": {
+      "album_name": "Joan Baez",
+      "artist": "Joan Baez",
+      "total_tracks": 16,
+      "played_tracks": [
+        "2hulWLdzjBexk2bxQpcUp7"
+      ],
+      "first_played": "2026-04-15T16:31:34.947Z",
+      "last_played": "2026-04-15T16:31:34.947Z"
     }
   },
   "completed_albums": {
