@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-15T19:15:33.111Z",
+  "last_checked": "2026-04-15T20:36:07.981Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -337,6 +337,16 @@
       ],
       "first_played": "2026-04-15T19:03:06.291Z",
       "last_played": "2026-04-15T19:03:06.291Z"
+    },
+    "0B2E1w5T7PEbZIctZnnt9K": {
+      "album_name": "Bryter Layter",
+      "artist": "Nick Drake",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6wuekNiL0KqFbvfdwuequN"
+      ],
+      "first_played": "2026-04-15T20:36:07.981Z",
+      "last_played": "2026-04-15T20:36:07.981Z"
     }
   },
   "completed_albums": {
