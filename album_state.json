@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-15T18:14:40.331Z",
+  "last_checked": "2026-04-15T19:15:33.111Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -59,31 +59,6 @@
       ],
       "first_played": "2026-04-13T16:30:20.648Z",
       "last_played": "2026-04-14T20:35:11.451Z",
-      "completion_logged": true
-    },
-    "4cpVufUPv5g1vE2j10KJ2j": {
-      "album_name": "Bert Jansch",
-      "artist": "Bert Jansch",
-      "total_tracks": 15,
-      "played_tracks": [
-        "0Yc0Bp4Dqb3xhAH9EHvybL",
-        "2NKAqjzeDVg4ZG5OHdDITT",
-        "3OkgCbaCtc8LPOufoV8mbk",
-        "4Y7j0KxLcmqYw2Yagu5XRV",
-        "2BqgPxXXqnif1OgBrV0W1a",
-        "7o8DK0BdBlltwoQvHZhz8g",
-        "3nOHRKB0lTqYgQPBnOUcY3",
-        "7670Fg67h3y1J22hxEZDjd",
-        "1Iq5qRdnQ6D4n4fJlWDC6K",
-        "5H4Zrqld0NxZ02yIo236Ca",
-        "4TfEsQfVhQGBJ9r0fxr5lo",
-        "6K6DezXhlPRMRc9SEgkzGJ",
-        "61zwDPcs0Lvyyz2TPSnGdD",
-        "0iqPhVCZcJphW0YDSQxXx1",
-        "5TibxTFccG8VfJvku0FUX1"
-      ],
-      "first_played": "2026-04-13T18:28:16.816Z",
-      "last_played": "2026-04-13T18:40:13.101Z",
       "completion_logged": true
     },
     "3AMHMM2aNG6k3d7ybcQ5bY": {
@@ -222,10 +197,11 @@
       "total_tracks": 10,
       "played_tracks": [
         "3Uh7rAb7F0XGVpEEDwfH1k",
-        "20FLGZPgMHXlU0VpQ0HpxN"
+        "20FLGZPgMHXlU0VpQ0HpxN",
+        "6x3HF1SdlVeZqOb7soisuh"
       ],
       "first_played": "2026-04-15T16:24:35.206Z",
-      "last_played": "2026-04-15T17:18:23.223Z"
+      "last_played": "2026-04-15T18:59:33.045Z"
     },
     "5mwOo1zikswhmfHvtqVSXg": {
       "album_name": "Pink Moon",
@@ -253,10 +229,11 @@
       "artist": "Nico",
       "total_tracks": 10,
       "played_tracks": [
-        "5yeK60qK7eN7UuCvfu8hvi"
+        "5yeK60qK7eN7UuCvfu8hvi",
+        "3uCkIqD0VzQUijbs8WIizs"
       ],
       "first_played": "2026-04-15T18:14:40.331Z",
-      "last_played": "2026-04-15T18:14:40.331Z"
+      "last_played": "2026-04-15T18:57:46.857Z"
     },
     "7DC0pE943VR5tAKIvQXHts": {
       "album_name": "Figure 8",
@@ -285,10 +262,11 @@
       "total_tracks": 30,
       "played_tracks": [
         "5FnpXVgDOk2sLT58qM22Of",
-        "6TjUg1cTUzWHbal6yQAi7c"
+        "6TjUg1cTUzWHbal6yQAi7c",
+        "40d2EcaOOCUjDzzo2YvUWn"
       ],
       "first_played": "2026-04-15T17:23:53.285Z",
-      "last_played": "2026-04-15T16:34:05.177Z"
+      "last_played": "2026-04-15T19:06:32.856Z"
     },
     "7JAh6mfXLsGojvj9a4fnDT": {
       "album_name": "Bavarian Fruit Bread",
@@ -329,6 +307,36 @@
       ],
       "first_played": "2026-04-15T16:31:34.947Z",
       "last_played": "2026-04-15T16:31:34.947Z"
+    },
+    "6iP3HGmoRXFUrKiml2QVkz": {
+      "album_name": "It's A Wonderful Life",
+      "artist": "Sparklehorse",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0IQs78HO3ym69mCNFJ0UZp"
+      ],
+      "first_played": "2026-04-15T19:12:02.808Z",
+      "last_played": "2026-04-15T19:12:02.808Z"
+    },
+    "2JQDn2wgm2nLVxdWE0GJJa": {
+      "album_name": "Folksongs & Ballads",
+      "artist": "Tia Blake",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6NQI1NOzJci3EKqZhn3sxB"
+      ],
+      "first_played": "2026-04-15T19:09:03.031Z",
+      "last_played": "2026-04-15T19:09:03.031Z"
+    },
+    "7hez8jibf36E66GHpFkWz7": {
+      "album_name": "Buffalo Springfield Again",
+      "artist": "Buffalo Springfield",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3uVmR6oQq0NluVZXkipKHV"
+      ],
+      "first_played": "2026-04-15T19:03:06.291Z",
+      "last_played": "2026-04-15T19:03:06.291Z"
     }
   },
   "completed_albums": {
