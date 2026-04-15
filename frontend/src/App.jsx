@@ -42,6 +42,11 @@ function App() {
     const history = data.listen_history || [];
     return {
       id,
+
+      // core safe fields (critical fix)
+      name: data.name ?? "Unknown Album",
+      artist: data.artist ?? "Unknown Artist",
+
       ...data,
       totalListens: history.length,
       // We keep latestListen as a sortable string/date object
