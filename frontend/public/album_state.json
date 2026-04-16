@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-15T20:36:07.981Z",
+  "last_checked": "2026-04-16T00:36:53.624Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -18,7 +18,7 @@
         "2vy2V8CBCeVyyDW2mvKppY"
       ],
       "first_played": "2026-04-11T15:38:08.458Z",
-      "last_played": "2026-04-14T00:49:40.947Z",
+      "last_played": "2026-04-15T23:22:53.842Z",
       "completion_logged": true
     },
     "78WlsSQKrX4suYf909Fcrm": {
@@ -198,10 +198,11 @@
       "played_tracks": [
         "3Uh7rAb7F0XGVpEEDwfH1k",
         "20FLGZPgMHXlU0VpQ0HpxN",
-        "6x3HF1SdlVeZqOb7soisuh"
+        "6x3HF1SdlVeZqOb7soisuh",
+        "3Mc00D5lLah9WAn62rDKrH"
       ],
       "first_played": "2026-04-15T16:24:35.206Z",
-      "last_played": "2026-04-15T18:59:33.045Z"
+      "last_played": "2026-04-16T00:02:53.484Z"
     },
     "5mwOo1zikswhmfHvtqVSXg": {
       "album_name": "Pink Moon",
@@ -347,6 +348,79 @@
       ],
       "first_played": "2026-04-15T20:36:07.981Z",
       "last_played": "2026-04-15T20:36:07.981Z"
+    },
+    "1O330PE8lc1dDXduHBwLXe": {
+      "album_name": "It's So Hard To Tell Who's Going To Love You The Best",
+      "artist": "Karen Dalton",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5Qtl48eWXItxPteXa9YUbB",
+        "09g4TuWLxMmrOTt1kzS47Z"
+      ],
+      "first_played": "2026-04-16T00:36:53.624Z",
+      "last_played": "2026-04-16T00:14:23.623Z"
+    },
+    "7Cm8zQw9gKY9p0rt1c8E7Z": {
+      "album_name": "Coles Corner (20th Anniversary Deluxe Edition)",
+      "artist": "Richard Hawley",
+      "total_tracks": 29,
+      "played_tracks": [
+        "7zbGF3nDwYpDcS1Yjcaxt2"
+      ],
+      "first_played": "2026-04-16T00:33:53.614Z",
+      "last_played": "2026-04-16T00:33:53.614Z"
+    },
+    "4EUJpUUKkFMIzq10y3CbvZ": {
+      "album_name": "The Miraculous Hump Returns From The Moon",
+      "artist": "Sopwith Camel",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3fCaSIikAjWwBTGIVBVzFx",
+        "4YUdgDeccpIG6vWeUca5sd"
+      ],
+      "first_played": "2026-04-16T00:28:23.625Z",
+      "last_played": "2026-04-16T00:08:23.799Z"
+    },
+    "7wpo5k9gqXQHfxISH1jatO": {
+      "album_name": "Fred Neil",
+      "artist": "Fred Neil",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5j5jfVrbo9X5jcsHqv52zD"
+      ],
+      "first_played": "2026-04-16T00:25:23.609Z",
+      "last_played": "2026-04-16T00:25:23.609Z"
+    },
+    "0h1ruavpzNOYbjwg5oC0fg": {
+      "album_name": "Bless The Weather",
+      "artist": "John Martyn",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6GXOriLcYRb1ZcIvoIK90y",
+        "63WbJxYBODw1DLLPQHOO5A"
+      ],
+      "first_played": "2026-04-16T00:21:23.679Z",
+      "last_played": "2026-04-15T23:56:53.506Z"
+    },
+    "3q90UAYeHLvAtnowiQlmgp": {
+      "album_name": "Cold Fact",
+      "artist": "Rodr\u00edguez",
+      "total_tracks": 12,
+      "played_tracks": [
+        "2Xn7NadvZ56D0B2D7x2CSL"
+      ],
+      "first_played": "2026-04-16T00:16:53.539Z",
+      "last_played": "2026-04-16T00:16:53.539Z"
+    },
+    "48ZQUb3tHat3E45x3O2znt": {
+      "album_name": "We The People",
+      "artist": "Ellen McIlwaine",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6QsOupxzmw6Ao2PzX5MVVF"
+      ],
+      "first_played": "2026-04-16T00:11:23.563Z",
+      "last_played": "2026-04-16T00:11:23.563Z"
     }
   },
   "completed_albums": {
