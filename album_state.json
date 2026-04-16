@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-16T20:15:46.509Z",
+  "last_checked": "2026-04-16T21:23:53.118Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -20,158 +20,6 @@
       "first_played": "2026-04-11T15:38:08.458Z",
       "last_played": "2026-04-15T23:22:53.842Z",
       "completion_logged": true
-    },
-    "2Y1kh9rJcUTzLQ2ToqZpLt": {
-      "album_name": "Songs For The Gentle Man",
-      "artist": "Bridget St John",
-      "total_tracks": 12,
-      "played_tracks": [
-        "2vYs2cNX6qiyKOVjZmOXY4",
-        "071uaFc0IvPO6jIMQCuNjA",
-        "1rmRf4w12lQPt6MPPQ0Z7s",
-        "2WS2JHq2s5EVqNwwwTJnsW",
-        "27fFI7lu5sOnf8o94k4WME",
-        "67gn853k6WAsvggiyOBvu6",
-        "3PAG5xJ6M8JYaqo4GjvZ4v",
-        "5NevyJnuHOmB5pk2ABSdkG",
-        "3vXIPNfoRXgu3PoWJBR7IQ",
-        "70prqovj5aUZHsPkSZJU8v",
-        "63NiD6qupPNR7jSGhd3q7V",
-        "7KGsQmDp90ANzfwEQqQn67"
-      ],
-      "first_played": "2026-04-13T16:30:20.648Z",
-      "last_played": "2026-04-14T20:35:11.451Z",
-      "completion_logged": true
-    },
-    "3AMHMM2aNG6k3d7ybcQ5bY": {
-      "album_name": "Definitely Maybe (Deluxe Edition Remastered)",
-      "artist": "Oasis",
-      "total_tracks": 44,
-      "played_tracks": [
-        "4jJfa4mO5JjV9Tz2aAxE2M"
-      ],
-      "first_played": "2026-04-14T21:43:51.998Z",
-      "last_played": "2026-04-14T21:43:51.998Z"
-    },
-    "03kOqFjrxiwkgvj2ExN6ii": {
-      "album_name": "Move Along",
-      "artist": "The All-American Rejects",
-      "total_tracks": 13,
-      "played_tracks": [
-        "55B1oLZNIH8M8lYyDdxG49"
-      ],
-      "first_played": "2026-04-14T21:23:32.941Z",
-      "last_played": "2026-04-14T21:23:32.941Z"
-    },
-    "6o38CdD7CUlZDCFhjZYLDH": {
-      "album_name": "It's Almost Dry",
-      "artist": "Pusha T",
-      "total_tracks": 12,
-      "played_tracks": [
-        "3Wx98ijEDnsxyMYePCuFNI"
-      ],
-      "first_played": "2026-04-14T21:20:32.943Z",
-      "last_played": "2026-04-14T21:20:32.943Z"
-    },
-    "5Dbax7G8SWrP9xyzkOvy2F": {
-      "album_name": "The Wall",
-      "artist": "Pink Floyd",
-      "total_tracks": 26,
-      "played_tracks": [
-        "5A7eooPKJHtr0UJmatjH4a"
-      ],
-      "first_played": "2026-04-14T21:17:32.828Z",
-      "last_played": "2026-04-14T21:17:32.828Z"
-    },
-    "3SiI1WQgcU7ViL7YylIF7U": {
-      "album_name": "Sights & Sounds",
-      "artist": "Arbour",
-      "total_tracks": 17,
-      "played_tracks": [
-        "0cY8ArMba3ZBflBSl3fLNI"
-      ],
-      "first_played": "2026-04-14T21:16:32.725Z",
-      "last_played": "2026-04-14T21:16:32.725Z"
-    },
-    "2UCWsnmZEVg9HhnMeKTsim": {
-      "album_name": "All Killer, No Filler",
-      "artist": "Sum 41",
-      "total_tracks": 13,
-      "played_tracks": [
-        "4KacUpvbA3Mfo05gttTjhN"
-      ],
-      "first_played": "2026-04-14T21:15:03.288Z",
-      "last_played": "2026-04-14T21:15:03.288Z"
-    },
-    "4E7bV0pzG0LciBSWTszra6": {
-      "album_name": "X&Y",
-      "artist": "Coldplay",
-      "total_tracks": 13,
-      "played_tracks": [
-        "7LVHVU3tWfcxj5aiPFEW4Q"
-      ],
-      "first_played": "2026-04-14T21:06:33.013Z",
-      "last_played": "2026-04-14T21:06:33.013Z"
-    },
-    "77CZUF57sYqgtznUe3OikQ": {
-      "album_name": "I Love My Computer",
-      "artist": "Ninajirachi",
-      "total_tracks": 12,
-      "played_tracks": [
-        "0CVbCtcdXAIw00YBXXbneu"
-      ],
-      "first_played": "2026-04-14T21:01:33.216Z",
-      "last_played": "2026-04-14T21:01:33.216Z"
-    },
-    "0YF8PfcGbsKg5IaFyPnlyY": {
-      "album_name": "Ventura",
-      "artist": "Anderson .Paak",
-      "total_tracks": 11,
-      "played_tracks": [
-        "4SBVWkRIMJ6WBCYPvr5Bwr"
-      ],
-      "first_played": "2026-04-14T20:57:33.468Z",
-      "last_played": "2026-04-14T20:57:33.468Z"
-    },
-    "7dqpveMVcWgbzqYrOdkFTD": {
-      "album_name": "Care Package",
-      "artist": "Drake",
-      "total_tracks": 17,
-      "played_tracks": [
-        "1qyFlfPREPbRcS2BNszdYI"
-      ],
-      "first_played": "2026-04-14T20:54:02.782Z",
-      "last_played": "2026-04-14T20:54:02.782Z"
-    },
-    "6D9I7GZsqc3pwDg3DFrtjs": {
-      "album_name": "Eat A Peach",
-      "artist": "Allman Brothers Band",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2WPLFvAldG0GG6Ad3Xa0TO"
-      ],
-      "first_played": "2026-04-14T20:49:33.084Z",
-      "last_played": "2026-04-14T20:49:33.084Z"
-    },
-    "5PW8nAtvf2HV8RYZFd4IrX": {
-      "album_name": "Born To Die - The Paradise Edition",
-      "artist": "Lana Del Rey",
-      "total_tracks": 23,
-      "played_tracks": [
-        "4O9dZs2B0ilk4PEfX2bPEv"
-      ],
-      "first_played": "2026-04-14T20:45:32.950Z",
-      "last_played": "2026-04-14T20:45:32.950Z"
-    },
-    "4qqdOkr3Ff3kN8GxoxvRES": {
-      "album_name": "For Melancholy Brunettes (& sad women)",
-      "artist": "Japanese Breakfast",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5JVEWVNVv8OYILCkHZkwvK"
-      ],
-      "first_played": "2026-04-14T20:41:32.812Z",
-      "last_played": "2026-04-14T20:41:32.812Z"
     },
     "7IpcJbVxLLEfW0KXB7ndE2": {
       "album_name": "Five Leaves Left",
@@ -459,10 +307,11 @@
       "artist": "Ramona Lisa",
       "total_tracks": 11,
       "played_tracks": [
-        "3Q8u4XHuLjt2yjuM4ufoVd"
+        "3Q8u4XHuLjt2yjuM4ufoVd",
+        "32TP8WINA5MPNxh9jBdKFa"
       ],
       "first_played": "2026-04-16T19:58:16.146Z",
-      "last_played": "2026-04-16T19:58:16.146Z"
+      "last_played": "2026-04-16T21:23:53.118Z"
     },
     "1bvCVYPVl445mO690M2dOr": {
       "album_name": "Night Time, My Time",
