@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-16T15:06:49.289Z",
+  "last_checked": "2026-04-16T20:15:46.509Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -204,7 +204,7 @@
         "4KROoGIaPaR1pBHPnR3bwC"
       ],
       "first_played": "2026-04-15T16:20:24.332Z",
-      "last_played": "2026-04-15T15:20:58.690Z",
+      "last_played": "2026-04-16T18:45:23.740Z",
       "completion_logged": true
     },
     "6O62Cqi0YqOytEbFmeLyjU": {
@@ -413,6 +413,78 @@
       ],
       "first_played": "2026-04-16T03:42:15.157Z",
       "last_played": "2026-04-16T03:42:15.157Z"
+    },
+    "22PkV1Le9P3X4RY4xtmK0q": {
+      "album_name": "Desire, I Want To Turn Into You",
+      "artist": "Caroline Polachek",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4bp2wYweUPvsBrQfntdYcr"
+      ],
+      "first_played": "2026-04-16T20:12:16.460Z",
+      "last_played": "2026-04-16T20:12:16.460Z"
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6IlgcHz7O34fOhHYOe77kR"
+      ],
+      "first_played": "2026-04-16T20:08:16.238Z",
+      "last_played": "2026-04-16T20:08:16.238Z"
+    },
+    "2HIwUmdxEl7SeWa1ndH5wC": {
+      "album_name": "Pop 2",
+      "artist": "Charli xcx",
+      "total_tracks": 10,
+      "played_tracks": [
+        "64xw3gXNMWv4wNXjF6tnXr"
+      ],
+      "first_played": "2026-04-16T20:05:46.408Z",
+      "last_played": "2026-04-16T20:05:46.408Z"
+    },
+    "1uD1kdwTWH1DZQZqGKz6rY": {
+      "album_name": "Jubilee",
+      "artist": "Japanese Breakfast",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0dpyzcT3RMNNSd2xKBf35I"
+      ],
+      "first_played": "2026-04-16T20:01:16.271Z",
+      "last_played": "2026-04-16T20:01:16.271Z"
+    },
+    "4OeA68LyLKcKR4g4DYkc5t": {
+      "album_name": "Arcadia",
+      "artist": "Ramona Lisa",
+      "total_tracks": 11,
+      "played_tracks": [
+        "3Q8u4XHuLjt2yjuM4ufoVd"
+      ],
+      "first_played": "2026-04-16T19:58:16.146Z",
+      "last_played": "2026-04-16T19:58:16.146Z"
+    },
+    "1bvCVYPVl445mO690M2dOr": {
+      "album_name": "Night Time, My Time",
+      "artist": "Sky Ferreira",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7d3BrpkSkKJpMdOuSnHxtH",
+        "1EuOJLjHYZCEPcGJqAC3wZ",
+        "5HEeBCUDho3uQVNu98CvsS",
+        "07w29sqWmeBlffYaFnSSd0",
+        "3k5SxXdbEzyHfE7wiJl0ya",
+        "0Px73m5ACfeYHYsAo9YTfP",
+        "0wl0fgqf5JprbGoUsjofbb",
+        "0i62I5HJlzIVu2FALBmBPx",
+        "0UOQdxiWOMJDAw8AHSslDr",
+        "2XPxacir3WoMtJ2pbTd240",
+        "2bunWQerOZ16R4iWR4PGMt",
+        "6Nc3KauZ5OOk7ogX7h5HhO"
+      ],
+      "first_played": "2026-04-16T19:50:45.996Z",
+      "last_played": "2026-04-16T18:51:53.062Z",
+      "completion_logged": true
     }
   },
   "completed_albums": {
@@ -403464,9 +403536,1010 @@
       "listen_history": [
         "2026-04-14T15:47:01.491Z"
       ]
+    },
+    "Sky Ferreira - Night Time, My Time": {
+      "artist": "Sky Ferreira",
+      "artist_mbid": "05f3353e-e2d9-4344-a3c9-8009dd8e0427",
+      "name": "Night Time, My Time",
+      "release_group_mbid": "64b9807d-ed23-47a3-a388-41c82bfd8069",
+      "label": "Capitol Records",
+      "release_year": 2013,
+      "release_month": 10,
+      "release_day": 29,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Boys",
+          "credits": [
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "organ"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "programming",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "programming",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "c7d1023d-158d-4862-914f-687b8eace3ad"
+        },
+        {
+          "position": "2",
+          "title": "Ain\u2019t Your Right",
+          "credits": [
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Jordan Benik",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Garrett Ray",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "programming",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "0f9758dd-84db-43a8-8a75-a33a069f0ce7"
+        },
+        {
+          "position": "3",
+          "title": "24 Hours",
+          "credits": [
+            [
+              "Nick Rowe",
+              "editor",
+              ""
+            ],
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Garrett Ray",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "8f138b2c-c9cc-47ef-84eb-5f28f271046f"
+        },
+        {
+          "position": "4",
+          "title": "Nobody Asked Me (If I Was Okay)",
+          "credits": [
+            [
+              "Nick Rowe",
+              "editor",
+              ""
+            ],
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Sean Fitzgerald",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Lils",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Jeremiah Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "4adaa339-e5e7-40d3-b60d-88a45aca003c"
+        },
+        {
+          "position": "5",
+          "title": "I Blame Myself",
+          "credits": [
+            [
+              "Daniel Nigro",
+              "editor",
+              ""
+            ],
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Daniel Nigro",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Justin Raisen",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Daniel Nigro",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "membranophone"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "membranophone"
+            ],
+            [
+              "Justin Raisen",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Justin Raisen",
+              "recording",
+              ""
+            ],
+            [
+              "Mereki Beach",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Daniel Nigro",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "ac5db780-2450-4fd4-a9a5-b0738c07a571"
+        },
+        {
+          "position": "6",
+          "title": "Omanko",
+          "credits": [
+            [
+              "Nick Rowe",
+              "editor",
+              ""
+            ],
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "membranophone"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Justin Raisen",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Justin Raisen",
+              "recording",
+              ""
+            ],
+            [
+              "Jeremiah Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "349c4412-7c33-413d-813f-dbc1592bc3dc"
+        },
+        {
+          "position": "7",
+          "title": "You\u2019re Not the One",
+          "credits": [
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Daniel Nigro",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Garrett Ray",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Daniel Nigro",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "316dfd1c-eebe-40c1-b294-cc330179b8fe"
+        },
+        {
+          "position": "8",
+          "title": "Heavy Metal Heart",
+          "credits": [
+            [
+              "Nick Rowe",
+              "editor",
+              ""
+            ],
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Lils",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "3b02ef1e-9517-454e-a871-2f41db8ef3a1"
+        },
+        {
+          "position": "9",
+          "title": "Kristine",
+          "credits": [
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Ashlee Gardner",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Ashlee Gardner",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "0fd09444-32a3-4561-be31-5292474c3b30"
+        },
+        {
+          "position": "10",
+          "title": "I Will",
+          "credits": [
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Daniel Nigro",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Daniel Nigro",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Ariel Rechtshaid",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Daniel Nigro",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "95b75a71-21a7-4678-8161-b2701ab436cc"
+        },
+        {
+          "position": "11",
+          "title": "Love in Stereo",
+          "credits": [
+            [
+              "Nick Rowe",
+              "editor",
+              ""
+            ],
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Daniel Nigro",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ]
+          ],
+          "recording_mbid": "1e1e0cbb-d227-4a72-84a7-8d23d8a1fc5b"
+        },
+        {
+          "position": "12",
+          "title": "Night Time, My Time",
+          "credits": [
+            [
+              "Chris Kasych",
+              "engineer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "engineer",
+              ""
+            ],
+            [
+              "Mark Santangelo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "mellotron"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Justin Raisen",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "David Schiffman",
+              "mix",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "producer",
+              "co"
+            ],
+            [
+              "Ariel Rechtshaid",
+              "producer",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "recording",
+              ""
+            ],
+            [
+              "Sky Ferreira",
+              "vocal",
+              ""
+            ],
+            [
+              "Justin Raisen",
+              "vocal",
+              "additional"
+            ]
+          ],
+          "recording_mbid": "371ac811-1ee8-4565-ae91-fc6ee72bbb0b"
+        }
+      ],
+      "tags": [
+        "rock",
+        "electronic",
+        "pop",
+        "alternative rock",
+        "indie rock",
+        "indie pop",
+        "pop rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/8bee73aa-3462-42e1-b388-0e58117aed2d/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-16T18:51:53.062Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Sky Ferreira - Night Time, My Time",
     "Nick Drake - Pink Moon",
     "John Martyn - One World",
     "Bert Jansch - Bert Jansch",
@@ -403475,7 +404548,6 @@
     "Soft Soundscapes - River",
     "The Slumbering One - Peaceful Slumber",
     "John Martyn - Solid Air",
-    "Serge Gainsbourg - Histoire de Melody Nelson",
-    "Eric B. & Rakim - Paid In Full"
+    "Serge Gainsbourg - Histoire de Melody Nelson"
   ]
 }
