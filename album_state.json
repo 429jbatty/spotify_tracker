@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-17T06:43:15.616Z",
+  "last_checked": "2026-04-17T08:41:02.775Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -341,10 +341,11 @@
       "total_tracks": 10,
       "played_tracks": [
         "4TBVy5cFYGmK5BA3rdMGEQ",
-        "3A0r8Pi9bbhLBI1OBhnzpQ"
+        "3A0r8Pi9bbhLBI1OBhnzpQ",
+        "1FlN2fZo6ph7iQ8gkQYeep"
       ],
       "first_played": "2026-04-17T05:03:09.115Z",
-      "last_played": "2026-04-17T05:58:53.254Z"
+      "last_played": "2026-04-17T06:50:24.350Z"
     },
     "250sWScTPsQKWAY9s7Oufy": {
       "album_name": "K\u00f6nigsforst",
@@ -372,10 +373,12 @@
       "total_tracks": 12,
       "played_tracks": [
         "3rkJH9BaiCWpRY718WTkBP",
-        "343MTAHIcZRw91arzrMeDs"
+        "343MTAHIcZRw91arzrMeDs",
+        "5tJZSE0l9xTnRrccjBZZXg",
+        "78Ct2qlEtSMw3CG6zWwAyz"
       ],
       "first_played": "2026-04-17T04:44:27.676Z",
-      "last_played": "2026-04-17T05:44:06.905Z"
+      "last_played": "2026-04-17T07:58:27.531Z"
     },
     "5ij6VfAkBwTa5Y3951PdAx": {
       "album_name": "Burial",
@@ -386,10 +389,13 @@
         "4VIyN0UbWutIfE529r0XOg",
         "1vyeqnphXY3hw1G4AF5yup",
         "3Qm4zsH9urKCM7Vs2vBVtd",
-        "3iyQXaGgxEVOJ6ChpIhbNB"
+        "3iyQXaGgxEVOJ6ChpIhbNB",
+        "3vIEBVSVApSyhSUWrH9Hz4",
+        "5r8r3TvO1sMR5IFBpHrOmC",
+        "0ABq5iOzsWj4r4A1JiqZVy"
       ],
       "first_played": "2026-04-17T04:40:33.543Z",
-      "last_played": "2026-04-17T05:09:39.193Z"
+      "last_played": "2026-04-17T06:55:47.128Z"
     },
     "1iRPiEYHIX2zpF8lkW54SK": {
       "album_name": "Untrue",
@@ -451,10 +457,11 @@
       "artist": "GAS",
       "total_tracks": 7,
       "played_tracks": [
-        "6tjzp1mCVaTeK5ZFAye3Ou"
+        "6tjzp1mCVaTeK5ZFAye3Ou",
+        "3l5ahHdUAkZeRRCaxpG5bb"
       ],
       "first_played": "2026-04-17T06:29:30.547Z",
-      "last_played": "2026-04-17T06:29:30.547Z"
+      "last_played": "2026-04-17T08:41:02.775Z"
     },
     "2SZZihZiCsFo87NKxDfxlH": {
       "album_name": "Selected Ambient Works Volume II",
@@ -462,10 +469,11 @@
       "total_tracks": 24,
       "played_tracks": [
         "0Pg0frSTti7d8Ck1OmOYkz",
-        "3jRCZkYVcDniUrXjL71QwE"
+        "3jRCZkYVcDniUrXjL71QwE",
+        "7glKwbR1DyuIuE6XvZvJbQ"
       ],
       "first_played": "2026-04-17T06:19:39.560Z",
-      "last_played": "2026-04-17T05:56:05.772Z"
+      "last_played": "2026-04-17T07:16:44.844Z"
     },
     "1Z2jkEtW5Sc9wWVxUgyG0E": {
       "album_name": "Apollo",
@@ -483,10 +491,11 @@
       "artist": "Boards of Canada",
       "total_tracks": 15,
       "played_tracks": [
-        "2DQlQcYponGtEwvEHRHYvu"
+        "2DQlQcYponGtEwvEHRHYvu",
+        "6ebsOJuLxaE2ArKhm1DMqP"
       ],
       "first_played": "2026-04-17T06:11:20.171Z",
-      "last_played": "2026-04-17T06:11:20.171Z"
+      "last_played": "2026-04-17T07:46:17.030Z"
     },
     "5JQlsvP6k7mHPFsOEAjSUE": {
       "album_name": "Foundation",
@@ -504,10 +513,11 @@
       "total_tracks": 12,
       "played_tracks": [
         "6qsZP3u6wkeRDFd4GiLLOg",
-        "71WG1HFNnu02kbqVTktmlh"
+        "71WG1HFNnu02kbqVTktmlh",
+        "4km48etH1GAlDCVa6Lli37"
       ],
       "first_played": "2026-04-17T05:48:45.425Z",
-      "last_played": "2026-04-17T05:21:39.186Z"
+      "last_played": "2026-04-17T08:03:25.469Z"
     },
     "6Iu8toVsvCc3I4INxYiVIy": {
       "album_name": "Ravedeath, 1972",
@@ -538,6 +548,90 @@
       ],
       "first_played": "2026-04-17T05:14:03.660Z",
       "last_played": "2026-04-17T05:14:03.660Z"
+    },
+    "4X4cmhqFm50dk6LyTtLuv6": {
+      "album_name": "Tunes 2011-2019",
+      "artist": "Burial",
+      "total_tracks": 17,
+      "played_tracks": [
+        "48rJ9CoD46ewlT4zse0CTZ",
+        "6attpPG0XKF3hlWF9u2x3p"
+      ],
+      "first_played": "2026-04-17T08:24:17.722Z",
+      "last_played": "2026-04-17T07:29:23.979Z"
+    },
+    "5yHH2l3d2d2K5tNQGorEdR": {
+      "album_name": "Radio Amor",
+      "artist": "Tim Hecker",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0eztk0w79uHB0RCXUYQ7Ao"
+      ],
+      "first_played": "2026-04-17T08:17:56.178Z",
+      "last_played": "2026-04-17T08:17:56.178Z"
+    },
+    "5F3YJdIjGHhnUVuD96G1mz": {
+      "album_name": "Utility",
+      "artist": "Barker",
+      "total_tracks": 9,
+      "played_tracks": [
+        "3W6sMOEB9n1RBeLegy9meH",
+        "3X4dCNeVxPCqiRfyB5hJeH"
+      ],
+      "first_played": "2026-04-17T08:12:39.548Z",
+      "last_played": "2026-04-17T07:33:32.648Z"
+    },
+    "7H6gso8aBfKK7mlouLCsW3": {
+      "album_name": "Replica",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "36wpkMsQ40ow2bdZyX37MP",
+        "4DW2lrqT1pMgPAFZiWqtO6"
+      ],
+      "first_played": "2026-04-17T07:50:10.866Z",
+      "last_played": "2026-04-17T07:21:25.634Z"
+    },
+    "3ofEXRsMidOzWed9dZsqfg": {
+      "album_name": "Body Riddle",
+      "artist": "Clark",
+      "total_tracks": 11,
+      "played_tracks": [
+        "1t86Aqm7uk30h9vVOl5c9h"
+      ],
+      "first_played": "2026-04-17T07:40:29.568Z",
+      "last_played": "2026-04-17T07:40:29.568Z"
+    },
+    "0ntm3YaiXVkkGitWl2XASV": {
+      "album_name": "Symbol",
+      "artist": "Susumu Yokota",
+      "total_tracks": 13,
+      "played_tracks": [
+        "1V5Dp4puHLcNQqwPjnldNE",
+        "6Mk96t3t5qR5YJ8ftCW18V"
+      ],
+      "first_played": "2026-04-17T07:36:34.932Z",
+      "last_played": "2026-04-17T07:04:59.190Z"
+    },
+    "5MZRB9G4snRWIG0otfxJYq": {
+      "album_name": "Haunt Me",
+      "artist": "Tim Hecker",
+      "total_tracks": 20,
+      "played_tracks": [
+        "1ysqPoEiWjLvJeIW47gwqw"
+      ],
+      "first_played": "2026-04-17T07:01:00.048Z",
+      "last_played": "2026-04-17T07:01:00.048Z"
+    },
+    "21mZBXYBKljtRluyCoCqCK": {
+      "album_name": "Quaristice",
+      "artist": "Autechre",
+      "total_tracks": 20,
+      "played_tracks": [
+        "0uqSV2Q6vvlxhqd1Go0tMh"
+      ],
+      "first_played": "2026-04-17T06:46:08.132Z",
+      "last_played": "2026-04-17T06:46:08.132Z"
     }
   },
   "completed_albums": {
