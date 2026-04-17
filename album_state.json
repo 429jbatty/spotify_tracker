@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-17T05:03:09.115Z",
+  "last_checked": "2026-04-17T06:43:15.616Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -340,10 +340,11 @@
       "artist": "Oneohtrix Point Never",
       "total_tracks": 10,
       "played_tracks": [
-        "4TBVy5cFYGmK5BA3rdMGEQ"
+        "4TBVy5cFYGmK5BA3rdMGEQ",
+        "3A0r8Pi9bbhLBI1OBhnzpQ"
       ],
       "first_played": "2026-04-17T05:03:09.115Z",
-      "last_played": "2026-04-17T05:03:09.115Z"
+      "last_played": "2026-04-17T05:58:53.254Z"
     },
     "250sWScTPsQKWAY9s7Oufy": {
       "album_name": "K\u00f6nigsforst",
@@ -370,20 +371,25 @@
       "artist": "Floating Points",
       "total_tracks": 12,
       "played_tracks": [
-        "3rkJH9BaiCWpRY718WTkBP"
+        "3rkJH9BaiCWpRY718WTkBP",
+        "343MTAHIcZRw91arzrMeDs"
       ],
       "first_played": "2026-04-17T04:44:27.676Z",
-      "last_played": "2026-04-17T04:44:27.676Z"
+      "last_played": "2026-04-17T05:44:06.905Z"
     },
     "5ij6VfAkBwTa5Y3951PdAx": {
       "album_name": "Burial",
       "artist": "Burial",
       "total_tracks": 13,
       "played_tracks": [
-        "4CetCOzy2sv4DcMJJBa8lj"
+        "4CetCOzy2sv4DcMJJBa8lj",
+        "4VIyN0UbWutIfE529r0XOg",
+        "1vyeqnphXY3hw1G4AF5yup",
+        "3Qm4zsH9urKCM7Vs2vBVtd",
+        "3iyQXaGgxEVOJ6ChpIhbNB"
       ],
       "first_played": "2026-04-17T04:40:33.543Z",
-      "last_played": "2026-04-17T04:40:33.543Z"
+      "last_played": "2026-04-17T05:09:39.193Z"
     },
     "1iRPiEYHIX2zpF8lkW54SK": {
       "album_name": "Untrue",
@@ -407,6 +413,131 @@
       "first_played": "2026-04-17T04:35:15.401Z",
       "last_played": "2026-04-17T03:44:32.576Z",
       "completion_logged": true
+    },
+    "6WeIO0CpDMiMXTglv0KuLr": {
+      "album_name": "Nothing Is Still",
+      "artist": "Leon Vynehall",
+      "total_tracks": 10,
+      "played_tracks": [
+        "2PFpbLMTUkHfW2cBIkthMw",
+        "0lDKZO6dS927plsK7SGmh4",
+        "1wg78EYrIcGyC9x1TeOD5e"
+      ],
+      "first_played": "2026-04-17T06:43:15.616Z",
+      "last_played": "2026-04-17T05:05:58.273Z"
+    },
+    "5QIf4hNIAksV1uMCXHVkAZ": {
+      "album_name": "Substrata + Man with a Movie Camera",
+      "artist": "Biosphere",
+      "total_tracks": 21,
+      "played_tracks": [
+        "4K4kedXFAuW6gn8iwgGFTw"
+      ],
+      "first_played": "2026-04-17T06:39:29.223Z",
+      "last_played": "2026-04-17T06:39:29.223Z"
+    },
+    "3GzIvKYXNOBViT8TveArjx": {
+      "album_name": "Virgins",
+      "artist": "Tim Hecker",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4FTPWFrUzsZUYvIC1VSBxU"
+      ],
+      "first_played": "2026-04-17T06:35:18.265Z",
+      "last_played": "2026-04-17T06:35:18.265Z"
+    },
+    "32Nl49izVyngH22kD1lrkk": {
+      "album_name": "Pop",
+      "artist": "GAS",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6tjzp1mCVaTeK5ZFAye3Ou"
+      ],
+      "first_played": "2026-04-17T06:29:30.547Z",
+      "last_played": "2026-04-17T06:29:30.547Z"
+    },
+    "2SZZihZiCsFo87NKxDfxlH": {
+      "album_name": "Selected Ambient Works Volume II",
+      "artist": "Aphex Twin",
+      "total_tracks": 24,
+      "played_tracks": [
+        "0Pg0frSTti7d8Ck1OmOYkz",
+        "3jRCZkYVcDniUrXjL71QwE"
+      ],
+      "first_played": "2026-04-17T06:19:39.560Z",
+      "last_played": "2026-04-17T05:56:05.772Z"
+    },
+    "1Z2jkEtW5Sc9wWVxUgyG0E": {
+      "album_name": "Apollo",
+      "artist": "Brian Eno",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1ps5sx71OhHiBVmGiKQSne",
+        "4bBs07tSkVLzETwbgPlxdl"
+      ],
+      "first_played": "2026-04-17T06:15:24.235Z",
+      "last_played": "2026-04-17T05:26:05.516Z"
+    },
+    "6uO5B6km2Dco28tOBmZtSU": {
+      "album_name": "The Campfire Headphase",
+      "artist": "Boards of Canada",
+      "total_tracks": 15,
+      "played_tracks": [
+        "2DQlQcYponGtEwvEHRHYvu"
+      ],
+      "first_played": "2026-04-17T06:11:20.171Z",
+      "last_played": "2026-04-17T06:11:20.171Z"
+    },
+    "5JQlsvP6k7mHPFsOEAjSUE": {
+      "album_name": "Foundation",
+      "artist": "Breakage",
+      "total_tracks": 16,
+      "played_tracks": [
+        "6oDRq4PtCKapT2JAhVYp25"
+      ],
+      "first_played": "2026-04-17T06:05:55.341Z",
+      "last_played": "2026-04-17T06:05:55.341Z"
+    },
+    "4Lx8daXjNFODMthnNcRQUp": {
+      "album_name": "Sakura",
+      "artist": "Susumu Yokota",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6qsZP3u6wkeRDFd4GiLLOg",
+        "71WG1HFNnu02kbqVTktmlh"
+      ],
+      "first_played": "2026-04-17T05:48:45.425Z",
+      "last_played": "2026-04-17T05:21:39.186Z"
+    },
+    "6Iu8toVsvCc3I4INxYiVIy": {
+      "album_name": "Ravedeath, 1972",
+      "artist": "Tim Hecker",
+      "total_tracks": 12,
+      "played_tracks": [
+        "27Wy3mCVRdW9ih3jFxRvtb"
+      ],
+      "first_played": "2026-04-17T05:40:02.362Z",
+      "last_played": "2026-04-17T05:40:02.362Z"
+    },
+    "2oJo7cB45gMVuRsaWNwDq2": {
+      "album_name": "Drukqs",
+      "artist": "Aphex Twin",
+      "total_tracks": 30,
+      "played_tracks": [
+        "6pHuMjk9O1G3XTTqbnpkTl"
+      ],
+      "first_played": "2026-04-17T05:17:28.948Z",
+      "last_played": "2026-04-17T05:17:28.948Z"
+    },
+    "2bZqfthFHCXrKjoL1jpEE2": {
+      "album_name": "Feast / Beast",
+      "artist": "Clark",
+      "total_tracks": 29,
+      "played_tracks": [
+        "1LJKALrTelI9M6aic3xtly"
+      ],
+      "first_played": "2026-04-17T05:14:03.660Z",
+      "last_played": "2026-04-17T05:14:03.660Z"
     }
   },
   "completed_albums": {
