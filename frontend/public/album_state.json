@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-16T21:23:53.118Z",
+  "last_checked": "2026-04-17T05:03:09.115Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -333,6 +333,79 @@
       ],
       "first_played": "2026-04-16T19:50:45.996Z",
       "last_played": "2026-04-16T18:51:53.062Z",
+      "completion_logged": true
+    },
+    "0p7nH5bz0pWBor10osUBuD": {
+      "album_name": "R Plus Seven",
+      "artist": "Oneohtrix Point Never",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4TBVy5cFYGmK5BA3rdMGEQ"
+      ],
+      "first_played": "2026-04-17T05:03:09.115Z",
+      "last_played": "2026-04-17T05:03:09.115Z"
+    },
+    "250sWScTPsQKWAY9s7Oufy": {
+      "album_name": "K\u00f6nigsforst",
+      "artist": "GAS",
+      "total_tracks": 8,
+      "played_tracks": [
+        "7joLh1gqRVsHuwccyjILbj"
+      ],
+      "first_played": "2026-04-17T04:58:02.971Z",
+      "last_played": "2026-04-17T04:58:02.971Z"
+    },
+    "5SSf6lNbSoaAUx6PxQVjlP": {
+      "album_name": "The Pearl",
+      "artist": "Harold Budd, Brian Eno",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4IN34Iq5T9x1vN6MASxvS9"
+      ],
+      "first_played": "2026-04-17T04:48:24.436Z",
+      "last_played": "2026-04-17T04:48:24.436Z"
+    },
+    "1WwZwdTICfaZI51BIIEN9z": {
+      "album_name": "Crush",
+      "artist": "Floating Points",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3rkJH9BaiCWpRY718WTkBP"
+      ],
+      "first_played": "2026-04-17T04:44:27.676Z",
+      "last_played": "2026-04-17T04:44:27.676Z"
+    },
+    "5ij6VfAkBwTa5Y3951PdAx": {
+      "album_name": "Burial",
+      "artist": "Burial",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4CetCOzy2sv4DcMJJBa8lj"
+      ],
+      "first_played": "2026-04-17T04:40:33.543Z",
+      "last_played": "2026-04-17T04:40:33.543Z"
+    },
+    "1iRPiEYHIX2zpF8lkW54SK": {
+      "album_name": "Untrue",
+      "artist": "Burial",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6cDA9iqE0eD68QsdT6kJxL",
+        "2qSe6XMtbjHIqte1BeAdRK",
+        "18Znx47PDdm8uNoyljW4zQ",
+        "615bAxPCk03PC2sTdK4XPX",
+        "5oLDBlcP7njmPA8gqxprVZ",
+        "0YPg9B9SUzo528Pqhnlt62",
+        "7vZTj01UKQ6OuTItkQfxuy",
+        "6sU8lAXpyEXeDeyZ0KSNri",
+        "4XsWxIKoGsECypK2V1PA8V",
+        "5m1VR5YlkswXMoHSmGWFqa",
+        "5lxQAoqEP5QLcC5056NOYK",
+        "55gnBQAhU5rGzLsXTAx2MM",
+        "0Ve32fZr4vgnrGzFIfvtV4"
+      ],
+      "first_played": "2026-04-17T04:35:15.401Z",
+      "last_played": "2026-04-17T03:44:32.576Z",
       "completion_logged": true
     }
   },
@@ -404385,9 +404458,201 @@
       "listen_history": [
         "2026-04-16T18:51:53.062Z"
       ]
+    },
+    "Burial - Untrue": {
+      "artist": "Burial",
+      "artist_mbid": "9ddce51c-2b75-4b3e-ac8c-1db09e7c89c6",
+      "name": "Untrue",
+      "release_group_mbid": "fddedc4f-7a2e-3d7d-9ec5-1705c416f3f4",
+      "label": "Hyperdub",
+      "release_year": 2007,
+      "release_month": 11,
+      "release_day": 5,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "[Untrue intro]",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8a39d6ae-deac-4cc3-b398-1a12f34a34a9"
+        },
+        {
+          "position": "2",
+          "title": "Archangel",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "e66b1022-d2d4-4d92-8916-72970de6426e"
+        },
+        {
+          "position": "3",
+          "title": "Near Dark",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "faa191c2-ec08-4cb6-98b7-9681abaf6d00"
+        },
+        {
+          "position": "4",
+          "title": "Ghost Hardware",
+          "credits": [
+            [
+              "Burial",
+              "performer",
+              ""
+            ],
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1ceb8b3d-fc7b-4b05-902f-2fec4170b9cd"
+        },
+        {
+          "position": "5",
+          "title": "Endorphin",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "397fbb93-24bf-4cfd-b905-f16748e5520f"
+        },
+        {
+          "position": "6",
+          "title": "Etched Headplate",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1eacb3ca-e8e1-4588-920d-1187dcb8ca79"
+        },
+        {
+          "position": "7",
+          "title": "In McDonalds",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "17abfe47-bd84-4e6d-b584-2ba2a5973a36"
+        },
+        {
+          "position": "8",
+          "title": "Untrue",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "0393be14-3d61-4a56-b3fc-6453b22ec058"
+        },
+        {
+          "position": "9",
+          "title": "Shell of Light",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d1b1d17a-87c8-410a-8d4b-345a7f127c88"
+        },
+        {
+          "position": "10",
+          "title": "Dog Shelter",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b8c9aff1-968e-46ea-a738-9efc83519d5b"
+        },
+        {
+          "position": "11",
+          "title": "Homeless",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "973442d3-80e8-488e-873e-b6bc3dad9ca9"
+        },
+        {
+          "position": "12",
+          "title": "UK",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "755b46b4-0f6b-4ace-8f30-e13127b22265"
+        },
+        {
+          "position": "13",
+          "title": "Raver",
+          "credits": [
+            [
+              "Burial",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "db6190ff-63a4-407d-bf2d-56124ae5d72c"
+        }
+      ],
+      "tags": [
+        "electronic",
+        "dubstep",
+        "british",
+        "uk",
+        "britannique",
+        "2007",
+        "hauntology",
+        "grime",
+        "dance and electronica",
+        "electronica dubstep",
+        "future garage"
+      ],
+      "image_url": "https://coverartarchive.org/release/3b78aca5-18da-4183-a5dc-51626d39e8ff/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-17T03:44:32.576Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Burial - Untrue",
     "Sky Ferreira - Night Time, My Time",
     "Nick Drake - Pink Moon",
     "John Martyn - One World",
@@ -404396,7 +404661,6 @@
     "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
     "Soft Soundscapes - River",
     "The Slumbering One - Peaceful Slumber",
-    "John Martyn - Solid Air",
-    "Serge Gainsbourg - Histoire de Melody Nelson"
+    "John Martyn - Solid Air"
   ]
 }
