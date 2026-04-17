@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-17T14:27:25.141Z",
+  "last_checked": "2026-04-17T17:35:33.696Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -66,27 +66,6 @@
       "first_played": "2026-04-15T18:14:40.331Z",
       "last_played": "2026-04-15T18:57:46.857Z"
     },
-    "7DC0pE943VR5tAKIvQXHts": {
-      "album_name": "Figure 8",
-      "artist": "Elliott Smith",
-      "total_tracks": 16,
-      "played_tracks": [
-        "4xfAVJL8R7mVYbDk8a9xOY"
-      ],
-      "first_played": "2026-04-15T17:28:22.963Z",
-      "last_played": "2026-04-15T17:28:22.963Z"
-    },
-    "53cxrg7kbFQxDizY0kcDQo": {
-      "album_name": "Parallelograms",
-      "artist": "Linda Perhacs",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1EY7zEIE32twYy7zL05WG2",
-        "0PSxgms5q4pEtRGXRw2oWK"
-      ],
-      "first_played": "2026-04-15T17:26:23.166Z",
-      "last_played": "2026-04-15T17:03:55.600Z"
-    },
     "1klALx0u4AavZNEvC4LrTL": {
       "album_name": "The Beatles (Remastered)",
       "artist": "The Beatles",
@@ -98,46 +77,6 @@
       ],
       "first_played": "2026-04-15T17:23:53.285Z",
       "last_played": "2026-04-15T19:06:32.856Z"
-    },
-    "7JAh6mfXLsGojvj9a4fnDT": {
-      "album_name": "Bavarian Fruit Bread",
-      "artist": "Hope Sandoval & The Warm Inventions",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0OVvantI7wPKGnZM7gcJxa"
-      ],
-      "first_played": "2026-04-15T17:21:07.207Z",
-      "last_played": "2026-04-15T17:21:07.207Z"
-    },
-    "0iO91QmtRa5h2wRZ0CNAzS": {
-      "album_name": "Jessica Pratt",
-      "artist": "Jessica Pratt",
-      "total_tracks": 11,
-      "played_tracks": [
-        "57WGADwXrn3y0ds6sRz77l"
-      ],
-      "first_played": "2026-04-15T17:12:23.030Z",
-      "last_played": "2026-04-15T17:12:23.030Z"
-    },
-    "0zI2zWeDTMPZpVM3APGMTB": {
-      "album_name": "Desertshore",
-      "artist": "Nico",
-      "total_tracks": 8,
-      "played_tracks": [
-        "4XbVSkmhMaegga3UDg5J7p"
-      ],
-      "first_played": "2026-04-15T17:07:52.991Z",
-      "last_played": "2026-04-15T17:07:52.991Z"
-    },
-    "734AFYo34Q1zRpg9N8E2Ho": {
-      "album_name": "Joan Baez",
-      "artist": "Joan Baez",
-      "total_tracks": 16,
-      "played_tracks": [
-        "2hulWLdzjBexk2bxQpcUp7"
-      ],
-      "first_played": "2026-04-15T16:31:34.947Z",
-      "last_played": "2026-04-15T16:31:34.947Z"
     },
     "6iP3HGmoRXFUrKiml2QVkz": {
       "album_name": "It's A Wonderful Life",
@@ -345,10 +284,11 @@
         "1FlN2fZo6ph7iQ8gkQYeep",
         "6nMej5H3w4NmKynmLGfV2X",
         "18qKVgN8Gk9mmb2fsIVy57",
-        "6uyDJOfz9zxHGcFVft44Bx"
+        "6uyDJOfz9zxHGcFVft44Bx",
+        "6YtmXlaoK5pktbxpf8Fiwu"
       ],
       "first_played": "2026-04-17T05:03:09.115Z",
-      "last_played": "2026-04-17T08:46:18.157Z"
+      "last_played": "2026-04-17T15:05:14.278Z"
     },
     "250sWScTPsQKWAY9s7Oufy": {
       "album_name": "K\u00f6nigsforst",
@@ -584,10 +524,11 @@
         "1yvVHPffsrYngiDEHFgEhi",
         "0itLChB4g2Oavxp6oAUbVS",
         "0nuNl8d8i7zyThbntpAUpm",
-        "3J4PCgeDsKEI09UzozNm0p"
+        "3J4PCgeDsKEI09UzozNm0p",
+        "6po3snJaGM1Rd7juRFTBIp"
       ],
       "first_played": "2026-04-17T08:24:17.722Z",
-      "last_played": "2026-04-17T13:47:57.562Z"
+      "last_played": "2026-04-17T14:57:39.462Z"
     },
     "5yHH2l3d2d2K5tNQGorEdR": {
       "album_name": "Radio Amor",
@@ -611,10 +552,11 @@
         "3X4dCNeVxPCqiRfyB5hJeH",
         "1n8IVhQ7v9pcUjiFcH8vbq",
         "0BuobeiCWrKv0OPKngNSHK",
-        "3uUp2XAUdFpToskLaFFOXI"
+        "3uUp2XAUdFpToskLaFFOXI",
+        "5dgplKAI3LBjqSaPK4fHYY"
       ],
       "first_played": "2026-04-17T08:12:39.548Z",
-      "last_played": "2026-04-17T13:17:12.707Z"
+      "last_played": "2026-04-17T15:03:41.280Z"
     },
     "7H6gso8aBfKK7mlouLCsW3": {
       "album_name": "Replica",
@@ -633,10 +575,11 @@
       "total_tracks": 11,
       "played_tracks": [
         "1t86Aqm7uk30h9vVOl5c9h",
-        "3ZdjC8RuAoMxmtBskstYvR"
+        "3ZdjC8RuAoMxmtBskstYvR",
+        "6poTjpv8CzaYIYbwJ71GV5"
       ],
       "first_played": "2026-04-17T07:40:29.568Z",
-      "last_played": "2026-04-17T11:48:52.592Z"
+      "last_played": "2026-04-17T15:08:57.563Z"
     },
     "0ntm3YaiXVkkGitWl2XASV": {
       "album_name": "Symbol",
@@ -688,10 +631,11 @@
       "played_tracks": [
         "7o2AeQZzfCERsRmOM86EcB",
         "4Sxv0whUHWzHK5T8uuP66S",
-        "09opLVMX7cfKVKlP3iKZR1"
+        "09opLVMX7cfKVKlP3iKZR1",
+        "7KRQoq9GeWeCm0ZAXg5XMb"
       ],
       "first_played": "2026-04-17T09:57:29.090Z",
-      "last_played": "2026-04-17T12:30:41.116Z"
+      "last_played": "2026-04-17T14:38:03.628Z"
     },
     "3p1ZD8q3sGC6tf81QeVrYI": {
       "album_name": "Tri Repetae",
@@ -730,10 +674,11 @@
       "total_tracks": 11,
       "played_tracks": [
         "7uXRhVsCHwKVV8gYeA5CXS",
-        "7oZwhOIxuFxRzqKmOKDgiO"
+        "7oZwhOIxuFxRzqKmOKDgiO",
+        "1Vd2YEy1uOaOjsAjJ1IMwb"
       ],
       "first_played": "2026-04-17T12:06:43.087Z",
-      "last_played": "2026-04-17T12:42:27.388Z"
+      "last_played": "2026-04-17T14:45:52.185Z"
     },
     "7d7WtcAp4qNtfwOqzAPQMJ": {
       "album_name": "Garbage",
@@ -814,6 +759,135 @@
       ],
       "first_played": "2026-04-17T12:35:50.542Z",
       "last_played": "2026-04-17T12:35:50.542Z"
+    },
+    "4oniyB3TRFhjglVSqVgy9e": {
+      "album_name": "Wuthering Heights",
+      "artist": "Charli xcx",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0T3sHoiR3t9HtwbIOgTI7J",
+        "4llQhQnQ0xKel20HqjZyMt",
+        "15ApEgs3gaAMKOEj2vzH1p"
+      ],
+      "first_played": "2026-04-17T17:35:33.696Z",
+      "last_played": "2026-04-17T16:58:26.036Z"
+    },
+    "18iTOiWJODEd1RjX0cQ43U": {
+      "album_name": "The Long Lonesome Road",
+      "artist": "Dick Curless",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6dQ64Mzc2sgL7K8tbs2rhD",
+        "3BxelzfWPYQDIMsDwTcM92"
+      ],
+      "first_played": "2026-04-17T16:54:27.299Z",
+      "last_played": "2026-04-17T16:19:23.377Z"
+    },
+    "36VWXRSWTUDDODmvEjd0ar": {
+      "album_name": "Country and Western",
+      "artist": "Johnny Bond",
+      "total_tracks": 31,
+      "played_tracks": [
+        "3h2BhbOOABtrXSwZ7I3pTi",
+        "38BvaHFHMbGAVmqLrh0G0t"
+      ],
+      "first_played": "2026-04-17T16:33:23.082Z",
+      "last_played": "2026-04-17T16:16:22.626Z"
+    },
+    "76ZuKW5UFJ2qi2KOpTF1De": {
+      "album_name": "The Drifter",
+      "artist": "Marty Robbins",
+      "total_tracks": 12,
+      "played_tracks": [
+        "49gKf6bWhRRlWqAk5BDNTs"
+      ],
+      "first_played": "2026-04-17T16:30:53.720Z",
+      "last_played": "2026-04-17T16:30:53.720Z"
+    },
+    "3byMNewZfj02zUw60uB0LU": {
+      "album_name": "Southbound",
+      "artist": "Doc Watson",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5uBu8oUroBGGI2iEtU8POk"
+      ],
+      "first_played": "2026-04-17T16:27:53.097Z",
+      "last_played": "2026-04-17T16:27:53.097Z"
+    },
+    "6z5cOIVvT5vR4A3j9p4il6": {
+      "album_name": "Swingin' out West",
+      "artist": "Jerry Burnham, Don Burnham",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3uo7AJY7GhQ1IZMQpMZzBH"
+      ],
+      "first_played": "2026-04-17T16:24:23.172Z",
+      "last_played": "2026-04-17T16:24:23.172Z"
+    },
+    "2S9czi8B6ThrmMyQTFMu65": {
+      "album_name": "Vintage Collections",
+      "artist": "Ferlin Husky",
+      "total_tracks": 20,
+      "played_tracks": [
+        "0Ym2azWtRJhCWozdKc0d9t"
+      ],
+      "first_played": "2026-04-17T16:21:23.403Z",
+      "last_played": "2026-04-17T16:21:23.403Z"
+    },
+    "4CDCQiAvoym6N4qAmh7Dhm": {
+      "album_name": "Return of the Gunfighter",
+      "artist": "Marty Robbins",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1nivSuLqmUwqPNfjTcltl7"
+      ],
+      "first_played": "2026-04-17T16:14:53.400Z",
+      "last_played": "2026-04-17T16:14:53.400Z"
+    },
+    "3kQpBS26lAj0A0VGl1snRl": {
+      "album_name": "Gunfighter Ballads And Trail Songs",
+      "artist": "Marty Robbins",
+      "total_tracks": 15,
+      "played_tracks": [
+        "5ESnx7UWLIGmu4sUfR5hGi",
+        "68FTJoO8edSpzuYb6lGW6P",
+        "4iJr2NWIV27oktDKhXB6fC",
+        "1lAh2EfGm0VOPeaws5sqB8",
+        "2HuYj0YVL65hDEQe2cKwgg",
+        "4f8hBeMXMvssn6HtFAtblo",
+        "1DvLnmJqQYtWD29uB6S8z3",
+        "62rmfpQuieSgCITPX819sR",
+        "7BvaaY9U5h6UdHgrK3GyPh",
+        "3xW8tODLhF9AOfWdi7i7Rg",
+        "7tnoflnylUKY7P7WKGj4n2",
+        "1C0kmtVhqjfm1U9mXpvyNe",
+        "4G9f3VGp9wjE49JUfg3XtO",
+        "66RbVtQkNBFb7BcebSkeAT",
+        "0AQquaENerGps8BQmbPw14"
+      ],
+      "first_played": "2026-04-17T16:12:23.408Z",
+      "last_played": "2026-04-17T15:22:23.032Z",
+      "completion_logged": true
+    },
+    "07Ckd8KDDxcbY5iUXjhuex": {
+      "album_name": "Tomorrow's Harvest",
+      "artist": "Boards of Canada",
+      "total_tracks": 17,
+      "played_tracks": [
+        "6ngx6PjG5Gy2y1WJl3epZQ"
+      ],
+      "first_played": "2026-04-17T15:16:18.453Z",
+      "last_played": "2026-04-17T15:16:18.453Z"
+    },
+    "5Rc5G86a4zX96HlyHYeGsX": {
+      "album_name": "Lunatic Harness",
+      "artist": "\u00b5-Ziq",
+      "total_tracks": 13,
+      "played_tracks": [
+        "4miEA9U9PZKBYryATLzCKC"
+      ],
+      "first_played": "2026-04-17T14:32:40.577Z",
+      "last_played": "2026-04-17T14:32:40.577Z"
     }
   },
   "completed_albums": {
@@ -405056,9 +405130,144 @@
       "listen_history": [
         "2026-04-17T03:44:32.576Z"
       ]
+    },
+    "Marty Robbins - Gunfighter Ballads And Trail Songs": {
+      "artist": "Marty Robbins",
+      "artist_mbid": "2c2add7c-9a99-4812-a20e-870d331f01fd",
+      "name": "Gunfighter Ballads and Trail Songs",
+      "release_group_mbid": "81e9ea0b-e334-35b3-9d10-f9a5f8bea5ae",
+      "label": "Columbia",
+      "release_year": 1959,
+      "release_month": 9,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Big Iron",
+          "credits": [
+            [
+              "Don Law",
+              "producer",
+              ""
+            ]
+          ],
+          "recording_mbid": "0d45c63d-083b-45cb-aebd-e21446fe2d10"
+        },
+        {
+          "position": "2",
+          "title": "A Hundred and Sixty Acres",
+          "credits": {},
+          "recording_mbid": "1f46e7a4-7787-4a36-9cef-bffd94aed816"
+        },
+        {
+          "position": "3",
+          "title": "They\u2019re Hanging Me Tonight",
+          "credits": {},
+          "recording_mbid": "02c2443d-7c82-4642-80a2-9432e532dcc0"
+        },
+        {
+          "position": "4",
+          "title": "Cool Water",
+          "credits": {},
+          "recording_mbid": "7ef7f1fc-d94d-4fcd-a15b-a51d926e0594"
+        },
+        {
+          "position": "5",
+          "title": "Billy the Kid",
+          "credits": [
+            [
+              "Marty Robbins",
+              "arranger",
+              ""
+            ]
+          ],
+          "recording_mbid": "9b4506bb-294d-4e59-bfe2-a694bbad538e"
+        },
+        {
+          "position": "6",
+          "title": "Utah Carol",
+          "credits": {},
+          "recording_mbid": "dfd2d25d-388d-4d43-9edf-3d940713f86f"
+        },
+        {
+          "position": "7",
+          "title": "The Strawberry Roan",
+          "credits": [
+            [
+              "Marty Robbins",
+              "arranger",
+              ""
+            ]
+          ],
+          "recording_mbid": "51b64658-b715-4f3f-b682-927b2dd69200"
+        },
+        {
+          "position": "8",
+          "title": "The Master\u2019s Call",
+          "credits": {},
+          "recording_mbid": "8d9a8fe1-1470-4599-84a1-5c252d48c9af"
+        },
+        {
+          "position": "9",
+          "title": "Running Gun",
+          "credits": {},
+          "recording_mbid": "01a8275a-2985-4b81-bbff-58fceee83830"
+        },
+        {
+          "position": "10",
+          "title": "El Paso",
+          "credits": {},
+          "recording_mbid": "55ab4c7b-15a7-4402-9487-c113507dfe0e"
+        },
+        {
+          "position": "11",
+          "title": "In the Valley",
+          "credits": {},
+          "recording_mbid": "0c6890f8-e096-4515-8ca5-1d145c585f49"
+        },
+        {
+          "position": "12",
+          "title": "The Little Green Valley",
+          "credits": {},
+          "recording_mbid": "4fe662c8-bcf1-420e-8990-865423d2ed80"
+        },
+        {
+          "position": "13",
+          "title": "The Hanging Tree",
+          "credits": {},
+          "recording_mbid": "8c55fe83-f555-4bc5-a1eb-a5a97cee92b6"
+        },
+        {
+          "position": "14",
+          "title": "Saddle Tramp",
+          "credits": {},
+          "recording_mbid": "3fba2cdc-fc31-4c74-ada0-c9bbbad0aa57"
+        },
+        {
+          "position": "15",
+          "title": "El Paso (full-length version)",
+          "credits": {},
+          "recording_mbid": "ddf23a3d-fc36-4921-934f-a429ba588444"
+        }
+      ],
+      "tags": [
+        "country",
+        "traditional country",
+        "nashville",
+        "country-pop",
+        "tejano",
+        "cowboy",
+        "sound/countrypolitan"
+      ],
+      "image_url": "https://coverartarchive.org/release/9d8994e8-cd09-4071-8607-289690ee02d2/front",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-17T15:22:23.032Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Marty Robbins - Gunfighter Ballads And Trail Songs",
     "Burial - Untrue",
     "Sky Ferreira - Night Time, My Time",
     "Nick Drake - Pink Moon",
@@ -405067,7 +405276,6 @@
     "Bridget St John - Songs For The Gentle Man",
     "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
     "Soft Soundscapes - River",
-    "The Slumbering One - Peaceful Slumber",
-    "John Martyn - Solid Air"
+    "The Slumbering One - Peaceful Slumber"
   ]
 }
