@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-18T13:49:42.359Z",
+  "last_checked": "2026-04-18T16:14:25.872Z",
   "albums_in_progress": {
     "5mwOo1zikswhmfHvtqVSXg": {
       "album_name": "Pink Moon",
@@ -709,6 +709,19 @@
       ],
       "first_played": "2026-04-17T14:32:40.577Z",
       "last_played": "2026-04-17T14:32:40.577Z"
+    },
+    "2VYo0PSqdxVTMI0ydKUtoL": {
+      "album_name": "With A Hammer",
+      "artist": "Yaeji",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7n5e6Snjp8tbqwzAPoYjXn",
+        "2RgQKoWxEB6KGu8h4a7R46",
+        "4uCwlBl11LtnGk4WpsIyOE",
+        "3kP8ole19xwHdHj1DKN0PC"
+      ],
+      "first_played": "2026-04-18T14:50:15.616Z",
+      "last_played": "2026-04-18T15:14:19.317Z"
     }
   },
   "completed_albums": {
