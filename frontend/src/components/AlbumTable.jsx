@@ -95,7 +95,7 @@ function AlbumTable({ albums, onFilterSelect }) {
             </TableRow>
           </TableHeader>
 
-          <TableBody className="bg-primary-foreground">
+          <TableBody className="bg-muted">
             {sortedAlbums.map((album) => (
               <AlbumRow
                 key={album.id}

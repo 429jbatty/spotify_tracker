@@ -78,7 +78,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen space-y-10">
+    <div className="min-h-screen space-y-10 bg-[linear-gradient(180deg,hsl(var(--chart-1)/0.12),transparent_18rem),linear-gradient(90deg,hsl(var(--chart-4)/0.06),transparent_28rem)]">
 
       {/* vertical stack header and search bar */}
       <div className="flex flex-col gap-4">
