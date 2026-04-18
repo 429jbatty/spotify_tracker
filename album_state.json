@@ -99801,6 +99801,7 @@
       "artist_mbid": "925228de-bbe5-4c7b-b76f-78e382ec9148",
       "name": "Paid in Full",
       "release_group_mbid": "e124668d-731c-3d2f-bd38-facf91df5e27",
+      "release_mbid": "5cbdd275-5dcd-459f-b9a4-f81eb9803aa2",
       "label": "Island",
       "release_year": 1987,
       "release_month": 7,
@@ -99808,7 +99809,7 @@
       "tracklist": [
         {
           "position": "1",
-          "title": "I Ain\u2019t No Joke",
+          "title": "I Ain't No Joke",
           "credits": [
             [
               "Patrick Adams",
@@ -99828,6 +99829,16 @@
             [
               "Rakim",
               "producer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
               ""
             ]
           ],
@@ -99835,7 +99846,7 @@
         },
         {
           "position": "2",
-          "title": "Eric B. Is on the Cut",
+          "title": "Eric B Is On The Cut",
           "credits": [
             [
               "Patrick Adams",
@@ -99855,6 +99866,16 @@
             [
               "Rakim",
               "producer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
               ""
             ]
           ],
@@ -99888,6 +99909,16 @@
               "Marley Marl",
               "remixer",
               ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
             ]
           ],
           "recording_mbid": "8c2da050-894d-430a-a072-3e490259b02b"
@@ -99915,13 +99946,23 @@
               "Rakim",
               "producer",
               ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
             ]
           ],
           "recording_mbid": "b5dd3e75-3eb6-4541-a4b5-b839b21c1b67"
         },
         {
           "position": "5",
-          "title": "Move the Crowd",
+          "title": "Move The Crowd",
           "credits": [
             [
               "Patrick Adams",
@@ -99941,6 +99982,16 @@
             [
               "Rakim",
               "producer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
               ""
             ]
           ],
@@ -99948,7 +99999,7 @@
         },
         {
           "position": "6",
-          "title": "Paid in Full",
+          "title": "Paid In Full",
           "credits": [
             [
               "Patrick Adams",
@@ -99968,6 +100019,16 @@
             [
               "Rakim",
               "producer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
               ""
             ]
           ],
@@ -99975,7 +100036,7 @@
         },
         {
           "position": "7",
-          "title": "As the Rhyme Goes On",
+          "title": "As The Rhyme Goes On",
           "credits": [
             [
               "Patrick Adams",
@@ -99995,6 +100056,16 @@
             [
               "Rakim",
               "producer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
               ""
             ]
           ],
@@ -100022,6 +100093,16 @@
             [
               "Rakim",
               "producer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
               ""
             ]
           ],
@@ -100055,6 +100136,16 @@
               "Marley Marl",
               "remixer",
               ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
             ]
           ],
           "recording_mbid": "c68f2137-a0bd-4846-a2a3-a274ebd64615"
@@ -100082,45 +100173,282 @@
               "Rakim",
               "producer",
               ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
             ]
           ],
           "recording_mbid": "b55d3025-5119-4359-a9a2-24837f98fb7a"
         },
         {
-          "position": "11",
-          "title": "As the Rhyme Goes On (radio mix)",
-          "credits": {},
-          "recording_mbid": "674d4550-ca16-41fd-9ba0-257085d95abf"
-        },
-        {
-          "position": "12",
-          "title": "Paid in Full (Mini Madness: The Coldcut remix)",
+          "position": "1",
+          "title": "Paid in Full (Seven Minutes of Madness - The Cold cut remix)",
           "credits": [
+            [
+              "Raine Shine",
+              "engineer",
+              ""
+            ],
+            [
+              "Matt Black",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "Matt Black",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "DJ Cell",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "DJ Cell",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "Eric B. & Rakim",
+              "producer",
+              ""
+            ],
             [
               "Coldcut",
               "remixer",
               ""
+            ],
+            [
+              "Rakim",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
             ]
           ],
-          "recording_mbid": "375765e8-50eb-4a2c-b3b9-564e3c922d14"
+          "recording_mbid": "8e61746b-68f1-4fc5-94ee-1c82b297b8f1"
+        },
+        {
+          "position": "2",
+          "title": "I Know You Got Soul (The Richie Rich megamix)",
+          "credits": [
+            [
+              "PJ Dynamix",
+              "engineer",
+              ""
+            ],
+            [
+              "Richie Rich",
+              "remixer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "29440cb7-0646-49bb-9b6f-7e71a5bbe120"
+        },
+        {
+          "position": "3",
+          "title": "Move the Crowd (The Wild Bunch remix)",
+          "credits": {},
+          "recording_mbid": "533485a6-af9a-4a17-8e80-a12f03386432"
+        },
+        {
+          "position": "4",
+          "title": "Paid in Full (Derek B's Urban Respray)",
+          "credits": [
+            [
+              "Derek B",
+              "remixer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "92bb106e-6ff2-415f-a058-dce0d4ef1bad"
+        },
+        {
+          "position": "5",
+          "title": "As the Rhyme Goes On (Pumpin' the Turbo - Chad Jay in Effect)",
+          "credits": [
+            [
+              "Chad Jay",
+              "remixer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "2e0b5fc7-f849-42cf-9488-93359f1083da"
+        },
+        {
+          "position": "6",
+          "title": "Move the Crowd (Beatmix by the Democratic 3 Featuring DJ Slack)",
+          "credits": [
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "28325ab7-9b63-40e3-8e1e-ba6a8f883aa5"
+        },
+        {
+          "position": "7",
+          "title": "My Melody (original mix)",
+          "credits": {},
+          "recording_mbid": "6047618b-d50b-4823-9465-43472d049091"
+        },
+        {
+          "position": "8",
+          "title": "I Know You Got Soul (a cappella)",
+          "credits": [
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "7095c19e-2a01-4547-8305-9f719d50d3f0"
+        },
+        {
+          "position": "9",
+          "title": "I Know You Got Soul (dub)",
+          "credits": [
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "bd9e7cb2-8578-45ea-9f19-8129429879ec"
+        },
+        {
+          "position": "10",
+          "title": "Eric B. Is President (dub)",
+          "credits": [
+            [
+              "Marley Marl",
+              "remixer",
+              ""
+            ],
+            [
+              "MC Shan",
+              "remixer",
+              ""
+            ],
+            [
+              "Eric B.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rakim",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "937af3ef-1d18-4294-bcf0-8c2079103681"
+        },
+        {
+          "position": "11",
+          "title": "My Melody (dub)",
+          "credits": {},
+          "recording_mbid": "c60884aa-de11-40e3-af8c-1d77db31725d"
         }
       ],
+      "genres": [],
       "tags": [
-        "rap",
         "blues",
-        "hip-hop",
-        "hip hop",
-        "conscious",
-        "turntablism",
-        "hip hop rap",
         "boom bap",
+        "conscious",
         "east coast hip hop",
         "hardcore hip hop",
-        "instrumental hip hop"
+        "hip hop",
+        "hip hop rap",
+        "instrumental hip hop",
+        "turntablism"
       ],
-      "image_url": "https://coverartarchive.org/release/d4fe62bb-5a97-4013-a6e5-67db03be59a6/front",
-      "listen_history": [],
-      "source": "musicbrainz"
+      "image_url": "https://coverartarchive.org/release/a9a29f09-a77a-4d2a-b1cc-e4d7c3458848/4421488020-500.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-10T18:33:08.634Z"
+      ]
     },
     "Eric Clapton - Slowhand": {
       "artist": "Eric Clapton",
@@ -400872,335 +401200,6 @@
       ],
       "completion_logged": true
     },
-    "Eric B. & Rakim - Paid In Full": {
-      "artist": "Eric B. & Rakim",
-      "artist_mbid": "925228de-bbe5-4c7b-b76f-78e382ec9148",
-      "name": "Paid in Full",
-      "release_group_mbid": "e124668d-731c-3d2f-bd38-facf91df5e27",
-      "label": "Island",
-      "release_year": 1987,
-      "release_month": 7,
-      "release_day": 7,
-      "tracklist": [
-        {
-          "position": "1",
-          "title": "I Ain\u2019t No Joke",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "f649ccf5-3cdb-4671-9284-c44ab5152430"
-        },
-        {
-          "position": "2",
-          "title": "Eric B. Is on the Cut",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "f24cfafb-9561-42ba-9a02-a108788ac42a"
-        },
-        {
-          "position": "3",
-          "title": "My Melody",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ],
-            [
-              "Marley Marl",
-              "remixer",
-              ""
-            ]
-          ],
-          "recording_mbid": "8c2da050-894d-430a-a072-3e490259b02b"
-        },
-        {
-          "position": "4",
-          "title": "I Know You Got Soul",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "b5dd3e75-3eb6-4541-a4b5-b839b21c1b67"
-        },
-        {
-          "position": "5",
-          "title": "Move the Crowd",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "f406d1c5-69ca-412f-a4c4-3fb07f37765d"
-        },
-        {
-          "position": "6",
-          "title": "Paid in Full",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "d286011f-31dd-40e6-9aa1-6244f7d636a0"
-        },
-        {
-          "position": "7",
-          "title": "As the Rhyme Goes On",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "771ef357-c3cc-4393-91ed-f2ad277af393"
-        },
-        {
-          "position": "8",
-          "title": "Chinese Arithmetic",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "2a55c719-3dd9-4d11-9fc4-064eda8edbb8"
-        },
-        {
-          "position": "9",
-          "title": "Eric B. Is President",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ],
-            [
-              "Marley Marl",
-              "remixer",
-              ""
-            ]
-          ],
-          "recording_mbid": "c68f2137-a0bd-4846-a2a3-a274ebd64615"
-        },
-        {
-          "position": "10",
-          "title": "Extended Beat",
-          "credits": [
-            [
-              "Patrick Adams",
-              "engineer",
-              ""
-            ],
-            [
-              "Elai Tubo",
-              "engineer",
-              ""
-            ],
-            [
-              "Eric B.",
-              "producer",
-              ""
-            ],
-            [
-              "Rakim",
-              "producer",
-              ""
-            ]
-          ],
-          "recording_mbid": "b55d3025-5119-4359-a9a2-24837f98fb7a"
-        },
-        {
-          "position": "11",
-          "title": "As the Rhyme Goes On (radio mix)",
-          "credits": {},
-          "recording_mbid": "674d4550-ca16-41fd-9ba0-257085d95abf"
-        },
-        {
-          "position": "12",
-          "title": "Paid in Full (Mini Madness: The Coldcut remix)",
-          "credits": [
-            [
-              "Coldcut",
-              "remixer",
-              ""
-            ]
-          ],
-          "recording_mbid": "375765e8-50eb-4a2c-b3b9-564e3c922d14"
-        }
-      ],
-      "tags": [
-        "rap",
-        "blues",
-        "hip-hop",
-        "hip hop",
-        "conscious",
-        "turntablism",
-        "hip hop rap",
-        "boom bap",
-        "east coast hip hop",
-        "hardcore hip hop",
-        "instrumental hip hop"
-      ],
-      "image_url": "https://coverartarchive.org/release/d4fe62bb-5a97-4013-a6e5-67db03be59a6/front",
-      "source": "musicbrainz",
-      "listen_history": [
-        "2026-04-10T18:33:08.634Z"
-      ],
-      "completion_logged": true
-    },
     "John Martyn - Solid Air": {
       "artist": "John Martyn",
       "artist_mbid": "e821a756-487f-4931-a02f-27cf11cec7bf",
@@ -403330,124 +403329,6 @@
         "2026-04-12T20:34:30.354Z"
       ]
     },
-    "Bridget St John - Songs For The Gentle Man": {
-      "artist": "Bridget St. John",
-      "artist_mbid": "db53fe45-d4a4-4b55-b74e-1ce069572704",
-      "name": "Songs for the Gentle Man",
-      "release_group_mbid": "fe939459-7a1d-3cd2-8020-b33f1649eb0e",
-      "label": "Dandelion Records",
-      "release_year": 1971,
-      "release_month": null,
-      "release_day": null,
-      "tracklist": [
-        {
-          "position": "1",
-          "title": "A Day Away",
-          "credits": {},
-          "recording_mbid": "94eae1ab-0af1-4d61-81a1-a1474eba7be9"
-        },
-        {
-          "position": "2",
-          "title": "City Crazy",
-          "credits": {},
-          "recording_mbid": "5b9d5774-404c-4fe2-8461-8842775e98d3"
-        },
-        {
-          "position": "3",
-          "title": "Early Morning Song",
-          "credits": {},
-          "recording_mbid": "877046ff-5cac-4cd8-b0b5-c9737bf1f968"
-        },
-        {
-          "position": "4",
-          "title": "Back to Stay",
-          "credits": {},
-          "recording_mbid": "0d9220b4-2b85-4dee-abf4-e9d84b218af3"
-        },
-        {
-          "position": "5",
-          "title": "Seagull-Sunday",
-          "credits": {},
-          "recording_mbid": "8b0d2aed-b0d2-4e71-b4a4-244db4b3c45e"
-        },
-        {
-          "position": "6",
-          "title": "If You'd Been There",
-          "credits": {},
-          "recording_mbid": "623d06f7-b074-489f-a4ac-249040dc1395"
-        },
-        {
-          "position": "7",
-          "title": "Song for the Laird of Connaught Hall, Part 2",
-          "credits": {},
-          "recording_mbid": "72a106f1-3ffc-4515-a5d8-97fded57a89d"
-        },
-        {
-          "position": "8",
-          "title": "Making Losing Better",
-          "credits": {},
-          "recording_mbid": "a647a7b6-85b0-4eb3-a7ee-374aa6316bab"
-        },
-        {
-          "position": "9",
-          "title": "The Lady and the Gentle Man",
-          "credits": {},
-          "recording_mbid": "ec36bae2-0eb7-44ea-ab28-a0a271a54514"
-        },
-        {
-          "position": "10",
-          "title": "Downderry Daze",
-          "credits": {},
-          "recording_mbid": "4ae2e3d5-34a2-4aed-a120-d83c2e2d7087"
-        },
-        {
-          "position": "11",
-          "title": "The Pebble and the Man",
-          "credits": {},
-          "recording_mbid": "f196105f-90ef-4628-855f-67af23b65f76"
-        },
-        {
-          "position": "12",
-          "title": "It Seems Very Strange",
-          "credits": {},
-          "recording_mbid": "79355e70-a139-47f2-bba0-2878573b361f"
-        },
-        {
-          "position": "13",
-          "title": "Suzanne",
-          "credits": {},
-          "recording_mbid": "87a5affc-b314-4fed-890b-1d578e277f61"
-        },
-        {
-          "position": "14",
-          "title": "There's a Place I Know",
-          "credits": {},
-          "recording_mbid": "c155f979-1a31-43a8-a34f-9600dca27fe0"
-        },
-        {
-          "position": "15",
-          "title": "Suzanne",
-          "credits": {},
-          "recording_mbid": "5b05126c-e520-4b04-94f4-2f7b92ba529f"
-        },
-        {
-          "position": "16",
-          "title": "There Is a Place I Know",
-          "credits": {},
-          "recording_mbid": "e18d52a0-6f40-46b5-b1dc-568b64e34635"
-        }
-      ],
-      "tags": [
-        "rock",
-        "folk",
-        "folk rock"
-      ],
-      "image_url": "https://coverartarchive.org/release/e34a42e7-55c0-4b0e-9a85-6a339fbe2c1a/front",
-      "source": "musicbrainz",
-      "listen_history": [
-        "2026-04-13T16:33:50.734Z"
-      ]
-    },
     "Bert Jansch - Bert Jansch": {
       "artist": "Bert Jansch",
       "artist_mbid": "d7f95537-2b48-403d-9ac2-f1fc7aad0960",
@@ -405053,6 +404934,102 @@
       "listen_history": [
         "2026-04-17T15:22:23.032Z"
       ]
+    },
+    "Bridget St. John - Songs for the Gentle Man": {
+      "artist": "Bridget St. John",
+      "artist_mbid": "db53fe45-d4a4-4b55-b74e-1ce069572704",
+      "name": "Songs for the Gentle Man",
+      "release_group_mbid": "fe939459-7a1d-3cd2-8020-b33f1649eb0e",
+      "release_mbid": "54c76f09-7d74-4c4f-bc6d-ce584cafdbc7",
+      "label": "Cherry Red Records",
+      "release_year": 1971,
+      "release_month": null,
+      "release_day": null,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "A Day Away",
+          "credits": {},
+          "recording_mbid": "94eae1ab-0af1-4d61-81a1-a1474eba7be9"
+        },
+        {
+          "position": "2",
+          "title": "City Crazy",
+          "credits": {},
+          "recording_mbid": "5b9d5774-404c-4fe2-8461-8842775e98d3"
+        },
+        {
+          "position": "3",
+          "title": "Early Morning Song",
+          "credits": {},
+          "recording_mbid": "877046ff-5cac-4cd8-b0b5-c9737bf1f968"
+        },
+        {
+          "position": "4",
+          "title": "Back to Stay",
+          "credits": {},
+          "recording_mbid": "0d9220b4-2b85-4dee-abf4-e9d84b218af3"
+        },
+        {
+          "position": "5",
+          "title": "Seagull-Sunday",
+          "credits": {},
+          "recording_mbid": "8b0d2aed-b0d2-4e71-b4a4-244db4b3c45e"
+        },
+        {
+          "position": "6",
+          "title": "If You'd Been There",
+          "credits": {},
+          "recording_mbid": "623d06f7-b074-489f-a4ac-249040dc1395"
+        },
+        {
+          "position": "7",
+          "title": "Song for the Laird of Connaught Hall, Part 2",
+          "credits": {},
+          "recording_mbid": "72a106f1-3ffc-4515-a5d8-97fded57a89d"
+        },
+        {
+          "position": "8",
+          "title": "Making Losing Better",
+          "credits": {},
+          "recording_mbid": "a647a7b6-85b0-4eb3-a7ee-374aa6316bab"
+        },
+        {
+          "position": "9",
+          "title": "The Lady and the Gentle Man",
+          "credits": {},
+          "recording_mbid": "ec36bae2-0eb7-44ea-ab28-a0a271a54514"
+        },
+        {
+          "position": "10",
+          "title": "Downderry Daze",
+          "credits": {},
+          "recording_mbid": "4ae2e3d5-34a2-4aed-a120-d83c2e2d7087"
+        },
+        {
+          "position": "11",
+          "title": "The Pebble and the Man",
+          "credits": {},
+          "recording_mbid": "f196105f-90ef-4628-855f-67af23b65f76"
+        },
+        {
+          "position": "12",
+          "title": "It Seems Very Strange",
+          "credits": {},
+          "recording_mbid": "79355e70-a139-47f2-bba0-2878573b361f"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "folk",
+        "folk rock",
+        "rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/54c76f09-7d74-4c4f-bc6d-ce584cafdbc7/30555949883-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-13T16:33:50.734Z"
+      ]
     }
   },
   "most_recently_listened": [
@@ -405062,7 +405039,7 @@
     "Nick Drake - Pink Moon",
     "John Martyn - One World",
     "Bert Jansch - Bert Jansch",
-    "Bridget St John - Songs For The Gentle Man",
+    "Bridget St. John - Songs for the Gentle Man",
     "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
     "Soft Soundscapes - River",
     "The Slumbering One - Peaceful Slumber"
