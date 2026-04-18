@@ -69,7 +69,7 @@ def get_release_group_by_id(release_group_mbid: str):
     result = _with_retries(
         musicbrainzngs.get_release_group_by_id,
         release_group_mbid,
-        includes=["tags", "url-rels"],
+        includes=["artist-credits", "tags", "url-rels"],
     )
     return result.get("release-group")
 
@@ -95,8 +95,10 @@ def search_artists(name: str):
 
 def get_releases_for_group(release_group_mbid: str):
     result = _with_retries(
-        musicbrainzngs.search_releases,
-        rgid=release_group_mbid,
+        musicbrainzngs.browse_releases,
+        release_group=release_group_mbid,
+        includes=["artist-credits", "labels", "media"],
+        release_status=["official"],
         limit=100,
     )
     return result.get("release-list", [])
@@ -113,7 +115,9 @@ def get_release_by_id(release_id: str):
             "artist-credits",  # main artist(s)
             "artist-rels",  # relationships for artist (optional, useful for credits)
             "release-rels",  # release-level relationships (e.g., production, mastering)
+            "release-group-rels",
             "work-rels",  # track-level relationships (composer, producer, etc.)
+            "work-level-rels",
             "url-rels",  # Wikipedia, Discogs links
             "recording-level-rels",
         ],
@@ -136,8 +140,60 @@ def get_work_by_id(work_id: str):
 # ---------------------------
 
 
-def get_cover_art_url(release_mbid: str):
-    return f"https://coverartarchive.org/release/{release_mbid}/front"
+def _https_url(url: str | None):
+    if not url:
+        return None
+    return url.replace("http://", "https://", 1)
+
+
+def _front_cover_url_from_images(cover_art: dict):
+    images = cover_art.get("images", [])
+    front_images = [img for img in images if img.get("front")]
+    approved_front_images = [img for img in front_images if img.get("approved")]
+    candidates = approved_front_images or front_images or images
+
+    if not candidates:
+        return None
+
+    image = candidates[0]
+    thumbnails = image.get("thumbnails", {})
+    return _https_url(
+        thumbnails.get("1200")
+        or thumbnails.get("500")
+        or thumbnails.get("large")
+        or image.get("image")
+    )
+
+
+def get_release_cover_art_url(release_mbid: str):
+    try:
+        cover_art = _with_retries(musicbrainzngs.get_image_list, release_mbid)
+    except musicbrainzngs.ResponseError:
+        return None
+
+    return _front_cover_url_from_images(cover_art)
+
+
+def get_release_group_cover_art_url(release_group_mbid: str):
+    try:
+        cover_art = _with_retries(
+            musicbrainzngs.get_release_group_image_list, release_group_mbid
+        )
+    except musicbrainzngs.ResponseError:
+        return None
+
+    return _front_cover_url_from_images(cover_art)
+
+
+def get_cover_art_url(release_mbid: str, release_group_mbid: str | None = None):
+    release_image = get_release_cover_art_url(release_mbid)
+    if release_image:
+        return release_image
+
+    if release_group_mbid:
+        return get_release_group_cover_art_url(release_group_mbid)
+
+    return None
 
 
 # musicbrain_client.py
