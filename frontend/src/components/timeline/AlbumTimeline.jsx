@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import YearNode from "./YearNode";
 
-function AlbumTimeline({ albums }) {
+function AlbumTimeline({ albums, onAlbumClick }) {
   const grouped = useMemo(() => {
     const groups = {};
 
@@ -30,6 +30,7 @@ function AlbumTimeline({ albums }) {
             key={yearGroup.year}
             year={yearGroup.year}
             albums={yearGroup.albums}
+            onAlbumClick={onAlbumClick}
           />
         ))}
       </div>

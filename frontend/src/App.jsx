@@ -2,16 +2,18 @@ import { useEffect, useState } from "react";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
-import Dashboard from "./components/Dashboard";
 import normalizeAlbums from "./services/albumNormalizer";
 import Header from "./components/universalHeader";
 import PageDiscovery from "./components/PageDiscovery";
+import PageDataQuality from "./components/PageDataQuality";
+import { filterAlbums } from "./components/utils/albumFilters";
 
 function App() {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const [view, setView] = useState("discovery");
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilters, setActiveFilters] = useState([]);
 
   useEffect(() => {
     fetch(`${import.meta.env.BASE_URL}album_state.json`)
@@ -54,16 +56,26 @@ function App() {
     };
   });
 
-  {/*Search functionality*/}
+  const visibleAlbums = filterAlbums(processedAlbums, searchTerm, activeFilters);
   const filteredAlbums = Object.fromEntries(
-    Object.entries(processedAlbums).filter(([id, album]) => {
-      const term = searchTerm.toLowerCase();
-      return (
-        album.name.toLowerCase().includes(term) ||
-        album.artist.toLowerCase().includes(term)
-      );
-    })
+    visibleAlbums.map((album) => [album.id, album])
   );
+  const handleFilterSelect = (filter) => {
+    setActiveFilters((current) => {
+      if (current.some((item) => item.id === filter.id)) return current;
+      return [...current, filter];
+    });
+    setView("table");
+  };
+
+  const removeFilter = (filterId) => {
+    setActiveFilters((current) => current.filter((filter) => filter.id !== filterId));
+  };
+
+  const clearFilters = () => {
+    setSearchTerm("");
+    setActiveFilters([]);
+  };
 
   return (
     <div className="min-h-screen space-y-10">
@@ -79,13 +91,51 @@ function App() {
             <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           </div>
         )}
+
+        {(searchTerm || activeFilters.length > 0) && (
+          <div className="flex flex-wrap items-center gap-2 px-6">
+            {searchTerm && (
+              <span className="rounded-md border border-border px-2 py-1 text-xs text-muted-foreground">
+                Search: {searchTerm}
+              </span>
+            )}
+            {activeFilters.map((filter) => (
+              <button
+                key={filter.id}
+                type="button"
+                onClick={() => removeFilter(filter.id)}
+                className="rounded-md border border-border px-2 py-1 text-xs text-foreground hover:bg-muted"
+              >
+                {filter.label}
+              </button>
+            ))}
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
+            >
+              Clear
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Conditional rendering based on selected view */}
-      {/* {view === "dashboard" && <Dashboard albums={processedAlbums} ids={data.most_recently_listened} />} */}
-      {view === "discovery" && <PageDiscovery albums={processedAlbums} />}
-      {view === "table" && <AlbumTable albums={filteredAlbums}/>}
-      {view === "timeline" && <AlbumTimeView albums={filteredAlbums}/>}
+      {view === "discovery" && (
+        <PageDiscovery
+          albums={visibleAlbums}
+          allAlbums={processedAlbums}
+          onFilterSelect={handleFilterSelect}
+        />
+      )}
+      {view === "table" && (
+        <AlbumTable albums={filteredAlbums} onFilterSelect={handleFilterSelect} />
+      )}
+      {view === "timeline" && (
+        <AlbumTimeView albums={filteredAlbums} onFilterSelect={handleFilterSelect} />
+      )}
+      {view === "quality" && (
+        <PageDataQuality albums={visibleAlbums} onFilterSelect={handleFilterSelect} />
+      )}
     </div>
   );
 }

@@ -5,7 +5,7 @@ function AlbumSearch({ searchTerm, setSearchTerm }) {
     <div className="mb-4 w-full text-foreground">
       <Input
         type="text"
-        placeholder="Search by album, artist, or label..."
+        placeholder="Search albums, artists, labels, tags, years, or credits..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full"

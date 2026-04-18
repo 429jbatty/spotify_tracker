@@ -4,17 +4,21 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
 
-function AlbumBubble({ album }) {
+function AlbumBubble({ album, onClick }) {
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
-        <div className="h-16 w-16 overflow-hidden rounded-md shadow cursor-pointer hover:scale-105 transition">
+        <button
+          type="button"
+          onClick={onClick}
+          className="h-16 w-16 overflow-hidden rounded-md shadow cursor-pointer hover:scale-105 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        >
           <img
             src={album.image_url}
             alt={album.name}
             className="h-full w-full object-cover"
           />
-        </div>
+        </button>
       </HoverCardTrigger>
 
       <HoverCardContent className="w-64">

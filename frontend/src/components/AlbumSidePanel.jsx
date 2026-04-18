@@ -3,12 +3,10 @@ import AlbumHeader from "./AlbumCardHeader";
 import ListenCountBadge from "./ListenCountBadge";
 import AlbumListenHistory from "./AlbumListenHistory";
 import AlbumMetadata from "./AlbumMetadata";
-import AlbumCredits from "./AlbumCredits";
-import TracklistModal from "./TracklistModal";
+import AlbumTrackDetails from "./AlbumTrackDetails";
 import { buildSparkline } from "./utils/albumHelpers";
 
 import {
-  groupAlbumCredits,
   getListenStats,
 } from "./utils/albumHelpers";
 
@@ -34,8 +32,7 @@ function Sparkline({ counts = [], barWidth = 4, maxHeight = 40 }) {
   );
 }
 
-function AlbumSidePanel({ album }) {
-  const groupedCredits = groupAlbumCredits(album);
+function AlbumSidePanel({ album, onFilterSelect }) {
   const listenStats = getListenStats(album.listen_history);
   const sparklineCounts = buildSparkline(album.listen_history, 12);
 
@@ -80,18 +77,13 @@ function AlbumSidePanel({ album }) {
 
       {/* Metadata */}
       <section className="border-t pt-4">
-        <AlbumMetadata album={album} />
+        <AlbumMetadata album={album} onFilterSelect={onFilterSelect} />
       </section>
 
-      {/* Credits */}
-      <section className="border-t pt-4">
-        <AlbumCredits groupedCredits={groupedCredits} />
-      </section>
-
-      {/* Tracklist */}
+      {/* Tracks and credits */}
       {album.tracklist?.length > 0 && (
         <section className="border-t pt-4">
-          <TracklistModal album={album} />
+          <AlbumTrackDetails album={album} onFilterSelect={onFilterSelect} />
         </section>
       )}
 

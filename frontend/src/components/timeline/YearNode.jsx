@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import AlbumCluster from "./AlbumCluster";
 
-function YearNode({ year, albums }) {
+function YearNode({ year, albums, onAlbumClick }) {
   const [expanded, setExpanded] = useState(false);
   const [visible, setVisible] = useState(false);
   const ref = useRef();
@@ -39,7 +39,9 @@ function YearNode({ year, albums }) {
       />
 
       {/* cluster */}
-      {visible && expanded && <AlbumCluster albums={albums} />}
+      {visible && expanded && (
+        <AlbumCluster albums={albums} onAlbumClick={onAlbumClick} />
+      )}
     </div>
   );
 }

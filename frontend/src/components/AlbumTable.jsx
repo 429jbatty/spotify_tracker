@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-function AlbumTable({ albums }) {
+function AlbumTable({ albums, onFilterSelect }) {
   const [sortBy, setSortBy] = useState("listen_history");
   const [ascending, setAscending] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -114,7 +114,7 @@ function AlbumTable({ albums }) {
           className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
         >
           {selectedAlbum && (
-            <AlbumSidePanel album={selectedAlbum} />
+            <AlbumSidePanel album={selectedAlbum} onFilterSelect={onFilterSelect} />
           )}
         </SheetContent>
       </Sheet>

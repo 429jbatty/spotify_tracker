@@ -1,14 +1,11 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function UniversalHeader({ view, setView }) {
-  const [waveform, setWaveform] = useState([]);
-
-  useEffect(() => {
-    const heights = Array.from({ length: 100 }).map(() => Math.random() * 40 + 12);
-    setWaveform(heights);
-  }, []);
+  const [waveform] = useState(() =>
+    Array.from({ length: 100 }).map(() => Math.random() * 40 + 12)
+  );
 
   return (
     <header className="relative w-full">
@@ -58,8 +55,7 @@ function UniversalHeader({ view, setView }) {
         {/* Navigation */}
         <Tabs value={view} onValueChange={setView}>
           <TabsList className="bg-background/30 backdrop-blur-sm rounded-xl p-1">
-            {/* {["dashboard", "discovery", "table", "timeline"].map((v) => ( */}
-            {["discovery", "table", "timeline"].map((v) => (
+            {["discovery", "table", "timeline", "quality"].map((v) => (
               <TabsTrigger
                 key={v}
                 value={v}
@@ -76,7 +72,9 @@ function UniversalHeader({ view, setView }) {
                   ? "Discovery"
                   : v === "table"
                   ? "All"
-                  : "Release Dates"}
+                  : v === "timeline"
+                  ? "Release Dates"
+                  : "Data Quality"}
               </TabsTrigger>
             ))}
           </TabsList>
