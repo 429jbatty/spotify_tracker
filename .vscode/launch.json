@@ -24,6 +24,16 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "name": "Metadata refresh",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "one_time_scripts._refresh_metadata",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "justMyCode": true,
+            "cwd": "${workspaceFolder}"
+        },
+        {
             "name": "Current File",
             "type": "debugpy",
             "request": "launch",
