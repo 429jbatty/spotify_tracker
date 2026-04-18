@@ -1,4 +1,3 @@
-from datetime import datetime, timezone
 from spotify_manager import SpotifyAPI
 import album_metadata_service as meta
 import logging
@@ -6,7 +5,6 @@ from dateutil import parser
 
 logger = logging.getLogger(__name__)
 
-from dateutil import parser
 from datetime import datetime, timezone, timedelta
 
 
@@ -38,8 +36,11 @@ def update_album_progress(state, sp: SpotifyAPI, tracks):
     Updates albums_in_progress with newly played tracks.
     """
 
-    for t in tracks:
+    for t in sorted(tracks, key=lambda track: parser.isoparse(track["played_at"])):
         album_id = t["album_id"]
+
+        if state["albums_in_progress"].get(album_id, {}).get("completion_logged"):
+            del state["albums_in_progress"][album_id]
 
         if album_id not in state["albums_in_progress"]:
             # Fetch album metadata once
@@ -97,13 +98,11 @@ def log_completed_album(state, album_id):
     album_logged_data = state["albums_in_progress"][album_id]
     artist = album_logged_data["artist"]
     album_name = album_logged_data["album_name"]
-    album_metadata = meta.get_album_metadata(
-        artist, album_name
-    )  # inefficient because might not be needed
     key = f"{artist} - {album_name}"
     listen_datetime = album_logged_data["last_played"]
 
     if key not in state["completed_albums"]:
+        album_metadata = meta.get_album_metadata(artist, album_name)
         album_metadata["listen_history"] = [listen_datetime]
         logging.info(f"New album logged: {artist} - {album_name}")
         entry = {key: album_metadata}

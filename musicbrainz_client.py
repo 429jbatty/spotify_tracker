@@ -19,6 +19,7 @@ musicbrainzngs.set_useragent(
 # Rate limiting help
 RATE_LIMIT = 1.1
 MAX_RETRIES = 5
+REQUEST_DELAY = 1.1
 
 _rate_lock = threading.Lock()
 _last_request_time = 0
