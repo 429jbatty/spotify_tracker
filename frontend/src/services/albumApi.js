@@ -71,6 +71,13 @@ export async function addAlbumListen(albumId, listenedAt) {
   });
 }
 
+export async function deleteAlbumListen(albumId, listenedAt) {
+  return requestJson(`/albums/${albumId}/listens`, {
+    method: "DELETE",
+    body: JSON.stringify({ listened_at: listenedAt }),
+  });
+}
+
 export async function mergeAlbum(albumId, targetAlbumId) {
   return requestJson(`/albums/${albumId}/merge`, {
     method: "POST",

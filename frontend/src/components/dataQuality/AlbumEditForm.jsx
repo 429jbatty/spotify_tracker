@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { mergeAlbum, updateAlbum } from "../../services/albumApi";
 import { Field, StatusMessage } from "./FormBits";
+import AlbumListenEditor from "./AlbumListenEditor";
 import {
   buildMetadataPayload,
   fieldValue,
@@ -184,6 +185,12 @@ function AlbumEditForm({ album, onAlbumUpdated, onDataChanged }) {
           />
         </Field>
       </div>
+
+      <AlbumListenEditor
+        album={album}
+        onAlbumUpdated={onAlbumUpdated}
+        onDataChanged={onDataChanged}
+      />
 
       {mergeCandidate && (
         <div className="rounded-md border border-border/70 bg-muted/40 p-3 text-sm">

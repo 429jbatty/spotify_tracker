@@ -7,6 +7,7 @@ from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import (
     AlbumListenCreate,
+    AlbumListenDelete,
     AlbumMergeRequest,
     AlbumMetadataUpdate,
     AlbumRefreshRequest,
@@ -113,6 +114,17 @@ def add_album_listen(album_id: int, request: AlbumListenCreate) -> dict:
     session, repository = _repository()
     try:
         return repository.add_album_listen(album_id, request.listened_at)
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    finally:
+        session.close()
+
+
+@router.delete("/{album_id}/listens", response_model=CompletedAlbum)
+def delete_album_listen(album_id: int, request: AlbumListenDelete) -> dict:
+    session, repository = _repository()
+    try:
+        return repository.delete_album_listen(album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:

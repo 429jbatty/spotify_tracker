@@ -90,6 +90,10 @@ class AlbumListenCreate(BaseModel):
     listened_at: str
 
 
+class AlbumListenDelete(BaseModel):
+    listened_at: str
+
+
 class AlbumMergeRequest(BaseModel):
     target_album_id: int
 

@@ -327,6 +327,24 @@ class SqliteStateRepository:
         self.session.commit()
         return self._album_record(album)
 
+    def delete_album_listen(self, album_id: int, listened_at: str) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        listen = self.session.scalars(
+            select(AlbumListen).where(
+                AlbumListen.album_id == album.id,
+                AlbumListen.listened_at == listened_at,
+            )
+        ).first()
+        if listen is None:
+            raise KeyError(f"Listen not found: {listened_at}")
+
+        self.session.delete(listen)
+        self.session.commit()
+        return self._album_record(album)
+
     def _set_app_state(self, key: str, value: str | None) -> None:
         app_state = self.session.get(AppState, key)
         if app_state is None:

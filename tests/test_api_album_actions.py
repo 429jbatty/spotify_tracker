@@ -244,6 +244,35 @@ class ApiAlbumActionTests(unittest.TestCase):
             ["2026-04-01T10:00:00.000Z", "2026-04-02T10:00:00.000Z"],
         )
 
+    def test_delete_album_listen_removes_only_that_listen(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, album_id, _ = self._client(temp_dir)
+            client.post(
+                f"/api/albums/{album_id}/listens",
+                json={"listened_at": "2026-04-02T10:00:00.000Z"},
+            )
+
+            response = client.request(
+                "DELETE",
+                f"/api/albums/{album_id}/listens",
+                json={"listened_at": "2026-04-01T10:00:00.000Z"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["listen_history"], ["2026-04-02T10:00:00.000Z"])
+
+    def test_delete_missing_album_listen_returns_not_found(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, album_id, _ = self._client(temp_dir)
+
+            response = client.request(
+                "DELETE",
+                f"/api/albums/{album_id}/listens",
+                json={"listened_at": "2026-04-03T10:00:00.000Z"},
+            )
+
+        self.assertEqual(response.status_code, 404)
+
     def test_refresh_duplicate_album_merges_listens_and_deletes_source(self):
         state = sample_album_state()
         state["completed_albums"] = {
