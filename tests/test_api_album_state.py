@@ -7,8 +7,10 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 
 from backend.app.database import create_schema
+from backend.app.models import Album
 from backend.app.main import create_app
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
 
@@ -157,6 +159,39 @@ class ApiAlbumStateTests(unittest.TestCase):
             payload["completed_albums"]["Artist - Finished Album"]["name"],
             "Finished Album",
         )
+
+    def test_album_state_endpoint_returns_local_artwork_url_when_available(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(
+                bind=engine,
+                autoflush=False,
+                autocommit=False,
+            )
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.import_album_state(sample_album_state())
+                album = session.scalars(select(Album)).one()
+                album.local_image_path = "artwork/release-group-mbid.jpg"
+                session.commit()
+
+            with patch.dict(
+                "os.environ",
+                {
+                    "DATABASE_URL": database_url,
+                    "MEDIA_DIR": temp_dir,
+                },
+            ):
+                client = TestClient(create_app())
+                response = client.get("/api/album-state")
+
+        self.assertEqual(response.status_code, 200)
+        album = response.json()["completed_albums"]["Artist - Finished Album"]
+        self.assertEqual(album["image_url"], "/media/artwork/release-group-mbid.jpg")
+        self.assertEqual(album["remote_image_url"], "https://example.test/cover.jpg")
+        self.assertEqual(album["local_image_path"], "artwork/release-group-mbid.jpg")
 
 
 if __name__ == "__main__":

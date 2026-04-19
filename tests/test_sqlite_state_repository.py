@@ -86,6 +86,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         self.assertEqual(album["artist"], "Artist")
         self.assertEqual(album["name"], "Finished Album")
         self.assertEqual(album["release_group_mbid"], "release-group-mbid")
+        self.assertEqual(album["image_url"], "https://example.test/cover.jpg")
+        self.assertEqual(album["remote_image_url"], "https://example.test/cover.jpg")
+        self.assertIsNone(album["local_image_path"])
         self.assertEqual(album["tracklist"][0]["title"], "Opening Track")
         self.assertEqual(
             album["listen_history"],
@@ -204,6 +207,69 @@ class SqliteStateRepositoryTests(unittest.TestCase):
 
         self.assertEqual(exact, "Artist - Finished Album")
         self.assertEqual(casefolded, "Artist - Finished Album")
+
+    def test_save_album_state_preserves_existing_local_image_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            updated_state = sample_album_state()
+            updated_state["completed_albums"]["Artist - Finished Album"][
+                "image_url"
+            ] = "https://example.test/new-cover.jpg"
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+
+                album = session.scalars(
+                    select(Album).where(Album.album_key == "Artist - Finished Album")
+                ).one()
+                album.local_image_path = "artwork/release-group-mbid.jpg"
+                session.commit()
+
+                repository.save_album_state(updated_state)
+                loaded = repository.load_album_state()
+
+        album = loaded["completed_albums"]["Artist - Finished Album"]
+        self.assertEqual(album["image_url"], "/media/artwork/release-group-mbid.jpg")
+        self.assertEqual(
+            album["remote_image_url"],
+            "https://example.test/new-cover.jpg",
+        )
+        self.assertEqual(album["local_image_path"], "artwork/release-group-mbid.jpg")
+
+    def test_replace_completed_album_metadata_preserves_existing_local_image_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+
+                album = session.scalars(
+                    select(Album).where(Album.album_key == "Artist - Finished Album")
+                ).one()
+                album.local_image_path = "artwork/release-group-mbid.jpg"
+                session.commit()
+
+                repository.replace_completed_album_metadata(
+                    "Artist - Finished Album",
+                    {
+                        "artist": "Artist",
+                        "name": "Finished Album",
+                        "image_url": "https://example.test/new-cover.jpg",
+                        "source": "musicbrainz",
+                    },
+                )
+                loaded = repository.load_album_state()
+
+        album = loaded["completed_albums"]["Artist - Finished Album"]
+        self.assertEqual(album["image_url"], "/media/artwork/release-group-mbid.jpg")
+        self.assertEqual(
+            album["remote_image_url"],
+            "https://example.test/new-cover.jpg",
+        )
+        self.assertEqual(album["local_image_path"], "artwork/release-group-mbid.jpg")
 
 
 if __name__ == "__main__":

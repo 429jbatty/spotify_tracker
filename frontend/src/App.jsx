@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
@@ -16,19 +16,24 @@ function App() {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState([]);
 
-  useEffect(() => {
-    fetchAlbumState()
-      .then((json) => {
-        setData({
-          ...json,
-          completed_albums: normalizeAlbums(json.completed_albums)
-        });
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(err.message);
-      });
+  const loadAlbumState = useCallback(async () => {
+    const json = await fetchAlbumState();
+    const normalized = {
+      ...json,
+      completed_albums: normalizeAlbums(json.completed_albums)
+    };
+    setData(normalized);
+    setError(null);
+    return normalized;
   }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    loadAlbumState().catch((err) => {
+      console.error(err);
+      setError(err.message);
+    });
+  }, [loadAlbumState]);
 
   if (error) return <div>Error: {error}</div>;
   if (!data) return <div>Loading...</div>;
@@ -72,12 +77,12 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen space-y-10 bg-[linear-gradient(180deg,hsl(var(--chart-1)/0.12),transparent_18rem),linear-gradient(90deg,hsl(var(--chart-4)/0.06),transparent_28rem)]">
+    <div className="min-h-screen space-y-10 ">
 
       {/* vertical stack header and search bar */}
       <div className="flex flex-col gap-4">
         {/* Header with tabs */}
-        <Header view={view} setView={setView} />
+        <Header view={view} setView={setView} onDataChanged={loadAlbumState} />
 
         {/* Search box (skip on dashboard) */}
         {!(view === "dashboard" || view === "discovery") && (
@@ -119,16 +124,29 @@ function App() {
           albums={visibleAlbums}
           allAlbums={processedAlbums}
           onFilterSelect={handleFilterSelect}
+          onDataChanged={loadAlbumState}
         />
       )}
       {view === "table" && (
-        <AlbumTable albums={filteredAlbums} onFilterSelect={handleFilterSelect} />
+        <AlbumTable
+          albums={filteredAlbums}
+          onFilterSelect={handleFilterSelect}
+          onDataChanged={loadAlbumState}
+        />
       )}
       {view === "timeline" && (
-        <AlbumTimeView albums={filteredAlbums} onFilterSelect={handleFilterSelect} />
+        <AlbumTimeView
+          albums={filteredAlbums}
+          onFilterSelect={handleFilterSelect}
+          onDataChanged={loadAlbumState}
+        />
       )}
       {view === "quality" && (
-        <PageDataQuality albums={visibleAlbums} onFilterSelect={handleFilterSelect} />
+        <PageDataQuality
+          albums={visibleAlbums}
+          onDataChanged={loadAlbumState}
+          onFilterSelect={handleFilterSelect}
+        />
       )}
     </div>
   );

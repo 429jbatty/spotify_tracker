@@ -57,6 +57,72 @@ class MetadataRefreshServiceTests(unittest.TestCase):
         self.assertEqual(album["image_url"], "https://example.test/cover.jpg")
         self.assertEqual(album["listen_history"], ["2026-04-01T10:00:00.000Z"])
 
+    def test_refresh_album_preserves_existing_values_when_refreshed_values_are_null(self):
+        state = state_with_album()
+        state["completed_albums"]["Artist - Old Title"].update(
+            {
+                "label": "Existing Label",
+                "image_url": "https://example.test/existing.jpg",
+                "remote_image_url": "https://example.test/existing.jpg",
+            }
+        )
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            return_value={
+                "artist": "Artist",
+                "name": "Old Title",
+                "label": None,
+                "image_url": None,
+                "release_year": 2001,
+                "source": "musicbrainz",
+            },
+        ):
+            result = refresh.refresh_album_in_state(
+                state,
+                artist="Artist",
+                album="Old Title",
+            )
+
+        album = state["completed_albums"]["Artist - Old Title"]
+
+        self.assertEqual(result.status, "refreshed_with_warnings")
+        self.assertEqual(album["label"], "Existing Label")
+        self.assertEqual(album["image_url"], "https://example.test/existing.jpg")
+        self.assertEqual(album["release_year"], 2001)
+        self.assertNotIn("_refresh_warnings", album)
+
+    def test_refresh_album_updates_remote_artwork_when_new_artwork_is_found(self):
+        state = state_with_album()
+        state["completed_albums"]["Artist - Old Title"].update(
+            {
+                "image_url": "/media/artwork/existing.jpg",
+                "remote_image_url": "https://example.test/old.jpg",
+                "local_image_path": "artwork/existing.jpg",
+            }
+        )
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            return_value={
+                "artist": "Artist",
+                "name": "Old Title",
+                "image_url": "https://example.test/new.jpg",
+                "source": "musicbrainz",
+            },
+        ):
+            refresh.refresh_album_in_state(
+                state,
+                artist="Artist",
+                album="Old Title",
+            )
+
+        album = state["completed_albums"]["Artist - Old Title"]
+
+        self.assertEqual(album["image_url"], "https://example.test/new.jpg")
+        self.assertEqual(album["remote_image_url"], "https://example.test/new.jpg")
+        self.assertEqual(album["local_image_path"], "artwork/existing.jpg")
+
     def test_refresh_album_updates_key_when_canonical_metadata_changes(self):
         state = state_with_album()
 
@@ -114,6 +180,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
 
         self.assertEqual(len(results), 2)
         self.assertEqual([result.refreshed for result in results], [True, False])
+        self.assertEqual(results[1].status, "skipped_no_match")
         self.assertIn("No metadata returned", results[1].error)
 
     def test_refresh_album_and_save_uses_direct_sqlite_update(self):

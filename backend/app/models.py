@@ -26,6 +26,8 @@ class Album(Base):
     release_month: Mapped[int | None] = mapped_column(Integer, nullable=True)
     release_day: Mapped[int | None] = mapped_column(Integer, nullable=True)
     image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    remote_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    local_image_path: Mapped[str | None] = mapped_column(Text, nullable=True)
     source: Mapped[str] = mapped_column(String, default="unknown")
     metadata_json: Mapped[dict] = mapped_column(JSON, default=dict)
 

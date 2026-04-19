@@ -139,7 +139,7 @@ export default function DiscoveryLineChart({
   const xTicks = chartData.filter((_, i) => i % tickEvery === 0);
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-background/85 ring-foreground/5">
       <CardHeader className="flex justify-between items-center">
         <CardTitle>New Discoveries Over Time</CardTitle>
 

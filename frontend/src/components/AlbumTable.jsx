@@ -15,7 +15,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-function AlbumTable({ albums, onFilterSelect }) {
+function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
   const [sortBy, setSortBy] = useState("listen_history");
   const [ascending, setAscending] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -62,11 +62,20 @@ function AlbumTable({ albums, onFilterSelect }) {
     setPanelOpen(true);
   };
 
+  const updateSelectedAlbum = (album) => {
+    setSelectedAlbum((current) => (current ? { ...current, ...album } : album));
+  };
+
+  const handleAlbumDeleted = () => {
+    setSelectedAlbum(null);
+    setPanelOpen(false);
+  };
+
   const headers = [
     { key: "image_url", label: "", sortable: false, width: "w-[100px]" },
     { key: "name", label: "Album", sortable: true, width: "w-[37%]" },
     { key: "artist", label: "Artist", sortable: true, width: "w-[20%]" },
-    { key: "release_year", label: "Year", sortable: true, width: "w-[10%]" },
+    { key: "release_year", label: "Release year", sortable: true, width: "w-[10%]" },
     { key: "label", label: "Label", sortable: true, width: "w-[15%]" },
     { key: "totalListens", label: "Listens", sortable: true, width: "w-[8%]" },
     { key: "latestListen", label: "Last listen", sortable: true, width: "w-[10%]" },
@@ -114,7 +123,13 @@ function AlbumTable({ albums, onFilterSelect }) {
           className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
         >
           {selectedAlbum && (
-            <AlbumSidePanel album={selectedAlbum} onFilterSelect={onFilterSelect} />
+            <AlbumSidePanel
+              album={selectedAlbum}
+              onFilterSelect={onFilterSelect}
+              onAlbumUpdated={updateSelectedAlbum}
+              onAlbumDeleted={handleAlbumDeleted}
+              onDataChanged={onDataChanged}
+            />
           )}
         </SheetContent>
       </Sheet>

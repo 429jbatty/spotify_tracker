@@ -41,7 +41,12 @@ function RotationList({ title, items }) {
   );
 }
 
-export default function Discovery({ albums, allAlbums = albums, onFilterSelect }) {
+export default function Discovery({
+  albums,
+  allAlbums = albums,
+  onFilterSelect,
+  onDataChanged,
+}) {
   const [timeRange, setTimeRange] = useState("7d");
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -130,6 +135,15 @@ export default function Discovery({ albums, allAlbums = albums, onFilterSelect }
     setPanelOpen(true);
   };
 
+  const updateSelectedAlbum = (album) => {
+    setSelectedAlbum((current) => (current ? { ...current, ...album } : album));
+  };
+
+  const handleAlbumDeleted = () => {
+    setSelectedAlbum(null);
+    setPanelOpen(false);
+  };
+
   return (
     <>
       <div className="p-6 space-y-6">
@@ -170,7 +184,7 @@ export default function Discovery({ albums, allAlbums = albums, onFilterSelect }
           </div>
 
           <div className="grid gap-4 lg:grid-cols-[1.15fr_2fr]">
-            <div className="rounded-lg border border-border bg-card p-5">
+            <div className="rounded-lg border border-border/70 bg-background/80 p-5 shadow-sm">
               <p className="text-xs font-medium text-muted-foreground">
                 Albums in this window
               </p>
@@ -187,7 +201,7 @@ export default function Discovery({ albums, allAlbums = albums, onFilterSelect }
               </p>
             </div>
 
-            <div className="rounded-lg border border-border bg-card p-5">
+            <div className="rounded-lg border border-border/70 bg-background/80 p-5 shadow-sm">
               <div className="grid grid-cols-3 gap-4">
                 <SupportingMetric
                   label="New artists"
@@ -243,7 +257,13 @@ export default function Discovery({ albums, allAlbums = albums, onFilterSelect }
           className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
         >
           {selectedAlbum && (
-            <AlbumSidePanel album={selectedAlbum} onFilterSelect={onFilterSelect} />
+            <AlbumSidePanel
+              album={selectedAlbum}
+              onFilterSelect={onFilterSelect}
+              onAlbumUpdated={updateSelectedAlbum}
+              onAlbumDeleted={handleAlbumDeleted}
+              onDataChanged={onDataChanged}
+            />
           )}
         </SheetContent>
       </Sheet>

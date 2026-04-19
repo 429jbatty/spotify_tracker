@@ -4,6 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 from backend.app.config import get_settings
+from backend.app.migrations import run_sqlite_migrations
 from backend.app.models import Base
 
 
@@ -20,6 +21,7 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 def create_schema(database_url: str | None = None):
     target_engine = get_engine(database_url) if database_url else engine
     Base.metadata.create_all(bind=target_engine)
+    run_sqlite_migrations(target_engine)
     return target_engine
 
 

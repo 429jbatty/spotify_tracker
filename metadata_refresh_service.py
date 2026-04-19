@@ -1,6 +1,8 @@
 import copy
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+
+import musicbrainzngs
 
 import album_metadata_service as metadata_service
 import tracking
@@ -10,6 +12,12 @@ logger = logging.getLogger(__name__)
 
 PRESERVED_FIELDS = {
     "listen_history",
+    "local_image_path",
+}
+
+IGNORED_MERGE_FIELDS = {
+    "id",
+    "album_key",
 }
 
 
@@ -20,10 +28,73 @@ class RefreshResult:
     album: str
     refreshed: bool
     error: str | None = None
+    status: str = ""
+    warnings: list[str] = field(default_factory=list)
+
+    def __post_init__(self):
+        if not self.status:
+            self.status = "refreshed" if self.refreshed else "failed"
 
 
 def _album_key(artist: str, album: str) -> str:
     return f"{artist} - {album}"
+
+
+def classify_refresh_error(exc: Exception) -> str:
+    if isinstance(exc, LookupError):
+        return "skipped_no_match"
+    if isinstance(exc, ValueError) and "Album key already exists" in str(exc):
+        return "skipped_duplicate_key"
+    if isinstance(exc, musicbrainzngs.NetworkError):
+        return "failed_network"
+    return "failed"
+
+
+def _log_refresh_error(key: str, exc: Exception) -> str:
+    status = classify_refresh_error(exc)
+    if status == "failed":
+        logger.exception("Failed to refresh metadata for %s", key)
+    else:
+        logger.warning(
+            "Skipped metadata refresh for %s [%s]: %s",
+            key,
+            status,
+            exc,
+        )
+        logger.debug("Refresh skip details for %s", key, exc_info=True)
+    return status
+
+
+def _merge_refreshed_metadata(record: dict, refreshed: dict) -> dict:
+    merged = {
+        key: copy.deepcopy(value)
+        for key, value in record.items()
+        if key not in IGNORED_MERGE_FIELDS
+    }
+    warnings = []
+
+    for key, value in refreshed.items():
+        if key in IGNORED_MERGE_FIELDS:
+            continue
+        if value is None and merged.get(key) is not None:
+            warnings.append(f"Preserved existing {key}; refreshed value was null.")
+            continue
+        merged[key] = copy.deepcopy(value)
+        if (
+            key == "image_url"
+            and value is not None
+            and "remote_image_url" not in refreshed
+        ):
+            merged["remote_image_url"] = copy.deepcopy(value)
+
+    for field_name in PRESERVED_FIELDS:
+        if field_name in record:
+            merged[field_name] = copy.deepcopy(record[field_name])
+
+    if warnings:
+        merged["_refresh_warnings"] = warnings
+
+    return merged
 
 
 def _find_album_key(completed_albums: dict, artist: str | None, album: str | None):
@@ -72,12 +143,7 @@ def refresh_album_record(record: dict, spotify_url: str | None = None):
     if not refreshed:
         raise LookupError(f"No metadata returned for {artist} - {album}.")
 
-    refreshed = copy.deepcopy(refreshed)
-    for field in PRESERVED_FIELDS:
-        if field in record:
-            refreshed[field] = copy.deepcopy(record[field])
-
-    return refreshed
+    return _merge_refreshed_metadata(record, refreshed)
 
 
 def refresh_album_in_state(
@@ -96,6 +162,7 @@ def refresh_album_in_state(
 
     existing_record = completed_albums[target_key]
     refreshed_record = refresh_album_record(existing_record, spotify_url=spotify_url)
+    warnings = refreshed_record.pop("_refresh_warnings", [])
 
     new_key = _album_key(refreshed_record["artist"], refreshed_record["name"])
     if new_key != target_key:
@@ -112,6 +179,8 @@ def refresh_album_in_state(
         artist=refreshed_record["artist"],
         album=refreshed_record["name"],
         refreshed=True,
+        status="refreshed_with_warnings" if warnings else "refreshed",
+        warnings=warnings,
     )
 
 
@@ -127,13 +196,14 @@ def refresh_all_albums_in_state(state: dict, continue_on_error: bool = True):
         try:
             result = refresh_album_in_state(state, key=key)
         except Exception as exc:
-            logger.exception("Failed to refresh metadata for %s", key)
+            status = _log_refresh_error(key, exc)
             result = RefreshResult(
                 key=key,
                 artist=record.get("artist", ""),
                 album=record.get("name", ""),
                 refreshed=False,
                 error=str(exc),
+                status=status,
             )
             results.append(result)
 
@@ -165,6 +235,7 @@ def _refresh_album_in_sqlite_repository(
     )
     existing_record = repository.get_completed_album_record(target_key)
     refreshed_record = refresh_album_record(existing_record, spotify_url=spotify_url)
+    warnings = refreshed_record.pop("_refresh_warnings", [])
     new_key = repository.replace_completed_album_metadata(
         target_key,
         refreshed_record,
@@ -175,6 +246,8 @@ def _refresh_album_in_sqlite_repository(
         artist=refreshed_record["artist"],
         album=refreshed_record["name"],
         refreshed=True,
+        status="refreshed_with_warnings" if warnings else "refreshed",
+        warnings=warnings,
     )
 
 
@@ -205,7 +278,7 @@ def _refresh_all_albums_and_save_sqlite(continue_on_error: bool = True):
             try:
                 result = _refresh_album_in_sqlite_repository(repository, key=key)
             except Exception as exc:
-                logger.exception("Failed to refresh metadata for %s", key)
+                status = _log_refresh_error(key, exc)
                 try:
                     record = repository.get_completed_album_record(key)
                 except Exception:
@@ -217,6 +290,7 @@ def _refresh_all_albums_and_save_sqlite(continue_on_error: bool = True):
                     album=record.get("name", ""),
                     refreshed=False,
                     error=str(exc),
+                    status=status,
                 )
                 results.append(result)
 

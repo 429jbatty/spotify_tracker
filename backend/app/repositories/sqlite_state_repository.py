@@ -11,6 +11,7 @@ from backend.app.repositories.json_state_repository import (
 
 
 STATE_LAST_CHECKED = "last_checked"
+ARTWORK_URL_PREFIX = "/media/artwork/"
 
 
 def _album_lookup_statement(album_key: str) -> Select:
@@ -21,7 +22,14 @@ def _album_metadata(record: dict[str, Any]) -> dict[str, Any]:
     return {
         key: value
         for key, value in record.items()
-        if key not in {"listen_history"}
+        if key
+        not in {
+            "id",
+            "album_key",
+            "listen_history",
+            "remote_image_url",
+            "local_image_path",
+        }
     }
 
 
@@ -95,6 +103,41 @@ class SqliteStateRepository:
             raise KeyError(f"Album key not found: {key}")
         return self._album_record(album)
 
+    def get_completed_album_record_by_id(self, album_id: int) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+        return self._album_record(album)
+
+    def albums_for_artwork_cache(self) -> list[dict[str, Any]]:
+        albums = self.session.scalars(select(Album).order_by(Album.album_key)).all()
+        return [
+            {
+                "id": album.id,
+                "album_key": album.album_key,
+                "artist": album.artist,
+                "name": album.name,
+                "release_group_mbid": album.release_group_mbid,
+                "release_mbid": album.release_mbid,
+                "image_url": album.image_url,
+                "remote_image_url": album.remote_image_url,
+                "local_image_path": album.local_image_path,
+            }
+            for album in albums
+        ]
+
+    def update_album_local_image_path(
+        self,
+        album_id: int,
+        local_image_path: str,
+    ) -> None:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        album.local_image_path = local_image_path
+        self.session.commit()
+
     def replace_completed_album_metadata(
         self,
         target_key: str,
@@ -128,11 +171,161 @@ class SqliteStateRepository:
         album.release_year = record.get("release_year")
         album.release_month = record.get("release_month")
         album.release_day = record.get("release_day")
-        album.image_url = record.get("image_url")
+        self._apply_album_artwork_fields(album, record)
         album.source = record.get("source") or "unknown"
         album.metadata_json = _album_metadata(record)
         self.session.commit()
         return new_key
+
+    def replace_completed_album_metadata_by_id(
+        self,
+        album_id: int,
+        refreshed_record: dict[str, Any],
+    ) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        self._apply_completed_album_record(album, refreshed_record)
+        self.session.commit()
+        return self._album_record(album)
+
+    def replace_completed_album_metadata_by_id_or_merge_duplicate(
+        self,
+        album_id: int,
+        refreshed_record: dict[str, Any],
+    ) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        normalized_record = _normalize_completed_albums(
+            {
+                _album_key(
+                    refreshed_record.get("artist", ""),
+                    refreshed_record.get("name", ""),
+                ): refreshed_record
+            }
+        )
+        new_key = next(iter(normalized_record))
+        existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
+
+        if existing_target is not None and existing_target.id != album.id:
+            existing_record = self._album_record_for_update(existing_target)
+            merged_record = {
+                **existing_record,
+                **{
+                    key: value
+                    for key, value in refreshed_record.items()
+                    if value is not None and value != "" and value != []
+                },
+            }
+            self._apply_completed_album_record(existing_target, merged_record)
+            return self.merge_completed_album_listens(album.id, existing_target.id)
+
+        self._apply_completed_album_record(album, refreshed_record)
+        self.session.commit()
+        return self._album_record(album)
+
+    def merge_completed_album_listens(
+        self,
+        source_album_id: int,
+        target_album_id: int,
+    ) -> dict[str, Any]:
+        source_album = self.session.get(Album, source_album_id)
+        if source_album is None:
+            raise KeyError(f"Album id not found: {source_album_id}")
+
+        target_album = self.session.get(Album, target_album_id)
+        if target_album is None:
+            raise KeyError(f"Album id not found: {target_album_id}")
+
+        if source_album.id == target_album.id:
+            raise ValueError("Cannot merge an album into itself.")
+
+        source_listens = list(
+            self.session.scalars(
+                select(AlbumListen.listened_at)
+                .where(AlbumListen.album_id == source_album.id)
+                .order_by(AlbumListen.listened_at)
+            )
+        )
+
+        for listened_at in source_listens:
+            self._add_listen(target_album, listened_at)
+
+        self.session.execute(
+            delete(AlbumListen).where(AlbumListen.album_id == source_album.id)
+        )
+        self.session.delete(source_album)
+        self.session.commit()
+        return self._album_record(target_album)
+
+    def delete_completed_album(self, album_id: int) -> None:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        self.session.execute(delete(AlbumListen).where(AlbumListen.album_id == album.id))
+        self.session.delete(album)
+        self.session.commit()
+
+    def create_completed_album(
+        self,
+        record: dict[str, Any],
+        listen_date: str | None = None,
+    ) -> dict[str, Any]:
+        normalized_record = _normalize_completed_albums(
+            {_album_key(record.get("artist", ""), record.get("name", "")): record}
+        )
+        album_key, normalized = next(iter(normalized_record.items()))
+
+        if self.session.scalars(_album_lookup_statement(album_key)).first():
+            raise ValueError(f"Album already exists: {album_key}")
+
+        album = Album(
+            album_key=album_key,
+            artist=normalized["artist"],
+            name=normalized["name"],
+        )
+        self.session.add(album)
+        self._apply_completed_album_record(album, normalized)
+        self.session.flush()
+
+        if listen_date:
+            self._add_listen(album, listen_date)
+        for listened_at in normalized.get("listen_history") or []:
+            self._add_listen(album, listened_at)
+
+        self.session.commit()
+        return self._album_record(album)
+
+    def update_completed_album_fields(
+        self,
+        album_id: int,
+        fields: dict[str, Any],
+    ) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        existing_record = self._album_record_for_update(album)
+        updated_record = {
+            **existing_record,
+            **{key: value for key, value in fields.items() if value is not None},
+        }
+        self._apply_completed_album_record(album, updated_record)
+        self.session.commit()
+        return self._album_record(album)
+
+    def add_album_listen(self, album_id: int, listened_at: str) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        self._add_listen(album, listened_at)
+        self.session.commit()
+        return self._album_record(album)
 
     def _set_app_state(self, key: str, value: str | None) -> None:
         app_state = self.session.get(AppState, key)
@@ -178,19 +371,7 @@ class SqliteStateRepository:
                 )
                 self.session.add(album)
 
-            album.album_key = album_key
-            album.artist = record["artist"]
-            album.name = record["name"]
-            album.artist_mbid = record.get("artist_mbid")
-            album.release_group_mbid = record.get("release_group_mbid")
-            album.release_mbid = record.get("release_mbid")
-            album.label = record.get("label")
-            album.release_year = record.get("release_year")
-            album.release_month = record.get("release_month")
-            album.release_day = record.get("release_day")
-            album.image_url = record.get("image_url")
-            album.source = record.get("source") or "unknown"
-            album.metadata_json = _album_metadata(record)
+            self._apply_completed_album_record(album, record, album_key=album_key)
 
             self.session.flush()
             self._sync_listens(album, record.get("listen_history") or [])
@@ -271,8 +452,14 @@ class SqliteStateRepository:
                 .order_by(AlbumListen.listened_at)
             )
         )
+        image_url = album.image_url
+        if album.local_image_path:
+            image_url = _artwork_url(album.local_image_path)
+
         return {
             **(album.metadata_json or {}),
+            "id": album.id,
+            "album_key": album.album_key,
             "artist": album.artist,
             "name": album.name,
             "artist_mbid": album.artist_mbid,
@@ -282,10 +469,75 @@ class SqliteStateRepository:
             "release_year": album.release_year,
             "release_month": album.release_month,
             "release_day": album.release_day,
-            "image_url": album.image_url,
+            "image_url": image_url,
+            "remote_image_url": album.remote_image_url,
+            "local_image_path": album.local_image_path,
             "source": album.source,
             "listen_history": listen_history,
         }
+
+    def _album_record_for_update(self, album: Album) -> dict[str, Any]:
+        record = self._album_record(album)
+        record["image_url"] = album.image_url
+        record["remote_image_url"] = album.remote_image_url
+        record["local_image_path"] = album.local_image_path
+        return record
+
+    def _apply_album_artwork_fields(self, album: Album, record: dict[str, Any]) -> None:
+        image_url = record.get("image_url")
+        remote_image_url = record.get("remote_image_url") or image_url
+
+        album.image_url = image_url
+        album.remote_image_url = remote_image_url
+
+        if "local_image_path" in record:
+            album.local_image_path = record.get("local_image_path")
+
+    def _apply_completed_album_record(
+        self,
+        album: Album,
+        record: dict[str, Any],
+        album_key: str | None = None,
+    ) -> None:
+        normalized_record = _normalize_completed_albums(
+            {album_key or _album_key(record.get("artist", ""), record.get("name", "")): record}
+        )
+        new_key, normalized = next(iter(normalized_record.items()))
+
+        existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
+        if existing_target is not None and existing_target.id != album.id:
+            raise ValueError(f"Album key already exists: {new_key}")
+
+        album.album_key = new_key
+        album.artist = normalized["artist"]
+        album.name = normalized["name"]
+        album.artist_mbid = normalized.get("artist_mbid")
+        album.release_group_mbid = normalized.get("release_group_mbid")
+        album.release_mbid = normalized.get("release_mbid")
+        album.label = normalized.get("label")
+        album.release_year = normalized.get("release_year")
+        album.release_month = normalized.get("release_month")
+        album.release_day = normalized.get("release_day")
+        self._apply_album_artwork_fields(album, normalized)
+        album.source = normalized.get("source") or "unknown"
+        album.metadata_json = _album_metadata(normalized)
+
+    def _add_listen(self, album: Album, listened_at: str) -> None:
+        existing = self.session.scalars(
+            select(AlbumListen).where(
+                AlbumListen.album_id == album.id,
+                AlbumListen.listened_at == listened_at,
+            )
+        ).first()
+        if existing is not None:
+            return
+        self.session.add(
+            AlbumListen(
+                album_id=album.id,
+                listened_at=listened_at,
+                source=album.source,
+            )
+        )
 
     def _load_albums_in_progress(self) -> dict[str, Any]:
         albums_in_progress = {}
@@ -317,3 +569,8 @@ class SqliteStateRepository:
             .limit(limit)
         )
         return [row[0] for row in rows]
+
+
+def _artwork_url(local_image_path: str) -> str:
+    filename = local_image_path.removeprefix("artwork/").lstrip("/")
+    return f"{ARTWORK_URL_PREFIX}{filename}"

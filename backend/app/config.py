@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_STATE_FILE = ROOT_DIR / "frontend" / "public" / "album_state.json"
 DEFAULT_EXPORT_FILE = ROOT_DIR / "data" / "exports" / "album_state_export.json"
+DEFAULT_MEDIA_DIR = ROOT_DIR / "data" / "media"
 
 
 @dataclass(frozen=True)
@@ -16,6 +17,7 @@ class Settings:
     frontend_origin: str = "http://localhost:5173"
     state_file: str = str(DEFAULT_STATE_FILE)
     export_state_file: str = str(DEFAULT_EXPORT_FILE)
+    media_dir: str = str(DEFAULT_MEDIA_DIR)
     album_state_backend: str = "sqlite"
 
 
@@ -33,6 +35,7 @@ def get_settings() -> Settings:
             "EXPORT_STATE_FILE",
             Settings.export_state_file,
         ),
+        media_dir=os.environ.get("MEDIA_DIR", Settings.media_dir),
         album_state_backend=os.environ.get(
             "ALBUM_STATE_BACKEND",
             Settings.album_state_backend,

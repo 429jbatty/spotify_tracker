@@ -19,6 +19,8 @@ class AlbumTrack(BaseModel):
 class CompletedAlbum(BaseModel):
     model_config = ConfigDict(extra="allow")
 
+    id: int | None = None
+    album_key: str | None = None
     artist: str
     name: str
     listen_history: list[str]
@@ -29,6 +31,8 @@ class CompletedAlbum(BaseModel):
     tags: list[str] = Field(default_factory=list)
     genres: list[str] = Field(default_factory=list)
     image_url: str | None = None
+    remote_image_url: str | None = None
+    local_image_path: str | None = None
     source: str
 
 
@@ -49,3 +53,46 @@ class AlbumState(BaseModel):
     albums_in_progress: dict[str, AlbumInProgress]
     completed_albums: dict[str, CompletedAlbum]
     most_recently_listened: list[str]
+
+
+class ManualAlbumCreate(BaseModel):
+    artist: str
+    name: str
+    listen_date: str
+    release_year: int | None = None
+    release_month: int | None = None
+    release_day: int | None = None
+    label: str | None = None
+    image_url: str | None = None
+    release_group_mbid: str | None = None
+    release_mbid: str | None = None
+    spotify_url: str | None = None
+    musicbrainz_url: str | None = None
+    source: str = "manual"
+
+
+class AlbumMetadataUpdate(BaseModel):
+    artist: str | None = None
+    name: str | None = None
+    release_year: int | None = None
+    release_month: int | None = None
+    release_day: int | None = None
+    label: str | None = None
+    image_url: str | None = None
+    remote_image_url: str | None = None
+    local_image_path: str | None = None
+    spotify_url: str | None = None
+    musicbrainz_url: str | None = None
+    source: str | None = None
+
+
+class AlbumListenCreate(BaseModel):
+    listened_at: str
+
+
+class AlbumMergeRequest(BaseModel):
+    target_album_id: int
+
+
+class AlbumRefreshRequest(BaseModel):
+    spotify_url: str | None = None
