@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-18T21:35:10.337Z",
+  "last_checked": "2026-04-19T00:46:40.379Z",
   "albums_in_progress": {
     "0p7nH5bz0pWBor10osUBuD": {
       "album_name": "R Plus Seven",
@@ -638,6 +638,26 @@
       ],
       "first_played": "2026-04-18T21:31:10.390Z",
       "last_played": "2026-04-18T21:31:10.390Z"
+    },
+    "0rmhjUgoVa17LZuS8xWQ3v": {
+      "album_name": "Pure Heroine",
+      "artist": "Lorde",
+      "total_tracks": 10,
+      "played_tracks": [
+        "35kahykNu00FPysz3C2euR"
+      ],
+      "first_played": "2026-04-18T22:13:11.471Z",
+      "last_played": "2026-04-18T22:13:11.471Z"
+    },
+    "7rSZXXHHvIhF4yUFdaOCy9": {
+      "album_name": "Are You Experienced",
+      "artist": "Jimi Hendrix",
+      "total_tracks": 17,
+      "played_tracks": [
+        "3f5JtAsGRIXN8pSAeTi6vA"
+      ],
+      "first_played": "2026-04-18T23:46:59.145Z",
+      "last_played": "2026-04-18T23:46:59.145Z"
     }
   },
   "completed_albums": {
@@ -404947,9 +404967,15 @@
       "listen_history": [
         "2026-04-13T16:33:50.734Z"
       ]
+    },
+    "Jimi Hendrix - Electric Ladyland": {
+      "listen_history": [
+        "2026-04-18T23:36:49.796Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Jimi Hendrix - Electric Ladyland",
     "Sky Ferreira - Night Time, My Time",
     "Marty Robbins - Gunfighter Ballads And Trail Songs",
     "Burial - Untrue",
@@ -404958,7 +404984,6 @@
     "Bert Jansch - Bert Jansch",
     "Bridget St. John - Songs for the Gentle Man",
     "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
-    "Soft Soundscapes - River",
-    "The Slumbering One - Peaceful Slumber"
+    "Soft Soundscapes - River"
   ]
 }
