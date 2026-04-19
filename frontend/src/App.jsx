@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
+import { fetchAlbumState } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
 import Header from "./components/universalHeader";
 import PageDiscovery from "./components/PageDiscovery";
@@ -16,15 +17,8 @@ function App() {
   const [activeFilters, setActiveFilters] = useState([]);
 
   useEffect(() => {
-    fetch(`${import.meta.env.BASE_URL}album_state.json`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Failed to fetch album data");
-        }
-        return res.json();
-      })
+    fetchAlbumState()
       .then((json) => {
-        console.log("Loaded JSON:", json);
         setData({
           ...json,
           completed_albums: normalizeAlbums(json.completed_albums)

@@ -1,14 +1,13 @@
 import logging
 
 import metadata_refresh_service as refresh_service
-import utils
 
 # Edit these values, then run:
 # ./.venv/bin/python refresh_metadata.py
 
 REFRESH_ALL = False
 
-ALBUM_KEYS = ["Bridget St John - Songs For The Gentle Man"]
+ALBUM_KEYS = ["Bridget St. John - Songs for the Gentle Man"]
 
 ALBUMS = [
     # {
@@ -36,18 +35,16 @@ def _print_summary(results):
 
 
 def refresh_configured_albums():
-    state = utils.load_state()
     results = []
 
     if REFRESH_ALL:
-        results = refresh_service.refresh_all_albums_in_state(
-            state,
+        results = refresh_service.refresh_all_albums_and_save(
             continue_on_error=CONTINUE_ON_ERROR,
         )
     else:
         for key in ALBUM_KEYS:
             try:
-                result = refresh_service.refresh_album_in_state(state, key=key)
+                result = refresh_service.refresh_album_and_save(key=key)
             except Exception as exc:
                 if not CONTINUE_ON_ERROR:
                     raise
@@ -70,8 +67,7 @@ def refresh_configured_albums():
             key = f"{artist} - {album}"
 
             try:
-                result = refresh_service.refresh_album_in_state(
-                    state,
+                result = refresh_service.refresh_album_and_save(
                     artist=artist,
                     album=album,
                     spotify_url=spotify_url,
@@ -91,7 +87,6 @@ def refresh_configured_albums():
             else:
                 results.append(result)
 
-    utils.save_state(state)
     return results
 
 

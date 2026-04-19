@@ -150,6 +150,84 @@ def refresh_all_albums_in_state(state: dict, continue_on_error: bool = True):
     return results
 
 
+def _refresh_album_in_sqlite_repository(
+    repository,
+    *,
+    artist: str | None = None,
+    album: str | None = None,
+    key: str | None = None,
+    spotify_url: str | None = None,
+):
+    target_key = repository.find_completed_album_key(
+        artist=artist,
+        album=album,
+        key=key,
+    )
+    existing_record = repository.get_completed_album_record(target_key)
+    refreshed_record = refresh_album_record(existing_record, spotify_url=spotify_url)
+    new_key = repository.replace_completed_album_metadata(
+        target_key,
+        refreshed_record,
+    )
+
+    return RefreshResult(
+        key=new_key,
+        artist=refreshed_record["artist"],
+        album=refreshed_record["name"],
+        refreshed=True,
+    )
+
+
+def _refresh_album_and_save_sqlite(
+    *,
+    artist: str | None = None,
+    album: str | None = None,
+    key: str | None = None,
+    spotify_url: str | None = None,
+):
+    with utils.sqlite_state_repository() as repository:
+        return _refresh_album_in_sqlite_repository(
+            repository,
+            artist=artist,
+            album=album,
+            key=key,
+            spotify_url=spotify_url,
+        )
+
+
+def _refresh_all_albums_and_save_sqlite(continue_on_error: bool = True):
+    results = []
+
+    with utils.sqlite_state_repository() as repository:
+        original_keys = repository.completed_album_keys()
+
+        for key in original_keys:
+            try:
+                result = _refresh_album_in_sqlite_repository(repository, key=key)
+            except Exception as exc:
+                logger.exception("Failed to refresh metadata for %s", key)
+                try:
+                    record = repository.get_completed_album_record(key)
+                except Exception:
+                    record = {}
+
+                result = RefreshResult(
+                    key=key,
+                    artist=record.get("artist", ""),
+                    album=record.get("name", ""),
+                    refreshed=False,
+                    error=str(exc),
+                )
+                results.append(result)
+
+                if not continue_on_error:
+                    raise
+            else:
+                results.append(result)
+
+    return results
+
+
 def refresh_album_and_save(
     *,
     artist: str | None = None,
@@ -157,6 +235,14 @@ def refresh_album_and_save(
     key: str | None = None,
     spotify_url: str | None = None,
 ):
+    if utils.use_sqlite_state():
+        return _refresh_album_and_save_sqlite(
+            artist=artist,
+            album=album,
+            key=key,
+            spotify_url=spotify_url,
+        )
+
     state = utils.load_state()
     result = refresh_album_in_state(
         state,
@@ -170,6 +256,11 @@ def refresh_album_and_save(
 
 
 def refresh_all_albums_and_save(continue_on_error: bool = True):
+    if utils.use_sqlite_state():
+        return _refresh_all_albums_and_save_sqlite(
+            continue_on_error=continue_on_error,
+        )
+
     state = utils.load_state()
     results = refresh_all_albums_in_state(
         state,

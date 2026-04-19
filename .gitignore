@@ -5,3 +5,7 @@ spotify_credentials.json
 .cache*
 unmatched_albums.csv
 .vscode/*
+data/exports/
+*.db
+*.sqlite
+*.sqlite3
