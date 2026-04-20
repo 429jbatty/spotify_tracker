@@ -1,26 +1,6 @@
 {
-  "last_checked": "2026-04-20T20:22:17.386Z",
+  "last_checked": "2026-04-20T21:52:08.898Z",
   "albums_in_progress": {
-    "4ClyeVlAKJJViIyfVW0yQD": {
-      "album_name": "Pang",
-      "artist": "Caroline Polachek",
-      "total_tracks": 14,
-      "played_tracks": [
-        "5bcJwBywjaz78KTf374PCb"
-      ],
-      "first_played": "2026-04-18T21:31:10.390Z",
-      "last_played": "2026-04-18T21:31:10.390Z"
-    },
-    "0rmhjUgoVa17LZuS8xWQ3v": {
-      "album_name": "Pure Heroine",
-      "artist": "Lorde",
-      "total_tracks": 10,
-      "played_tracks": [
-        "35kahykNu00FPysz3C2euR"
-      ],
-      "first_played": "2026-04-18T22:13:11.471Z",
-      "last_played": "2026-04-18T22:13:11.471Z"
-    },
     "7rSZXXHHvIhF4yUFdaOCy9": {
       "album_name": "Are You Experienced",
       "artist": "Jimi Hendrix",
@@ -61,16 +41,85 @@
       "first_played": "2026-04-20T20:17:18.651Z",
       "last_played": "2026-04-20T20:17:18.651Z"
     },
-    "2lIZef4lzdvZkiiCzvPKj7": {
-      "album_name": "BRAT",
+    "316O0Xetgx2NJLRgJBw4uq": {
+      "album_name": "Brat and it\u2019s the same but there\u2019s three more songs so it\u2019s not",
       "artist": "Charli xcx",
-      "total_tracks": 15,
+      "total_tracks": 18,
       "played_tracks": [
-        "4w2GLmK2wnioVnb5CPQeex",
-        "0CySZwyRJ0vyUqtSjM9i2k"
+        "3dk7WaeS0y0JG0OMd0FVcg"
       ],
-      "first_played": "2026-04-20T20:19:47.404Z",
-      "last_played": "2026-04-20T20:22:17.386Z"
+      "first_played": "2026-04-20T21:22:09.201Z",
+      "last_played": "2026-04-20T21:22:09.201Z"
+    },
+    "0rmhjUgoVa17LZuS8xWQ3v": {
+      "album_name": "Pure Heroine",
+      "artist": "Lorde",
+      "total_tracks": 10,
+      "played_tracks": [
+        "51QEyJI5M7uyd8DOh9tqQY"
+      ],
+      "first_played": "2026-04-20T21:26:09.145Z",
+      "last_played": "2026-04-20T21:26:09.145Z"
+    },
+    "58PwJKq5KH2MjVt2Ih4nEt": {
+      "album_name": "choke enough",
+      "artist": "Oklou",
+      "total_tracks": 13,
+      "played_tracks": [
+        "6g2m5644ZTXBzxSt0z5Qwa"
+      ],
+      "first_played": "2026-04-20T21:30:09.100Z",
+      "last_played": "2026-04-20T21:30:09.100Z"
+    },
+    "3o1TOhMkU5FFMSJMDhXfdF": {
+      "album_name": "EUSEXUA",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6TeKbncyK62smlAvPy1dNa"
+      ],
+      "first_played": "2026-04-20T21:37:39.210Z",
+      "last_played": "2026-04-20T21:37:39.210Z"
+    },
+    "4ClyeVlAKJJViIyfVW0yQD": {
+      "album_name": "Pang",
+      "artist": "Caroline Polachek",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5B6Kjha6RRIMWGN7zGsAaT"
+      ],
+      "first_played": "2026-04-20T21:40:38.881Z",
+      "last_played": "2026-04-20T21:40:38.881Z"
+    },
+    "6exBK52toUpg3zj2Gog3K1": {
+      "album_name": "Fauxllennium",
+      "artist": "TV Girl, George Clanton",
+      "total_tracks": 7,
+      "played_tracks": [
+        "188JTF6dEXKksYBt9t05TJ"
+      ],
+      "first_played": "2026-04-20T21:44:39.266Z",
+      "last_played": "2026-04-20T21:44:39.266Z"
+    },
+    "36P07bti6xD99o7S1acmin": {
+      "album_name": "Brat and it\u2019s completely different but also still brat",
+      "artist": "Charli xcx",
+      "total_tracks": 34,
+      "played_tracks": [
+        "7srqyRb5plksW5k65itXDB"
+      ],
+      "first_played": "2026-04-20T21:48:09.009Z",
+      "last_played": "2026-04-20T21:48:09.009Z"
+    },
+    "28bHj2enHkHVFLwuWmkwlQ": {
+      "album_name": "Virgin",
+      "artist": "Lorde",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0vtgMfyOVM2Y97DcVVJw3m"
+      ],
+      "first_played": "2026-04-20T21:52:08.898Z",
+      "last_played": "2026-04-20T21:52:08.898Z"
     }
   },
   "completed_albums": {
@@ -404389,9 +404438,648 @@
       "listen_history": [
         "2026-04-18T23:36:49.796Z"
       ]
+    },
+    "Charli xcx - BRAT": {
+      "artist": "Charli xcx",
+      "artist_mbid": "260b6184-8828-48eb-945c-bc4cb6fc34ca",
+      "name": "BRAT",
+      "release_group_mbid": "e0fdb431-0109-420d-8a37-f99eaeb4d671",
+      "release_mbid": "06272341-cea9-42ad-9b0c-6ec47954417c",
+      "label": "Atlantic",
+      "release_year": 2024,
+      "release_month": 6,
+      "release_day": 7,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "360",
+          "credits": [
+            [
+              "Cirkut",
+              "engineer",
+              "lead vocals"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Cirkut",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "producer",
+              "additional"
+            ],
+            [
+              "Cirkut",
+              "work composer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Omer Fedi",
+              "work composer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "work composer",
+              ""
+            ],
+            [
+              "Blake Slatkin",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "9e687f51-1fa6-4374-b9e0-2e3df630bcd5"
+        },
+        {
+          "position": "2",
+          "title": "Club classics",
+          "credits": [
+            [
+              "Tom Norris",
+              "mix",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "George Daniel",
+              "producer",
+              ""
+            ],
+            [
+              "George Daniel",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "0a88e1e3-f8b3-434a-9289-a2828a00241a"
+        },
+        {
+          "position": "3",
+          "title": "Sympathy is a knife",
+          "credits": [
+            [
+              "Tom Norris",
+              "mix",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "producer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "producer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work composer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "work composer",
+              ""
+            ],
+            [
+              "Jon Shave",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "75fbda47-954c-4a9d-b6a8-e28ad376313a"
+        },
+        {
+          "position": "4",
+          "title": "I might say something stupid",
+          "credits": [
+            [
+              "Gesaffelstein",
+              "mix",
+              ""
+            ],
+            [
+              "Bart Schoudel",
+              "mix",
+              ""
+            ],
+            [
+              "Gesaffelstein",
+              "producer",
+              ""
+            ],
+            [
+              "Gesaffelstein",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "5d43269f-4c7d-40cb-893d-35b51b6dc078"
+        },
+        {
+          "position": "5",
+          "title": "Talk talk",
+          "credits": [
+            [
+              "Tom Norris",
+              "mix",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Hudson Mohawke",
+              "producer",
+              ""
+            ],
+            [
+              "Ross Birchard",
+              "work composer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "351af27b-2581-4f27-a75f-1ae5200db4f2"
+        },
+        {
+          "position": "6",
+          "title": "Von dutch",
+          "credits": [
+            [
+              "Tom Norris",
+              "mix",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "producer",
+              ""
+            ],
+            [
+              "Ashley Jacobson",
+              "recording",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "vocal",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "93e4875c-8a06-4b7d-96cb-8cb27f142c7d"
+        },
+        {
+          "position": "7",
+          "title": "Everything is romantic",
+          "credits": [
+            [
+              "Charli xcx",
+              "producer",
+              ""
+            ],
+            [
+              "Chordz",
+              "producer",
+              "additional"
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Jae Deal",
+              "producer",
+              "additional"
+            ],
+            [
+              "El Guincho",
+              "producer",
+              ""
+            ],
+            [
+              "Jasper Harris",
+              "producer",
+              "additional"
+            ],
+            [
+              "El Guincho",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "92f108ea-4a03-4469-8bc3-be46ffa331e0"
+        },
+        {
+          "position": "8",
+          "title": "Rewind",
+          "credits": [
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Cirkut",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Cirkut",
+              "work composer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "ff1b50b4-b05c-4d65-836d-8ae4685ece42"
+        },
+        {
+          "position": "9",
+          "title": "So I",
+          "credits": [
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Jon Shave",
+              "producer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "work composer",
+              ""
+            ],
+            [
+              "Jon Shave",
+              "work composer",
+              ""
+            ],
+            [
+              "SOPHIE",
+              "work dedication",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "90962800-c819-47bc-b1df-97ed3ff2bd08"
+        },
+        {
+          "position": "10",
+          "title": "Girl, so confusing",
+          "credits": [
+            [
+              "Tom Norris",
+              "mix",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "01a70574-fcf4-4292-a29b-bd5dc6892cfa"
+        },
+        {
+          "position": "11",
+          "title": "Apple",
+          "credits": [
+            [
+              "Charli xcx",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "George Daniel",
+              "producer",
+              ""
+            ],
+            [
+              "Lotus IV",
+              "producer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work composer",
+              ""
+            ],
+            [
+              "George Daniel",
+              "work composer",
+              ""
+            ],
+            [
+              "Lotus IV",
+              "work composer",
+              ""
+            ],
+            [
+              "Noonie Bao",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "85cc72aa-2e66-45fc-bc02-ce2ec036f82b"
+        },
+        {
+          "position": "12",
+          "title": "B2b",
+          "credits": [
+            [
+              "Gesaffelstein",
+              "mix",
+              ""
+            ],
+            [
+              "Bart Schoudel",
+              "mix",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Omer Fedi",
+              "producer",
+              ""
+            ],
+            [
+              "Gesaffelstein",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Omer Fedi",
+              "work composer",
+              ""
+            ],
+            [
+              "Gesaffelstein",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "316274e2-6043-41c3-97dd-0f570822b319"
+        },
+        {
+          "position": "13",
+          "title": "Mean girls",
+          "credits": [
+            [
+              "Tom Norris",
+              "mix",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Hudson Mohawke",
+              "producer",
+              ""
+            ],
+            [
+              "Ross Birchard",
+              "work composer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "058b79d3-1023-4c75-9bf4-96491ec8fdc1"
+        },
+        {
+          "position": "14",
+          "title": "I think about it all the time",
+          "credits": [
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Finn Keane",
+              "work composer",
+              ""
+            ],
+            [
+              "Jon Shave",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "4d8939a9-a11e-464c-8816-4447472df358"
+        },
+        {
+          "position": "15",
+          "title": "365",
+          "credits": [
+            [
+              "Cirkut",
+              "producer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "producer",
+              ""
+            ],
+            [
+              "Cirkut",
+              "work composer",
+              ""
+            ],
+            [
+              "A. G. Cook",
+              "work composer",
+              ""
+            ],
+            [
+              "Charli xcx",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "bd9fd6a1-d41b-4b82-9ead-a4f958749a77"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "5+ wochen",
+        "bubblegum bass",
+        "club",
+        "dance music",
+        "dance-pop",
+        "edm",
+        "electro house",
+        "electroclash",
+        "electronic",
+        "electropop",
+        "hyperpop",
+        "jahrescharts 2024",
+        "left-field pop",
+        "ph_2_stars",
+        "plattentests.de",
+        "pop",
+        "uk rave"
+      ],
+      "image_url": "https://coverartarchive.org/release/ab55ac76-eee5-4f89-ac14-7bb9aa837bc8/38462695827-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-20T21:33:09.176Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Charli xcx - BRAT",
     "Pixies - Doolittle",
     "Joy Division - Unknown Pleasures",
     "Jimi Hendrix - Electric Ladyland",
@@ -404400,7 +405088,6 @@
     "Burial - Untrue",
     "Nick Drake - Pink Moon",
     "John Martyn - One World",
-    "Bert Jansch - Bert Jansch",
-    "Bridget St. John - Songs for the Gentle Man"
+    "Bert Jansch - Bert Jansch"
   ]
 }
