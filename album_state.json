@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-20T16:30:55.967Z",
+  "last_checked": "2026-04-20T17:08:16.944Z",
   "albums_in_progress": {
     "4ClyeVlAKJJViIyfVW0yQD": {
       "album_name": "Pang",
@@ -47,10 +47,19 @@
       "total_tracks": 15,
       "played_tracks": [
         "5cy5IStIn7OSHDEIgXeDyq",
-        "5pT6ORhZsIq14smtQp3POM"
+        "5pT6ORhZsIq14smtQp3POM",
+        "51Z2IzJvLCnZaIpBV0IYRr",
+        "6YhMbOm0HwrGvnAyu4b6dL",
+        "4IvZLDtwBHmBmwgDIUbuwa",
+        "1SHobTEExrHNnM2J149sRz",
+        "6BT7qiDY4A5tOyklohjQuW",
+        "1TCSR2K7qofcXKzGEtNkyv",
+        "4OOnKruLT7SQf9ny770YKe",
+        "6x0cOqPP07gTXusQfK9COQ",
+        "4NXzNzXDkMEWtvn3foSIrJ"
       ],
       "first_played": "2026-04-20T16:28:55.420Z",
-      "last_played": "2026-04-20T16:30:55.967Z"
+      "last_played": "2026-04-20T17:08:16.944Z"
     }
   },
   "completed_albums": {
