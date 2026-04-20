@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-20T17:08:16.944Z",
+  "last_checked": "2026-04-20T20:22:17.386Z",
   "albums_in_progress": {
     "4ClyeVlAKJJViIyfVW0yQD": {
       "album_name": "Pang",
@@ -41,25 +41,36 @@
       "first_played": "2026-04-20T16:25:26.203Z",
       "last_played": "2026-04-20T16:25:26.203Z"
     },
-    "0DQyTVcDhK9wm0f6RaErWO": {
-      "album_name": "Doolittle",
+    "50j4Wm1b9hLpSpPIA39Vp9": {
+      "album_name": "Surfer Rosa (2007 Remaster)",
       "artist": "Pixies",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5G2g1EbEtFSMkMbAnhl7FV"
+      ],
+      "first_played": "2026-04-20T20:00:54.188Z",
+      "last_played": "2026-04-20T20:00:54.188Z"
+    },
+    "5bmpvyP7UGqB4VuXmrJUMy": {
+      "album_name": "Either/Or",
+      "artist": "Elliott Smith",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6L9uay2MM8qACwI1yQHnw2"
+      ],
+      "first_played": "2026-04-20T20:17:18.651Z",
+      "last_played": "2026-04-20T20:17:18.651Z"
+    },
+    "2lIZef4lzdvZkiiCzvPKj7": {
+      "album_name": "BRAT",
+      "artist": "Charli xcx",
       "total_tracks": 15,
       "played_tracks": [
-        "5cy5IStIn7OSHDEIgXeDyq",
-        "5pT6ORhZsIq14smtQp3POM",
-        "51Z2IzJvLCnZaIpBV0IYRr",
-        "6YhMbOm0HwrGvnAyu4b6dL",
-        "4IvZLDtwBHmBmwgDIUbuwa",
-        "1SHobTEExrHNnM2J149sRz",
-        "6BT7qiDY4A5tOyklohjQuW",
-        "1TCSR2K7qofcXKzGEtNkyv",
-        "4OOnKruLT7SQf9ny770YKe",
-        "6x0cOqPP07gTXusQfK9COQ",
-        "4NXzNzXDkMEWtvn3foSIrJ"
+        "4w2GLmK2wnioVnb5CPQeex",
+        "0CySZwyRJ0vyUqtSjM9i2k"
       ],
-      "first_played": "2026-04-20T16:28:55.420Z",
-      "last_played": "2026-04-20T17:08:16.944Z"
+      "first_played": "2026-04-20T20:19:47.404Z",
+      "last_played": "2026-04-20T20:22:17.386Z"
     }
   },
   "completed_albums": {
@@ -248855,7 +248866,9 @@
         "cryptic"
       ],
       "image_url": "https://coverartarchive.org/release/67073980-9a62-4fef-b5c0-4b5bd9d2d9ed/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-20T19:56:54.219Z"
+      ],
       "source": "musicbrainz"
     },
     "Pixies - Surfer Rosa": {
@@ -404379,6 +404392,7 @@
     }
   },
   "most_recently_listened": [
+    "Pixies - Doolittle",
     "Joy Division - Unknown Pleasures",
     "Jimi Hendrix - Electric Ladyland",
     "Sky Ferreira - Night Time, My Time",
@@ -404387,7 +404401,6 @@
     "Nick Drake - Pink Moon",
     "John Martyn - One World",
     "Bert Jansch - Bert Jansch",
-    "Bridget St. John - Songs for the Gentle Man",
-    "Eric Clapton - Unplugged (Deluxe Edition) (Live)"
+    "Bridget St. John - Songs for the Gentle Man"
   ]
 }
