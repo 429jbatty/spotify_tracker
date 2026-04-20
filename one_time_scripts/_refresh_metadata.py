@@ -5,6 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 import metadata_refresh_service as refresh_service
+from backend.app.config import get_settings
 
 # Edit these values, then run:
 # ./.venv/bin/python refresh_metadata.py
@@ -24,7 +25,6 @@ ALBUMS = [
 ]
 
 CONTINUE_ON_ERROR = True
-REPORT_DIR = Path("data/refresh_reports")
 
 
 def _print_summary(results):
@@ -49,8 +49,9 @@ def _print_summary(results):
 
 
 def _write_report(results):
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    report_path = REPORT_DIR / (
+    report_dir = Path(get_settings().data_dir) / "refresh_reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    report_path = report_dir / (
         f"metadata_refresh_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
     )
     payload = {

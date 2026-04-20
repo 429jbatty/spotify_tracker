@@ -190,7 +190,6 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             with patch.dict(
                 os.environ,
                 {
-                    "ALBUM_STATE_BACKEND": "sqlite",
                     "DATABASE_URL": database_url,
                 },
             ):
@@ -247,7 +246,6 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             with patch.dict(
                 os.environ,
                 {
-                    "ALBUM_STATE_BACKEND": "sqlite",
                     "DATABASE_URL": database_url,
                 },
             ):

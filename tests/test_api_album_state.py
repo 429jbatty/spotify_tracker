@@ -1,4 +1,3 @@
-import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -47,14 +46,22 @@ def sample_album_state():
 class ApiAlbumStateTests(unittest.TestCase):
     def test_album_state_endpoint_returns_frontend_compatible_state(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            state_file = Path(temp_dir) / "album_state.json"
-            state_file.write_text(json.dumps(sample_album_state()), encoding="utf-8")
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(
+                bind=engine,
+                autoflush=False,
+                autocommit=False,
+            )
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.import_album_state(sample_album_state())
 
             with patch.dict(
                 "os.environ",
                 {
-                    "ALBUM_STATE_BACKEND": "json",
-                    "STATE_FILE": str(state_file),
+                    "DATABASE_URL": database_url,
                 },
             ):
                 client = TestClient(create_app())
@@ -82,28 +89,6 @@ class ApiAlbumStateTests(unittest.TestCase):
         self.assertEqual(album["image_url"], "https://example.test/cover.jpg")
         self.assertEqual(album["source"], "musicbrainz")
 
-    def test_album_state_endpoint_returns_empty_state_when_file_is_missing(self):
-        with patch.dict(
-            "os.environ",
-            {
-                "ALBUM_STATE_BACKEND": "json",
-                "STATE_FILE": "/tmp/missing-album-state.json",
-            },
-        ):
-            client = TestClient(create_app())
-            response = client.get("/api/album-state")
-
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            response.json(),
-            {
-                "last_checked": None,
-                "albums_in_progress": {},
-                "completed_albums": {},
-                "most_recently_listened": [],
-            },
-        )
-
     def test_album_state_endpoint_fills_missing_album_identity_from_key(self):
         state = sample_album_state()
         state["completed_albums"]["Soft Soundscapes - River"] = {
@@ -111,14 +96,22 @@ class ApiAlbumStateTests(unittest.TestCase):
         }
 
         with tempfile.TemporaryDirectory() as temp_dir:
-            state_file = Path(temp_dir) / "album_state.json"
-            state_file.write_text(json.dumps(state), encoding="utf-8")
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(
+                bind=engine,
+                autoflush=False,
+                autocommit=False,
+            )
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.import_album_state(state)
 
             with patch.dict(
                 "os.environ",
                 {
-                    "ALBUM_STATE_BACKEND": "json",
-                    "STATE_FILE": str(state_file),
+                    "DATABASE_URL": database_url,
                 },
             ):
                 client = TestClient(create_app())

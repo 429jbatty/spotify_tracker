@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
+export const SELECTED_USER_STORAGE_KEY = "spotify_tracker_user_slug";
 
 function joinUrl(baseUrl, path) {
   return `${baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
@@ -40,7 +41,36 @@ async function requestJson(path, options = {}) {
 }
 
 export async function fetchAlbumState() {
+  const userSlug = getSelectedUserSlug();
+  if (userSlug) return requestJson(`/users/${userSlug}/album-state`);
   return requestJson("/album-state");
+}
+
+export async function fetchUsers() {
+  return requestJson("/users");
+}
+
+export async function createUser(payload) {
+  return requestJson("/users", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchSpotifyStatus(userSlug = getSelectedUserSlug()) {
+  if (!userSlug) return { connected: false };
+  return requestJson(`/users/${userSlug}/spotify/status`);
+}
+
+export function spotifyConnectUrl(userSlug = getSelectedUserSlug()) {
+  if (!userSlug) return null;
+  return joinUrl(API_BASE_URL, `/users/${userSlug}/spotify/connect`);
+}
+
+export async function syncSpotifyNow(userSlug = getSelectedUserSlug()) {
+  return requestJson(`/users/${userSlug}/spotify/sync`, {
+    method: "POST",
+  });
 }
 
 export async function refreshAlbumMetadata(albumId, payload = {}) {
@@ -51,7 +81,9 @@ export async function refreshAlbumMetadata(albumId, payload = {}) {
 }
 
 export async function createAlbum(payload) {
-  return requestJson("/albums", {
+  const userSlug = getSelectedUserSlug();
+  const path = userSlug ? `/users/${userSlug}/albums` : "/albums";
+  return requestJson(path, {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -65,14 +97,22 @@ export async function updateAlbum(albumId, payload) {
 }
 
 export async function addAlbumListen(albumId, listenedAt) {
-  return requestJson(`/albums/${albumId}/listens`, {
+  const userSlug = getSelectedUserSlug();
+  const path = userSlug
+    ? `/users/${userSlug}/albums/${albumId}/listens`
+    : `/albums/${albumId}/listens`;
+  return requestJson(path, {
     method: "POST",
     body: JSON.stringify({ listened_at: listenedAt }),
   });
 }
 
 export async function deleteAlbumListen(albumId, listenedAt) {
-  return requestJson(`/albums/${albumId}/listens`, {
+  const userSlug = getSelectedUserSlug();
+  const path = userSlug
+    ? `/users/${userSlug}/albums/${albumId}/listens`
+    : `/albums/${albumId}/listens`;
+  return requestJson(path, {
     method: "DELETE",
     body: JSON.stringify({ listened_at: listenedAt }),
   });
@@ -89,4 +129,16 @@ export async function deleteAlbum(albumId) {
   return requestJson(`/albums/${albumId}`, {
     method: "DELETE",
   });
+}
+
+export function getSelectedUserSlug() {
+  return window.localStorage.getItem(SELECTED_USER_STORAGE_KEY);
+}
+
+export function setSelectedUserSlug(userSlug) {
+  if (userSlug) {
+    window.localStorage.setItem(SELECTED_USER_STORAGE_KEY, userSlug);
+  } else {
+    window.localStorage.removeItem(SELECTED_USER_STORAGE_KEY);
+  }
 }

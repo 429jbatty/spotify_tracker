@@ -7,6 +7,26 @@ class HealthResponse(BaseModel):
     status: str
 
 
+class User(BaseModel):
+    id: int
+    slug: str
+    display_name: str
+    is_active: bool = True
+
+
+class UserCreate(BaseModel):
+    slug: str
+    display_name: str
+
+
+class SpotifyStatus(BaseModel):
+    connected: bool
+    spotify_user_id: str | None = None
+    connected_at: str | None = None
+    last_successful_sync_at: str | None = None
+    last_sync_error: str | None = None
+
+
 class AlbumTrack(BaseModel):
     model_config = ConfigDict(extra="allow")
 

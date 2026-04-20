@@ -1,4 +1,6 @@
 from collections.abc import Generator
+from pathlib import Path
+from urllib.parse import unquote
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
@@ -8,8 +10,21 @@ from backend.app.migrations import run_sqlite_migrations
 from backend.app.models import Base
 
 
+def _ensure_sqlite_parent(database_url: str) -> None:
+    if not database_url.startswith("sqlite:///"):
+        return
+
+    raw_path = unquote(database_url.removeprefix("sqlite:///"))
+    database_path = raw_path
+    if not database_path or database_path == ":memory:":
+        return
+
+    Path(database_path).expanduser().parent.mkdir(parents=True, exist_ok=True)
+
+
 def get_engine(database_url: str | None = None):
     url = database_url or get_settings().database_url
+    _ensure_sqlite_parent(url)
     connect_args = {"check_same_thread": False} if url.startswith("sqlite") else {}
     return create_engine(url, connect_args=connect_args)
 

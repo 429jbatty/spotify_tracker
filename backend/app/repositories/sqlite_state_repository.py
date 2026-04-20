@@ -3,11 +3,18 @@ from typing import Any
 from sqlalchemy import Select, delete, func, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import Album, AlbumInProgress, AlbumListen, AppState
-from backend.app.repositories.json_state_repository import (
+from backend.app.models import (
+    Album,
+    AlbumInProgress,
+    AlbumListen,
+    UserAlbum,
+    UserAppState,
+)
+from backend.app.repositories.state_utils import (
     _normalize_completed_albums,
     empty_album_state,
 )
+from backend.app.repositories.user_repository import UserRepository
 
 
 STATE_LAST_CHECKED = "last_checked"
@@ -38,8 +45,13 @@ def _album_key(artist: str, album: str) -> str:
 
 
 class SqliteStateRepository:
-    def __init__(self, session: Session):
+    def __init__(self, session: Session, user_slug: str | None = None):
         self.session = session
+        self.user = (
+            UserRepository(session).require_user_by_slug(user_slug)
+            if user_slug
+            else UserRepository(session).ensure_default_user()
+        )
 
     def import_album_state(self, state: dict[str, Any]) -> None:
         self.save_album_state(state)
@@ -245,17 +257,33 @@ class SqliteStateRepository:
 
         source_listens = list(
             self.session.scalars(
-                select(AlbumListen.listened_at)
+                select(AlbumListen)
                 .where(AlbumListen.album_id == source_album.id)
-                .order_by(AlbumListen.listened_at)
+                .order_by(AlbumListen.user_id, AlbumListen.listened_at)
             )
         )
 
-        for listened_at in source_listens:
-            self._add_listen(target_album, listened_at)
+        for listen in source_listens:
+            self._add_user_album(target_album.id, user_id=listen.user_id)
+            self._add_listen(
+                target_album,
+                listen.listened_at,
+                user_id=listen.user_id,
+            )
+
+        source_memberships = list(
+            self.session.scalars(
+                select(UserAlbum).where(UserAlbum.album_id == source_album.id)
+            )
+        )
+        for membership in source_memberships:
+            self._add_user_album(target_album.id, user_id=membership.user_id)
 
         self.session.execute(
             delete(AlbumListen).where(AlbumListen.album_id == source_album.id)
+        )
+        self.session.execute(
+            delete(UserAlbum).where(UserAlbum.album_id == source_album.id)
         )
         self.session.delete(source_album)
         self.session.commit()
@@ -267,6 +295,7 @@ class SqliteStateRepository:
             raise KeyError(f"Album id not found: {album_id}")
 
         self.session.execute(delete(AlbumListen).where(AlbumListen.album_id == album.id))
+        self.session.execute(delete(UserAlbum).where(UserAlbum.album_id == album.id))
         self.session.delete(album)
         self.session.commit()
 
@@ -280,8 +309,18 @@ class SqliteStateRepository:
         )
         album_key, normalized = next(iter(normalized_record.items()))
 
-        if self.session.scalars(_album_lookup_statement(album_key)).first():
-            raise ValueError(f"Album already exists: {album_key}")
+        existing_album = self.session.scalars(_album_lookup_statement(album_key)).first()
+        if existing_album is not None:
+            if self._user_has_album(existing_album.id):
+                raise ValueError(f"Album already exists: {album_key}")
+            self._apply_completed_album_record(existing_album, normalized)
+            self._add_user_album(existing_album.id)
+            if listen_date:
+                self._add_listen(existing_album, listen_date)
+            for listened_at in normalized.get("listen_history") or []:
+                self._add_listen(existing_album, listened_at)
+            self.session.commit()
+            return self._album_record(existing_album)
 
         album = Album(
             album_key=album_key,
@@ -291,6 +330,7 @@ class SqliteStateRepository:
         self.session.add(album)
         self._apply_completed_album_record(album, normalized)
         self.session.flush()
+        self._add_user_album(album.id)
 
         if listen_date:
             self._add_listen(album, listen_date)
@@ -334,6 +374,7 @@ class SqliteStateRepository:
 
         listen = self.session.scalars(
             select(AlbumListen).where(
+                AlbumListen.user_id == self.user.id,
                 AlbumListen.album_id == album.id,
                 AlbumListen.listened_at == listened_at,
             )
@@ -346,22 +387,38 @@ class SqliteStateRepository:
         return self._album_record(album)
 
     def _set_app_state(self, key: str, value: str | None) -> None:
-        app_state = self.session.get(AppState, key)
+        app_state = self.session.scalars(
+            select(UserAppState).where(
+                UserAppState.user_id == self.user.id,
+                UserAppState.key == key,
+            )
+        ).first()
         if app_state is None:
-            app_state = AppState(key=key, value=value)
+            app_state = UserAppState(user_id=self.user.id, key=key, value=value)
             self.session.add(app_state)
         else:
             app_state.value = value
 
     def _get_app_state(self, key: str) -> str | None:
-        app_state = self.session.get(AppState, key)
+        app_state = self.session.scalars(
+            select(UserAppState).where(
+                UserAppState.user_id == self.user.id,
+                UserAppState.key == key,
+            )
+        ).first()
         return app_state.value if app_state else None
 
     def _sync_completed_albums(self, completed_albums: dict[str, Any]) -> None:
         normalized_albums = _normalize_completed_albums(completed_albums)
         incoming_keys = set(normalized_albums)
 
-        existing_keys = set(self.session.scalars(select(Album.album_key)))
+        existing_keys = set(
+            self.session.scalars(
+                select(Album.album_key)
+                .join(UserAlbum)
+                .where(UserAlbum.user_id == self.user.id)
+            )
+        )
         stale_keys = existing_keys - incoming_keys
         if stale_keys:
             stale_album_ids = list(
@@ -371,9 +428,18 @@ class SqliteStateRepository:
             )
             if stale_album_ids:
                 self.session.execute(
-                    delete(AlbumListen).where(AlbumListen.album_id.in_(stale_album_ids))
+                    delete(AlbumListen).where(
+                        AlbumListen.user_id == self.user.id,
+                        AlbumListen.album_id.in_(stale_album_ids),
+                    )
                 )
-            self.session.execute(delete(Album).where(Album.album_key.in_(stale_keys)))
+                self.session.execute(
+                    delete(UserAlbum).where(
+                        UserAlbum.user_id == self.user.id,
+                        UserAlbum.album_id.in_(stale_album_ids),
+                    )
+                )
+                self._delete_unowned_albums(stale_album_ids)
             self.session.flush()
 
         for album_key, record in normalized_albums.items():
@@ -392,6 +458,7 @@ class SqliteStateRepository:
             self._apply_completed_album_record(album, record, album_key=album_key)
 
             self.session.flush()
+            self._add_user_album(album.id)
             self._sync_listens(album, record.get("listen_history") or [])
 
     def _sync_listens(self, album: Album, listen_history: list[str]) -> None:
@@ -399,6 +466,7 @@ class SqliteStateRepository:
         existing_listens = set(
             self.session.scalars(
                 select(AlbumListen.listened_at).where(AlbumListen.album_id == album.id)
+                .where(AlbumListen.user_id == self.user.id)
             )
         )
 
@@ -406,6 +474,7 @@ class SqliteStateRepository:
         if stale_listens:
             self.session.execute(
                 delete(AlbumListen).where(
+                    AlbumListen.user_id == self.user.id,
                     AlbumListen.album_id == album.id,
                     AlbumListen.listened_at.in_(stale_listens),
                 )
@@ -416,6 +485,7 @@ class SqliteStateRepository:
                 continue
             self.session.add(
                 AlbumListen(
+                    user_id=self.user.id,
                     album_id=album.id,
                     listened_at=listened_at,
                     source=album.source,
@@ -426,12 +496,17 @@ class SqliteStateRepository:
     def _sync_albums_in_progress(self, albums_in_progress: dict[str, Any]) -> None:
         incoming_ids = set(albums_in_progress)
         existing_ids = set(
-            self.session.scalars(select(AlbumInProgress.spotify_album_id))
+            self.session.scalars(
+                select(AlbumInProgress.spotify_album_id).where(
+                    AlbumInProgress.user_id == self.user.id
+                )
+            )
         )
         stale_ids = existing_ids - incoming_ids
         if stale_ids:
             self.session.execute(
                 delete(AlbumInProgress).where(
+                    AlbumInProgress.user_id == self.user.id,
                     AlbumInProgress.spotify_album_id.in_(stale_ids)
                 )
             )
@@ -440,9 +515,17 @@ class SqliteStateRepository:
             if not isinstance(record, dict):
                 continue
 
-            album = self.session.get(AlbumInProgress, spotify_album_id)
+            album = self.session.scalars(
+                select(AlbumInProgress).where(
+                    AlbumInProgress.user_id == self.user.id,
+                    AlbumInProgress.spotify_album_id == spotify_album_id,
+                )
+            ).first()
             if album is None:
-                album = AlbumInProgress(spotify_album_id=spotify_album_id)
+                album = AlbumInProgress(
+                    user_id=self.user.id,
+                    spotify_album_id=spotify_album_id,
+                )
                 self.session.add(album)
 
             album.album_name = record.get("album_name") or "Unknown Album"
@@ -455,7 +538,13 @@ class SqliteStateRepository:
 
     def _load_completed_albums(self) -> dict[str, Any]:
         completed_albums = {}
-        albums = self.session.scalars(select(Album).order_by(Album.album_key)).all()
+        albums = self.session.scalars(
+            select(Album)
+            .join(UserAlbum)
+            .where(UserAlbum.user_id == self.user.id)
+            .group_by(Album.id)
+            .order_by(Album.album_key)
+        ).all()
 
         for album in albums:
             completed_albums[album.album_key] = self._album_record(album)
@@ -467,6 +556,7 @@ class SqliteStateRepository:
             self.session.scalars(
                 select(AlbumListen.listened_at)
                 .where(AlbumListen.album_id == album.id)
+                .where(AlbumListen.user_id == self.user.id)
                 .order_by(AlbumListen.listened_at)
             )
         )
@@ -540,9 +630,17 @@ class SqliteStateRepository:
         album.source = normalized.get("source") or "unknown"
         album.metadata_json = _album_metadata(normalized)
 
-    def _add_listen(self, album: Album, listened_at: str) -> None:
+    def _add_listen(
+        self,
+        album: Album,
+        listened_at: str,
+        user_id: int | None = None,
+    ) -> None:
+        target_user_id = user_id or self.user.id
+        self._add_user_album(album.id, user_id=target_user_id)
         existing = self.session.scalars(
             select(AlbumListen).where(
+                AlbumListen.user_id == target_user_id,
                 AlbumListen.album_id == album.id,
                 AlbumListen.listened_at == listened_at,
             )
@@ -551,6 +649,7 @@ class SqliteStateRepository:
             return
         self.session.add(
             AlbumListen(
+                user_id=target_user_id,
                 album_id=album.id,
                 listened_at=listened_at,
                 source=album.source,
@@ -560,7 +659,9 @@ class SqliteStateRepository:
     def _load_albums_in_progress(self) -> dict[str, Any]:
         albums_in_progress = {}
         albums = self.session.scalars(
-            select(AlbumInProgress).order_by(AlbumInProgress.spotify_album_id)
+            select(AlbumInProgress)
+            .where(AlbumInProgress.user_id == self.user.id)
+            .order_by(AlbumInProgress.spotify_album_id)
         ).all()
 
         for album in albums:
@@ -582,11 +683,57 @@ class SqliteStateRepository:
         rows = self.session.execute(
             select(Album.album_key)
             .join(AlbumListen)
+            .where(AlbumListen.user_id == self.user.id)
             .group_by(Album.id)
             .order_by(func.max(AlbumListen.listened_at).desc())
             .limit(limit)
         )
         return [row[0] for row in rows]
+
+    def _add_user_album(self, album_id: int, user_id: int | None = None) -> None:
+        target_user_id = user_id or self.user.id
+        for pending in self.session.new:
+            if (
+                isinstance(pending, UserAlbum)
+                and pending.user_id == target_user_id
+                and pending.album_id == album_id
+            ):
+                return
+        if self._user_has_album(album_id, user_id=target_user_id):
+            return
+        self.session.add(UserAlbum(user_id=target_user_id, album_id=album_id))
+
+    def _user_has_album(self, album_id: int, user_id: int | None = None) -> bool:
+        target_user_id = user_id or self.user.id
+        return (
+            self.session.scalars(
+                select(UserAlbum.id).where(
+                    UserAlbum.user_id == target_user_id,
+                    UserAlbum.album_id == album_id,
+                )
+            ).first()
+            is not None
+        )
+
+    def _delete_unowned_albums(self, album_ids: list[int]) -> None:
+        albums_without_owners = []
+        for album_id in album_ids:
+            has_any_owner = (
+                self.session.scalars(
+                    select(UserAlbum.id).where(UserAlbum.album_id == album_id)
+                ).first()
+                is not None
+            )
+            if not has_any_owner:
+                albums_without_owners.append(album_id)
+
+        if albums_without_owners:
+            self.session.execute(
+                delete(AlbumListen).where(AlbumListen.album_id.in_(albums_without_owners))
+            )
+            self.session.execute(
+                delete(Album).where(Album.id.in_(albums_without_owners))
+            )
 
 
 def _artwork_url(local_image_path: str) -> str:

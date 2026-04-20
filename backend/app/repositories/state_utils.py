@@ -1,0 +1,35 @@
+from typing import Any
+
+
+def empty_album_state() -> dict[str, Any]:
+    return {
+        "last_checked": None,
+        "albums_in_progress": {},
+        "completed_albums": {},
+        "most_recently_listened": [],
+    }
+
+
+def _normalize_completed_albums(completed_albums: dict[str, Any]) -> dict[str, Any]:
+    normalized = {}
+    for key, record in completed_albums.items():
+        if not isinstance(record, dict):
+            record = {}
+
+        artist, album = _split_album_key(key)
+        normalized[key] = {
+            **record,
+            "artist": record.get("artist") or artist,
+            "name": record.get("name") or album,
+            "listen_history": record.get("listen_history") or [],
+            "source": record.get("source") or "unknown",
+        }
+
+    return normalized
+
+
+def _split_album_key(key: str) -> tuple[str, str]:
+    if " - " not in key:
+        return "Unknown Artist", key
+    artist, album = key.split(" - ", 1)
+    return artist or "Unknown Artist", album or "Unknown Album"

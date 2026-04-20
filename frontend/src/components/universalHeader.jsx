@@ -1,5 +1,9 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
 import AlbumCreateDialog from "./AlbumCreateDialog";
+import { spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 import {
   BarChart3,
   CalendarDays,
@@ -43,7 +47,43 @@ const NAV_ITEMS = [
   },
 ];
 
-function UniversalHeader({ view, setView, onDataChanged }) {
+function UniversalHeader({
+  view,
+  setView,
+  onDataChanged,
+  selectedUser,
+  spotifyStatus,
+  onSpotifyStatusChanged,
+  onSwitchUser,
+}) {
+  const { toast } = useToast();
+  const [isSyncing, setIsSyncing] = useState(false);
+  const handleConnectSpotify = () => {
+    const url = spotifyConnectUrl(selectedUser?.slug);
+    if (url) window.location.href = url;
+  };
+
+  const handleSyncNow = async () => {
+    setIsSyncing(true);
+    try {
+      await syncSpotifyNow(selectedUser?.slug);
+      await onSpotifyStatusChanged?.();
+      await onDataChanged?.();
+      toast({
+        title: "Sync Complete",
+        description: "Your Spotify data has been synchronized successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Sync Failed",
+        description: error.message || "An error occurred while syncing.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-30 border-b border-primary/20 bg-muted backdrop-blur">
       <div className="px-6 py-4">
@@ -95,11 +135,49 @@ function UniversalHeader({ view, setView, onDataChanged }) {
           </Tabs>
 
           <div className="hidden items-center gap-2 xl:flex">
+            <div className="mr-2 flex flex-col items-end text-xs">
+              <span className="font-medium text-foreground">
+                {selectedUser?.display_name}
+              </span>
+              <button
+                type="button"
+                onClick={onSwitchUser}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Switch user
+              </button>
+            </div>
+            {spotifyStatus?.connected ? (
+              <Button variant="outline" onClick={handleSyncNow} disabled={isSyncing}>
+                {isSyncing ? "Syncing..." : "Sync Spotify"}
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={handleConnectSpotify}>
+                Connect Spotify
+              </Button>
+            )}
             <AlbumCreateDialog
               onDataChanged={onDataChanged}
               triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
             />
           </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2 xl:hidden">
+          <span className="text-sm font-medium text-foreground">
+            {selectedUser?.display_name}
+          </span>
+          <Button variant="outline" size="sm" onClick={onSwitchUser}>
+            Switch user
+          </Button>
+          {spotifyStatus?.connected ? (
+            <Button variant="outline" size="sm" onClick={handleSyncNow} disabled={isSyncing}>
+              {isSyncing ? "Syncing..." : "Sync Spotify"}
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" onClick={handleConnectSpotify}>
+              Connect Spotify
+            </Button>
+          )}
         </div>
       </div>
     </header>

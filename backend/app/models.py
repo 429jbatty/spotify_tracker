@@ -35,26 +35,80 @@ class Album(Base):
         back_populates="album",
         cascade="all, delete-orphan",
     )
+    user_albums: Mapped[list["UserAlbum"]] = relationship(
+        back_populates="album",
+        cascade="all, delete-orphan",
+    )
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    slug: Mapped[str] = mapped_column(String, unique=True, index=True)
+    display_name: Mapped[str] = mapped_column(String)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    listens: Mapped[list["AlbumListen"]] = relationship(back_populates="user")
+    user_albums: Mapped[list["UserAlbum"]] = relationship(back_populates="user")
+    albums_in_progress: Mapped[list["AlbumInProgress"]] = relationship(
+        back_populates="user",
+    )
+    app_state: Mapped[list["UserAppState"]] = relationship(back_populates="user")
+    spotify_credentials: Mapped["UserSpotifyCredentials | None"] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+
+class UserAlbum(Base):
+    __tablename__ = "user_albums"
+    __table_args__ = (
+        UniqueConstraint("user_id", "album_id", name="uq_user_album"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    album_id: Mapped[int] = mapped_column(ForeignKey("albums.id"), index=True)
+
+    user: Mapped[User] = relationship(back_populates="user_albums")
+    album: Mapped[Album] = relationship(back_populates="user_albums")
 
 
 class AlbumListen(Base):
     __tablename__ = "album_listens"
     __table_args__ = (
-        UniqueConstraint("album_id", "listened_at", name="uq_album_listen_once"),
+        UniqueConstraint(
+            "user_id",
+            "album_id",
+            "listened_at",
+            name="uq_user_album_listen_once",
+        ),
     )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     album_id: Mapped[int] = mapped_column(ForeignKey("albums.id"), index=True)
     listened_at: Mapped[str] = mapped_column(String, index=True)
     source: Mapped[str] = mapped_column(String, default="unknown")
 
     album: Mapped[Album] = relationship(back_populates="listens")
+    user: Mapped[User] = relationship(back_populates="listens")
 
 
 class AlbumInProgress(Base):
     __tablename__ = "albums_in_progress"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "spotify_album_id",
+            name="uq_user_album_in_progress",
+        ),
+    )
 
-    spotify_album_id: Mapped[str] = mapped_column(String, primary_key=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    spotify_album_id: Mapped[str] = mapped_column(String, index=True)
     album_name: Mapped[str] = mapped_column(String)
     artist: Mapped[str] = mapped_column(String)
     total_tracks: Mapped[int] = mapped_column(Integer)
@@ -63,9 +117,42 @@ class AlbumInProgress(Base):
     last_played: Mapped[str] = mapped_column(String)
     completion_logged: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
 
+    user: Mapped[User] = relationship(back_populates="albums_in_progress")
+
 
 class AppState(Base):
     __tablename__ = "app_state"
 
     key: Mapped[str] = mapped_column(String, primary_key=True)
     value: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class UserAppState(Base):
+    __tablename__ = "user_app_state"
+    __table_args__ = (
+        UniqueConstraint("user_id", "key", name="uq_user_app_state_key"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    key: Mapped[str] = mapped_column(String, index=True)
+    value: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    user: Mapped[User] = relationship(back_populates="app_state")
+
+
+class UserSpotifyCredentials(Base):
+    __tablename__ = "user_spotify_credentials"
+
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"),
+        primary_key=True,
+    )
+    spotify_user_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    refresh_token: Mapped[str] = mapped_column(Text)
+    scope: Mapped[str | None] = mapped_column(Text, nullable=True)
+    connected_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    last_successful_sync_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    last_sync_error: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+    user: Mapped[User] = relationship(back_populates="spotify_credentials")

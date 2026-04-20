@@ -10,18 +10,17 @@ frontend through FastAPI.
 SQLite is the runtime source of truth.
 
 ```text
-Spotify tracking job
+Spotify tracking job per connected user
   -> SQLite
-  -> FastAPI /api/album-state
+  -> FastAPI /api/users/{user}/album-state
   -> React frontend
 ```
 
-The old `album_state.json` flow is now migration and backup tooling only. The
-frontend no longer reads the static JSON file directly.
-
 Key backend paths:
 
-- `main.py`: runs Spotify tracking and writes state.
+- `main.py`: compatibility wrapper for default-user Spotify tracking.
+- `backend/app/services/spotify_tracking_service.py`: user-scoped Spotify tracking.
+- `backend/app/jobs/track_all_users.py`: scheduled multi-user tracking entrypoint.
 - `tracking.py`: album progress and completion logic.
 - `album_metadata_service.py`: MusicBrainz lookup and metadata shaping.
 - `metadata_refresh_service.py`: targeted metadata refresh logic.
@@ -38,23 +37,35 @@ Key frontend paths:
 
 ## Data Storage
 
-Default database:
+The app uses `DATA_DIR` for runtime data. If `DATA_DIR` is unset, it defaults
+to the repo-local `data/` directory for development. For deployment, point it
+outside the repo:
+
+```bash
+DATA_DIR=/srv/spotify_tracker/data
+```
+
+Default database path:
 
 ```text
-data/spotify_tracker.sqlite
+$DATA_DIR/spotify_tracker.sqlite
 ```
 
 Main tables:
 
 - `albums`: album metadata and MusicBrainz identifiers.
-- `album_listens`: one row per completed album listen.
-- `albums_in_progress`: partial Spotify listening sessions.
-- `app_state`: app-level values such as `last_checked`.
+- `users`: no-password app profiles.
+- `user_albums`: which shared albums belong to each user's library.
+- `album_listens`: user-scoped completed album listens.
+- `albums_in_progress`: user-scoped partial Spotify listening sessions.
+- `user_app_state`: user-scoped values such as `last_checked`.
+- `user_spotify_credentials`: per-user Spotify refresh tokens and sync status.
+- `app_state`: legacy app-level values retained for migration compatibility.
 
 Inspect the database with:
 
 ```bash
-sqlite3 data/spotify_tracker.sqlite
+sqlite3 "$DATA_DIR/spotify_tracker.sqlite"
 ```
 
 Useful SQLite shell commands:
@@ -76,9 +87,10 @@ LIMIT 20;
 ```
 
 ```sql
-SELECT a.album_key, l.listened_at
+SELECT u.slug, a.album_key, l.listened_at
 FROM album_listens l
 JOIN albums a ON a.id = l.album_id
+JOIN users u ON u.id = l.user_id
 ORDER BY l.listened_at DESC
 LIMIT 20;
 ```
@@ -108,12 +120,15 @@ The app reads environment variables from the shell and `.env`.
 
 Important variables:
 
-- `DATABASE_URL`: SQLite URL. Defaults to `sqlite:///data/spotify_tracker.sqlite`.
-- `ALBUM_STATE_BACKEND`: defaults to `sqlite`. Use `json` only for legacy reads.
-- `STATE_FILE`: legacy JSON input path.
-- `EXPORT_STATE_FILE`: JSON backup output path.
-- `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REDIRECT_URI`,
-  `SPOTIFY_REFRESH_TOKEN`: Spotify API credentials.
+- `DATA_DIR`: runtime data directory. Defaults to repo-local `data/`.
+- `DATABASE_URL`: optional SQLite URL override. Defaults to
+  `sqlite:///$DATA_DIR/spotify_tracker.sqlite`.
+- `MEDIA_DIR`: optional media directory override. Defaults to `$DATA_DIR/media`.
+- `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REDIRECT_URI`:
+  app-level Spotify OAuth settings.
+
+Spotify refresh tokens are not stored in `.env`. Every user, including `jacob`,
+stores their refresh token in SQLite through the in-app Spotify connect flow.
 
 ## Common Commands
 
@@ -134,6 +149,8 @@ API URLs:
 ```text
 http://127.0.0.1:8000/api/health
 http://127.0.0.1:8000/api/album-state
+http://127.0.0.1:8000/api/users
+http://127.0.0.1:8000/api/users/jacob/album-state
 ```
 
 Run the frontend in another terminal:
@@ -156,6 +173,12 @@ Run Spotify tracking and write to SQLite:
 make track
 ```
 
+Run Spotify tracking for all users with connected Spotify accounts:
+
+```bash
+make track-all
+```
+
 Refresh configured album metadata:
 
 ```bash
@@ -165,28 +188,6 @@ make refresh-metadata
 The refresh script is configured in `one_time_scripts/_refresh_metadata.py`.
 Keep `REFRESH_ALL = False` for targeted refreshes. Setting it to `True` will
 attempt to refresh every completed album.
-
-## JSON Migration And Backups
-
-Import the legacy JSON state into SQLite:
-
-```bash
-make import-json-to-sqlite
-```
-
-Export the current SQLite state to JSON:
-
-```bash
-make export-sqlite-to-json
-```
-
-Default export path:
-
-```text
-data/exports/album_state_export.json
-```
-
-`data/exports/` and SQLite database files are ignored by git.
 
 ## Local Development Flow
 
@@ -205,6 +206,52 @@ PATH="$HOME/.nvm/versions/node/v22.22.0/bin:$PATH" npm run dev
 
 The Vite dev server serves the React app and proxies `/api` requests to
 FastAPI on port `8000`.
+
+## Multi-User Spotify Tracking
+
+The frontend starts with a no-password user picker. Each user has independent
+listen history, in-progress album state, Spotify credentials, and `last_checked`
+cursor. Album metadata, MusicBrainz IDs, and cached artwork are shared.
+
+Connect Spotify for a user from the app header after selecting that user. The
+OAuth callback stores the user's refresh token in SQLite. The app-level Spotify
+client ID, secret, and redirect URI still come from environment variables.
+
+For a Proxmox VM or LXC deployment, run the multi-user tracker with a systemd
+timer rather than inside the FastAPI process. Example unit files:
+
+```ini
+# /etc/systemd/system/spotify-tracker-worker.service
+[Unit]
+Description=Spotify Tracker multi-user sync
+
+[Service]
+Type=oneshot
+WorkingDirectory=/path/to/spotify_tracker
+EnvironmentFile=/path/to/spotify_tracker/.env
+ExecStart=/path/to/spotify_tracker/.venv/bin/python -m backend.app.jobs.track_all_users
+```
+
+```ini
+# /etc/systemd/system/spotify-tracker-worker.timer
+[Unit]
+Description=Run Spotify Tracker multi-user sync every 15 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+Enable it with:
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now spotify-tracker-worker.timer
+```
 
 ## Current Notes
 

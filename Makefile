@@ -1,4 +1,4 @@
-.PHONY: test api import-json-to-sqlite export-sqlite-to-json track refresh-metadata cache-artwork
+.PHONY: test api track track-all refresh-metadata cache-artwork
 
 PYTHON := ./.venv/bin/python
 
@@ -11,11 +11,8 @@ api:
 track:
 	$(PYTHON) main.py
 
-import-json-to-sqlite:
-	$(PYTHON) -m one_time_scripts._import_json_to_sqlite
-
-export-sqlite-to-json:
-	$(PYTHON) -m one_time_scripts._export_sqlite_to_json
+track-all:
+	$(PYTHON) -m backend.app.jobs.track_all_users
 
 refresh-metadata:
 	$(PYTHON) -m one_time_scripts._refresh_metadata

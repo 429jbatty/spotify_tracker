@@ -1,7 +1,4 @@
 import os
-import json
-import datetime
-from collections import defaultdict
 from contextlib import contextmanager
 from dotenv import load_dotenv
 
@@ -9,22 +6,14 @@ from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
 from backend.app.database import create_schema
-from backend.app.repositories.json_state_repository import empty_album_state
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 
 load_dotenv()
-STATE_FILE = os.environ.get("STATE_FILE")
-MANUAL_ENTRY_FILE = os.environ.get("MANUAL_ENTRY_FILE")
-GOOGLE_SHEETS_ENTRY_FILE = os.environ.get("GOOGLE_SHEETS_ENTRY_FILE")
 SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}
 
 
-def _use_sqlite_state():
-    return get_settings().album_state_backend == "sqlite"
-
-
 def use_sqlite_state():
-    return _use_sqlite_state()
+    return True
 
 
 def _sqlite_repository():
@@ -45,52 +34,21 @@ def sqlite_state_repository():
 
 
 def load_state():
-    if _use_sqlite_state():
-        with sqlite_state_repository() as repository:
-            return repository.load_album_state()
-
-    if not STATE_FILE or not os.path.exists(STATE_FILE):
-        return empty_album_state()
-
-    with open(STATE_FILE, "r") as f:
-        return json.load(f)
-
-
-def load_manual_entries():
-    if not MANUAL_ENTRY_FILE or not os.path.exists(MANUAL_ENTRY_FILE):
-        return {"completed_albums": {}}
-
-    with open(MANUAL_ENTRY_FILE, "r") as f:
-        return json.load(f)
-
-
-def load_google_sheets_entries():
-    if not GOOGLE_SHEETS_ENTRY_FILE or not os.path.exists(GOOGLE_SHEETS_ENTRY_FILE):
-        return {"completed_albums": {}}
-
-    with open(GOOGLE_SHEETS_ENTRY_FILE, "r") as f:
-        return json.load(f)
+    with sqlite_state_repository() as repository:
+        return repository.load_album_state()
 
 
 def save_state(state):
-    if _use_sqlite_state():
-        with sqlite_state_repository() as repository:
-            repository.save_album_state(state)
-        return
-
-    with open(STATE_FILE, "w") as f:
-        json.dump(state, f, indent=2)
+    with sqlite_state_repository() as repository:
+        repository.save_album_state(state)
 
 
 def get_local_credentials():
-    """
-    You can replace this with env vars later for GitHub Actions.
-    """
     return {
         "client_id": os.environ.get("SPOTIFY_CLIENT_ID"),
         "client_secret": os.environ.get("SPOTIFY_CLIENT_SECRET"),
         "redirect_uri": os.environ.get("SPOTIFY_REDIRECT_URI"),
-        "refresh_token": os.environ.get("SPOTIFY_REFRESH_TOKEN"),
+        "refresh_token": None,
     }
 
 
