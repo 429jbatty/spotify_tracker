@@ -1,19 +1,6 @@
 {
-  "last_checked": "2026-04-20T13:42:45.036Z",
+  "last_checked": "2026-04-20T16:30:55.967Z",
   "albums_in_progress": {
-    "2VYo0PSqdxVTMI0ydKUtoL": {
-      "album_name": "With A Hammer",
-      "artist": "Yaeji",
-      "total_tracks": 13,
-      "played_tracks": [
-        "7n5e6Snjp8tbqwzAPoYjXn",
-        "2RgQKoWxEB6KGu8h4a7R46",
-        "4uCwlBl11LtnGk4WpsIyOE",
-        "3kP8ole19xwHdHj1DKN0PC"
-      ],
-      "first_played": "2026-04-18T14:50:15.616Z",
-      "last_played": "2026-04-18T15:14:19.317Z"
-    },
     "4ClyeVlAKJJViIyfVW0yQD": {
       "album_name": "Pang",
       "artist": "Caroline Polachek",
@@ -43,6 +30,27 @@
       ],
       "first_played": "2026-04-18T23:46:59.145Z",
       "last_played": "2026-04-18T23:46:59.145Z"
+    },
+    "3AQgdwMNCiN7awXch5fAaG": {
+      "album_name": "Remain in Light (Deluxe Version)",
+      "artist": "Talking Heads",
+      "total_tracks": 12,
+      "played_tracks": [
+        "58uyNQ2aC329uLMZpU9Ptz"
+      ],
+      "first_played": "2026-04-20T16:25:26.203Z",
+      "last_played": "2026-04-20T16:25:26.203Z"
+    },
+    "0DQyTVcDhK9wm0f6RaErWO": {
+      "album_name": "Doolittle",
+      "artist": "Pixies",
+      "total_tracks": 15,
+      "played_tracks": [
+        "5cy5IStIn7OSHDEIgXeDyq",
+        "5pT6ORhZsIq14smtQp3POM"
+      ],
+      "first_played": "2026-04-20T16:28:55.420Z",
+      "last_played": "2026-04-20T16:30:55.967Z"
     }
   },
   "completed_albums": {
@@ -151530,7 +151538,9 @@
         "factory records"
       ],
       "image_url": "https://coverartarchive.org/release/c619a467-2f82-4618-9cc3-d5a0ce917756/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-20T16:05:02.347Z"
+      ],
       "source": "musicbrainz"
     },
     "Joy Division - Closer": {
@@ -404360,6 +404370,7 @@
     }
   },
   "most_recently_listened": [
+    "Joy Division - Unknown Pleasures",
     "Jimi Hendrix - Electric Ladyland",
     "Sky Ferreira - Night Time, My Time",
     "Marty Robbins - Gunfighter Ballads And Trail Songs",
@@ -404368,7 +404379,6 @@
     "John Martyn - One World",
     "Bert Jansch - Bert Jansch",
     "Bridget St. John - Songs for the Gentle Man",
-    "Eric Clapton - Unplugged (Deluxe Edition) (Live)",
-    "Soft Soundscapes - River"
+    "Eric Clapton - Unplugged (Deluxe Edition) (Live)"
   ]
 }
