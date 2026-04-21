@@ -1,0 +1,11 @@
+[Unit]
+Description=Spotify Tracker multi-user sync
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=jacob
+WorkingDirectory=/opt/spotify_tracker
+EnvironmentFile=/opt/spotify_tracker/.env
+ExecStart=/opt/spotify_tracker/.venv/bin/python -m backend.app.jobs.track_all_users

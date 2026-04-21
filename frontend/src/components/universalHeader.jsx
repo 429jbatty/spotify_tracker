@@ -95,7 +95,7 @@ function UniversalHeader({
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-foreground">
-                  SoundStats
+                  Albumary
                 </h1>
                 <p className="text-xs text-muted-foreground">
                   Album listening history

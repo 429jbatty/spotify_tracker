@@ -32,7 +32,7 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
     <main className="min-h-screen bg-background px-6 py-10 text-foreground">
       <div className="mx-auto flex max-w-3xl flex-col gap-8">
         <div className="space-y-2">
-          <h1 className="text-3xl font-semibold">SoundStats</h1>
+          <h1 className="text-3xl font-semibold">Albumary</h1>
           <p className="text-sm text-muted-foreground">
             Choose a listener to open their album history.
           </p>

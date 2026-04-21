@@ -1,4 +1,4 @@
-.PHONY: test api track track-all refresh-metadata cache-artwork
+.PHONY: test api track track-all refresh-metadata cache-artwork deploy
 
 PYTHON := ./.venv/bin/python
 
@@ -19,3 +19,6 @@ refresh-metadata:
 
 cache-artwork:
 	$(PYTHON) -m one_time_scripts._cache_artwork
+
+deploy:
+	./deploy/deploy.sh
