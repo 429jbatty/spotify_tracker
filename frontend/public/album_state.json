@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-21T16:58:36.892Z",
+  "last_checked": "2026-04-21T21:53:01.847Z",
   "albums_in_progress": {
     "3AQgdwMNCiN7awXch5fAaG": {
       "album_name": "Remain in Light (Deluxe Version)",
@@ -111,6 +111,90 @@
       ],
       "first_played": "2026-04-20T21:52:08.898Z",
       "last_played": "2026-04-20T21:52:08.898Z"
+    },
+    "3Yko2SxDk4hc6fncIBQlcM": {
+      "album_name": "A Seat at the Table",
+      "artist": "Solange",
+      "total_tracks": 21,
+      "played_tracks": [
+        "6gO8khQWeJcV7U0Kzo6Ynk",
+        "2KdT8BSu7sViL2G5vQiWB6"
+      ],
+      "first_played": "2026-04-21T21:12:35.240Z",
+      "last_played": "2026-04-21T21:15:31.660Z"
+    },
+    "4WF4HvVT7VjGnVjxjoCR6w": {
+      "album_name": "When I Get Home",
+      "artist": "Solange",
+      "total_tracks": 19,
+      "played_tracks": [
+        "0jF4xsiVd8AQoIEUmn7KLt"
+      ],
+      "first_played": "2026-04-21T21:17:31.576Z",
+      "last_played": "2026-04-21T21:17:31.576Z"
+    },
+    "6tC2ERExm7n7JEDkHOEFs5": {
+      "album_name": "Flamagra",
+      "artist": "Flying Lotus",
+      "total_tracks": 27,
+      "played_tracks": [
+        "3V4VlZvJ1ggairG00ZMaiD"
+      ],
+      "first_played": "2026-04-21T21:21:01.653Z",
+      "last_played": "2026-04-21T21:21:01.653Z"
+    },
+    "456WeVeZk38VJuqg2sL7QG": {
+      "album_name": "Mood Valiant",
+      "artist": "Hiatus Kaiyote",
+      "total_tracks": 12,
+      "played_tracks": [
+        "55mvtucws4Mnro27744t9X"
+      ],
+      "first_played": "2026-04-21T21:24:32.265Z",
+      "last_played": "2026-04-21T21:24:32.265Z"
+    },
+    "3qr4pTBWEU1SVf01j6RAx3": {
+      "album_name": "Baduizm",
+      "artist": "Erykah Badu",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0tNuJpBgtE65diL6Q8Q7fI"
+      ],
+      "first_played": "2026-04-21T21:28:31.682Z",
+      "last_played": "2026-04-21T21:28:31.682Z"
+    },
+    "4u50iZ3xFs19AxPRmakPYa": {
+      "album_name": "How I Do",
+      "artist": "Res",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4cfpzcGsqLamOJnCYw1QW1"
+      ],
+      "first_played": "2026-04-21T21:32:31.670Z",
+      "last_played": "2026-04-21T21:32:31.670Z"
+    },
+    "0OoRiTZs9hsRz7KxB8JkSX": {
+      "album_name": "Adventures In Paradise",
+      "artist": "Minnie Riperton",
+      "total_tracks": 10,
+      "played_tracks": [
+        "397fxHew7NyjryGWGr1Imy"
+      ],
+      "first_played": "2026-04-21T21:37:02.111Z",
+      "last_played": "2026-04-21T21:37:02.111Z"
+    },
+    "3kEtdS2pH6hKcMU9Wioob1": {
+      "album_name": "Illmatic",
+      "artist": "Nas",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4N0olzsMpr5cAPFrzNErGv",
+        "0trHOzAhNpGCsGBEu7dOJo",
+        "2LhhnqrHPWvXYveZVHLKrd",
+        "7G3lxTsMfSx4yarMkfgnTC"
+      ],
+      "first_played": "2026-04-21T21:40:01.618Z",
+      "last_played": "2026-04-21T21:53:01.847Z"
     }
   },
   "completed_albums": {
