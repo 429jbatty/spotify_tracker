@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-04-20T21:52:08.898Z",
+  "last_checked": "2026-04-20T22:29:53.619Z",
   "albums_in_progress": {
-    "7rSZXXHHvIhF4yUFdaOCy9": {
-      "album_name": "Are You Experienced",
-      "artist": "Jimi Hendrix",
-      "total_tracks": 17,
-      "played_tracks": [
-        "3f5JtAsGRIXN8pSAeTi6vA"
-      ],
-      "first_played": "2026-04-18T23:46:59.145Z",
-      "last_played": "2026-04-18T23:46:59.145Z"
-    },
     "3AQgdwMNCiN7awXch5fAaG": {
       "album_name": "Remain in Light (Deluxe Version)",
       "artist": "Talking Heads",
@@ -66,10 +56,11 @@
       "artist": "Oklou",
       "total_tracks": 13,
       "played_tracks": [
-        "6g2m5644ZTXBzxSt0z5Qwa"
+        "6g2m5644ZTXBzxSt0z5Qwa",
+        "6aUr8iLB8hfp9z2xMv1X5X"
       ],
       "first_played": "2026-04-20T21:30:09.100Z",
-      "last_played": "2026-04-20T21:30:09.100Z"
+      "last_played": "2026-04-20T22:29:53.619Z"
     },
     "3o1TOhMkU5FFMSJMDhXfdF": {
       "album_name": "EUSEXUA",
