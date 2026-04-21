@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 
 from spotipy import Spotify
+from spotipy.exceptions import SpotifyException
 from spotipy.oauth2 import SpotifyOAuth
 
 from backend.app.repositories.spotify_credentials_repository import (
@@ -18,17 +19,25 @@ def authorize_url(user_slug: str) -> str:
 
 def connect_user_from_callback(session, *, code: str, state: str) -> str:
     user = UserRepository(session).require_user_by_slug(state)
-    token_info = _oauth().get_access_token(
-        code=code,
-        as_dict=True,
-        check_cache=False,
-    )
+    try:
+        token_info = _oauth().get_access_token(
+            code=code,
+            as_dict=True,
+            check_cache=False,
+        )
+    except SpotifyException as exc:
+        raise LookupError(_friendly_spotify_error(exc)) from exc
+
     refresh_token = token_info.get("refresh_token")
     if not refresh_token:
         raise LookupError("Spotify did not return a refresh token.")
 
     spotify = Spotify(auth=token_info["access_token"])
-    spotify_profile = spotify.current_user()
+    try:
+        spotify_profile = spotify.current_user()
+    except SpotifyException as exc:
+        raise LookupError(_friendly_spotify_error(exc)) from exc
+
     SpotifyCredentialsRepository(session).upsert_credentials(
         user_id=user.id,
         refresh_token=refresh_token,
@@ -57,3 +66,30 @@ def _required_setting(name: str) -> str:
     if not value:
         raise LookupError(f"{name} is not configured.")
     return value
+
+
+def _friendly_spotify_error(exc: SpotifyException) -> str:
+    message = (getattr(exc, "msg", None) or "").strip()
+    status_code = getattr(exc, "http_status", None)
+    lowered = message.lower()
+
+    if "not registered for this application" in lowered:
+        return (
+            "This Spotify account is not allowed to use the app yet. "
+            "Add the account under Spotify Developer Dashboard -> Users and Access, "
+            "or move the app out of development mode."
+        )
+
+    if status_code == 401:
+        return "Spotify rejected the authorization token. Please try connecting again."
+
+    if status_code == 403:
+        return (
+            "Spotify denied access for this account. "
+            "Check the app's Spotify Developer Dashboard settings and allowed users."
+        )
+
+    if message:
+        return f"Spotify authorization failed: {message}"
+
+    return "Spotify authorization failed."
