@@ -13,7 +13,7 @@ run_as_repo_owner() {
     if [[ $EUID -eq 0 ]]; then
         local owner
         owner="$(stat -c '%U' "$REPO_DIR")"
-        su -s /bin/bash "$owner" -c "cd '$REPO_DIR' && $cmd"
+        runuser -u "$owner" -- bash -lc "cd '$REPO_DIR' && $cmd"
     else
         bash -lc "cd '$REPO_DIR' && $cmd"
     fi
@@ -23,7 +23,7 @@ restart_service() {
     if [[ $EUID -eq 0 ]]; then
         systemctl restart "$SERVICE_NAME"
     else
-        sudo systemctl restart "$SERVICE_NAME"
+        sudo -n systemctl restart "$SERVICE_NAME"
     fi
 }
 
