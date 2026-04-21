@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-21T16:26:37.158Z",
+  "last_checked": "2026-04-21T16:58:36.892Z",
   "albums_in_progress": {
     "3AQgdwMNCiN7awXch5fAaG": {
       "album_name": "Remain in Light (Deluxe Version)",
@@ -111,23 +111,6 @@
       ],
       "first_played": "2026-04-20T21:52:08.898Z",
       "last_played": "2026-04-20T21:52:08.898Z"
-    },
-    "3Yko2SxDk4hc6fncIBQlcM": {
-      "album_name": "A Seat at the Table",
-      "artist": "Solange",
-      "total_tracks": 21,
-      "played_tracks": [
-        "688iitLNSV6Iik1QESqvth",
-        "7zbX1txfcs42K2PlhFJNNE",
-        "4cvepMgER4YAbkGne2kQ6G",
-        "48EjSdYh8wz2gBxxqzrsLe",
-        "3VVEUP5550SmFMQkjIlZ7f",
-        "22DHmfJa31hKpc2Lg0gVBV",
-        "4A3evD9w8QYhXBxqcj16ys",
-        "698avDwvnCZ69jYz3zlzoX"
-      ],
-      "first_played": "2026-04-21T14:45:33.306Z",
-      "last_played": "2026-04-21T16:26:37.158Z"
     }
   },
   "completed_albums": {
@@ -291304,7 +291287,9 @@
         "r&b"
       ],
       "image_url": "https://coverartarchive.org/release/3e3c90cd-0c0c-4beb-8f7b-b95a076c89eb/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-21T16:58:36.892Z"
+      ],
       "source": "musicbrainz"
     },
     "Sonic Youth - Daydream Nation": {
@@ -405087,6 +405072,7 @@
     }
   },
   "most_recently_listened": [
+    "Solange - A Seat at the Table",
     "Charli xcx - BRAT",
     "Pixies - Doolittle",
     "Joy Division - Unknown Pleasures",
@@ -405095,7 +405081,6 @@
     "Marty Robbins - Gunfighter Ballads And Trail Songs",
     "Burial - Untrue",
     "Nick Drake - Pink Moon",
-    "John Martyn - One World",
-    "Bert Jansch - Bert Jansch"
+    "John Martyn - One World"
   ]
 }
