@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-22T16:10:51.763Z",
+  "last_checked": "2026-04-22T17:41:22.921Z",
   "albums_in_progress": {
     "50j4Wm1b9hLpSpPIA39Vp9": {
       "album_name": "Surfer Rosa (2007 Remaster)",
@@ -208,25 +208,31 @@
       "artist": "Wu-Tang Clan",
       "total_tracks": 15,
       "played_tracks": [
-        "7IwURvEfVcdxUCjLKUu6sv"
+        "7IwURvEfVcdxUCjLKUu6sv",
+        "4LaiF2h7gsybmURceGYLqh"
       ],
       "first_played": "2026-04-22T15:51:51.762Z",
-      "last_played": "2026-04-22T15:51:51.762Z"
+      "last_played": "2026-04-22T17:31:22.312Z"
     },
-    "07bIdDDe3I3hhWpxU6tuBp": {
-      "album_name": "DAYTONA",
+    "42oQv8fbI5CbeuAasf2ILC": {
+      "album_name": "My Name Is My Name",
       "artist": "Pusha T",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4XkXgUNDVBMj3oJoE8yspZ"
+      ],
+      "first_played": "2026-04-22T17:26:52.213Z",
+      "last_played": "2026-04-22T17:26:52.213Z"
+    },
+    "6pwuKxMUkNg673KETsXPUV": {
+      "album_name": "KIDS SEE GHOSTS",
+      "artist": "KIDS SEE GHOSTS, Kanye West, Kid Cudi",
       "total_tracks": 7,
       "played_tracks": [
-        "6bGwKHXHNLmTy6yt147FPh",
-        "7iEoaTyBCqLaAwJnOP1BTn",
-        "3HgA5R5alihocnOYE9ihpS",
-        "2BuBXn15gj4MNYZydyWgrk",
-        "4LKSaRoKNnlpKXTT663BrT",
-        "5vnuJ8EopkP5dHukpOmT3L"
+        "3aUFrxO1B8EW63QchEl3wX"
       ],
-      "first_played": "2026-04-22T15:55:51.946Z",
-      "last_played": "2026-04-22T16:10:51.763Z"
+      "first_played": "2026-04-22T17:41:22.921Z",
+      "last_played": "2026-04-22T17:41:22.921Z"
     }
   },
   "completed_albums": {
@@ -254520,7 +254526,9 @@
         "coke rap"
       ],
       "image_url": "https://coverartarchive.org/release/3179aee3-3e2d-4b26-8161-3d49c77c6d91/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-22T17:24:23.258Z"
+      ],
       "source": "musicbrainz"
     },
     "Queen - Jazz": {
@@ -405190,6 +405198,7 @@
     }
   },
   "most_recently_listened": [
+    "Pusha T - DAYTONA",
     "Nas - Illmatic",
     "Solange - A Seat at the Table",
     "Charli xcx - BRAT",
@@ -405198,7 +405207,6 @@
     "Jimi Hendrix - Electric Ladyland",
     "Sky Ferreira - Night Time, My Time",
     "Marty Robbins - Gunfighter Ballads And Trail Songs",
-    "Burial - Untrue",
-    "Nick Drake - Pink Moon"
+    "Burial - Untrue"
   ]
 }
