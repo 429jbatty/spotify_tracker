@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-04-22T04:02:11.453Z",
+  "last_checked": "2026-04-22T16:10:51.763Z",
   "albums_in_progress": {
-    "3AQgdwMNCiN7awXch5fAaG": {
-      "album_name": "Remain in Light (Deluxe Version)",
-      "artist": "Talking Heads",
-      "total_tracks": 12,
-      "played_tracks": [
-        "58uyNQ2aC329uLMZpU9Ptz"
-      ],
-      "first_played": "2026-04-20T16:25:26.203Z",
-      "last_played": "2026-04-20T16:25:26.203Z"
-    },
     "50j4Wm1b9hLpSpPIA39Vp9": {
       "album_name": "Surfer Rosa (2007 Remaster)",
       "artist": "Pixies",
@@ -183,19 +173,60 @@
       "first_played": "2026-04-21T21:37:02.111Z",
       "last_played": "2026-04-21T21:37:02.111Z"
     },
-    "3kEtdS2pH6hKcMU9Wioob1": {
-      "album_name": "Illmatic",
+    "4UhEjfIRx4tE1XRY21vwNa": {
+      "album_name": "I Am...",
       "artist": "Nas",
-      "total_tracks": 10,
+      "total_tracks": 16,
       "played_tracks": [
-        "4N0olzsMpr5cAPFrzNErGv",
-        "0trHOzAhNpGCsGBEu7dOJo",
-        "2LhhnqrHPWvXYveZVHLKrd",
-        "7G3lxTsMfSx4yarMkfgnTC",
-        "2PRsh2LNPxoxC9OnErnelg"
+        "3gY6tiCNsuVi6s8kPV6aQg"
       ],
-      "first_played": "2026-04-21T21:40:01.618Z",
-      "last_played": "2026-04-22T04:02:11.453Z"
+      "first_played": "2026-04-22T15:40:22.641Z",
+      "last_played": "2026-04-22T15:40:22.641Z"
+    },
+    "5snUbps5KleLIP0cVI72lP": {
+      "album_name": "Reachin' (A New Refutation Of Time And Space)",
+      "artist": "Digable Planets",
+      "total_tracks": 14,
+      "played_tracks": [
+        "26q6YTrXt9l8qshIveiTX9"
+      ],
+      "first_played": "2026-04-22T15:44:51.975Z",
+      "last_played": "2026-04-22T15:44:51.975Z"
+    },
+    "5iaxBk4qVHAMp9vtYSoEBM": {
+      "album_name": "Don't Sweat The Technique",
+      "artist": "Eric B. & Rakim",
+      "total_tracks": 12,
+      "played_tracks": [
+        "5ti4mhcnlDhC2J1CYUYhWQ"
+      ],
+      "first_played": "2026-04-22T15:49:21.945Z",
+      "last_played": "2026-04-22T15:49:21.945Z"
+    },
+    "3tQd5mwBtVyxCoEo4htGAV": {
+      "album_name": "Enter The Wu-Tang (36 Chambers) [Expanded Edition]",
+      "artist": "Wu-Tang Clan",
+      "total_tracks": 15,
+      "played_tracks": [
+        "7IwURvEfVcdxUCjLKUu6sv"
+      ],
+      "first_played": "2026-04-22T15:51:51.762Z",
+      "last_played": "2026-04-22T15:51:51.762Z"
+    },
+    "07bIdDDe3I3hhWpxU6tuBp": {
+      "album_name": "DAYTONA",
+      "artist": "Pusha T",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6bGwKHXHNLmTy6yt147FPh",
+        "7iEoaTyBCqLaAwJnOP1BTn",
+        "3HgA5R5alihocnOYE9ihpS",
+        "2BuBXn15gj4MNYZydyWgrk",
+        "4LKSaRoKNnlpKXTT663BrT",
+        "5vnuJ8EopkP5dHukpOmT3L"
+      ],
+      "first_played": "2026-04-22T15:55:51.946Z",
+      "last_played": "2026-04-22T16:10:51.763Z"
     }
   },
   "completed_albums": {
@@ -216235,7 +216266,9 @@
         "boastful"
       ],
       "image_url": "https://coverartarchive.org/release/2bc3bbdb-a5de-4ad7-9bcc-46d6e20d62a8/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-22T15:36:21.856Z"
+      ],
       "source": "musicbrainz"
     },
     "Nas - NASIR": {
@@ -405157,6 +405190,7 @@
     }
   },
   "most_recently_listened": [
+    "Nas - Illmatic",
     "Solange - A Seat at the Table",
     "Charli xcx - BRAT",
     "Pixies - Doolittle",
@@ -405165,7 +405199,6 @@
     "Sky Ferreira - Night Time, My Time",
     "Marty Robbins - Gunfighter Ballads And Trail Songs",
     "Burial - Untrue",
-    "Nick Drake - Pink Moon",
-    "John Martyn - One World"
+    "Nick Drake - Pink Moon"
   ]
 }
