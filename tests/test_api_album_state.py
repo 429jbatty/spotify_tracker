@@ -86,6 +86,7 @@ class ApiAlbumStateTests(unittest.TestCase):
         self.assertEqual(album["tracklist"][0]["title"], "Opening Track")
         self.assertEqual(album["tags"], ["indie"])
         self.assertEqual(album["genres"], ["rock"])
+        self.assertEqual(album["your_tags"], [])
         self.assertEqual(album["image_url"], "https://example.test/cover.jpg")
         self.assertEqual(album["source"], "musicbrainz")
 

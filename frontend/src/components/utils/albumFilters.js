@@ -1,5 +1,15 @@
+import { getUserTagLabel } from "./userTags";
+
 function normalize(value) {
   return String(value || "").toLowerCase();
+}
+
+function normalizeTagList(values) {
+  return (values || []).map((value) =>
+    typeof value === "string"
+      ? getUserTagLabel(value)
+      : value?.label || getUserTagLabel(value?.id) || ""
+  );
 }
 
 export function getAlbumCredits(album) {
@@ -26,8 +36,8 @@ export function albumMatchesSearch(album, searchTerm) {
     album.label,
     album.release_year,
     album.release_date,
-    ...(album.tags || []),
     ...(album.genres || []),
+    ...normalizeTagList(album.your_tags),
   ];
 
   for (const [name, role, detail] of getAlbumCredits(album)) {
@@ -50,10 +60,11 @@ export function albumMatchesFilter(album, filter) {
   const value = normalize(filter.value);
 
   if (filter.type === "label") return normalize(album.label) === value;
-  if (filter.type === "tag") {
-    return [...(album.tags || []), ...(album.genres || [])].some(
-      (tag) => normalize(tag) === value
-    );
+  if (filter.type === "genre") {
+    return (album.genres || []).some((genre) => normalize(genre) === value);
+  }
+  if (filter.type === "your-tag") {
+    return normalizeTagList(album.your_tags).some((tag) => normalize(tag) === value);
   }
   if (filter.type === "year") return String(album.release_year) === String(filter.value);
   if (filter.type === "decade") {

@@ -6,6 +6,7 @@ import AlbumListenHistory from "./AlbumListenHistory";
 import AlbumMetadata from "./AlbumMetadata";
 import AlbumMetadataActions from "./AlbumMetadataActions";
 import AlbumTrackDetails from "./AlbumTrackDetails";
+import AlbumUserTags from "./AlbumUserTags";
 import { normalizeAlbum } from "../services/albumNormalizer";
 import { buildSparkline } from "./utils/albumHelpers";
 
@@ -103,6 +104,13 @@ function AlbumSidePanel({
       <section className="border-t pt-4">
         <AlbumMetadata album={displayAlbum} onFilterSelect={onFilterSelect} />
       </section>
+
+      <AlbumUserTags
+        album={displayAlbum}
+        onAlbumUpdated={handleAlbumUpdated}
+        onDataChanged={onDataChanged}
+        onFilterSelect={onFilterSelect}
+      />
 
       <AlbumMetadataActions
         album={displayAlbum}

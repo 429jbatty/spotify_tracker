@@ -15,6 +15,7 @@ from backend.app.repositories.state_utils import (
     empty_album_state,
 )
 from backend.app.repositories.user_repository import UserRepository
+from backend.app.user_tags import normalize_user_tags
 
 
 STATE_LAST_CHECKED = "last_checked"
@@ -34,6 +35,7 @@ def _album_metadata(record: dict[str, Any]) -> dict[str, Any]:
             "id",
             "album_key",
             "listen_history",
+            "your_tags",
             "remote_image_url",
             "local_image_path",
         }
@@ -277,7 +279,13 @@ class SqliteStateRepository:
             )
         )
         for membership in source_memberships:
-            self._add_user_album(target_album.id, user_id=membership.user_id)
+            target_membership = self._add_user_album(
+                target_album.id,
+                user_id=membership.user_id,
+            )
+            target_membership.your_tags = normalize_user_tags(
+                [*(target_membership.your_tags or []), *(membership.your_tags or [])]
+            )
 
         self.session.execute(
             delete(AlbumListen).where(AlbumListen.album_id == source_album.id)
@@ -364,6 +372,19 @@ class SqliteStateRepository:
             raise KeyError(f"Album id not found: {album_id}")
 
         self._add_listen(album, listened_at)
+        self.session.commit()
+        return self._album_record(album)
+
+    def update_user_album_tags(self, album_id: int, your_tags: list[str]) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        membership = self._user_album_membership(album.id)
+        if membership is None:
+            raise KeyError(f"Album is not available for user: {album_id}")
+
+        membership.your_tags = normalize_user_tags(your_tags)
         self.session.commit()
         return self._album_record(album)
 
@@ -552,6 +573,7 @@ class SqliteStateRepository:
         return completed_albums
 
     def _album_record(self, album: Album) -> dict[str, Any]:
+        membership = self._user_album_membership(album.id)
         listen_history = list(
             self.session.scalars(
                 select(AlbumListen.listened_at)
@@ -582,6 +604,7 @@ class SqliteStateRepository:
             "local_image_path": album.local_image_path,
             "source": album.source,
             "listen_history": listen_history,
+            "your_tags": normalize_user_tags(membership.your_tags if membership else []),
         }
 
     def _album_record_for_update(self, album: Album) -> dict[str, Any]:
@@ -690,7 +713,7 @@ class SqliteStateRepository:
         )
         return [row[0] for row in rows]
 
-    def _add_user_album(self, album_id: int, user_id: int | None = None) -> None:
+    def _add_user_album(self, album_id: int, user_id: int | None = None) -> UserAlbum:
         target_user_id = user_id or self.user.id
         for pending in self.session.new:
             if (
@@ -698,21 +721,34 @@ class SqliteStateRepository:
                 and pending.user_id == target_user_id
                 and pending.album_id == album_id
             ):
-                return
-        if self._user_has_album(album_id, user_id=target_user_id):
-            return
-        self.session.add(UserAlbum(user_id=target_user_id, album_id=album_id))
+                return pending
+        existing = self._user_album_membership(album_id, user_id=target_user_id)
+        if existing is not None:
+            return existing
+        membership = UserAlbum(
+            user_id=target_user_id,
+            album_id=album_id,
+            your_tags=[],
+        )
+        self.session.add(membership)
+        return membership
 
     def _user_has_album(self, album_id: int, user_id: int | None = None) -> bool:
+        return self._user_album_membership(album_id, user_id=user_id) is not None
+
+    def _user_album_membership(
+        self,
+        album_id: int,
+        user_id: int | None = None,
+    ) -> UserAlbum | None:
         target_user_id = user_id or self.user.id
         return (
             self.session.scalars(
-                select(UserAlbum.id).where(
+                select(UserAlbum).where(
                     UserAlbum.user_id == target_user_id,
                     UserAlbum.album_id == album_id,
                 )
             ).first()
-            is not None
         )
 
     def _delete_unowned_albums(self, album_ids: list[int]) -> None:

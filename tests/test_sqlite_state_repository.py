@@ -94,6 +94,7 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             album["listen_history"],
             ["2026-04-18T15:45:00.000Z", "2026-04-18T16:45:00.000Z"],
         )
+        self.assertEqual(album["your_tags"], [])
         self.assertEqual(loaded["most_recently_listened"][0], "Artist - Finished Album")
 
     def test_import_is_idempotent_for_albums_and_listens(self):
@@ -237,6 +238,24 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             "https://example.test/new-cover.jpg",
         )
         self.assertEqual(album["local_image_path"], "artwork/release-group-mbid.jpg")
+
+    def test_update_user_album_tags_persists_per_user_tags(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+                album_id = repository.load_album_state()["completed_albums"][
+                    "Artist - Finished Album"
+                ]["id"]
+
+                updated = repository.update_user_album_tags(
+                    album_id,
+                    ["great-imaging", "atmospheric"],
+                )
+
+        self.assertEqual(updated["your_tags"], ["great-imaging", "atmospheric"])
 
     def test_replace_completed_album_metadata_preserves_existing_local_image_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:

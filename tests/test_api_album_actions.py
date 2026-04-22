@@ -244,6 +244,35 @@ class ApiAlbumActionTests(unittest.TestCase):
             ["2026-04-01T10:00:00.000Z", "2026-04-02T10:00:00.000Z"],
         )
 
+    def test_update_album_user_tags_replaces_tag_selection(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, album_id, _ = self._client(temp_dir)
+
+            response = client.put(
+                f"/api/albums/{album_id}/your-tags",
+                json={"your_tags": ["great-imaging", "cohesive"]},
+            )
+
+            refreshed_state = client.get("/api/album-state").json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["your_tags"], ["great-imaging", "cohesive"])
+        self.assertEqual(
+            refreshed_state["completed_albums"]["Artist - Old Title"]["your_tags"],
+            ["great-imaging", "cohesive"],
+        )
+
+    def test_update_album_user_tags_rejects_unknown_values(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, album_id, _ = self._client(temp_dir)
+
+            response = client.put(
+                f"/api/albums/{album_id}/your-tags",
+                json={"your_tags": ["made-up-tag"]},
+            )
+
+        self.assertEqual(response.status_code, 422)
+
     def test_delete_album_listen_removes_only_that_listen(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, album_id, _ = self._client(temp_dir)

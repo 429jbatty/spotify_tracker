@@ -125,6 +125,17 @@ export async function mergeAlbum(albumId, targetAlbumId) {
   });
 }
 
+export async function updateAlbumUserTags(albumId, yourTags) {
+  const userSlug = getSelectedUserSlug();
+  const path = userSlug
+    ? `/users/${userSlug}/albums/${albumId}/your-tags`
+    : `/albums/${albumId}/your-tags`;
+  return requestJson(path, {
+    method: "PUT",
+    body: JSON.stringify({ your_tags: yourTags }),
+  });
+}
+
 export async function deleteAlbum(albumId) {
   return requestJson(`/albums/${albumId}`, {
     method: "DELETE",

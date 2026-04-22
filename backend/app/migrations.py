@@ -279,6 +279,30 @@ def migrate_albums_in_progress_user_scope(engine: Engine) -> None:
         connection.execute(text("PRAGMA foreign_keys = ON"))
 
 
+def migrate_user_album_tags(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    if not _table_exists(engine, "user_albums"):
+        return
+
+    columns = _table_columns(engine, "user_albums")
+    if "your_tags" in columns:
+        return
+
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE user_albums ADD COLUMN your_tags JSON"))
+        connection.execute(
+            text(
+                """
+                UPDATE user_albums
+                SET your_tags = '[]'
+                WHERE your_tags IS NULL OR your_tags = ''
+                """
+            )
+        )
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
@@ -286,3 +310,4 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_user_albums(engine)
     migrate_album_listens_user_scope(engine)
     migrate_albums_in_progress_user_scope(engine)
+    migrate_user_album_tags(engine)

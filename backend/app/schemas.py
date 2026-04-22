@@ -50,6 +50,7 @@ class CompletedAlbum(BaseModel):
     tracklist: list[AlbumTrack] = Field(default_factory=list)
     tags: list[str] = Field(default_factory=list)
     genres: list[str] = Field(default_factory=list)
+    your_tags: list[str] = Field(default_factory=list)
     image_url: str | None = None
     remote_image_url: str | None = None
     local_image_path: str | None = None
@@ -120,3 +121,7 @@ class AlbumMergeRequest(BaseModel):
 
 class AlbumRefreshRequest(BaseModel):
     spotify_url: str | None = None
+
+
+class UserAlbumTagsUpdate(BaseModel):
+    your_tags: list[str] = Field(default_factory=list)

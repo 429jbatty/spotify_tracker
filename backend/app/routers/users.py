@@ -13,6 +13,7 @@ from backend.app.schemas import (
     ManualAlbumCreate,
     User,
     UserCreate,
+    UserAlbumTagsUpdate,
 )
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -118,3 +119,20 @@ def delete_user_album_listen(
             return repository.delete_album_listen(album_id, request.listened_at)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+
+
+@router.put("/{user_slug}/albums/{album_id}/your-tags", response_model=CompletedAlbum)
+def update_user_album_tags(
+    user_slug: str,
+    album_id: int,
+    request: UserAlbumTagsUpdate,
+) -> dict:
+    session_factory = _session_factory()
+    with session_factory() as session:
+        try:
+            repository = SqliteStateRepository(session, user_slug=user_slug)
+            return repository.update_user_album_tags(album_id, request.your_tags)
+        except KeyError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
