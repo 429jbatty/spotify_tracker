@@ -189,6 +189,18 @@ The refresh script is configured in `one_time_scripts/_refresh_metadata.py`.
 Keep `REFRESH_ALL = False` for targeted refreshes. Setting it to `True` will
 attempt to refresh every completed album.
 
+Delete a user and all dependent rows:
+
+```bash
+./.venv/bin/python -m one_time_scripts._delete_user <user-slug>
+```
+
+To allow deleting the default seeded user:
+
+```bash
+./.venv/bin/python -m one_time_scripts._delete_user <user-slug> --force-default-user
+```
+
 ## Local Development Flow
 
 Typical two-terminal workflow:
