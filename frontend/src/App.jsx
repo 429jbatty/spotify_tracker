@@ -168,6 +168,7 @@ function App() {
           <Header
             view={view}
             setView={setView}
+            albums={processedAlbums}
             onDataChanged={loadAlbumState}
             selectedUser={selectedUser}
             spotifyStatus={spotifyStatus}

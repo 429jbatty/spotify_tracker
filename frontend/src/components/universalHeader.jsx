@@ -50,6 +50,7 @@ const NAV_ITEMS = [
 function UniversalHeader({
   view,
   setView,
+  albums,
   onDataChanged,
   selectedUser,
   spotifyStatus,
@@ -104,6 +105,7 @@ function UniversalHeader({
             </div>
 
             <AlbumCreateDialog
+              albums={albums}
               onDataChanged={onDataChanged}
               variant="outline"
               triggerClassName="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 xl:hidden"
@@ -161,6 +163,7 @@ function UniversalHeader({
               </Button>
             )}
             <AlbumCreateDialog
+              albums={albums}
               onDataChanged={onDataChanged}
               triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
             />
