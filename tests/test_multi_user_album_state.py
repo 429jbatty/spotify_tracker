@@ -130,7 +130,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
 
             response = client.put(
                 f"/api/users/friend/albums/{album_id}/your-tags",
-                json={"your_tags": ["great-imaging", "cohesive"]},
+                json={"your_tags": ["atmospheric", "cohesive"]},
             )
             default_state = client.get("/api/album-state").json()
             friend_state = client.get("/api/users/friend/album-state").json()
@@ -142,7 +142,46 @@ class MultiUserAlbumStateTests(unittest.TestCase):
         )
         self.assertEqual(
             friend_state["completed_albums"]["Artist - Shared Album"]["your_tags"],
-            ["great-imaging", "cohesive"],
+            ["atmospheric", "cohesive"],
+        )
+
+    def test_user_scoped_feedback_does_not_touch_default_user(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            client.post("/api/users", json={"slug": "friend", "display_name": "Friend"})
+            album_id = client.get("/api/album-state").json()["completed_albums"][
+                "Artist - Shared Album"
+            ]["id"]
+            client.post(
+                "/api/users/friend/albums",
+                json={
+                    "artist": "Artist",
+                    "name": "Shared Album",
+                    "listen_date": "2026-04-18T15:45:00.000Z",
+                },
+            )
+
+            response = client.put(
+                f"/api/users/friend/albums/{album_id}/your-feedback",
+                json={"rating": 9, "notes": "Locked in immediately."},
+            )
+            default_state = client.get("/api/album-state").json()
+            friend_state = client.get("/api/users/friend/album-state").json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(
+            default_state["completed_albums"]["Artist - Shared Album"]["rating"]
+        )
+        self.assertIsNone(
+            default_state["completed_albums"]["Artist - Shared Album"]["notes"]
+        )
+        self.assertEqual(
+            friend_state["completed_albums"]["Artist - Shared Album"]["rating"],
+            9,
+        )
+        self.assertEqual(
+            friend_state["completed_albums"]["Artist - Shared Album"]["notes"],
+            "Locked in immediately.",
         )
 
 

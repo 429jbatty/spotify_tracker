@@ -11,6 +11,7 @@ from backend.app.schemas import (
     AlbumState,
     CompletedAlbum,
     ManualAlbumCreate,
+    UserAlbumFeedbackUpdate,
     User,
     UserCreate,
     UserAlbumTagsUpdate,
@@ -136,3 +137,22 @@ def update_user_album_tags(
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
         except ValueError as exc:
             raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+
+
+@router.put("/{user_slug}/albums/{album_id}/your-feedback", response_model=CompletedAlbum)
+def update_user_album_feedback(
+    user_slug: str,
+    album_id: int,
+    request: UserAlbumFeedbackUpdate,
+) -> dict:
+    session_factory = _session_factory()
+    with session_factory() as session:
+        try:
+            repository = SqliteStateRepository(session, user_slug=user_slug)
+            return repository.update_user_album_feedback(
+                album_id,
+                rating=request.rating,
+                notes=request.notes,
+            )
+        except KeyError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))

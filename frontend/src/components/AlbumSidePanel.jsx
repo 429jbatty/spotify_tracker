@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import AlbumArtwork from "./AlbumArtwork";
 import AlbumHeader from "./AlbumCardHeader";
 import ListenCountBadge from "./ListenCountBadge";
+import AlbumRatingBadge from "./AlbumRatingBadge";
 import AlbumListenHistory from "./AlbumListenHistory";
 import AlbumMetadata from "./AlbumMetadata";
 import AlbumMetadataActions from "./AlbumMetadataActions";
 import AlbumTrackDetails from "./AlbumTrackDetails";
+import AlbumUserFeedback from "./AlbumUserFeedback";
 import AlbumUserTags from "./AlbumUserTags";
 import { normalizeAlbum } from "../services/albumNormalizer";
 import { buildSparkline } from "./utils/albumHelpers";
 
-import {
-  getListenStats,
-} from "./utils/albumHelpers";
+import { getListenStats } from "./utils/albumHelpers";
 
 // --- Sparkline Component ---
 function Sparkline({ counts = [], barWidth = 4, maxHeight = 40 }) {
@@ -64,12 +64,17 @@ function AlbumSidePanel({
   return (
     <div className="relative flex flex-col gap-6 p-6 overflow-y-auto">
 
-      {/* Top-right listen count badge */}
-      {listenStats && listenStats.count > 0 && (
-        <div className="absolute top-6 right-6 z-10">
+      {listenStats && listenStats.count > 0 ? (
+        <div className="absolute right-6 top-6 z-10">
           <ListenCountBadge count={listenStats.count} />
         </div>
-      )}
+      ) : null}
+
+      {displayAlbum.rating ? (
+        <div className="flex justify-center">
+          <AlbumRatingBadge rating={displayAlbum.rating} />
+        </div>
+      ) : null}
 
       {/* Artwork */}
       <div className="flex justify-center">
@@ -104,6 +109,12 @@ function AlbumSidePanel({
       <section className="border-t pt-4">
         <AlbumMetadata album={displayAlbum} onFilterSelect={onFilterSelect} />
       </section>
+
+      <AlbumUserFeedback
+        album={displayAlbum}
+        onAlbumUpdated={handleAlbumUpdated}
+        onDataChanged={onDataChanged}
+      />
 
       <AlbumUserTags
         album={displayAlbum}

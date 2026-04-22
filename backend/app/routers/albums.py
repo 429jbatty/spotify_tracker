@@ -13,6 +13,7 @@ from backend.app.schemas import (
     AlbumRefreshRequest,
     CompletedAlbum,
     ManualAlbumCreate,
+    UserAlbumFeedbackUpdate,
     UserAlbumTagsUpdate,
 )
 
@@ -168,5 +169,20 @@ def update_album_user_tags(album_id: int, request: UserAlbumTagsUpdate) -> dict:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    finally:
+        session.close()
+
+
+@router.put("/{album_id}/your-feedback", response_model=CompletedAlbum)
+def update_album_user_feedback(album_id: int, request: UserAlbumFeedbackUpdate) -> dict:
+    session, repository = _repository()
+    try:
+        return repository.update_user_album_feedback(
+            album_id,
+            rating=request.rating,
+            notes=request.notes,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:
         session.close()

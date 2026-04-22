@@ -51,6 +51,8 @@ class CompletedAlbum(BaseModel):
     tags: list[str] = Field(default_factory=list)
     genres: list[str] = Field(default_factory=list)
     your_tags: list[str] = Field(default_factory=list)
+    rating: int | None = None
+    notes: str | None = None
     image_url: str | None = None
     remote_image_url: str | None = None
     local_image_path: str | None = None
@@ -125,3 +127,8 @@ class AlbumRefreshRequest(BaseModel):
 
 class UserAlbumTagsUpdate(BaseModel):
     your_tags: list[str] = Field(default_factory=list)
+
+
+class UserAlbumFeedbackUpdate(BaseModel):
+    rating: int | None = Field(default=None, ge=1, le=10)
+    notes: str | None = None

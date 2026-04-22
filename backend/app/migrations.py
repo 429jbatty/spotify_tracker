@@ -303,6 +303,25 @@ def migrate_user_album_tags(engine: Engine) -> None:
         )
 
 
+def migrate_user_album_feedback(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    if not _table_exists(engine, "user_albums"):
+        return
+
+    columns = _table_columns(engine, "user_albums")
+
+    with engine.begin() as connection:
+        if "rating" not in columns:
+            connection.execute(text("ALTER TABLE user_albums ADD COLUMN rating INTEGER"))
+            columns.add("rating")
+
+        if "notes" not in columns:
+            connection.execute(text("ALTER TABLE user_albums ADD COLUMN notes TEXT"))
+            columns.add("notes")
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
@@ -311,3 +330,4 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_album_listens_user_scope(engine)
     migrate_albums_in_progress_user_scope(engine)
     migrate_user_album_tags(engine)
+    migrate_user_album_feedback(engine)

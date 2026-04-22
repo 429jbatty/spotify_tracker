@@ -95,6 +95,8 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             ["2026-04-18T15:45:00.000Z", "2026-04-18T16:45:00.000Z"],
         )
         self.assertEqual(album["your_tags"], [])
+        self.assertIsNone(album["rating"])
+        self.assertIsNone(album["notes"])
         self.assertEqual(loaded["most_recently_listened"][0], "Artist - Finished Album")
 
     def test_import_is_idempotent_for_albums_and_listens(self):
@@ -252,10 +254,30 @@ class SqliteStateRepositoryTests(unittest.TestCase):
 
                 updated = repository.update_user_album_tags(
                     album_id,
-                    ["great-imaging", "atmospheric"],
+                    ["atmospheric", "cohesive"],
                 )
 
-        self.assertEqual(updated["your_tags"], ["great-imaging", "atmospheric"])
+        self.assertEqual(updated["your_tags"], ["atmospheric", "cohesive"])
+
+    def test_update_user_album_feedback_persists_rating_and_notes(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+                album_id = repository.load_album_state()["completed_albums"][
+                    "Artist - Finished Album"
+                ]["id"]
+
+                updated = repository.update_user_album_feedback(
+                    album_id,
+                    rating=8,
+                    notes="Huge low end and great pacing.",
+                )
+
+        self.assertEqual(updated["rating"], 8)
+        self.assertEqual(updated["notes"], "Huge low end and great pacing.")
 
     def test_replace_completed_album_metadata_preserves_existing_local_image_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:

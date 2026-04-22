@@ -136,6 +136,17 @@ export async function updateAlbumUserTags(albumId, yourTags) {
   });
 }
 
+export async function updateAlbumUserFeedback(albumId, payload) {
+  const userSlug = getSelectedUserSlug();
+  const path = userSlug
+    ? `/users/${userSlug}/albums/${albumId}/your-feedback`
+    : `/albums/${albumId}/your-feedback`;
+  return requestJson(path, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
+}
+
 export async function deleteAlbum(albumId) {
   return requestJson(`/albums/${albumId}`, {
     method: "DELETE",

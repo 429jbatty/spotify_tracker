@@ -250,16 +250,16 @@ class ApiAlbumActionTests(unittest.TestCase):
 
             response = client.put(
                 f"/api/albums/{album_id}/your-tags",
-                json={"your_tags": ["great-imaging", "cohesive"]},
+                json={"your_tags": ["atmospheric", "cohesive"]},
             )
 
             refreshed_state = client.get("/api/album-state").json()
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["your_tags"], ["great-imaging", "cohesive"])
+        self.assertEqual(response.json()["your_tags"], ["atmospheric", "cohesive"])
         self.assertEqual(
             refreshed_state["completed_albums"]["Artist - Old Title"]["your_tags"],
-            ["great-imaging", "cohesive"],
+            ["atmospheric", "cohesive"],
         )
 
     def test_update_album_user_tags_rejects_unknown_values(self):
@@ -272,6 +272,29 @@ class ApiAlbumActionTests(unittest.TestCase):
             )
 
         self.assertEqual(response.status_code, 422)
+
+    def test_update_album_user_feedback_replaces_rating_and_notes(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, album_id, _ = self._client(temp_dir)
+
+            response = client.put(
+                f"/api/albums/{album_id}/your-feedback",
+                json={"rating": 7, "notes": "Strong opener, weaker middle."},
+            )
+
+            refreshed_state = client.get("/api/album-state").json()
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["rating"], 7)
+        self.assertEqual(response.json()["notes"], "Strong opener, weaker middle.")
+        self.assertEqual(
+            refreshed_state["completed_albums"]["Artist - Old Title"]["rating"],
+            7,
+        )
+        self.assertEqual(
+            refreshed_state["completed_albums"]["Artist - Old Title"]["notes"],
+            "Strong opener, weaker middle.",
+        )
 
     def test_delete_album_listen_removes_only_that_listen(self):
         with tempfile.TemporaryDirectory() as temp_dir:

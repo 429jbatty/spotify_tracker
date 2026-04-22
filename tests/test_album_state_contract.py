@@ -75,6 +75,8 @@ class AlbumStateContractTests(unittest.TestCase):
         self.assertEqual(album.tags, ["indie"])
         self.assertEqual(album.genres, ["rock"])
         self.assertEqual(album.your_tags, [])
+        self.assertIsNone(album.rating)
+        self.assertIsNone(album.notes)
         self.assertEqual(album.image_url, "https://example.test/cover.jpg")
         self.assertEqual(album.source, "musicbrainz")
 

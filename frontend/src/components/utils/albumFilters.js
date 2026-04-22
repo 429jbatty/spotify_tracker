@@ -36,6 +36,7 @@ export function albumMatchesSearch(album, searchTerm) {
     album.label,
     album.release_year,
     album.release_date,
+    album.notes,
     ...(album.genres || []),
     ...normalizeTagList(album.your_tags),
   ];

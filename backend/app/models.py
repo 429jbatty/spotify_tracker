@@ -71,6 +71,8 @@ class UserAlbum(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
     album_id: Mapped[int] = mapped_column(ForeignKey("albums.id"), index=True)
     your_tags: Mapped[list[str]] = mapped_column(JSON, default=list)
+    rating: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user: Mapped[User] = relationship(back_populates="user_albums")
     album: Mapped[Album] = relationship(back_populates="user_albums")

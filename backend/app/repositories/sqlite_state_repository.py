@@ -286,6 +286,10 @@ class SqliteStateRepository:
             target_membership.your_tags = normalize_user_tags(
                 [*(target_membership.your_tags or []), *(membership.your_tags or [])]
             )
+            if target_membership.rating is None:
+                target_membership.rating = membership.rating
+            if not (target_membership.notes or "").strip():
+                target_membership.notes = membership.notes
 
         self.session.execute(
             delete(AlbumListen).where(AlbumListen.album_id == source_album.id)
@@ -385,6 +389,26 @@ class SqliteStateRepository:
             raise KeyError(f"Album is not available for user: {album_id}")
 
         membership.your_tags = normalize_user_tags(your_tags)
+        self.session.commit()
+        return self._album_record(album)
+
+    def update_user_album_feedback(
+        self,
+        album_id: int,
+        *,
+        rating: int | None,
+        notes: str | None,
+    ) -> dict[str, Any]:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        membership = self._user_album_membership(album.id)
+        if membership is None:
+            raise KeyError(f"Album is not available for user: {album_id}")
+
+        membership.rating = rating
+        membership.notes = notes.strip() if isinstance(notes, str) else None
         self.session.commit()
         return self._album_record(album)
 
@@ -605,6 +629,8 @@ class SqliteStateRepository:
             "source": album.source,
             "listen_history": listen_history,
             "your_tags": normalize_user_tags(membership.your_tags if membership else []),
+            "rating": membership.rating if membership else None,
+            "notes": membership.notes if membership else None,
         }
 
     def _album_record_for_update(self, album: Album) -> dict[str, Any]:
@@ -729,6 +755,8 @@ class SqliteStateRepository:
             user_id=target_user_id,
             album_id=album_id,
             your_tags=[],
+            rating=None,
+            notes=None,
         )
         self.session.add(membership)
         return membership
