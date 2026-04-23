@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-22T17:41:22.921Z",
+  "last_checked": "2026-04-23T14:45:21.666Z",
   "albums_in_progress": {
     "3Yko2SxDk4hc6fncIBQlcM": {
       "album_name": "A Seat at the Table",
@@ -132,6 +132,21 @@
       ],
       "first_played": "2026-04-22T17:41:22.921Z",
       "last_played": "2026-04-22T17:41:22.921Z"
+    },
+    "4bKHXqEVmt32YU7u51GIHB": {
+      "album_name": "Sometimes I Wish We Were An Eagle",
+      "artist": "Bill Callahan",
+      "total_tracks": 9,
+      "played_tracks": [
+        "3KZRkM7Uv0F2oCTUHAvv0a",
+        "1nWRZiUhOLXL4VrnqqxWpD",
+        "5C5RjEIzqnqOLmNVFlnVFU",
+        "4pptcDdsgxN4qsjOOzotI6",
+        "7ydapdmQ4oivP54X29q7Af",
+        "3POTfidt7cMfX4mmukNfeE"
+      ],
+      "first_played": "2026-04-23T14:09:48.387Z",
+      "last_played": "2026-04-23T14:45:21.666Z"
     }
   },
   "completed_albums": {
