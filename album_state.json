@@ -1,37 +1,6 @@
 {
-  "last_checked": "2026-04-24T01:03:56.309Z",
+  "last_checked": "2026-04-24T17:29:09.279Z",
   "albums_in_progress": {
-    "3tQd5mwBtVyxCoEo4htGAV": {
-      "album_name": "Enter The Wu-Tang (36 Chambers) [Expanded Edition]",
-      "artist": "Wu-Tang Clan",
-      "total_tracks": 15,
-      "played_tracks": [
-        "7IwURvEfVcdxUCjLKUu6sv",
-        "4LaiF2h7gsybmURceGYLqh"
-      ],
-      "first_played": "2026-04-22T15:51:51.762Z",
-      "last_played": "2026-04-22T17:31:22.312Z"
-    },
-    "42oQv8fbI5CbeuAasf2ILC": {
-      "album_name": "My Name Is My Name",
-      "artist": "Pusha T",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4XkXgUNDVBMj3oJoE8yspZ"
-      ],
-      "first_played": "2026-04-22T17:26:52.213Z",
-      "last_played": "2026-04-22T17:26:52.213Z"
-    },
-    "6pwuKxMUkNg673KETsXPUV": {
-      "album_name": "KIDS SEE GHOSTS",
-      "artist": "KIDS SEE GHOSTS, Kanye West, Kid Cudi",
-      "total_tracks": 7,
-      "played_tracks": [
-        "3aUFrxO1B8EW63QchEl3wX"
-      ],
-      "first_played": "2026-04-22T17:41:22.921Z",
-      "last_played": "2026-04-22T17:41:22.921Z"
-    },
     "4bKHXqEVmt32YU7u51GIHB": {
       "album_name": "Sometimes I Wish We Were An Eagle",
       "artist": "Bill Callahan",
@@ -47,6 +16,23 @@
       ],
       "first_played": "2026-04-23T14:09:48.387Z",
       "last_played": "2026-04-23T14:57:03.889Z"
+    },
+    "1ljZLkNdSQR6Cirmvp1dIU": {
+      "album_name": "Flamboyant",
+      "artist": "Dorian Electra",
+      "total_tracks": 11,
+      "played_tracks": [
+        "1FCLJZMnwNFsgDtO4GxDjd",
+        "1ImtZSOFXI6IjBNnctXj5b",
+        "1MvcXsrVevzM146szhwK8K",
+        "7Iv5IZonH69m1fHM8MdlHf",
+        "2dfS66uV3scigFBn6Rrclq",
+        "76aidnX3GIFC41UTh8OsRe",
+        "4zWCYSPoaSXwljYHTTonDi",
+        "0SfwFo03No7kEcTddrbBix"
+      ],
+      "first_played": "2026-04-24T17:08:43.227Z",
+      "last_played": "2026-04-24T17:29:09.279Z"
     }
   },
   "completed_albums": {
