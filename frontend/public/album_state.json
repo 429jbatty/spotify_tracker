@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-25T20:15:59.279Z",
+  "last_checked": "2026-04-25T22:06:38.269Z",
   "albums_in_progress": {
     "1NS7Bf9O24tmMAu2wqDaVy": {
       "album_name": "A Walk Across the Rooftops",
@@ -20,10 +20,11 @@
       "played_tracks": [
         "59PYsHSyznHHH9gujZvO5Y",
         "5djCX0bDd96N89Ayv5Y8Y2",
-        "7ub14NqqyR1MDUTXyFBTzO"
+        "7ub14NqqyR1MDUTXyFBTzO",
+        "3UYjzTbFu1qJjxkgktKXJC"
       ],
       "first_played": "2026-04-25T17:04:55.734Z",
-      "last_played": "2026-04-25T19:05:10.708Z"
+      "last_played": "2026-04-25T20:23:37.841Z"
     },
     "22PkV1Le9P3X4RY4xtmK0q": {
       "album_name": "Desire, I Want To Turn Into You",
@@ -58,10 +59,11 @@
         "1KIYFOA09YNTjzLSvDz8NC",
         "0HO7edOcs0Ls9pVJ4n4AQ2",
         "6OHw7nogOSmTGnRpEiqkhb",
-        "0zRJLA25QhP1mzcr3tZdZ0"
+        "0zRJLA25QhP1mzcr3tZdZ0",
+        "72vmEODDrpQ5wEUhLbiYgI"
       ],
       "first_played": "2026-04-25T17:14:22.733Z",
-      "last_played": "2026-04-25T20:10:16.652Z"
+      "last_played": "2026-04-25T20:50:20.407Z"
     },
     "3a9qH2VEsSiOZvMrjaS0Nu": {
       "album_name": "how i'm feeling now",
@@ -138,10 +140,12 @@
       "played_tracks": [
         "28MOE4pVk5uN3wBDGBacET",
         "1TWNKyNQOBfNUkWWs7FooF",
-        "0HKr9aqzHBsVNnsUCdH4bw"
+        "0HKr9aqzHBsVNnsUCdH4bw",
+        "32umfTzGdXsWOTNaRGR5hd",
+        "6c3qhnJnDalbbgC7CAijbn"
       ],
       "first_played": "2026-04-25T17:53:55.057Z",
-      "last_played": "2026-04-25T19:30:53.202Z"
+      "last_played": "2026-04-25T20:48:06.688Z"
     },
     "6jBRjtrgSlOvQvrSdtQa8Q": {
       "album_name": "Glitch Princess",
@@ -160,10 +164,11 @@
       "played_tracks": [
         "3x3kYVMHdqwConilMGjZzi",
         "2F6cCKQn0vC0NUc47kBgzT",
-        "2G6tzFH6856w3mihEUpK6O"
+        "2G6tzFH6856w3mihEUpK6O",
+        "34KQ2ulA3YlNxPuUhJUcUy"
       ],
       "first_played": "2026-04-25T18:18:30.416Z",
-      "last_played": "2026-04-25T19:18:09.845Z"
+      "last_played": "2026-04-25T20:30:31.113Z"
     },
     "2HIwUmdxEl7SeWa1ndH5wC": {
       "album_name": "Pop 2",
@@ -183,10 +188,12 @@
         "7CUkeiG7QtB7tPU9f8SANS",
         "3VHiIVQe8Sc6gtSsTp3pDz",
         "61bwFjzXGG1x2aZsANdLyl",
-        "2MLuFz9Y3Vg3PF0Yf93M5c"
+        "2MLuFz9Y3Vg3PF0Yf93M5c",
+        "2fwz9mBaELJCzXuEEEe35Y",
+        "23Dapn8107GgxvXDIsPwWm"
       ],
       "first_played": "2026-04-25T18:24:15.280Z",
-      "last_played": "2026-04-25T20:15:59.279Z"
+      "last_played": "2026-04-25T20:55:40.528Z"
     },
     "2XS5McKf3zdJWpcZ4OkZPZ": {
       "album_name": "10,000 gecs",
@@ -264,10 +271,11 @@
       "artist": "SOPHIE",
       "total_tracks": 11,
       "played_tracks": [
-        "2SCyDaDxOEmqgEvak5Yt0N"
+        "2SCyDaDxOEmqgEvak5Yt0N",
+        "4dLgqMwWUiM1FzyedzhU2u"
       ],
       "first_played": "2026-04-25T20:06:18.482Z",
-      "last_played": "2026-04-25T20:06:18.482Z"
+      "last_played": "2026-04-25T20:44:35.391Z"
     },
     "08pGwlQDFQYZg1gX0ZYOKq": {
       "album_name": "I'm Your Empress Of",
@@ -288,6 +296,66 @@
       ],
       "first_played": "2026-04-25T20:13:35.656Z",
       "last_played": "2026-04-25T20:13:35.656Z"
+    },
+    "3OevODyllQCrhudfLLnV3y": {
+      "album_name": "Dawn Of Chromatica",
+      "artist": "Lady Gaga",
+      "total_tracks": 14,
+      "played_tracks": [
+        "6l6XdpIyh6RJ4gmdqoz0D6"
+      ],
+      "first_played": "2026-04-25T20:27:27.155Z",
+      "last_played": "2026-04-25T20:27:27.155Z"
+    },
+    "0mQPq9INcTC48siErksOrl": {
+      "album_name": "Wallsocket",
+      "artist": "underscores",
+      "total_tracks": 12,
+      "played_tracks": [
+        "42FM6tM3n06euZCvpJn3dn"
+      ],
+      "first_played": "2026-04-25T20:34:46.852Z",
+      "last_played": "2026-04-25T20:34:46.852Z"
+    },
+    "5HZHvhX5TpJJD6hTgn0j0D": {
+      "album_name": "Serotonin II",
+      "artist": "yeule",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1wl53ydLl7vh2t7bFMZ5dn"
+      ],
+      "first_played": "2026-04-25T20:41:50.153Z",
+      "last_played": "2026-04-25T20:41:50.153Z"
+    },
+    "3JBuWWY8OCHXMcQz5xxxCr": {
+      "album_name": "food house",
+      "artist": "food house, Gupi, Fraxiom",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6nEDYdxD1YEWnXdbWxT6U8"
+      ],
+      "first_played": "2026-04-25T21:02:11.827Z",
+      "last_played": "2026-04-25T21:02:11.827Z"
+    },
+    "3o1TOhMkU5FFMSJMDhXfdF": {
+      "album_name": "EUSEXUA",
+      "artist": "FKA twigs",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6TeKbncyK62smlAvPy1dNa"
+      ],
+      "first_played": "2026-04-25T22:00:22.530Z",
+      "last_played": "2026-04-25T22:00:22.530Z"
+    },
+    "3e9VtbXnl6tqrFKrnNyxaI": {
+      "album_name": "If You're Feeling Sinister",
+      "artist": "Belle and Sebastian",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6q28LN1KJpsYqG5jNFy6rX"
+      ],
+      "first_played": "2026-04-25T22:06:38.269Z",
+      "last_played": "2026-04-25T22:06:38.269Z"
     }
   },
   "completed_albums": {
@@ -405252,9 +405320,326 @@
       "listen_history": [
         "2026-04-20T21:33:09.176Z"
       ]
+    },
+    "Magdalena Bay - Imaginal Disk": {
+      "artist": "Magdalena Bay",
+      "artist_mbid": "68c261d5-48c8-4ea9-9466-9fc908dc79bb",
+      "name": "Imaginal Disk",
+      "release_group_mbid": "9c710cb4-6b20-47d7-a31a-5adb064c6c6b",
+      "release_mbid": "acad6b60-2b75-425a-ae50-0900ac45dda4",
+      "label": "Mom+Pop",
+      "release_year": 2024,
+      "release_month": 8,
+      "release_day": 23,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "She Looked Like Me!",
+          "credits": [
+            [
+              "Jon Fridmann",
+              "instrument",
+              "additional, trumpet"
+            ],
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "70487029-1d32-4b7a-ba2a-acfe2462f312"
+        },
+        {
+          "position": "2",
+          "title": "Killing Time",
+          "credits": [
+            [
+              "Patrick Jones",
+              "engineer",
+              "drums (drum set)"
+            ],
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b2fc55d4-30ce-416d-a03b-0d8892584663"
+        },
+        {
+          "position": "3",
+          "title": "True Blue Interlude",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "825a791f-f00c-4fd8-8e75-260e9838d704"
+        },
+        {
+          "position": "4",
+          "title": "Image",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "29ba0b6f-f966-4b53-90ba-d1262bebaf1a"
+        },
+        {
+          "position": "5",
+          "title": "Death & Romance",
+          "credits": [
+            [
+              "Patrick Jones",
+              "engineer",
+              "drums (drum set)"
+            ],
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5b34596b-e458-40c9-91e5-5b97491fb07c"
+        },
+        {
+          "position": "6",
+          "title": "Fear, Sex",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "85c1f4b0-4381-4ca1-bc00-220e6c37c7df"
+        },
+        {
+          "position": "7",
+          "title": "Vampire in the Corner",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d818b0d0-b7fa-4277-b018-90799627bbed"
+        },
+        {
+          "position": "8",
+          "title": "Watching T.V.",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "82b44587-0a63-483d-8fab-be34801d83f9"
+        },
+        {
+          "position": "9",
+          "title": "Tunnel Vision",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "de410730-4c29-41f9-8c92-7828f99ee492"
+        },
+        {
+          "position": "10",
+          "title": "Love Is Everywhere",
+          "credits": [
+            [
+              "Justin Raisen",
+              "producer",
+              "additional"
+            ],
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "e15047be-ea52-4817-a1d4-d556818a49f0"
+        },
+        {
+          "position": "11",
+          "title": "Feeling DiskInserted?",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "da40e6d4-08b3-4848-9fed-75c4740edbbb"
+        },
+        {
+          "position": "12",
+          "title": "That\u2019s My Floor",
+          "credits": [
+            [
+              "Patrick Jones",
+              "engineer",
+              "drums (drum set)"
+            ],
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8ecc6ae7-857e-41cd-8a73-ac330210fe70"
+        },
+        {
+          "position": "13",
+          "title": "Cry for Me",
+          "credits": [
+            [
+              "Patrick Jones",
+              "engineer",
+              "drums (drum set)"
+            ],
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "433484b9-4d7d-47d8-a1bb-32a7a216b0f3"
+        },
+        {
+          "position": "14",
+          "title": "Angel on a Satellite",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c75227be-7296-4da8-9d0a-2d6d61804e45"
+        },
+        {
+          "position": "15",
+          "title": "The Ballad of Matt & Mica",
+          "credits": [
+            [
+              "Matthew Lewin",
+              "work writer",
+              ""
+            ],
+            [
+              "Mica Tenenbaum",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6b22f42d-cad9-4372-b83f-163d659d3a3b"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "chillwave",
+        "dance-pop",
+        "electropop",
+        "english",
+        "indietronica",
+        "neo-psychedelia",
+        "pop",
+        "pop rock",
+        "progressive pop",
+        "synth-pop"
+      ],
+      "image_url": "https://coverartarchive.org/release/acad6b60-2b75-425a-ae50-0900ac45dda4/39313937167-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-25T21:55:58.637Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Magdalena Bay - Imaginal Disk",
     "Dorian Electra - Flamboyant",
     "Pusha T - DAYTONA",
     "Nas - Illmatic",
@@ -405263,7 +405648,6 @@
     "Pixies - Doolittle",
     "Joy Division - Unknown Pleasures",
     "Jimi Hendrix - Electric Ladyland",
-    "Sky Ferreira - Night Time, My Time",
-    "Marty Robbins - Gunfighter Ballads And Trail Songs"
+    "Sky Ferreira - Night Time, My Time"
   ]
 }
