@@ -1,24 +1,6 @@
 {
-  "last_checked": "2026-04-25T15:15:45.115Z",
+  "last_checked": "2026-04-25T18:18:30.416Z",
   "albums_in_progress": {
-    "1ljZLkNdSQR6Cirmvp1dIU": {
-      "album_name": "Flamboyant",
-      "artist": "Dorian Electra",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1FCLJZMnwNFsgDtO4GxDjd",
-        "1ImtZSOFXI6IjBNnctXj5b",
-        "1MvcXsrVevzM146szhwK8K",
-        "7Iv5IZonH69m1fHM8MdlHf",
-        "2dfS66uV3scigFBn6Rrclq",
-        "76aidnX3GIFC41UTh8OsRe",
-        "4zWCYSPoaSXwljYHTTonDi",
-        "0SfwFo03No7kEcTddrbBix",
-        "3hL6xxjDWlNtiTHjCL2GJ5"
-      ],
-      "first_played": "2026-04-24T17:08:43.227Z",
-      "last_played": "2026-04-24T22:26:16.391Z"
-    },
     "1NS7Bf9O24tmMAu2wqDaVy": {
       "album_name": "A Walk Across the Rooftops",
       "artist": "The Blue Nile",
@@ -29,7 +11,144 @@
         "4KyMLroW5nS0j1fywUg9Zn"
       ],
       "first_played": "2026-04-25T14:56:27.699Z",
-      "last_played": "2026-04-25T15:15:45.115Z"
+      "last_played": "2026-04-25T16:29:03.584Z"
+    },
+    "6Rv8V4QeLgfEC01czqJsiI": {
+      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
+      "artist": "SOPHIE",
+      "total_tracks": 9,
+      "played_tracks": [
+        "59PYsHSyznHHH9gujZvO5Y",
+        "5djCX0bDd96N89Ayv5Y8Y2"
+      ],
+      "first_played": "2026-04-25T17:04:55.734Z",
+      "last_played": "2026-04-25T17:25:34.822Z"
+    },
+    "22PkV1Le9P3X4RY4xtmK0q": {
+      "album_name": "Desire, I Want To Turn Into You",
+      "artist": "Caroline Polachek",
+      "total_tracks": 12,
+      "played_tracks": [
+        "40tRJ8bMkIkXh8vhHKQsoX"
+      ],
+      "first_played": "2026-04-25T17:07:32.915Z",
+      "last_played": "2026-04-25T17:07:32.915Z"
+    },
+    "0rYXZCRBEsRBc4ZyRo8Y6w": {
+      "album_name": "RINA",
+      "artist": "Rina Sawayama",
+      "total_tracks": 8,
+      "played_tracks": [
+        "7I9bSsqqIA0cV1nL0igGLm"
+      ],
+      "first_played": "2026-04-25T17:11:14.455Z",
+      "last_played": "2026-04-25T17:11:14.455Z"
+    },
+    "0L53GIjCJxQXYeI3us0rgH": {
+      "album_name": "My Agenda",
+      "artist": "Dorian Electra",
+      "total_tracks": 11,
+      "played_tracks": [
+        "42Lx4iunLk0Vxkpw2OQfsE",
+        "2eqJwRnJ63ufvVS7salI03",
+        "0CwVW7kDEq7rG34HIMCds0"
+      ],
+      "first_played": "2026-04-25T17:14:22.733Z",
+      "last_played": "2026-04-25T17:57:11.644Z"
+    },
+    "3a9qH2VEsSiOZvMrjaS0Nu": {
+      "album_name": "how i'm feeling now",
+      "artist": "Charli xcx",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5GsJIVCBFjhCcUwJaTW2sB"
+      ],
+      "first_played": "2026-04-25T17:18:25.722Z",
+      "last_played": "2026-04-25T17:18:25.722Z"
+    },
+    "4ClyeVlAKJJViIyfVW0yQD": {
+      "album_name": "Pang",
+      "artist": "Caroline Polachek",
+      "total_tracks": 14,
+      "played_tracks": [
+        "2wcrQZ7ZJolYEfIaPP9yL4",
+        "5YIVVzQcJG7pFhyNo0Ytlh",
+        "4RqBss578GNj4u9VYZK5u0"
+      ],
+      "first_played": "2026-04-25T17:28:40.888Z",
+      "last_played": "2026-04-25T18:11:59.521Z"
+    },
+    "5ZpSRd3GwvEGrD7kWn0fHz": {
+      "album_name": "Saves The World",
+      "artist": "MUNA",
+      "total_tracks": 12,
+      "played_tracks": [
+        "69WAiCaEdxACKzB4B7Bv27"
+      ],
+      "first_played": "2026-04-25T17:32:11.749Z",
+      "last_played": "2026-04-25T17:32:11.749Z"
+    },
+    "386IqvSuljaZsMjwDGGdLj": {
+      "album_name": "Charli",
+      "artist": "Charli xcx",
+      "total_tracks": 15,
+      "played_tracks": [
+        "15IgHEkeO9gSqrKilaEh8b",
+        "1yUJK3qxPiFiPeAG2gLfuW"
+      ],
+      "first_played": "2026-04-25T17:37:05.783Z",
+      "last_played": "2026-04-25T18:00:54.708Z"
+    },
+    "3DMR3yM5crnt1dG9lLaMTZ": {
+      "album_name": "MAGDALENE",
+      "artist": "FKA twigs",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2uZkWDubNphtNJxUbvCLd7"
+      ],
+      "first_played": "2026-04-25T17:41:04.734Z",
+      "last_played": "2026-04-25T17:41:04.734Z"
+    },
+    "3h1wgea55XrtVoxrkRYDBn": {
+      "album_name": "Reflections",
+      "artist": "Hannah Diamond",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4FC0VE8aoYj6s1vrLj367k"
+      ],
+      "first_played": "2026-04-25T17:45:22.302Z",
+      "last_played": "2026-04-25T17:45:22.302Z"
+    },
+    "3stadz88XVpHcXnVYMHc4J": {
+      "album_name": "SAWAYAMA",
+      "artist": "Rina Sawayama",
+      "total_tracks": 13,
+      "played_tracks": [
+        "28MOE4pVk5uN3wBDGBacET",
+        "1TWNKyNQOBfNUkWWs7FooF"
+      ],
+      "first_played": "2026-04-25T17:53:55.057Z",
+      "last_played": "2026-04-25T18:15:30.869Z"
+    },
+    "6jBRjtrgSlOvQvrSdtQa8Q": {
+      "album_name": "Glitch Princess",
+      "artist": "yeule",
+      "total_tracks": 13,
+      "played_tracks": [
+        "3c8QXE2NQBVrtMSTXAofor"
+      ],
+      "first_played": "2026-04-25T18:05:53.985Z",
+      "last_played": "2026-04-25T18:05:53.985Z"
+    },
+    "6HjuqzWf3UlJoaU7iqDRIv": {
+      "album_name": "Fanfare",
+      "artist": "Dorian Electra",
+      "total_tracks": 13,
+      "played_tracks": [
+        "3x3kYVMHdqwConilMGjZzi"
+      ],
+      "first_played": "2026-04-25T18:18:30.416Z",
+      "last_played": "2026-04-25T18:18:30.416Z"
     }
   },
   "completed_albums": {
@@ -85615,7 +85734,9 @@
         "hyperpop"
       ],
       "image_url": "https://coverartarchive.org/release/2091c24e-4bfb-4efb-8f5c-385eb3fc76e4/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-25T17:00:19.124Z"
+      ],
       "source": "musicbrainz"
     },
     "Dorian Electra - My Agenda": {
@@ -404995,6 +405116,7 @@
     }
   },
   "most_recently_listened": [
+    "Dorian Electra - Flamboyant",
     "Pusha T - DAYTONA",
     "Nas - Illmatic",
     "Solange - A Seat at the Table",
@@ -405003,7 +405125,6 @@
     "Joy Division - Unknown Pleasures",
     "Jimi Hendrix - Electric Ladyland",
     "Sky Ferreira - Night Time, My Time",
-    "Marty Robbins - Gunfighter Ballads And Trail Songs",
-    "Burial - Untrue"
+    "Marty Robbins - Gunfighter Ballads And Trail Songs"
   ]
 }
