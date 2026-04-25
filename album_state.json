@@ -1,22 +1,6 @@
 {
-  "last_checked": "2026-04-25T05:32:36.660Z",
+  "last_checked": "2026-04-25T15:15:45.115Z",
   "albums_in_progress": {
-    "4bKHXqEVmt32YU7u51GIHB": {
-      "album_name": "Sometimes I Wish We Were An Eagle",
-      "artist": "Bill Callahan",
-      "total_tracks": 9,
-      "played_tracks": [
-        "3KZRkM7Uv0F2oCTUHAvv0a",
-        "1nWRZiUhOLXL4VrnqqxWpD",
-        "5C5RjEIzqnqOLmNVFlnVFU",
-        "4pptcDdsgxN4qsjOOzotI6",
-        "7ydapdmQ4oivP54X29q7Af",
-        "3POTfidt7cMfX4mmukNfeE",
-        "1EhtOYRE5CLvYZBoTOL6PY"
-      ],
-      "first_played": "2026-04-23T14:09:48.387Z",
-      "last_played": "2026-04-23T14:57:03.889Z"
-    },
     "1ljZLkNdSQR6Cirmvp1dIU": {
       "album_name": "Flamboyant",
       "artist": "Dorian Electra",
@@ -34,6 +18,18 @@
       ],
       "first_played": "2026-04-24T17:08:43.227Z",
       "last_played": "2026-04-24T22:26:16.391Z"
+    },
+    "1NS7Bf9O24tmMAu2wqDaVy": {
+      "album_name": "A Walk Across the Rooftops",
+      "artist": "The Blue Nile",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6izoarAOmLMwRnoaIv79Nn",
+        "31lJXgZxFqcqi6FCKb4wWl",
+        "4KyMLroW5nS0j1fywUg9Zn"
+      ],
+      "first_played": "2026-04-25T14:56:27.699Z",
+      "last_played": "2026-04-25T15:15:45.115Z"
     }
   },
   "completed_albums": {
