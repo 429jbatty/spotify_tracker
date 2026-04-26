@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-25T22:06:38.269Z",
+  "last_checked": "2026-04-25T22:19:50.939Z",
   "albums_in_progress": {
     "1NS7Bf9O24tmMAu2wqDaVy": {
       "album_name": "A Walk Across the Rooftops",
@@ -356,6 +356,16 @@
       ],
       "first_played": "2026-04-25T22:06:38.269Z",
       "last_played": "2026-04-25T22:06:38.269Z"
+    },
+    "6nL0U84JsEJ0cRsGCnsDnJ": {
+      "album_name": "You Forgot It In People",
+      "artist": "Broken Social Scene",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7EyVbyQS66aaH2LwhN0gpl"
+      ],
+      "first_played": "2026-04-25T22:19:50.939Z",
+      "last_played": "2026-04-25T22:19:50.939Z"
     }
   },
   "completed_albums": {
