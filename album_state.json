@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-26T16:16:11.840Z",
+  "last_checked": "2026-04-26T17:51:02.352Z",
   "albums_in_progress": {
     "1NS7Bf9O24tmMAu2wqDaVy": {
       "album_name": "A Walk Across the Rooftops",
@@ -355,7 +355,7 @@
         "6q28LN1KJpsYqG5jNFy6rX"
       ],
       "first_played": "2026-04-25T22:06:38.269Z",
-      "last_played": "2026-04-25T22:06:38.269Z"
+      "last_played": "2026-04-26T17:20:41.579Z"
     },
     "6nL0U84JsEJ0cRsGCnsDnJ": {
       "album_name": "You Forgot It In People",
@@ -367,15 +367,95 @@
       "first_played": "2026-04-25T22:19:50.939Z",
       "last_played": "2026-04-25T22:19:50.939Z"
     },
-    "5ieP11rJQvuYz0Ov3k03cy": {
-      "album_name": "Sea Change",
-      "artist": "Beck",
+    "5mwOo1zikswhmfHvtqVSXg": {
+      "album_name": "Pink Moon",
+      "artist": "Nick Drake",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4KROoGIaPaR1pBHPnR3bwC"
+      ],
+      "first_played": "2026-04-26T17:11:56.677Z",
+      "last_played": "2026-04-26T17:11:56.677Z"
+    },
+    "6qkzBXQvWjnyNCRDQRPpJ4": {
+      "album_name": "Dream River",
+      "artist": "Bill Callahan",
+      "total_tracks": 8,
+      "played_tracks": [
+        "1LhsGxrAQUV279TdvRl8lS"
+      ],
+      "first_played": "2026-04-26T17:17:55.032Z",
+      "last_played": "2026-04-26T17:17:55.032Z"
+    },
+    "6PtEmK9iNNZVuwYCFePLd4": {
+      "album_name": "Mighty Joe Moon",
+      "artist": "Grant Lee Buffalo",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5x19KF85NUG8HvzvKG0HNk"
+      ],
+      "first_played": "2026-04-26T17:26:38.660Z",
+      "last_played": "2026-04-26T17:26:38.660Z"
+    },
+    "0hBWhJEmVyNPG2Jq71CJXz": {
+      "album_name": "Stories From The City, Stories From The Sea",
+      "artist": "PJ Harvey",
       "total_tracks": 12,
       "played_tracks": [
-        "1bGas968flWbyqIdVqlHt4"
+        "4m5S4wvLY031rN6beIWoRe"
       ],
-      "first_played": "2026-04-26T16:16:11.840Z",
-      "last_played": "2026-04-26T16:16:11.840Z"
+      "first_played": "2026-04-26T17:28:40.285Z",
+      "last_played": "2026-04-26T17:28:40.285Z"
+    },
+    "2Qx7dgA5VjX8JDQaXVxzHu": {
+      "album_name": "Morning Phase",
+      "artist": "Beck",
+      "total_tracks": 13,
+      "played_tracks": [
+        "65tH2GPMFCt8JtM2PM3MiX"
+      ],
+      "first_played": "2026-04-26T17:34:01.758Z",
+      "last_played": "2026-04-26T17:34:01.758Z"
+    },
+    "5B1N06YAAIEJmGmz3GpFpH": {
+      "album_name": "Shame",
+      "artist": "Brad",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2R3Ugx6j3UeDUqWZCjblqP"
+      ],
+      "first_played": "2026-04-26T17:40:48.449Z",
+      "last_played": "2026-04-26T17:40:48.449Z"
+    },
+    "13VVtuvboNAaPFcKsQsjLP": {
+      "album_name": "Apocalypse",
+      "artist": "Bill Callahan",
+      "total_tracks": 7,
+      "played_tracks": [
+        "6qo9HElLHUptcwpVprsS4C"
+      ],
+      "first_played": "2026-04-26T17:44:20.239Z",
+      "last_played": "2026-04-26T17:44:20.239Z"
+    },
+    "5mzoI3VH0ZWk1pLFR6RoYy": {
+      "album_name": "Hail To the Thief",
+      "artist": "Radiohead",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5h4y42RUKwYKYWgutNwvKP"
+      ],
+      "first_played": "2026-04-26T17:49:46.015Z",
+      "last_played": "2026-04-26T17:49:46.015Z"
+    },
+    "68P7oIUK327pt5tDIZJd63": {
+      "album_name": "Think Tank (Special Edition)",
+      "artist": "Blur",
+      "total_tracks": 27,
+      "played_tracks": [
+        "79PrPZu9zWyc1qwUwXchVl"
+      ],
+      "first_played": "2026-04-26T17:51:02.352Z",
+      "last_played": "2026-04-26T17:51:02.352Z"
     }
   },
   "completed_albums": {
@@ -20872,7 +20952,9 @@
         "breakup"
       ],
       "image_url": "https://coverartarchive.org/release/ed7becaa-6e0b-4920-aeae-605b5c9fad64/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-26T17:03:59.075Z"
+      ],
       "source": "musicbrainz"
     },
     "Beck - Morning Phase": {
@@ -405659,6 +405741,7 @@
     }
   },
   "most_recently_listened": [
+    "Beck - Sea Change",
     "Magdalena Bay - Imaginal Disk",
     "Dorian Electra - Flamboyant",
     "Pusha T - DAYTONA",
@@ -405667,7 +405750,6 @@
     "Charli xcx - BRAT",
     "Pixies - Doolittle",
     "Joy Division - Unknown Pleasures",
-    "Jimi Hendrix - Electric Ladyland",
-    "Sky Ferreira - Night Time, My Time"
+    "Jimi Hendrix - Electric Ladyland"
   ]
 }
