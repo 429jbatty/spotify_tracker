@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-25T22:19:50.939Z",
+  "last_checked": "2026-04-26T16:16:11.840Z",
   "albums_in_progress": {
     "1NS7Bf9O24tmMAu2wqDaVy": {
       "album_name": "A Walk Across the Rooftops",
@@ -366,6 +366,16 @@
       ],
       "first_played": "2026-04-25T22:19:50.939Z",
       "last_played": "2026-04-25T22:19:50.939Z"
+    },
+    "5ieP11rJQvuYz0Ov3k03cy": {
+      "album_name": "Sea Change",
+      "artist": "Beck",
+      "total_tracks": 12,
+      "played_tracks": [
+        "1bGas968flWbyqIdVqlHt4"
+      ],
+      "first_played": "2026-04-26T16:16:11.840Z",
+      "last_played": "2026-04-26T16:16:11.840Z"
     }
   },
   "completed_albums": {
