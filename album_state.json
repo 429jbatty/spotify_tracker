@@ -1,18 +1,6 @@
 {
-  "last_checked": "2026-04-26T17:51:02.352Z",
+  "last_checked": "2026-04-27T16:32:46.710Z",
   "albums_in_progress": {
-    "1NS7Bf9O24tmMAu2wqDaVy": {
-      "album_name": "A Walk Across the Rooftops",
-      "artist": "The Blue Nile",
-      "total_tracks": 7,
-      "played_tracks": [
-        "6izoarAOmLMwRnoaIv79Nn",
-        "31lJXgZxFqcqi6FCKb4wWl",
-        "4KyMLroW5nS0j1fywUg9Zn"
-      ],
-      "first_played": "2026-04-25T14:56:27.699Z",
-      "last_played": "2026-04-25T16:29:03.584Z"
-    },
     "6Rv8V4QeLgfEC01czqJsiI": {
       "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
       "artist": "SOPHIE",
@@ -456,6 +444,38 @@
       ],
       "first_played": "2026-04-26T17:51:02.352Z",
       "last_played": "2026-04-26T17:51:02.352Z"
+    },
+    "0qWcLfCZ8wtcoOdX14oGNI": {
+      "album_name": "Stranger in the Alps",
+      "artist": "Phoebe Bridgers",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5w52BJAqGkV1ewaCVLmjhi"
+      ],
+      "first_played": "2026-04-27T16:12:35.884Z",
+      "last_played": "2026-04-27T16:12:35.884Z"
+    },
+    "7ndirwTVASzvPDffHarAxg": {
+      "album_name": "a-sides and besides",
+      "artist": "Adrianne Lenker, Buck Meek",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1EUYnTI3P1DzoeccZ0IHdD"
+      ],
+      "first_played": "2026-04-27T16:15:36.838Z",
+      "last_played": "2026-04-27T16:15:36.838Z"
+    },
+    "0e9GjrztzBw8oMC6n2CDeI": {
+      "album_name": "the record",
+      "artist": "boygenius",
+      "total_tracks": 12,
+      "played_tracks": [
+        "693xmBAOD4xwkS4W71W1Jn",
+        "12EkF8uGofptstVIX7Oc0C",
+        "38xXr3MkiKNzNDv4JDJagF"
+      ],
+      "first_played": "2026-04-27T16:27:47.649Z",
+      "last_played": "2026-04-27T16:32:46.710Z"
     }
   },
   "completed_albums": {
@@ -4391,7 +4411,9 @@
         "contemporary folk"
       ],
       "image_url": "https://coverartarchive.org/release/46b96d25-e893-4bac-a2b2-379a32f591b3/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-27T16:07:35.768Z"
+      ],
       "source": "musicbrainz"
     },
     "Aerosmith - Aerosmith": {
@@ -405741,6 +405763,7 @@
     }
   },
   "most_recently_listened": [
+    "Adrianne Lenker - songs",
     "Beck - Sea Change",
     "Magdalena Bay - Imaginal Disk",
     "Dorian Electra - Flamboyant",
@@ -405749,7 +405772,6 @@
     "Solange - A Seat at the Table",
     "Charli xcx - BRAT",
     "Pixies - Doolittle",
-    "Joy Division - Unknown Pleasures",
-    "Jimi Hendrix - Electric Ladyland"
+    "Joy Division - Unknown Pleasures"
   ]
 }
