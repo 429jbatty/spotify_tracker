@@ -1,31 +1,6 @@
 {
-  "last_checked": "2026-04-27T17:20:43.614Z",
+  "last_checked": "2026-04-27T19:07:01.990Z",
   "albums_in_progress": {
-    "6Rv8V4QeLgfEC01czqJsiI": {
-      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
-      "artist": "SOPHIE",
-      "total_tracks": 9,
-      "played_tracks": [
-        "59PYsHSyznHHH9gujZvO5Y",
-        "5djCX0bDd96N89Ayv5Y8Y2",
-        "7ub14NqqyR1MDUTXyFBTzO",
-        "3UYjzTbFu1qJjxkgktKXJC"
-      ],
-      "first_played": "2026-04-25T17:04:55.734Z",
-      "last_played": "2026-04-25T20:23:37.841Z"
-    },
-    "0rYXZCRBEsRBc4ZyRo8Y6w": {
-      "album_name": "RINA",
-      "artist": "Rina Sawayama",
-      "total_tracks": 8,
-      "played_tracks": [
-        "7I9bSsqqIA0cV1nL0igGLm",
-        "0Z0y8PeCB2f9w3m9Hi6vPD",
-        "56YbKSljGEtc3kYD53PsKZ"
-      ],
-      "first_played": "2026-04-25T17:11:14.455Z",
-      "last_played": "2026-04-25T20:02:36.163Z"
-    },
     "0L53GIjCJxQXYeI3us0rgH": {
       "album_name": "My Agenda",
       "artist": "Dorian Electra",
@@ -42,31 +17,6 @@
       ],
       "first_played": "2026-04-25T17:14:22.733Z",
       "last_played": "2026-04-25T20:50:20.407Z"
-    },
-    "386IqvSuljaZsMjwDGGdLj": {
-      "album_name": "Charli",
-      "artist": "Charli xcx",
-      "total_tracks": 15,
-      "played_tracks": [
-        "15IgHEkeO9gSqrKilaEh8b",
-        "1yUJK3qxPiFiPeAG2gLfuW",
-        "2T4SAwloHxRAtpD2hgykdA"
-      ],
-      "first_played": "2026-04-25T17:37:05.783Z",
-      "last_played": "2026-04-25T18:58:28.296Z"
-    },
-    "3h1wgea55XrtVoxrkRYDBn": {
-      "album_name": "Reflections",
-      "artist": "Hannah Diamond",
-      "total_tracks": 10,
-      "played_tracks": [
-        "4FC0VE8aoYj6s1vrLj367k",
-        "1S9DVvfdJAaGaF9pIbEa35",
-        "33om1peLEWLBZimmmjpfxH",
-        "5bLCHyNpSOzUICQnpEhP9t"
-      ],
-      "first_played": "2026-04-25T17:45:22.302Z",
-      "last_played": "2026-04-25T19:41:51.302Z"
     },
     "3stadz88XVpHcXnVYMHc4J": {
       "album_name": "SAWAYAMA",
@@ -110,77 +60,6 @@
       "first_played": "2026-04-25T18:24:15.280Z",
       "last_played": "2026-04-25T20:55:40.528Z"
     },
-    "2XS5McKf3zdJWpcZ4OkZPZ": {
-      "album_name": "10,000 gecs",
-      "artist": "100 gecs",
-      "total_tracks": 10,
-      "played_tracks": [
-        "39Pudjd7JS8NosYN24m7Hc"
-      ],
-      "first_played": "2026-04-25T18:45:46.210Z",
-      "last_played": "2026-04-25T18:45:46.210Z"
-    },
-    "0hRCrpv98LWp86pYFGg1G9": {
-      "album_name": "Unlimited Ammo: Infinity (Remix)",
-      "artist": "Namasenda",
-      "total_tracks": 20,
-      "played_tracks": [
-        "2Dnd6d6qETLUJqNln7NpzO"
-      ],
-      "first_played": "2026-04-25T18:54:02.415Z",
-      "last_played": "2026-04-25T18:54:02.415Z"
-    },
-    "5YjuPPmMZy5VGjlesAPbHG": {
-      "album_name": "Let's Hope Heteros Fail, Learn and Retire",
-      "artist": "Alice Longyu Gao",
-      "total_tracks": 8,
-      "played_tracks": [
-        "09DGovANkw9vormaIc652y"
-      ],
-      "first_played": "2026-04-25T19:10:03.188Z",
-      "last_played": "2026-04-25T19:10:03.188Z"
-    },
-    "0qnExDZfz0kVeBjixPsyjS": {
-      "album_name": "1000 gecs and The Tree of Clues",
-      "artist": "100 gecs",
-      "total_tracks": 19,
-      "played_tracks": [
-        "4u2jCma9zHR59lfKxBIOoy",
-        "4FeBA1bxkUae1aDsplsmrv"
-      ],
-      "first_played": "2026-04-25T19:24:12.212Z",
-      "last_played": "2026-04-25T19:59:20.855Z"
-    },
-    "4TgXvHJWXGk0BlBvfs13Qg": {
-      "album_name": "I'm All Ears",
-      "artist": "Let's Eat Grandma",
-      "total_tracks": 11,
-      "played_tracks": [
-        "59rdoga3q8OVCR5WnSGVM8"
-      ],
-      "first_played": "2026-04-25T19:35:01.889Z",
-      "last_played": "2026-04-25T19:35:01.889Z"
-    },
-    "0zCnrYtySmh8HZlPvCb67w": {
-      "album_name": "Pop",
-      "artist": "Cali Cartier",
-      "total_tracks": 9,
-      "played_tracks": [
-        "1o6AYqvPttsbraSOjzDSpx"
-      ],
-      "first_played": "2026-04-25T19:47:25.620Z",
-      "last_played": "2026-04-25T19:47:25.620Z"
-    },
-    "6HodZ9bCtPbrWSqMlIEuvK": {
-      "album_name": "DISCO4 :: PART I",
-      "artist": "HEALTH",
-      "total_tracks": 12,
-      "played_tracks": [
-        "2uhMO2asSGhkTvOykBy7HB"
-      ],
-      "first_played": "2026-04-25T19:50:27.384Z",
-      "last_played": "2026-04-25T19:50:27.384Z"
-    },
     "0JB2T1lOZ03obXXun0CLzY": {
       "album_name": "PRODUCT",
       "artist": "SOPHIE",
@@ -191,36 +70,6 @@
       ],
       "first_played": "2026-04-25T20:06:18.482Z",
       "last_played": "2026-04-25T20:44:35.391Z"
-    },
-    "08pGwlQDFQYZg1gX0ZYOKq": {
-      "album_name": "I'm Your Empress Of",
-      "artist": "Empress Of",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1plMJh3KzL9iza1xBtGfG9"
-      ],
-      "first_played": "2026-04-25T20:08:29.552Z",
-      "last_played": "2026-04-25T20:08:29.552Z"
-    },
-    "1qSS0T6Ffrb3rFVpizzOuk": {
-      "album_name": "U",
-      "artist": "underscores",
-      "total_tracks": 9,
-      "played_tracks": [
-        "1D84CoKziCbQw6NWVxorq4"
-      ],
-      "first_played": "2026-04-25T20:13:35.656Z",
-      "last_played": "2026-04-25T20:13:35.656Z"
-    },
-    "3OevODyllQCrhudfLLnV3y": {
-      "album_name": "Dawn Of Chromatica",
-      "artist": "Lady Gaga",
-      "total_tracks": 14,
-      "played_tracks": [
-        "6l6XdpIyh6RJ4gmdqoz0D6"
-      ],
-      "first_played": "2026-04-25T20:27:27.155Z",
-      "last_played": "2026-04-25T20:27:27.155Z"
     },
     "0mQPq9INcTC48siErksOrl": {
       "album_name": "Wallsocket",
@@ -392,23 +241,15 @@
       "first_played": "2026-04-27T16:15:36.838Z",
       "last_played": "2026-04-27T16:15:36.838Z"
     },
-    "0e9GjrztzBw8oMC6n2CDeI": {
-      "album_name": "the record",
-      "artist": "boygenius",
-      "total_tracks": 12,
+    "6Pp6qGEywDdofgFC1oFbSH": {
+      "album_name": "Punisher",
+      "artist": "Phoebe Bridgers",
+      "total_tracks": 11,
       "played_tracks": [
-        "693xmBAOD4xwkS4W71W1Jn",
-        "12EkF8uGofptstVIX7Oc0C",
-        "38xXr3MkiKNzNDv4JDJagF",
-        "48Qes8IUekSZpcNDQgYzUX",
-        "5PJH1U5Iie893v48Fl9yaC",
-        "09DR0sHnQUhHOiSNttc1mv",
-        "0FUGzUqkqRktGBvIeM3p2X",
-        "3wdrHVkaD700qA8P3OjmYR",
-        "4QEsxFZRA3RnjQAPYS3UXa"
+        "5LJ4ig9cMvjui3li1mrNRl"
       ],
-      "first_played": "2026-04-27T16:27:47.649Z",
-      "last_played": "2026-04-27T17:20:43.614Z"
+      "first_played": "2026-04-27T19:03:02.011Z",
+      "last_played": "2026-04-27T19:03:02.011Z"
     }
   },
   "completed_albums": {
@@ -405693,9 +405534,1382 @@
       "listen_history": [
         "2026-04-25T21:55:58.637Z"
       ]
+    },
+    "boygenius - the record": {
+      "artist": "boygenius",
+      "artist_mbid": "3ceeddbd-fba5-4bdb-99f7-2d028ed5afda",
+      "name": "the record",
+      "release_group_mbid": "1339f18d-220a-4405-8ae9-e52993b1ef70",
+      "release_mbid": "a8084248-af0b-4df8-84ca-e09e2a2000f2",
+      "label": "Interscope Records",
+      "release_year": 2023,
+      "release_month": 3,
+      "release_day": 31,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Without You Without Them",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "d3dd4141-de61-437e-abc8-0ed1146f3a5f"
+        },
+        {
+          "position": "2",
+          "title": "$20",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "boygenius",
+              "phonographic copyright",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Phoebe Bridgers",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Lucy Dacus",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "237916ca-4161-4e26-9653-28cda6414a49"
+        },
+        {
+          "position": "3",
+          "title": "Emily I\u2019m Sorry",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "boygenius",
+              "phonographic copyright",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Phoebe Bridgers",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Lucy Dacus",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "a2c4532b-2a92-45c5-8f95-b22de3c42228"
+        },
+        {
+          "position": "4",
+          "title": "True Blue",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "boygenius",
+              "phonographic copyright",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Phoebe Bridgers",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Lucy Dacus",
+              "vocal",
+              "lead vocals"
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "ad1ab896-3f7e-4983-9365-6ea9ff877a0e"
+        },
+        {
+          "position": "5",
+          "title": "Cool About It",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "4fa03056-e117-462a-8948-39f338800390"
+        },
+        {
+          "position": "6",
+          "title": "Not Strong Enough",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "58389d98-bfc9-4956-9dc2-4a692525958b"
+        },
+        {
+          "position": "7",
+          "title": "Revolution 0",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "2a37a5cf-9185-4a62-b924-e5786ddf7e21"
+        },
+        {
+          "position": "8",
+          "title": "Leonard Cohen",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Leonard Cohen",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ],
+            [
+              "HoJun Yu",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a73227db-6d28-4d19-b23c-30e6c69b0ee4"
+        },
+        {
+          "position": "9",
+          "title": "Satanist",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "026fc3b4-22e3-465f-8f4b-44a6a4abd3d0"
+        },
+        {
+          "position": "10",
+          "title": "We\u2019re in Love",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "9381bf67-88f7-420a-8371-3a50a45cdc48"
+        },
+        {
+          "position": "11",
+          "title": "Anti\u2010Curse",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "9627016d-a0f0-46aa-8122-c4d72b31ec45"
+        },
+        {
+          "position": "12",
+          "title": "Letter to an Old Poet",
+          "credits": [
+            [
+              "Owen Lantz",
+              "engineer",
+              ""
+            ],
+            [
+              "Will Maclellan",
+              "engineer",
+              ""
+            ],
+            [
+              "Catherine Marks",
+              "engineer",
+              ""
+            ],
+            [
+              "Bobby Mota",
+              "engineer",
+              ""
+            ],
+            [
+              "Kaushlesh \u201cGarry\u201d Purohit",
+              "engineer",
+              ""
+            ],
+            [
+              "Sarah Tudzin",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Mogis",
+              "mix",
+              ""
+            ],
+            [
+              "Tony Berg",
+              "producer",
+              "additional"
+            ],
+            [
+              "boygenius",
+              "producer",
+              ""
+            ],
+            [
+              "Melina Duterte",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ethan Gruska",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "producer",
+              "co"
+            ],
+            [
+              "Sarah Tudzin",
+              "producer",
+              "additional"
+            ],
+            [
+              "Catherine Marks",
+              "recording",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work composer",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work composer",
+              ""
+            ],
+            [
+              "Julien Baker",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Phoebe Bridgers",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Lucy Dacus",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "08e624bc-1bb0-4f62-961b-11ea01aa3066"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "1\u20134 wochen",
+        "folk",
+        "indie folk",
+        "indie rock",
+        "offizielle charts",
+        "singer-songwriter",
+        "vyrzukhisuc-album"
+      ],
+      "image_url": "https://coverartarchive.org/release/a8084248-af0b-4df8-84ca-e09e2a2000f2/35274612858-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-27T19:00:02.402Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "boygenius - the record",
     "Adrianne Lenker - songs",
     "Beck - Sea Change",
     "Magdalena Bay - Imaginal Disk",
@@ -405704,7 +406918,6 @@
     "Nas - Illmatic",
     "Solange - A Seat at the Table",
     "Charli xcx - BRAT",
-    "Pixies - Doolittle",
-    "Joy Division - Unknown Pleasures"
+    "Pixies - Doolittle"
   ]
 }
