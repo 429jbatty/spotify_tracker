@@ -1,116 +1,6 @@
 {
   "last_checked": "2026-04-27T19:07:01.990Z",
   "albums_in_progress": {
-    "0L53GIjCJxQXYeI3us0rgH": {
-      "album_name": "My Agenda",
-      "artist": "Dorian Electra",
-      "total_tracks": 11,
-      "played_tracks": [
-        "42Lx4iunLk0Vxkpw2OQfsE",
-        "2eqJwRnJ63ufvVS7salI03",
-        "0CwVW7kDEq7rG34HIMCds0",
-        "1KIYFOA09YNTjzLSvDz8NC",
-        "0HO7edOcs0Ls9pVJ4n4AQ2",
-        "6OHw7nogOSmTGnRpEiqkhb",
-        "0zRJLA25QhP1mzcr3tZdZ0",
-        "72vmEODDrpQ5wEUhLbiYgI"
-      ],
-      "first_played": "2026-04-25T17:14:22.733Z",
-      "last_played": "2026-04-25T20:50:20.407Z"
-    },
-    "3stadz88XVpHcXnVYMHc4J": {
-      "album_name": "SAWAYAMA",
-      "artist": "Rina Sawayama",
-      "total_tracks": 13,
-      "played_tracks": [
-        "28MOE4pVk5uN3wBDGBacET",
-        "1TWNKyNQOBfNUkWWs7FooF",
-        "0HKr9aqzHBsVNnsUCdH4bw",
-        "32umfTzGdXsWOTNaRGR5hd",
-        "6c3qhnJnDalbbgC7CAijbn"
-      ],
-      "first_played": "2026-04-25T17:53:55.057Z",
-      "last_played": "2026-04-25T20:48:06.688Z"
-    },
-    "6HjuqzWf3UlJoaU7iqDRIv": {
-      "album_name": "Fanfare",
-      "artist": "Dorian Electra",
-      "total_tracks": 13,
-      "played_tracks": [
-        "3x3kYVMHdqwConilMGjZzi",
-        "2F6cCKQn0vC0NUc47kBgzT",
-        "2G6tzFH6856w3mihEUpK6O",
-        "34KQ2ulA3YlNxPuUhJUcUy"
-      ],
-      "first_played": "2026-04-25T18:18:30.416Z",
-      "last_played": "2026-04-25T20:30:31.113Z"
-    },
-    "2uhB1KivbFnlkARpbd0Cvu": {
-      "album_name": "1000 gecs",
-      "artist": "100 gecs",
-      "total_tracks": 10,
-      "played_tracks": [
-        "7CUkeiG7QtB7tPU9f8SANS",
-        "3VHiIVQe8Sc6gtSsTp3pDz",
-        "61bwFjzXGG1x2aZsANdLyl",
-        "2MLuFz9Y3Vg3PF0Yf93M5c",
-        "2fwz9mBaELJCzXuEEEe35Y",
-        "23Dapn8107GgxvXDIsPwWm"
-      ],
-      "first_played": "2026-04-25T18:24:15.280Z",
-      "last_played": "2026-04-25T20:55:40.528Z"
-    },
-    "0JB2T1lOZ03obXXun0CLzY": {
-      "album_name": "PRODUCT",
-      "artist": "SOPHIE",
-      "total_tracks": 11,
-      "played_tracks": [
-        "2SCyDaDxOEmqgEvak5Yt0N",
-        "4dLgqMwWUiM1FzyedzhU2u"
-      ],
-      "first_played": "2026-04-25T20:06:18.482Z",
-      "last_played": "2026-04-25T20:44:35.391Z"
-    },
-    "0mQPq9INcTC48siErksOrl": {
-      "album_name": "Wallsocket",
-      "artist": "underscores",
-      "total_tracks": 12,
-      "played_tracks": [
-        "42FM6tM3n06euZCvpJn3dn"
-      ],
-      "first_played": "2026-04-25T20:34:46.852Z",
-      "last_played": "2026-04-25T20:34:46.852Z"
-    },
-    "5HZHvhX5TpJJD6hTgn0j0D": {
-      "album_name": "Serotonin II",
-      "artist": "yeule",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1wl53ydLl7vh2t7bFMZ5dn"
-      ],
-      "first_played": "2026-04-25T20:41:50.153Z",
-      "last_played": "2026-04-25T20:41:50.153Z"
-    },
-    "3JBuWWY8OCHXMcQz5xxxCr": {
-      "album_name": "food house",
-      "artist": "food house, Gupi, Fraxiom",
-      "total_tracks": 11,
-      "played_tracks": [
-        "6nEDYdxD1YEWnXdbWxT6U8"
-      ],
-      "first_played": "2026-04-25T21:02:11.827Z",
-      "last_played": "2026-04-25T21:02:11.827Z"
-    },
-    "3o1TOhMkU5FFMSJMDhXfdF": {
-      "album_name": "EUSEXUA",
-      "artist": "FKA twigs",
-      "total_tracks": 11,
-      "played_tracks": [
-        "6TeKbncyK62smlAvPy1dNa"
-      ],
-      "first_played": "2026-04-25T22:00:22.530Z",
-      "last_played": "2026-04-25T22:00:22.530Z"
-    },
     "3e9VtbXnl6tqrFKrnNyxaI": {
       "album_name": "If You're Feeling Sinister",
       "artist": "Belle and Sebastian",
@@ -120,16 +10,6 @@
       ],
       "first_played": "2026-04-25T22:06:38.269Z",
       "last_played": "2026-04-26T17:20:41.579Z"
-    },
-    "6nL0U84JsEJ0cRsGCnsDnJ": {
-      "album_name": "You Forgot It In People",
-      "artist": "Broken Social Scene",
-      "total_tracks": 13,
-      "played_tracks": [
-        "7EyVbyQS66aaH2LwhN0gpl"
-      ],
-      "first_played": "2026-04-25T22:19:50.939Z",
-      "last_played": "2026-04-25T22:19:50.939Z"
     },
     "5mwOo1zikswhmfHvtqVSXg": {
       "album_name": "Pink Moon",
