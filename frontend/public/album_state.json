@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-27T16:32:46.710Z",
+  "last_checked": "2026-04-27T17:20:43.614Z",
   "albums_in_progress": {
     "6Rv8V4QeLgfEC01czqJsiI": {
       "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
@@ -13,16 +13,6 @@
       ],
       "first_played": "2026-04-25T17:04:55.734Z",
       "last_played": "2026-04-25T20:23:37.841Z"
-    },
-    "22PkV1Le9P3X4RY4xtmK0q": {
-      "album_name": "Desire, I Want To Turn Into You",
-      "artist": "Caroline Polachek",
-      "total_tracks": 12,
-      "played_tracks": [
-        "40tRJ8bMkIkXh8vhHKQsoX"
-      ],
-      "first_played": "2026-04-25T17:07:32.915Z",
-      "last_played": "2026-04-25T17:07:32.915Z"
     },
     "0rYXZCRBEsRBc4ZyRo8Y6w": {
       "album_name": "RINA",
@@ -53,39 +43,6 @@
       "first_played": "2026-04-25T17:14:22.733Z",
       "last_played": "2026-04-25T20:50:20.407Z"
     },
-    "3a9qH2VEsSiOZvMrjaS0Nu": {
-      "album_name": "how i'm feeling now",
-      "artist": "Charli xcx",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5GsJIVCBFjhCcUwJaTW2sB"
-      ],
-      "first_played": "2026-04-25T17:18:25.722Z",
-      "last_played": "2026-04-25T17:18:25.722Z"
-    },
-    "4ClyeVlAKJJViIyfVW0yQD": {
-      "album_name": "Pang",
-      "artist": "Caroline Polachek",
-      "total_tracks": 14,
-      "played_tracks": [
-        "2wcrQZ7ZJolYEfIaPP9yL4",
-        "5YIVVzQcJG7pFhyNo0Ytlh",
-        "4RqBss578GNj4u9VYZK5u0",
-        "5bcJwBywjaz78KTf374PCb"
-      ],
-      "first_played": "2026-04-25T17:28:40.888Z",
-      "last_played": "2026-04-25T18:32:25.526Z"
-    },
-    "5ZpSRd3GwvEGrD7kWn0fHz": {
-      "album_name": "Saves The World",
-      "artist": "MUNA",
-      "total_tracks": 12,
-      "played_tracks": [
-        "69WAiCaEdxACKzB4B7Bv27"
-      ],
-      "first_played": "2026-04-25T17:32:11.749Z",
-      "last_played": "2026-04-25T17:32:11.749Z"
-    },
     "386IqvSuljaZsMjwDGGdLj": {
       "album_name": "Charli",
       "artist": "Charli xcx",
@@ -97,16 +54,6 @@
       ],
       "first_played": "2026-04-25T17:37:05.783Z",
       "last_played": "2026-04-25T18:58:28.296Z"
-    },
-    "3DMR3yM5crnt1dG9lLaMTZ": {
-      "album_name": "MAGDALENE",
-      "artist": "FKA twigs",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2uZkWDubNphtNJxUbvCLd7"
-      ],
-      "first_played": "2026-04-25T17:41:04.734Z",
-      "last_played": "2026-04-25T17:41:04.734Z"
     },
     "3h1wgea55XrtVoxrkRYDBn": {
       "album_name": "Reflections",
@@ -135,16 +82,6 @@
       "first_played": "2026-04-25T17:53:55.057Z",
       "last_played": "2026-04-25T20:48:06.688Z"
     },
-    "6jBRjtrgSlOvQvrSdtQa8Q": {
-      "album_name": "Glitch Princess",
-      "artist": "yeule",
-      "total_tracks": 13,
-      "played_tracks": [
-        "3c8QXE2NQBVrtMSTXAofor"
-      ],
-      "first_played": "2026-04-25T18:05:53.985Z",
-      "last_played": "2026-04-25T18:05:53.985Z"
-    },
     "6HjuqzWf3UlJoaU7iqDRIv": {
       "album_name": "Fanfare",
       "artist": "Dorian Electra",
@@ -157,16 +94,6 @@
       ],
       "first_played": "2026-04-25T18:18:30.416Z",
       "last_played": "2026-04-25T20:30:31.113Z"
-    },
-    "2HIwUmdxEl7SeWa1ndH5wC": {
-      "album_name": "Pop 2",
-      "artist": "Charli xcx",
-      "total_tracks": 10,
-      "played_tracks": [
-        "1qZuf7zgRHKgfSijGm2CTy"
-      ],
-      "first_played": "2026-04-25T18:22:08.559Z",
-      "last_played": "2026-04-25T18:22:08.559Z"
     },
     "2uhB1KivbFnlkARpbd0Cvu": {
       "album_name": "1000 gecs",
@@ -472,10 +399,16 @@
       "played_tracks": [
         "693xmBAOD4xwkS4W71W1Jn",
         "12EkF8uGofptstVIX7Oc0C",
-        "38xXr3MkiKNzNDv4JDJagF"
+        "38xXr3MkiKNzNDv4JDJagF",
+        "48Qes8IUekSZpcNDQgYzUX",
+        "5PJH1U5Iie893v48Fl9yaC",
+        "09DR0sHnQUhHOiSNttc1mv",
+        "0FUGzUqkqRktGBvIeM3p2X",
+        "3wdrHVkaD700qA8P3OjmYR",
+        "4QEsxFZRA3RnjQAPYS3UXa"
       ],
       "first_played": "2026-04-27T16:27:47.649Z",
-      "last_played": "2026-04-27T16:32:46.710Z"
+      "last_played": "2026-04-27T17:20:43.614Z"
     }
   },
   "completed_albums": {
