@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-28T20:26:04.966Z",
+  "last_checked": "2026-04-28T22:23:40.054Z",
   "albums_in_progress": {
     "0qWcLfCZ8wtcoOdX14oGNI": {
       "album_name": "Stranger in the Alps",
@@ -40,23 +40,6 @@
       ],
       "first_played": "2026-04-28T13:36:36.695Z",
       "last_played": "2026-04-28T13:36:36.695Z"
-    },
-    "02R7PREL8nCr02CEYLy7YH": {
-      "album_name": "Big Time",
-      "artist": "Angel Olsen",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6Tv21RLLA1Dt6OtPNz8QDq",
-        "1K2Hql13Y6fcOSy2Y15qNm",
-        "3zDaLyYb29tEke9Az3OELT",
-        "512vqW0xDLcWjWD2tc46xd",
-        "2QsYvAsiySw9Ax6bkOeJLK",
-        "6R7HXdGChalsGEvAI4iSu0",
-        "0CyOHVfeXbbECyooiRTQ4G",
-        "5qbHBepTowbMldhK8RVhTl"
-      ],
-      "first_played": "2026-04-28T19:53:04.903Z",
-      "last_played": "2026-04-28T20:26:04.966Z"
     }
   },
   "completed_albums": {
@@ -69839,7 +69822,9 @@
         "indie rock"
       ],
       "image_url": "https://coverartarchive.org/release/d0c76416-2421-43ec-8471-ca2b341b75d7/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-04-28T22:23:40.054Z"
+      ],
       "source": "musicbrainz"
     },
     "Courtney Barnett - Things Take Time, Take Time": {
@@ -406713,9 +406698,112 @@
       "listen_history": [
         "2026-04-27T19:00:02.402Z"
       ]
+    },
+    "Angel Olsen - Big Time": {
+      "artist": "Angel Olsen",
+      "artist_mbid": "185527bf-c293-4c24-8213-ed98fb8976be",
+      "name": "Big Time",
+      "release_group_mbid": "c66ca7b3-aad2-41e9-9826-b2675fe21545",
+      "release_mbid": "7dc2ce2a-1f20-4090-905c-11c60ab3e19b",
+      "label": "Jagjaguwar",
+      "release_year": 2022,
+      "release_month": 6,
+      "release_day": 3,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "All the Good Times",
+          "credits": [
+            [
+              "Angel Olsen",
+              "work composer",
+              ""
+            ],
+            [
+              "Angel Olsen",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "344c0781-07bf-4312-9977-eac5358d9cde"
+        },
+        {
+          "position": "2",
+          "title": "Big Time",
+          "credits": {},
+          "recording_mbid": "8d1179a2-f6b9-4b93-bb93-68c7a9ceb267"
+        },
+        {
+          "position": "3",
+          "title": "Dream Thing",
+          "credits": {},
+          "recording_mbid": "29db7379-7236-4446-a9e0-a74e0f29804a"
+        },
+        {
+          "position": "4",
+          "title": "Ghost On",
+          "credits": {},
+          "recording_mbid": "85ba5229-7075-41bf-bc4f-7e4876acdea4"
+        },
+        {
+          "position": "5",
+          "title": "All the Flowers",
+          "credits": {},
+          "recording_mbid": "510073ef-edfc-4222-8d60-2584b89d1764"
+        },
+        {
+          "position": "6",
+          "title": "Right Now",
+          "credits": {},
+          "recording_mbid": "5d5455b9-66e9-43ab-9528-5f1d8080db42"
+        },
+        {
+          "position": "7",
+          "title": "This Is How It Works",
+          "credits": {},
+          "recording_mbid": "da13d854-5906-4696-adca-2350bd16a3d9"
+        },
+        {
+          "position": "8",
+          "title": "Go Home",
+          "credits": {},
+          "recording_mbid": "ee75b788-b2e1-4ae8-8879-107b3bd47687"
+        },
+        {
+          "position": "9",
+          "title": "Through the Fires",
+          "credits": {},
+          "recording_mbid": "b5f375eb-63f9-4419-91b0-3f836c067a7e"
+        },
+        {
+          "position": "10",
+          "title": "Chasing the Sun",
+          "credits": {},
+          "recording_mbid": "486d42e6-de86-4e71-92cf-fb211d9ae645"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "1\u20134 wochen",
+        "english",
+        "indie rock",
+        "laut.de",
+        "offizielle charts",
+        "ph_temp_checken",
+        "plattentests.de",
+        "rock",
+        "vyrzukhisuc-album"
+      ],
+      "image_url": "https://coverartarchive.org/release/7dc2ce2a-1f20-4090-905c-11c60ab3e19b/33684082398-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-04-28T21:01:04.977Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Courtney Barnett - Tell Me How You Really Feel",
+    "Angel Olsen - Big Time",
     "boygenius - the record",
     "Adrianne Lenker - songs",
     "Beck - Sea Change",
@@ -406723,8 +406811,6 @@
     "Dorian Electra - Flamboyant",
     "Pusha T - DAYTONA",
     "Nas - Illmatic",
-    "Solange - A Seat at the Table",
-    "Charli xcx - BRAT",
-    "Pixies - Doolittle"
+    "Solange - A Seat at the Table"
   ]
 }
