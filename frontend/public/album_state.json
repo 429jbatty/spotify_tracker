@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-27T19:07:01.990Z",
+  "last_checked": "2026-04-28T13:36:36.695Z",
   "albums_in_progress": {
     "3e9VtbXnl6tqrFKrnNyxaI": {
       "album_name": "If You're Feeling Sinister",
@@ -130,6 +130,16 @@
       ],
       "first_played": "2026-04-27T19:03:02.011Z",
       "last_played": "2026-04-27T19:03:02.011Z"
+    },
+    "3IQRHa9iVLsGlSuVHiHZ3A": {
+      "album_name": "Little Oblivions",
+      "artist": "Julien Baker",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3alP0rX4ErhOszTpx6sFN2"
+      ],
+      "first_played": "2026-04-28T13:36:36.695Z",
+      "last_played": "2026-04-28T13:36:36.695Z"
     }
   },
   "completed_albums": {
