@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-04-28T13:36:36.695Z",
+  "last_checked": "2026-04-28T20:26:04.966Z",
   "albums_in_progress": {
     "0qWcLfCZ8wtcoOdX14oGNI": {
       "album_name": "Stranger in the Alps",
@@ -40,6 +40,23 @@
       ],
       "first_played": "2026-04-28T13:36:36.695Z",
       "last_played": "2026-04-28T13:36:36.695Z"
+    },
+    "02R7PREL8nCr02CEYLy7YH": {
+      "album_name": "Big Time",
+      "artist": "Angel Olsen",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6Tv21RLLA1Dt6OtPNz8QDq",
+        "1K2Hql13Y6fcOSy2Y15qNm",
+        "3zDaLyYb29tEke9Az3OELT",
+        "512vqW0xDLcWjWD2tc46xd",
+        "2QsYvAsiySw9Ax6bkOeJLK",
+        "6R7HXdGChalsGEvAI4iSu0",
+        "0CyOHVfeXbbECyooiRTQ4G",
+        "5qbHBepTowbMldhK8RVhTl"
+      ],
+      "first_played": "2026-04-28T19:53:04.903Z",
+      "last_played": "2026-04-28T20:26:04.966Z"
     }
   },
   "completed_albums": {
