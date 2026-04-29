@@ -1,26 +1,6 @@
 {
-  "last_checked": "2026-04-29T00:15:42.149Z",
+  "last_checked": "2026-04-29T16:36:16.819Z",
   "albums_in_progress": {
-    "0qWcLfCZ8wtcoOdX14oGNI": {
-      "album_name": "Stranger in the Alps",
-      "artist": "Phoebe Bridgers",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5w52BJAqGkV1ewaCVLmjhi"
-      ],
-      "first_played": "2026-04-27T16:12:35.884Z",
-      "last_played": "2026-04-27T16:12:35.884Z"
-    },
-    "7ndirwTVASzvPDffHarAxg": {
-      "album_name": "a-sides and besides",
-      "artist": "Adrianne Lenker, Buck Meek",
-      "total_tracks": 14,
-      "played_tracks": [
-        "1EUYnTI3P1DzoeccZ0IHdD"
-      ],
-      "first_played": "2026-04-27T16:15:36.838Z",
-      "last_played": "2026-04-27T16:15:36.838Z"
-    },
     "6Pp6qGEywDdofgFC1oFbSH": {
       "album_name": "Punisher",
       "artist": "Phoebe Bridgers",
@@ -40,6 +20,17 @@
       ],
       "first_played": "2026-04-28T13:36:36.695Z",
       "last_played": "2026-04-28T13:36:36.695Z"
+    },
+    "0e9GjrztzBw8oMC6n2CDeI": {
+      "album_name": "the record",
+      "artist": "boygenius",
+      "total_tracks": 12,
+      "played_tracks": [
+        "12EkF8uGofptstVIX7Oc0C",
+        "38xXr3MkiKNzNDv4JDJagF"
+      ],
+      "first_played": "2026-04-29T16:32:46.556Z",
+      "last_played": "2026-04-29T16:36:16.819Z"
     }
   },
   "completed_albums": {
