@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-04-29T18:31:27.652Z",
+  "last_checked": "2026-04-29T18:38:57.594Z",
   "albums_in_progress": {
-    "6Pp6qGEywDdofgFC1oFbSH": {
-      "album_name": "Punisher",
-      "artist": "Phoebe Bridgers",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5LJ4ig9cMvjui3li1mrNRl"
-      ],
-      "first_played": "2026-04-27T19:03:02.011Z",
-      "last_played": "2026-04-27T19:03:02.011Z"
-    },
     "3IQRHa9iVLsGlSuVHiHZ3A": {
       "album_name": "Little Oblivions",
       "artist": "Julien Baker",
@@ -39,10 +29,11 @@
       "artist": "Jon Hopkins",
       "total_tracks": 17,
       "played_tracks": [
-        "4ducn3t8KBGkCqaFDi9K92"
+        "4ducn3t8KBGkCqaFDi9K92",
+        "0c9MTfnssGoNXUgmsaE5XU"
       ],
       "first_played": "2026-04-29T18:31:27.652Z",
-      "last_played": "2026-04-29T18:31:27.652Z"
+      "last_played": "2026-04-29T18:38:57.594Z"
     }
   },
   "completed_albums": {
