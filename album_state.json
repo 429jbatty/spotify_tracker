@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-01T13:50:53.032Z",
+  "last_checked": "2026-05-01T16:05:26.078Z",
   "albums_in_progress": {
     "0e9GjrztzBw8oMC6n2CDeI": {
       "album_name": "the record",
@@ -31,6 +31,20 @@
       ],
       "first_played": "2026-04-29T18:31:27.652Z",
       "last_played": "2026-04-30T21:59:44.089Z"
+    },
+    "4YKwqDbjXrHeOzjQnxbiiQ": {
+      "album_name": "Diversions",
+      "artist": "Orbital",
+      "total_tracks": 6,
+      "played_tracks": [
+        "6vKNmeqan3wq1iBHfRCaPH",
+        "5sbCXvnZQEREKHF6IU7Hmf",
+        "7nflXwKkx2PWgnHlUV3XKL",
+        "6xugJUO600qfRiHQwnax8S",
+        "5mD3nD6Fh0YDmEGVNh9yNj"
+      ],
+      "first_played": "2026-05-01T15:22:27.866Z",
+      "last_played": "2026-05-01T16:05:26.078Z"
     }
   },
   "completed_albums": {
