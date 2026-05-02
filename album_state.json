@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-01T20:55:01.556Z",
+  "last_checked": "2026-05-02T03:00:56.577Z",
   "albums_in_progress": {
     "0Dg1KwgmtUzeMQonDCUFhQ": {
       "album_name": "Immunity",
@@ -28,6 +28,16 @@
       ],
       "first_played": "2026-05-01T20:55:01.556Z",
       "last_played": "2026-05-01T20:55:01.556Z"
+    },
+    "2noRn2Aes5aoNVsU6iWThc": {
+      "album_name": "Discovery",
+      "artist": "Daft Punk",
+      "total_tracks": 14,
+      "played_tracks": [
+        "0DiWol3AO6WpXZgp0goxAV"
+      ],
+      "first_played": "2026-05-02T03:00:56.577Z",
+      "last_played": "2026-05-02T03:00:56.577Z"
     }
   },
   "completed_albums": {
