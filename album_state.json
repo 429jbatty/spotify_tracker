@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-03T04:27:00.004Z",
+  "last_checked": "2026-05-04T19:07:34.164Z",
   "albums_in_progress": {
     "3o1TOhMkU5FFMSJMDhXfdF": {
       "album_name": "EUSEXUA",
@@ -15,57 +15,6 @@
       "first_played": "2026-05-02T17:12:58.210Z",
       "last_played": "2026-05-02T23:37:31.071Z"
     },
-    "58PwJKq5KH2MjVt2Ih4nEt": {
-      "album_name": "choke enough",
-      "artist": "Oklou",
-      "total_tracks": 13,
-      "played_tracks": [
-        "45LwOlqL3HOEQkPjjHpu7U",
-        "6aUr8iLB8hfp9z2xMv1X5X",
-        "7z8AjvqvkAOZriRlsJfx0q",
-        "6g2m5644ZTXBzxSt0z5Qwa",
-        "7zyBL0LZndcnPXsbdhiqWp"
-      ],
-      "first_played": "2026-05-02T17:19:21.284Z",
-      "last_played": "2026-05-02T18:41:56.574Z"
-    },
-    "1bvCVYPVl445mO690M2dOr": {
-      "album_name": "Night Time, My Time",
-      "artist": "Sky Ferreira",
-      "total_tracks": 12,
-      "played_tracks": [
-        "6Nc3KauZ5OOk7ogX7h5HhO",
-        "2bunWQerOZ16R4iWR4PGMt",
-        "2XPxacir3WoMtJ2pbTd240"
-      ],
-      "first_played": "2026-05-02T17:24:00.759Z",
-      "last_played": "2026-05-02T19:23:00.475Z"
-    },
-    "4ClyeVlAKJJViIyfVW0yQD": {
-      "album_name": "Pang",
-      "artist": "Caroline Polachek",
-      "total_tracks": 14,
-      "played_tracks": [
-        "5B6Kjha6RRIMWGN7zGsAaT",
-        "5YIVVzQcJG7pFhyNo0Ytlh",
-        "2wcrQZ7ZJolYEfIaPP9yL4"
-      ],
-      "first_played": "2026-05-02T17:27:04.628Z",
-      "last_played": "2026-05-02T19:09:50.676Z"
-    },
-    "7t01lwQRDjtEvwiAm88ACH": {
-      "album_name": "softscars",
-      "artist": "yeule",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1TebdBxUoNUicUQZesNuEM",
-        "3a8H9SY7zTGJt5h4679dPy",
-        "2Euwbryh21DOB5zEH0WT4P",
-        "7HHw7Lr6QHhq4wh3B1AJ13"
-      ],
-      "first_played": "2026-05-02T17:38:01.990Z",
-      "last_played": "2026-05-02T18:59:57.028Z"
-    },
     "1QqipMXWzJhr6yfcNKTp8B": {
       "album_name": "CRASH",
       "artist": "Charli xcx",
@@ -76,36 +25,6 @@
       ],
       "first_played": "2026-05-02T17:44:51.974Z",
       "last_played": "2026-05-03T02:08:50.104Z"
-    },
-    "1uD1kdwTWH1DZQZqGKz6rY": {
-      "album_name": "Jubilee",
-      "artist": "Japanese Breakfast",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0dpyzcT3RMNNSd2xKBf35I"
-      ],
-      "first_played": "2026-05-02T18:57:13.441Z",
-      "last_played": "2026-05-02T18:57:13.441Z"
-    },
-    "2G7CqmCYcpF1GtpXx5ttRO": {
-      "album_name": "choke enough (Deluxe)",
-      "artist": "Oklou",
-      "total_tracks": 17,
-      "played_tracks": [
-        "5ksAnx6NyYbHMQhEI7Y07B"
-      ],
-      "first_played": "2026-05-02T19:03:38.265Z",
-      "last_played": "2026-05-02T19:03:38.265Z"
-    },
-    "4axEKjoWXw9lTXvLPUR3HZ": {
-      "album_name": "Harlecore",
-      "artist": "Danny L Harle",
-      "total_tracks": 13,
-      "played_tracks": [
-        "3BIOgDZVS4iAmtDJ1S6RrD"
-      ],
-      "first_played": "2026-05-02T19:06:46.545Z",
-      "last_played": "2026-05-02T19:06:46.545Z"
     },
     "287QQ922OsJYh8aFNGdJG5": {
       "album_name": "Romance",
@@ -517,6 +436,17 @@
       ],
       "first_played": "2026-05-03T02:47:09.902Z",
       "last_played": "2026-05-03T02:47:09.902Z"
+    },
+    "6Hb0uXteh6zusGSn5wVpUp": {
+      "album_name": "Run The Jewels 3",
+      "artist": "Run The Jewels, El-P, Killer Mike",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5joOfvaQlHiwKk75rSgjgh",
+        "2myH9cSudoDB7cqBvt6vi8"
+      ],
+      "first_played": "2026-05-04T19:05:04.524Z",
+      "last_played": "2026-05-04T19:07:34.164Z"
     }
   },
   "completed_albums": {
