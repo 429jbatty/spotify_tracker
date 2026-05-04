@@ -1,16 +1,6 @@
 {
   "last_checked": "2026-05-03T04:27:00.004Z",
   "albums_in_progress": {
-    "4pFPIHBK3YjY7mcFt0seqi": {
-      "album_name": "Two Ribbons",
-      "artist": "Let's Eat Grandma",
-      "total_tracks": 10,
-      "played_tracks": [
-        "3haKbJ7pxyew1i3VEOqwaB"
-      ],
-      "first_played": "2026-05-02T17:08:31.244Z",
-      "last_played": "2026-05-02T17:08:31.244Z"
-    },
     "3o1TOhMkU5FFMSJMDhXfdF": {
       "album_name": "EUSEXUA",
       "artist": "FKA twigs",
@@ -24,17 +14,6 @@
       ],
       "first_played": "2026-05-02T17:12:58.210Z",
       "last_played": "2026-05-02T23:37:31.071Z"
-    },
-    "0YYPOxN7WrWD3ygAP5KB50": {
-      "album_name": "Evangelic Girl is a Gun",
-      "artist": "yeule",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5vkJZHiK2s7Os8AM1vInjv",
-        "3QOwGfSK65tEAZKAZi4yIS"
-      ],
-      "first_played": "2026-05-02T17:16:02.444Z",
-      "last_played": "2026-05-02T17:58:44.256Z"
     },
     "58PwJKq5KH2MjVt2Ih4nEt": {
       "album_name": "choke enough",
@@ -74,16 +53,6 @@
       "first_played": "2026-05-02T17:27:04.628Z",
       "last_played": "2026-05-02T19:09:50.676Z"
     },
-    "6Rv8V4QeLgfEC01czqJsiI": {
-      "album_name": "OIL OF EVERY PEARL'S UN-INSIDES",
-      "artist": "SOPHIE",
-      "total_tracks": 9,
-      "played_tracks": [
-        "5djCX0bDd96N89Ayv5Y8Y2"
-      ],
-      "first_played": "2026-05-02T17:30:56.972Z",
-      "last_played": "2026-05-02T17:30:56.972Z"
-    },
     "7t01lwQRDjtEvwiAm88ACH": {
       "album_name": "softscars",
       "artist": "yeule",
@@ -107,67 +76,6 @@
       ],
       "first_played": "2026-05-02T17:44:51.974Z",
       "last_played": "2026-05-03T02:08:50.104Z"
-    },
-    "25ktFe8igqIwv9aRbkdnTS": {
-      "album_name": "Desire, I Want To Turn Into You: Everasking Edition",
-      "artist": "Caroline Polachek",
-      "total_tracks": 20,
-      "played_tracks": [
-        "0I49aN2b9qfw1UWtctmNtr",
-        "0ZWUnLoyji01PyE6qWKp2y"
-      ],
-      "first_played": "2026-05-02T17:48:46.483Z",
-      "last_played": "2026-05-02T18:08:09.413Z"
-    },
-    "5lgqJ8vLfDGbL1AFHgj2o1": {
-      "album_name": "Soft Rock",
-      "artist": "Thy Slaughter, A. G. Cook, Finn Keane",
-      "total_tracks": 12,
-      "played_tracks": [
-        "5fXOTnYg6sn0UPyksZnXRP"
-      ],
-      "first_played": "2026-05-02T17:51:55.682Z",
-      "last_played": "2026-05-02T17:51:55.682Z"
-    },
-    "4SBl4zvNIL4H137YRf2P0J": {
-      "album_name": "Solar Power",
-      "artist": "Lorde",
-      "total_tracks": 12,
-      "played_tracks": [
-        "7JqqIi2ktnsNkYdQhKSCrz"
-      ],
-      "first_played": "2026-05-02T18:05:23.441Z",
-      "last_played": "2026-05-02T18:05:23.441Z"
-    },
-    "6wDFz92HEpBsdQ23F0hmZe": {
-      "album_name": "Later that day, the day before, or the day before that",
-      "artist": "Casey MQ",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6KL9tKgwBlkBkUAG24l0yR"
-      ],
-      "first_played": "2026-05-02T18:11:28.257Z",
-      "last_played": "2026-05-02T18:11:28.257Z"
-    },
-    "1dShPPoxXfzbjFO1jIHJZz": {
-      "album_name": "Blue Rev",
-      "artist": "Alvvays",
-      "total_tracks": 14,
-      "played_tracks": [
-        "4eTzgPhzCAQxHU0Y308Sk8"
-      ],
-      "first_played": "2026-05-02T18:25:44.288Z",
-      "last_played": "2026-05-02T18:25:44.288Z"
-    },
-    "1pflleeGIJGEAillSnSetf": {
-      "album_name": "In the End It Always Does",
-      "artist": "The Japanese House",
-      "total_tracks": 12,
-      "played_tracks": [
-        "1HfsmNlg8xxhOr9N2i4Q0n"
-      ],
-      "first_played": "2026-05-02T18:34:59.627Z",
-      "last_played": "2026-05-02T18:34:59.627Z"
     },
     "1uD1kdwTWH1DZQZqGKz6rY": {
       "album_name": "Jubilee",
