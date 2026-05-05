@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-05T18:28:39.699Z",
+  "last_checked": "2026-05-05T20:29:43.744Z",
   "albums_in_progress": {
     "6Hb0uXteh6zusGSn5wVpUp": {
       "album_name": "Run The Jewels 3",
@@ -17,21 +17,6 @@
       ],
       "first_played": "2026-05-04T19:05:04.524Z",
       "last_played": "2026-05-05T03:22:43.539Z"
-    },
-    "5IzJw66prbCD5KRbBlcKaj": {
-      "album_name": "Run The Jewels 2",
-      "artist": "Run The Jewels, El-P, Killer Mike",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4KmhJQDzXEbdpANT4Ob0h3",
-        "3i7Qx0MbPm7mFBv1YVeaFD",
-        "7h893ZHzcQh6USDVXsyGsu",
-        "7D460Ka7PHJV8YDZiZxghM",
-        "5WYDz4jNPR2NOEyzCecena",
-        "1jSUO5zwsnvspZrkWbty4n"
-      ],
-      "first_played": "2026-05-05T18:12:09.993Z",
-      "last_played": "2026-05-05T18:28:39.699Z"
     }
   },
   "completed_albums": {
@@ -407061,9 +407046,677 @@
       "listen_history": [
         "2026-05-01T20:21:28.408Z"
       ]
+    },
+    "Run The Jewels, El-P, Killer Mike - Run The Jewels 2": {
+      "artist": "Run the Jewels",
+      "artist_mbid": "a80c5dc5-b12e-4667-9f5a-b568961f3839",
+      "name": "Run the Jewels 2",
+      "release_group_mbid": "581d7ac8-8f1d-4d4a-a224-de9c9cd76b39",
+      "release_mbid": "957d62f4-8eb4-4636-afb9-07d92e0b5ace",
+      "label": "Mass Appeal",
+      "release_year": 2014,
+      "release_month": 10,
+      "release_day": 24,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Jeopardy",
+          "credits": [
+            [
+              "Smoota",
+              "instrument",
+              "additional, trombone"
+            ],
+            [
+              "Wilder Zoby",
+              "instrument",
+              "additional, organ"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "3ec3f9fb-b9fc-49bb-a213-b5e779d94b40"
+        },
+        {
+          "position": "2",
+          "title": "Oh My Darling Don\u2019t Cry",
+          "credits": [
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Michael Winslow",
+              "vocal",
+              "guest"
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "ba79798e-1e5b-46d6-beb7-4816930513c0"
+        },
+        {
+          "position": "3",
+          "title": "Blockbuster Night, Pt. 1",
+          "credits": [
+            [
+              "Little Shalimar",
+              "instrument",
+              "additional, guitar, synthesizer"
+            ],
+            [
+              "Trackstar the DJ",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "3532826e-5523-42d1-bf9d-8b5318f9470d"
+        },
+        {
+          "position": "4",
+          "title": "Close Your Eyes (and Count to Fuck)",
+          "credits": [
+            [
+              "Trackstar the DJ",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Zack de la Rocha",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Zack de la Rocha",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "392f2cb5-5f75-4867-a555-8356602df69e"
+        },
+        {
+          "position": "5",
+          "title": "All My Life",
+          "credits": [
+            [
+              "Matt Sweeney",
+              "instrument",
+              "additional, guitar"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "BOOTS",
+              "vocal",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "BOOTS",
+              "work lyricist",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "4216529b-522f-4e39-96e8-317b07d95eab"
+        },
+        {
+          "position": "6",
+          "title": "Lie, Cheat, Steal",
+          "credits": [
+            [
+              "BOOTS",
+              "producer",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "BOOTS",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "ff15b1f2-b72d-487e-a9e6-cb20f2230ff1"
+        },
+        {
+          "position": "7",
+          "title": "Early",
+          "credits": [
+            [
+              "James McNew",
+              "instrument",
+              "additional, bass"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "additional"
+            ],
+            [
+              "BOOTS",
+              "vocal",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "BOOTS",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "db8a98be-244e-4928-84ca-81e93469d69e"
+        },
+        {
+          "position": "8",
+          "title": "All Due Respect",
+          "credits": [
+            [
+              "Travis Barker",
+              "instrument",
+              "additional, membranophone"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "5554afea-67e6-4aea-a658-275d6cd2b968"
+        },
+        {
+          "position": "9",
+          "title": "Love Again (Akinyele Back)",
+          "credits": [
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Shay Bigga",
+              "vocal",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Gangsta Boo",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Kenya Hawkins",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Gangsta Boo",
+              "work lyricist",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "e343782c-587d-4f12-a25e-7e34a793e303"
+        },
+        {
+          "position": "10",
+          "title": "Crown",
+          "credits": [
+            [
+              "Diane Coffee",
+              "instrument",
+              "additional, piano"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              ""
+            ],
+            [
+              "Diane Coffee",
+              "vocal",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "fd622f20-9ef0-4c71-8d44-769a15345626"
+        },
+        {
+          "position": "11",
+          "title": "Angel Duster",
+          "credits": [
+            [
+              "Margot",
+              "instrument",
+              "strings"
+            ],
+            [
+              "Isaiah \u201cIkey\u201d Owens",
+              "instrument",
+              "piano, solo"
+            ],
+            [
+              "Wilder Zoby",
+              "instrument",
+              "additional, keyboard"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "additional"
+            ],
+            [
+              "Kareem Bunton",
+              "vocal",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "88af084e-ac25-40b4-84e3-cd0e488200cc"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "experimental hip hop",
+        "hardcore hip hop",
+        "hip hop",
+        "self-titled"
+      ],
+      "image_url": "https://coverartarchive.org/release/957d62f4-8eb4-4636-afb9-07d92e0b5ace/10297290692-500.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-05T20:29:43.744Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Orbital - Diversions",
     "Courtney Barnett - Tell Me How You Really Feel",
@@ -407072,7 +407725,6 @@
     "Adrianne Lenker - songs",
     "Beck - Sea Change",
     "Magdalena Bay - Imaginal Disk",
-    "Dorian Electra - Flamboyant",
-    "Pusha T - DAYTONA"
+    "Dorian Electra - Flamboyant"
   ]
 }
