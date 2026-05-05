@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-05T20:29:43.744Z",
+  "last_checked": "2026-05-05T22:01:32.132Z",
   "albums_in_progress": {
     "6Hb0uXteh6zusGSn5wVpUp": {
       "album_name": "Run The Jewels 3",
@@ -17,6 +17,39 @@
       ],
       "first_played": "2026-05-04T19:05:04.524Z",
       "last_played": "2026-05-05T03:22:43.539Z"
+    },
+    "5IzJw66prbCD5KRbBlcKaj": {
+      "album_name": "Run The Jewels 2",
+      "artist": "Run The Jewels, El-P, Killer Mike",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7D460Ka7PHJV8YDZiZxghM",
+        "5WYDz4jNPR2NOEyzCecena",
+        "1jSUO5zwsnvspZrkWbty4n",
+        "0KWRI0DCUKGmzFCghfRfnD",
+        "0S0p99rfY17nzbAuk2e7AG",
+        "3SksScZpp7EWCYgFlJlG6l",
+        "2w705DwfuWxn2fLxUukaxd",
+        "0kyl0YVnPMrjjbQu7ayd5g",
+        "3lIC31520J7ad1gjq7kMlK"
+      ],
+      "first_played": "2026-05-05T20:56:49.769Z",
+      "last_played": "2026-05-05T21:44:25.097Z"
+    },
+    "5h3WJG0aZjNOrayFu3MhCS": {
+      "album_name": "Big Fish Theory",
+      "artist": "Vince Staples",
+      "total_tracks": 12,
+      "played_tracks": [
+        "0RxSL5kjZXO45l38vVerNO",
+        "6eL1ncVDtQHgSm3E288TS7",
+        "1AdmqWMl7MCSRMKpwiH0yU",
+        "6q0wu4qjc9XVyqqRv7vlMZ",
+        "2fRoKHW3lzNUKIUTade8nL",
+        "3hJkeEjwi8foYgWDZnWKTB"
+      ],
+      "first_played": "2026-05-05T21:48:02.176Z",
+      "last_played": "2026-05-05T22:01:32.132Z"
     }
   },
   "completed_albums": {
