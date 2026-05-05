@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-05T03:22:43.539Z",
+  "last_checked": "2026-05-05T18:28:39.699Z",
   "albums_in_progress": {
     "6Hb0uXteh6zusGSn5wVpUp": {
       "album_name": "Run The Jewels 3",
@@ -17,6 +17,21 @@
       ],
       "first_played": "2026-05-04T19:05:04.524Z",
       "last_played": "2026-05-05T03:22:43.539Z"
+    },
+    "5IzJw66prbCD5KRbBlcKaj": {
+      "album_name": "Run The Jewels 2",
+      "artist": "Run The Jewels, El-P, Killer Mike",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4KmhJQDzXEbdpANT4Ob0h3",
+        "3i7Qx0MbPm7mFBv1YVeaFD",
+        "7h893ZHzcQh6USDVXsyGsu",
+        "7D460Ka7PHJV8YDZiZxghM",
+        "5WYDz4jNPR2NOEyzCecena",
+        "1jSUO5zwsnvspZrkWbty4n"
+      ],
+      "first_played": "2026-05-05T18:12:09.993Z",
+      "last_played": "2026-05-05T18:28:39.699Z"
     }
   },
   "completed_albums": {
