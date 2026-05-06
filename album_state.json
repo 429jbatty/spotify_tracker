@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-06T19:48:46.132Z",
+  "last_checked": "2026-05-06T22:18:27.395Z",
   "albums_in_progress": {
     "6Hb0uXteh6zusGSn5wVpUp": {
       "album_name": "Run The Jewels 3",
@@ -106,6 +106,31 @@
       ],
       "first_played": "2026-05-06T18:47:02.032Z",
       "last_played": "2026-05-06T19:05:02.122Z"
+    },
+    "4euX7BHHIVZecdn7Ii3eg2": {
+      "album_name": "Ah Via Musicom",
+      "artist": "Eric Johnson",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5qm0KiVKMXW1kq6VrnIhz5"
+      ],
+      "first_played": "2026-05-06T20:51:32.865Z",
+      "last_played": "2026-05-06T20:51:32.865Z"
+    },
+    "6FCzvataOZh68j8OKzOt9a": {
+      "album_name": "London Calling (Remastered)",
+      "artist": "The Clash",
+      "total_tracks": 19,
+      "played_tracks": [
+        "5jzma6gCzYtKB1DbEwFZKH",
+        "7FYkZkF9fog6WS818wJnhl",
+        "06JxwPA4WAg0LWADJtaldL",
+        "2FNsNZjUQg3bhx5dWW0pRs",
+        "4W9zZsQKsqikYbKM9vcN5Q",
+        "6wtmql7FJ7SSLuSw8JD8rX"
+      ],
+      "first_played": "2026-05-06T20:55:32.119Z",
+      "last_played": "2026-05-06T22:18:27.395Z"
     }
   },
   "completed_albums": {
