@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-06T03:19:25.579Z",
+  "last_checked": "2026-05-06T16:35:38.529Z",
   "albums_in_progress": {
     "6Hb0uXteh6zusGSn5wVpUp": {
       "album_name": "Run The Jewels 3",
@@ -51,6 +51,27 @@
       ],
       "first_played": "2026-05-05T21:48:02.176Z",
       "last_played": "2026-05-06T03:19:25.579Z"
+    },
+    "6CcC2RiYVSTsxI73d4lEeB": {
+      "album_name": "Elephant (Deluxe)",
+      "artist": "The White Stripes, Jack White",
+      "total_tracks": 41,
+      "played_tracks": [
+        "4ogMAWrvrZqUZSZDTOQeEh",
+        "5RLhqS6WiNHfHnRTWtI7px",
+        "0poznesPSNpFKZpY2soXRS",
+        "22uYXiLabRVf9A4cj9oBym",
+        "0YdIlS9a4WOeH8LhTIHMhg",
+        "44BTyJBKcot4lox0Ml5PX4",
+        "1kMUzbTPNYW0tRhxXOSjwT",
+        "59SiJCapnnk6GCosuK0OOJ",
+        "0Ge82yGpZWJvfhO8JPRJ4F",
+        "00lWiTJepmpGCKYPQ3jmVm",
+        "4SDUR80ZCq2HNYozi2vDHh",
+        "3pkKkj06gN1vFHvvxDQTIv"
+      ],
+      "first_played": "2026-05-06T15:21:57.214Z",
+      "last_played": "2026-05-06T16:35:38.529Z"
     }
   },
   "completed_albums": {
