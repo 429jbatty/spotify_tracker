@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-06T17:31:08.755Z",
+  "last_checked": "2026-05-06T19:48:46.132Z",
   "albums_in_progress": {
     "6Hb0uXteh6zusGSn5wVpUp": {
       "album_name": "Run The Jewels 3",
@@ -85,10 +85,27 @@
         "0bBRfcuev1xS3zFbPHinjP",
         "41QdwjXMybWm9DD295gPMk",
         "7LRr26eB2T341jxD9jsCLy",
-        "5kMSSo9droWIKN7NzqFbMG"
+        "5kMSSo9droWIKN7NzqFbMG",
+        "1vps9ZmMR5UbIgLVI8B5eE"
       ],
       "first_played": "2026-05-06T15:21:57.214Z",
-      "last_played": "2026-05-06T17:31:08.755Z"
+      "last_played": "2026-05-06T18:43:33.223Z"
+    },
+    "6Xvc1TfpVEhDeHhmTQEtp0": {
+      "album_name": "White Blood Cells",
+      "artist": "The White Stripes, Jack White",
+      "total_tracks": 16,
+      "played_tracks": [
+        "2ewjgFhHDTE8BkV8kzpiX2",
+        "4faZbPZPQAmHADVtQNsv5E",
+        "4VHAywPEJEBMvoaZYVyx7x",
+        "21Qsj3cMVCx2xF2EVVNbEu",
+        "3IOCKP98UaFAxzX2Z9M5jQ",
+        "1ltf1XEP18QMCMRRQtFbAl",
+        "2KsIyyd0aitfRhliFDRpId"
+      ],
+      "first_played": "2026-05-06T18:47:02.032Z",
+      "last_played": "2026-05-06T19:05:02.122Z"
     }
   },
   "completed_albums": {
@@ -407785,9 +407802,651 @@
       "listen_history": [
         "2026-05-05T20:29:43.744Z"
       ]
+    },
+    "Eric Johnson - Ah Via Musicom": {
+      "artist": "Eric Johnson",
+      "artist_mbid": "b53868c8-3654-41d3-91db-3c5a1237f0c3",
+      "name": "Ah Via Musicom",
+      "release_group_mbid": "e77a9536-08bd-3db8-90e7-64a38ffd6753",
+      "release_mbid": "3a92c7a5-8ca3-48f3-839f-c537e573f965",
+      "label": null,
+      "release_year": 1990,
+      "release_month": 3,
+      "release_day": 20,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Ah Via Musicom",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Roscoe Beck",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Paul Bissell",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "work composer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c575b773-df45-488d-a81d-4322e1049ce8"
+        },
+        {
+          "position": "2",
+          "title": "Cliffs of Dover",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Kyle Brock",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "386665dc-1226-4fb7-b68c-e18a61f60577"
+        },
+        {
+          "position": "3",
+          "title": "Desert Rose",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Roscoe Beck",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Kyle Brock",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "vocal",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work writer",
+              ""
+            ],
+            [
+              "Vince Mariani",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "54e5c0d1-20a7-4dbc-a444-8dd3fcdcc757"
+        },
+        {
+          "position": "4",
+          "title": "High Landrons",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Kyle Brock",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "lap steel guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "sitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Richard Mullen",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "vocal",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "b905bd1a-eeae-4ab2-a46f-095a271d1bd6"
+        },
+        {
+          "position": "5",
+          "title": "Steve's Boogie",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Kyle Brock",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Steven Hennig",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "lap steel guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f125d098-5a24-429b-8f6d-f25b98b3165f"
+        },
+        {
+          "position": "6",
+          "title": "Trademark",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Kyle Brock",
+              "instrument",
+              "bass"
+            ],
+            [
+              "James Fenner",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4e80278d-f60e-4489-b6b0-6122e8e79f96"
+        },
+        {
+          "position": "7",
+          "title": "Nothing Can Keep Me From You",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Roscoe Beck",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Reggie Witty",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "vocal",
+              ""
+            ],
+            [
+              "Jody Lazo",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "21d44f18-1c2a-4ace-b822-fe06fbbb9f93"
+        },
+        {
+          "position": "8",
+          "title": "Song for George",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Richard Mullen",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8f230af2-6163-4287-b899-8594a4c3c6c5"
+        },
+        {
+          "position": "9",
+          "title": "Righteous",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Roscoe Beck",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Wee Willie",
+              "instrument",
+              "harmonica"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "25031a85-f986-4084-8abb-e5430dbee894"
+        },
+        {
+          "position": "10",
+          "title": "Forty Mile Town",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Roscoe Beck",
+              "instrument",
+              "bass"
+            ],
+            [
+              "James Fenner",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "lap steel guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Richard Mullen",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "vocal",
+              ""
+            ],
+            [
+              "Jody Lazo",
+              "vocal",
+              "background vocals"
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "ac05e662-129e-4bf7-9bea-bbcd66249921"
+        },
+        {
+          "position": "11",
+          "title": "East Wes",
+          "credits": [
+            [
+              "Richard Mullen",
+              "engineer",
+              ""
+            ],
+            [
+              "Stephen Barber",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Kyle Brock",
+              "instrument",
+              "bass"
+            ],
+            [
+              "James Fenner",
+              "instrument",
+              "percussion"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Eric Johnson",
+              "instrument",
+              "lap steel guitar"
+            ],
+            [
+              "Tommy Taylor",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Michael Frondelli",
+              "mix",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "producer",
+              ""
+            ],
+            [
+              "Eric Johnson",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "9e9ecd93-9279-4314-8af5-3213c6ff4d65"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "blues rock",
+        "instrumental rock",
+        "rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/3a92c7a5-8ca3-48f3-839f-c537e573f965/3015070972-500.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-06T19:48:46.132Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Eric Johnson - Ah Via Musicom",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Orbital - Diversions",
@@ -407796,7 +408455,6 @@
     "boygenius - the record",
     "Adrianne Lenker - songs",
     "Beck - Sea Change",
-    "Magdalena Bay - Imaginal Disk",
-    "Dorian Electra - Flamboyant"
+    "Magdalena Bay - Imaginal Disk"
   ]
 }
