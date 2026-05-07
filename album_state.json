@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-07T16:38:52.924Z",
+  "last_checked": "2026-05-07T18:39:06.577Z",
   "albums_in_progress": {
     "5IzJw66prbCD5KRbBlcKaj": {
       "album_name": "Run The Jewels 2",
@@ -138,20 +138,23 @@
       "artist": "Hayden Pedigo",
       "total_tracks": 7,
       "played_tracks": [
-        "7lUsg90jVGMFd3cEkxRSjr"
+        "7lUsg90jVGMFd3cEkxRSjr",
+        "5R3ZWCKgygMIWYyA27vRFP"
       ],
       "first_played": "2026-05-07T16:30:04.538Z",
-      "last_played": "2026-05-07T16:30:04.538Z"
+      "last_played": "2026-05-07T17:13:59.833Z"
     },
     "43w4Esdz1B7zBj4685ykVv": {
       "album_name": "Roped In",
       "artist": "North Americans",
       "total_tracks": 9,
       "played_tracks": [
-        "3x4mucH9HmpAGrSeLjpm8f"
+        "3x4mucH9HmpAGrSeLjpm8f",
+        "7KTl9iLqs44hNEBJzsOwpR",
+        "6rasLZEx6DasV53ttfgnpS"
       ],
       "first_played": "2026-05-07T16:33:59.565Z",
-      "last_played": "2026-05-07T16:33:59.565Z"
+      "last_played": "2026-05-07T18:27:14.543Z"
     },
     "3u4ZrZsXDz53x9o4Y6AnVe": {
       "album_name": "Luminous",
@@ -172,6 +175,208 @@
       ],
       "first_played": "2026-05-07T16:38:52.924Z",
       "last_played": "2026-05-07T16:38:52.924Z"
+    },
+    "0KDSs2sUII429KDdUZAdPT": {
+      "album_name": "Glow",
+      "artist": "Kaki King",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7qT0I32aQseLqqt3tAZRBt"
+      ],
+      "first_played": "2026-05-07T16:42:22.934Z",
+      "last_played": "2026-05-07T16:42:22.934Z"
+    },
+    "6VaXdKLchZGpI0idCasMpV": {
+      "album_name": "Letting Go",
+      "artist": "Hayden Pedigo",
+      "total_tracks": 7,
+      "played_tracks": [
+        "4qWBcNGLT7oCZCXCQUefv0"
+      ],
+      "first_played": "2026-05-07T16:50:27.167Z",
+      "last_played": "2026-05-07T16:50:27.167Z"
+    },
+    "3O6DlnK0TMGSxz41xMkXNc": {
+      "album_name": "Collected Recordings",
+      "artist": "Gareth Dickson",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0AmraPU14KElZgbs2RtH0r"
+      ],
+      "first_played": "2026-05-07T16:53:50.515Z",
+      "last_played": "2026-05-07T16:53:50.515Z"
+    },
+    "6Q6euJugdzlnko4UpN5uma": {
+      "album_name": "Musiques",
+      "artist": "Pierre Bensusan",
+      "total_tracks": 15,
+      "played_tracks": [
+        "1VoZC8jeyiXQn4KnEUhX68"
+      ],
+      "first_played": "2026-05-07T17:00:32.887Z",
+      "last_played": "2026-05-07T17:00:32.887Z"
+    },
+    "5CbsLK7qbFYtYsGrUTwy3L": {
+      "album_name": "Everybody Loves You",
+      "artist": "Kaki King",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0JUa8PNsS6fvWz2Keb5KLq"
+      ],
+      "first_played": "2026-05-07T17:04:03.595Z",
+      "last_played": "2026-05-07T17:04:03.595Z"
+    },
+    "4bPZJmByfHhwx9IWVyblfe": {
+      "album_name": "Deseret Canyon",
+      "artist": "William Tyler",
+      "total_tracks": 7,
+      "played_tracks": [
+        "0ogkWOdxt92gNu97qybA6t"
+      ],
+      "first_played": "2026-05-07T17:08:30.688Z",
+      "last_played": "2026-05-07T17:08:30.688Z"
+    },
+    "7g8MWZncq38BdpcoceCTAo": {
+      "album_name": "Long Cool World",
+      "artist": "North Americans",
+      "total_tracks": 9,
+      "played_tracks": [
+        "5Ngej68IrPT4iupVm29cal"
+      ],
+      "first_played": "2026-05-07T17:23:29.534Z",
+      "last_played": "2026-05-07T17:23:29.534Z"
+    },
+    "0Yak3Y7E8UjlUGSEn4DUuM": {
+      "album_name": "Good and Green Again",
+      "artist": "Jake Xerxes Fussell",
+      "total_tracks": 9,
+      "played_tracks": [
+        "26dQ43D04GAMlC4BxHy9Xg"
+      ],
+      "first_played": "2026-05-07T17:26:39.212Z",
+      "last_played": "2026-05-07T17:26:39.212Z"
+    },
+    "0gLaTb6BP8pySUWwkiZjdD": {
+      "album_name": "Music by Ry Cooder",
+      "artist": "Ry Cooder",
+      "total_tracks": 34,
+      "played_tracks": [
+        "5gBX4Uep0ydT8AZsPUOKWd"
+      ],
+      "first_played": "2026-05-07T17:28:42.223Z",
+      "last_played": "2026-05-07T17:28:42.223Z"
+    },
+    "4m5C2Kv0spRbAZHFSMW0wn": {
+      "album_name": "Goes West",
+      "artist": "William Tyler",
+      "total_tracks": 10,
+      "played_tracks": [
+        "685WU5T4DGDeRHGjFMy2Cj",
+        "6DdOn2utHRoz0ShdxHiz2j",
+        "0cZzSqwf3OoBLYD2yPommj"
+      ],
+      "first_played": "2026-05-07T17:32:16.108Z",
+      "last_played": "2026-05-07T18:24:49.058Z"
+    },
+    "67YWUjgE252g3HnFOWwzhA": {
+      "album_name": "Soundkeeper",
+      "artist": "Gunn - Truscinski Duo",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6NlmKEFtS7NpWTRtlr0HLy"
+      ],
+      "first_played": "2026-05-07T17:37:24.779Z",
+      "last_played": "2026-05-07T17:37:24.779Z"
+    },
+    "26P67Eiu9rHgW52g3vsRrY": {
+      "album_name": "Going Steady",
+      "artist": "North Americans",
+      "total_tracks": 9,
+      "played_tracks": [
+        "6ZxmACd2n8revqAIosPQGP"
+      ],
+      "first_played": "2026-05-07T17:45:25.729Z",
+      "last_played": "2026-05-07T17:45:25.729Z"
+    },
+    "3QQyertIsTgPCYlJYak92J": {
+      "album_name": "Sam Wilkes, Craig Weinrib, and Dylan Day",
+      "artist": "Sam Wilkes, Craig Weinrib, Dylan Day",
+      "total_tracks": 7,
+      "played_tracks": [
+        "74Ry6jHz5l1RRo5EGRsv3G"
+      ],
+      "first_played": "2026-05-07T17:51:08.029Z",
+      "last_played": "2026-05-07T17:51:08.029Z"
+    },
+    "5LZVQiwNWzbq8W1cT9MxHe": {
+      "album_name": "I'll Be Waving As You Drive Away",
+      "artist": "Hayden Pedigo",
+      "total_tracks": 7,
+      "played_tracks": [
+        "47yRyhwrCVXkrjmTXye7Ot"
+      ],
+      "first_played": "2026-05-07T17:55:35.918Z",
+      "last_played": "2026-05-07T17:55:35.918Z"
+    },
+    "28A3qNusvWXfKEYiaTW0oq": {
+      "album_name": "Third",
+      "artist": "Nathan Salsburg",
+      "total_tracks": 10,
+      "played_tracks": [
+        "7C23d5jyOZiXIjBiqvBEDp"
+      ],
+      "first_played": "2026-05-07T18:07:24.997Z",
+      "last_played": "2026-05-07T18:07:24.997Z"
+    },
+    "2gAagCBpgV4wa8KBMUBYWL": {
+      "album_name": "Legs to Make us Longer",
+      "artist": "Kaki King",
+      "total_tracks": 11,
+      "played_tracks": [
+        "5rNaSws9k7wzVLOyJ508IO"
+      ],
+      "first_played": "2026-05-07T18:16:01.351Z",
+      "last_played": "2026-05-07T18:16:01.351Z"
+    },
+    "05HGeZ7JSfwJiOpaToYzUu": {
+      "album_name": "Death Chants, Breakdowns And Military Waltzes",
+      "artist": "John Fahey",
+      "total_tracks": 22,
+      "played_tracks": [
+        "6CePeHbXmgwna8B5dC6xKV"
+      ],
+      "first_played": "2026-05-07T18:19:21.227Z",
+      "last_played": "2026-05-07T18:19:21.227Z"
+    },
+    "0U43jFC9ahFCS22nTYQJP2": {
+      "album_name": "They Shoot, We Score",
+      "artist": "Yo La Tengo",
+      "total_tracks": 27,
+      "played_tracks": [
+        "3q20dzlyJKKanQVKllDrD5"
+      ],
+      "first_played": "2026-05-07T18:30:00.472Z",
+      "last_played": "2026-05-07T18:30:00.472Z"
+    },
+    "5C8gswv4jGbjz54KcgOau5": {
+      "album_name": "Golden Loam",
+      "artist": "Laurel Premo",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6eItHyvIjx4tf58G7yq13J"
+      ],
+      "first_played": "2026-05-07T18:34:54.340Z",
+      "last_played": "2026-05-07T18:34:54.340Z"
+    },
+    "7MdG2fvUTJJhIiLP8NowHF": {
+      "album_name": "Out of Sight",
+      "artist": "Jake Xerxes Fussell",
+      "total_tracks": 9,
+      "played_tracks": [
+        "6DMUmD9dg6H3ODpDmuezrK"
+      ],
+      "first_played": "2026-05-07T18:39:06.577Z",
+      "last_played": "2026-05-07T18:39:06.577Z"
     }
   },
   "completed_albums": {
