@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-07T00:18:52.332Z",
+  "last_checked": "2026-05-07T16:38:52.924Z",
   "albums_in_progress": {
     "5IzJw66prbCD5KRbBlcKaj": {
       "album_name": "Run The Jewels 2",
@@ -122,6 +122,56 @@
       ],
       "first_played": "2026-05-06T20:55:32.119Z",
       "last_played": "2026-05-07T00:18:52.332Z"
+    },
+    "2voL9Q8Tvcs3m6DDjTBTzn": {
+      "album_name": "Music from First Cow",
+      "artist": "William Tyler",
+      "total_tracks": 8,
+      "played_tracks": [
+        "1pWfHXjShO0q1tMhL7Cvur"
+      ],
+      "first_played": "2026-05-07T16:24:44.925Z",
+      "last_played": "2026-05-07T16:24:44.925Z"
+    },
+    "5KpwaQgyR0I0Qh6QCfY615": {
+      "album_name": "The Happiest Times I Ever Ignored",
+      "artist": "Hayden Pedigo",
+      "total_tracks": 7,
+      "played_tracks": [
+        "7lUsg90jVGMFd3cEkxRSjr"
+      ],
+      "first_played": "2026-05-07T16:30:04.538Z",
+      "last_played": "2026-05-07T16:30:04.538Z"
+    },
+    "43w4Esdz1B7zBj4685ykVv": {
+      "album_name": "Roped In",
+      "artist": "North Americans",
+      "total_tracks": 9,
+      "played_tracks": [
+        "3x4mucH9HmpAGrSeLjpm8f"
+      ],
+      "first_played": "2026-05-07T16:33:59.565Z",
+      "last_played": "2026-05-07T16:33:59.565Z"
+    },
+    "3u4ZrZsXDz53x9o4Y6AnVe": {
+      "album_name": "Luminous",
+      "artist": "Golden Brown",
+      "total_tracks": 7,
+      "played_tracks": [
+        "5XTW6cmcoxaJzBylXqqvtE"
+      ],
+      "first_played": "2026-05-07T16:37:03.371Z",
+      "last_played": "2026-05-07T16:37:03.371Z"
+    },
+    "2aerLJRYr2E7OoVyfH9ZYD": {
+      "album_name": "Of The Days",
+      "artist": "Grey Reverend",
+      "total_tracks": 9,
+      "played_tracks": [
+        "5VSj4OiNUXJCEHOnI6wQ2O"
+      ],
+      "first_played": "2026-05-07T16:38:52.924Z",
+      "last_played": "2026-05-07T16:38:52.924Z"
     }
   },
   "completed_albums": {
@@ -390175,7 +390225,9 @@
         "ambient americana"
       ],
       "image_url": "https://coverartarchive.org/release/682ff2a2-f1ea-41f6-8821-2329a238f187/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-07T16:22:08.302Z"
+      ],
       "source": "musicbrainz"
     },
     "William Tyler - Goes West": {
@@ -408462,6 +408514,7 @@
     }
   },
   "most_recently_listened": [
+    "William Tyler - Modern Country",
     "Eric Johnson - Ah Via Musicom",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
     "Caroline Polachek - Desire, I Want To Turn Into You",
@@ -408470,7 +408523,6 @@
     "Angel Olsen - Big Time",
     "boygenius - the record",
     "Adrianne Lenker - songs",
-    "Beck - Sea Change",
-    "Magdalena Bay - Imaginal Disk"
+    "Beck - Sea Change"
   ]
 }
