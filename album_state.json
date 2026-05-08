@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-08T00:49:39.243Z",
+  "last_checked": "2026-05-08T01:58:32.994Z",
   "albums_in_progress": {
     "5h3WJG0aZjNOrayFu3MhCS": {
       "album_name": "Big Fish Theory",
@@ -546,7 +546,7 @@
         "2YxXuCdbUpil3P7tRjhW1t"
       ],
       "first_played": "2026-05-07T21:56:51.357Z",
-      "last_played": "2026-05-08T00:22:24.150Z"
+      "last_played": "2026-05-08T01:37:39.960Z"
     },
     "6BK3muExDOuk0VnyMn9NVw": {
       "album_name": "Kintsugi",
@@ -606,10 +606,11 @@
       "played_tracks": [
         "7pHz9U4AZVAQXjs6ik0duH",
         "1xFKRN7Dx8KP8zdg7zs7XN",
-        "1x3bxSSANgIxkoyGldhmdX"
+        "1x3bxSSANgIxkoyGldhmdX",
+        "77vYwoC7e3pVoPq8BA9CuL"
       ],
       "first_played": "2026-05-07T22:29:00.712Z",
-      "last_played": "2026-05-07T23:24:42.617Z"
+      "last_played": "2026-05-08T01:10:05.503Z"
     },
     "7ik4rjxOnmwnAWWzjj5ni3": {
       "album_name": "Everything All The Time",
@@ -639,10 +640,11 @@
       "played_tracks": [
         "7rL602DQps4QmrrjbinLzP",
         "48PWHnhCWgPGArCo0rvdm1",
-        "7uMZy0bALAdneerERyr7Ks"
+        "7uMZy0bALAdneerERyr7Ks",
+        "4VcPw1c8BdKv6rUKAD1Hhw"
       ],
       "first_played": "2026-05-07T22:48:52.340Z",
-      "last_played": "2026-05-08T00:45:56.290Z"
+      "last_played": "2026-05-08T01:53:34.259Z"
     },
     "1ZiBMaXY7w0Y0WMGheBVr5": {
       "album_name": "Pikul",
@@ -680,20 +682,22 @@
       "artist": "Grizzly Bear",
       "total_tracks": 10,
       "played_tracks": [
-        "6zc0b2JM2M9DKMuLQ1XCRK"
+        "6zc0b2JM2M9DKMuLQ1XCRK",
+        "5ovGdvOGaSjuYiSLX0nIaY"
       ],
       "first_played": "2026-05-07T23:30:01.972Z",
-      "last_played": "2026-05-07T23:30:01.972Z"
+      "last_played": "2026-05-08T01:46:51.451Z"
     },
     "5GRnydamKvIeG46dycID6v": {
       "album_name": "Fleet Foxes",
       "artist": "Fleet Foxes",
       "total_tracks": 11,
       "played_tracks": [
-        "2qvToeBdYliw6n0nEsKJQa"
+        "2qvToeBdYliw6n0nEsKJQa",
+        "4fuVAz1Epsftsv71dkGOZY"
       ],
       "first_played": "2026-05-07T23:35:09.291Z",
-      "last_played": "2026-05-07T23:35:09.291Z"
+      "last_played": "2026-05-08T00:53:49.208Z"
     },
     "0YAtJCLY8ogFUjdopdHsyS": {
       "album_name": "El Pintor",
@@ -710,10 +714,11 @@
       "artist": "The War On Drugs",
       "total_tracks": 10,
       "played_tracks": [
-        "5j58jhAFzAy0keSuQYsQBn"
+        "5j58jhAFzAy0keSuQYsQBn",
+        "0rUIff1QHd5zlOBtlHVqd9"
       ],
       "first_played": "2026-05-07T23:53:18.951Z",
-      "last_played": "2026-05-07T23:53:18.951Z"
+      "last_played": "2026-05-08T01:58:32.994Z"
     },
     "3fn4TpavfAcdnAg4ZNpA3c": {
       "album_name": "Wolf's Law",
@@ -743,7 +748,7 @@
         "2bD1AW4yqiCurGCva6r88a"
       ],
       "first_played": "2026-05-08T00:31:49.322Z",
-      "last_played": "2026-05-08T00:31:49.322Z"
+      "last_played": "2026-05-08T01:42:26.409Z"
     },
     "7g4qoHjkYvfFkXJEZCjtc1": {
       "album_name": "Wolfgang Amadeus Phoenix",
@@ -774,6 +779,56 @@
       ],
       "first_played": "2026-05-08T00:49:39.243Z",
       "last_played": "2026-05-08T00:49:39.243Z"
+    },
+    "3HFbH1loOUbqCyPsLuHLLh": {
+      "album_name": "Room On Fire",
+      "artist": "The Strokes",
+      "total_tracks": 11,
+      "played_tracks": [
+        "78Gzxi27GuNHTfkn2BylG4"
+      ],
+      "first_played": "2026-05-08T00:56:38.506Z",
+      "last_played": "2026-05-08T00:56:38.506Z"
+    },
+    "1gsoIHeBan6QywhysNgApK": {
+      "album_name": "Our Love To Admire",
+      "artist": "Interpol",
+      "total_tracks": 12,
+      "played_tracks": [
+        "2O5UcpKolgLT8l8yAvEmID"
+      ],
+      "first_played": "2026-05-08T01:01:39.587Z",
+      "last_played": "2026-05-08T01:01:39.587Z"
+    },
+    "1DNojVW079FU9YnAMk3Cgr": {
+      "album_name": "Everything Now",
+      "artist": "Arcade Fire",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0SaEmR2rdtfsZawPjMYkWg"
+      ],
+      "first_played": "2026-05-08T01:15:58.611Z",
+      "last_played": "2026-05-08T01:15:58.611Z"
+    },
+    "4TkmrrpjlPoCPpGyDN3rkF": {
+      "album_name": "A Deeper Understanding",
+      "artist": "The War On Drugs",
+      "total_tracks": 10,
+      "played_tracks": [
+        "59P1nrdEImkAKa1nyW9X2e"
+      ],
+      "first_played": "2026-05-08T01:29:03.709Z",
+      "last_played": "2026-05-08T01:29:03.709Z"
+    },
+    "2R45MnKwqMVAuqQ6UvNwet": {
+      "album_name": "The Big Roar",
+      "artist": "The Joy Formidable",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7vbmgajl03NXAyplCEa9JD"
+      ],
+      "first_played": "2026-05-08T01:34:23.470Z",
+      "last_played": "2026-05-08T01:34:23.470Z"
     }
   },
   "completed_albums": {
