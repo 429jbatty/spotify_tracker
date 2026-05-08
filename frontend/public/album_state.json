@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-08T01:58:32.994Z",
+  "last_checked": "2026-05-08T15:58:26.617Z",
   "albums_in_progress": {
     "6CcC2RiYVSTsxI73d4lEeB": {
       "album_name": "Elephant (Deluxe)",
@@ -813,6 +813,23 @@
       ],
       "first_played": "2026-05-08T01:34:23.470Z",
       "last_played": "2026-05-08T01:34:23.470Z"
+    },
+    "6btUx9G2BPajQ7P6mpTxId": {
+      "album_name": "Boarding House Reach",
+      "artist": "Jack White",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0A3JTAIflJc9Z7nbOVYlAh",
+        "115yXWjEQgZLh7X7CcttYL",
+        "4J5YIM08RZ9SJCcCJeEv9z",
+        "2UFFf8ck8kY13DwpOAiumF",
+        "1SR5WPj04EEqL8mWQ6a3bO",
+        "0iCUBrpsGH8xtIBE9Yy0iZ",
+        "06k5ZWQoJ44zNYlb49zBjc",
+        "7u5FRq5CT9KeiynkXA6dbK"
+      ],
+      "first_played": "2026-05-08T15:21:35.637Z",
+      "last_played": "2026-05-08T15:58:26.617Z"
     }
   },
   "completed_albums": {
