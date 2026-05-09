@@ -1,29 +1,6 @@
 {
-  "last_checked": "2026-05-08T22:14:58.079Z",
+  "last_checked": "2026-05-08T22:55:09.323Z",
   "albums_in_progress": {
-    "6FCzvataOZh68j8OKzOt9a": {
-      "album_name": "London Calling (Remastered)",
-      "artist": "The Clash",
-      "total_tracks": 19,
-      "played_tracks": [
-        "5jzma6gCzYtKB1DbEwFZKH",
-        "7FYkZkF9fog6WS818wJnhl",
-        "06JxwPA4WAg0LWADJtaldL",
-        "2FNsNZjUQg3bhx5dWW0pRs",
-        "4W9zZsQKsqikYbKM9vcN5Q",
-        "6wtmql7FJ7SSLuSw8JD8rX",
-        "33GXePBlErinst4NjAvWuc",
-        "72boGlgSwUK01n44O2tOCv",
-        "66MwdlxiFMZ8TJGLEJnS7x",
-        "0jnFDxgNhS156vu6roUVco",
-        "1bzfgbLPF3XTyDhmvoQ6uH",
-        "3lUVy400HL94NB03paDTyN",
-        "1YvbtzUkXtgotCTo6QeqkW",
-        "2zAwL5UwmqIh3JoKVkFvd8"
-      ],
-      "first_played": "2026-05-06T20:55:32.119Z",
-      "last_played": "2026-05-07T00:18:52.332Z"
-    },
     "2voL9Q8Tvcs3m6DDjTBTzn": {
       "album_name": "Music from First Cow",
       "artist": "William Tyler",
@@ -884,6 +861,16 @@
       ],
       "first_played": "2026-05-08T22:14:58.079Z",
       "last_played": "2026-05-08T22:14:58.079Z"
+    },
+    "44ePwTuWK88vnalqutqJEG": {
+      "album_name": "Fever To Tell (Deluxe Remastered)",
+      "artist": "Yeah Yeah Yeahs",
+      "total_tracks": 29,
+      "played_tracks": [
+        "5tryzDT3iMMcONq3YHWgC9"
+      ],
+      "first_played": "2026-05-08T22:55:09.323Z",
+      "last_played": "2026-05-08T22:55:09.323Z"
     }
   },
   "completed_albums": {
