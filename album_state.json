@@ -1,39 +1,6 @@
 {
   "last_checked": "2026-05-08T22:55:09.323Z",
   "albums_in_progress": {
-    "4GT6uZod4p5RiDMOVHOMme": {
-      "album_name": "Neon Bible",
-      "artist": "Arcade Fire",
-      "total_tracks": 11,
-      "played_tracks": [
-        "51xBgzcyzojRpqFW2ICQAB",
-        "1ocL0Mdp2NKggF7kG3Qdm2"
-      ],
-      "first_played": "2026-05-07T21:21:50.680Z",
-      "last_played": "2026-05-07T23:44:26.595Z"
-    },
-    "1NFGnxmeIEBakre4DvLaJq": {
-      "album_name": "Plans",
-      "artist": "Death Cab for Cutie",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5yc59J3MR3tVDPTOgwgRI5",
-        "1crbFuCkGL4kXnAGd63RXq"
-      ],
-      "first_played": "2026-05-07T21:25:41.018Z",
-      "last_played": "2026-05-08T00:04:36.144Z"
-    },
-    "5XmhHMj5LZLWo32aA6ntKE": {
-      "album_name": "Oh, Inverted World (20th Anniversary Remaster)",
-      "artist": "The Shins",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1d1Uc9yNUMvUb0RbakGDt0",
-        "0NslHuacjxQYfUTOW3HCIV"
-      ],
-      "first_played": "2026-05-07T21:34:05.479Z",
-      "last_played": "2026-05-07T23:05:16.949Z"
-    },
     "4hnqM0JK4CM1phwfq1Ldyz": {
       "album_name": "This Is Happening",
       "artist": "LCD Soundsystem",
@@ -71,27 +38,6 @@
       "first_played": "2026-05-07T22:16:27.129Z",
       "last_played": "2026-05-08T22:01:58.056Z"
     },
-    "0gkUcpkyW2SXN49Yktkf6F": {
-      "album_name": "The Suburbs (Deluxe)",
-      "artist": "Arcade Fire",
-      "total_tracks": 18,
-      "played_tracks": [
-        "3RcAhyvWMuM03yiYD4bgCG",
-        "6SbVetD0xSnkyACxD7oRtg"
-      ],
-      "first_played": "2026-05-07T22:20:20.550Z",
-      "last_played": "2026-05-08T00:19:12.643Z"
-    },
-    "4Tm0dXi3s3aSAqng2DACHr": {
-      "album_name": "Wincing The Night Away",
-      "artist": "The Shins",
-      "total_tracks": 11,
-      "played_tracks": [
-        "3NPiFBw3mA9qbJfo0nhk6X"
-      ],
-      "first_played": "2026-05-07T22:25:09.945Z",
-      "last_played": "2026-05-07T22:25:09.945Z"
-    },
     "7G84Q2FcA43cjLeWBSIedv": {
       "album_name": "Narrow Stairs",
       "artist": "Death Cab for Cutie",
@@ -104,27 +50,6 @@
       ],
       "first_played": "2026-05-07T22:29:00.712Z",
       "last_played": "2026-05-08T01:10:05.503Z"
-    },
-    "7ik4rjxOnmwnAWWzjj5ni3": {
-      "album_name": "Everything All The Time",
-      "artist": "Band of Horses",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6iYZuHW7IAUTvUpvRTVQZA",
-        "766EIreId79ZFBkiDO1Ial"
-      ],
-      "first_played": "2026-05-07T22:33:47.378Z",
-      "last_played": "2026-05-07T23:01:25.860Z"
-    },
-    "4m7YqqQc36mQwhHgH4AsVu": {
-      "album_name": "Dark Night of The Soul",
-      "artist": "Danger Mouse, Sparklehorse",
-      "total_tracks": 13,
-      "played_tracks": [
-        "6lGzMfAWjZbvPPf8SLpu0Y"
-      ],
-      "first_played": "2026-05-07T22:38:20.328Z",
-      "last_played": "2026-05-07T22:38:20.328Z"
     },
     "2brwuyGZ2lLqWnBX6U4MQT": {
       "album_name": "Reflektor",
@@ -139,37 +64,6 @@
       "first_played": "2026-05-07T22:48:52.340Z",
       "last_played": "2026-05-08T01:53:34.259Z"
     },
-    "1ZiBMaXY7w0Y0WMGheBVr5": {
-      "album_name": "Pikul",
-      "artist": "Silversun Pickups",
-      "total_tracks": 7,
-      "played_tracks": [
-        "48QHGsFEnjw699I3f4UGL4"
-      ],
-      "first_played": "2026-05-07T22:53:41.797Z",
-      "last_played": "2026-05-07T22:53:41.797Z"
-    },
-    "4sW8Eql2e2kdRP1A1R1clG": {
-      "album_name": "Turn On The Bright Lights",
-      "artist": "Interpol",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1ZBqJilDGBVYktvlCEo9jC",
-        "2ZgyzFYYOz21b2AhPPkWKF"
-      ],
-      "first_played": "2026-05-07T23:09:29.204Z",
-      "last_played": "2026-05-08T00:13:45.586Z"
-    },
-    "4A8HMvPUKHOxvTlsrPeNKh": {
-      "album_name": "To Lose My Life... (Bonus remix version)",
-      "artist": "White Lies",
-      "total_tracks": 12,
-      "played_tracks": [
-        "3MSuo4vHv2zMTPomERER6w"
-      ],
-      "first_played": "2026-05-07T23:20:35.075Z",
-      "last_played": "2026-05-07T23:20:35.075Z"
-    },
     "4whHK0lCoTKit2dkPB2nPX": {
       "album_name": "Shields",
       "artist": "Grizzly Bear",
@@ -180,27 +74,6 @@
       ],
       "first_played": "2026-05-07T23:30:01.972Z",
       "last_played": "2026-05-08T01:46:51.451Z"
-    },
-    "5GRnydamKvIeG46dycID6v": {
-      "album_name": "Fleet Foxes",
-      "artist": "Fleet Foxes",
-      "total_tracks": 11,
-      "played_tracks": [
-        "2qvToeBdYliw6n0nEsKJQa",
-        "4fuVAz1Epsftsv71dkGOZY"
-      ],
-      "first_played": "2026-05-07T23:35:09.291Z",
-      "last_played": "2026-05-08T00:53:49.208Z"
-    },
-    "0YAtJCLY8ogFUjdopdHsyS": {
-      "album_name": "El Pintor",
-      "artist": "Interpol",
-      "total_tracks": 10,
-      "played_tracks": [
-        "30rUH583B1TFoisTeBfuA2"
-      ],
-      "first_played": "2026-05-07T23:39:33.542Z",
-      "last_played": "2026-05-07T23:39:33.542Z"
     },
     "51VxHZphGLsI7aUPqIkJaz": {
       "album_name": "Lost In The Dream",
@@ -213,26 +86,6 @@
       "first_played": "2026-05-07T23:53:18.951Z",
       "last_played": "2026-05-08T01:58:32.994Z"
     },
-    "3fn4TpavfAcdnAg4ZNpA3c": {
-      "album_name": "Wolf's Law",
-      "artist": "The Joy Formidable",
-      "total_tracks": 12,
-      "played_tracks": [
-        "60i2U8vi4WQcbaBDFGLJ5C"
-      ],
-      "first_played": "2026-05-08T00:09:47.290Z",
-      "last_played": "2026-05-08T00:09:47.290Z"
-    },
-    "4vTEFCLgDEgKIQXTrsmS6F": {
-      "album_name": "I Love You, Honeybear",
-      "artist": "Father John Misty",
-      "total_tracks": 11,
-      "played_tracks": [
-        "5jLMFDMUkGpzIgPF2sxWkB"
-      ],
-      "first_played": "2026-05-08T00:27:02.939Z",
-      "last_played": "2026-05-08T00:27:02.939Z"
-    },
     "26HVbJdxW1zC799gz8yzUr": {
       "album_name": "Codes and Keys",
       "artist": "Death Cab for Cutie",
@@ -242,46 +95,6 @@
       ],
       "first_played": "2026-05-08T00:31:49.322Z",
       "last_played": "2026-05-08T01:42:26.409Z"
-    },
-    "7g4qoHjkYvfFkXJEZCjtc1": {
-      "album_name": "Wolfgang Amadeus Phoenix",
-      "artist": "Phoenix",
-      "total_tracks": 10,
-      "played_tracks": [
-        "68hYdj3GepWm2R202KhJT7"
-      ],
-      "first_played": "2026-05-08T00:35:02.518Z",
-      "last_played": "2026-05-08T00:35:02.518Z"
-    },
-    "49LA20VMk65fQyEaIzYdvf": {
-      "album_name": "Yoshimi Battles the Pink Robots",
-      "artist": "The Flaming Lips",
-      "total_tracks": 11,
-      "played_tracks": [
-        "4ou3f7jaB41isbJkt6CF2b"
-      ],
-      "first_played": "2026-05-08T00:38:21.156Z",
-      "last_played": "2026-05-08T00:38:21.156Z"
-    },
-    "6k3vC8nep1BfqAIJ81L6OL": {
-      "album_name": "An Awesome Wave",
-      "artist": "alt-J",
-      "total_tracks": 14,
-      "played_tracks": [
-        "3aA5fk4c6a7e5HM4rJqkSF"
-      ],
-      "first_played": "2026-05-08T00:49:39.243Z",
-      "last_played": "2026-05-08T00:49:39.243Z"
-    },
-    "3HFbH1loOUbqCyPsLuHLLh": {
-      "album_name": "Room On Fire",
-      "artist": "The Strokes",
-      "total_tracks": 11,
-      "played_tracks": [
-        "78Gzxi27GuNHTfkn2BylG4"
-      ],
-      "first_played": "2026-05-08T00:56:38.506Z",
-      "last_played": "2026-05-08T00:56:38.506Z"
     },
     "1gsoIHeBan6QywhysNgApK": {
       "album_name": "Our Love To Admire",
