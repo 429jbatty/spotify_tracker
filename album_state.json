@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-11T18:12:34.012Z",
+  "last_checked": "2026-05-11T22:24:02.545Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -44,7 +44,25 @@
         "1UbwpyozDvufPs6aNPW3ti"
       ],
       "first_played": "2026-05-11T18:12:34.012Z",
-      "last_played": "2026-05-11T18:12:34.012Z"
+      "last_played": "2026-05-11T21:53:01.679Z"
+    },
+    "6Hb0uXteh6zusGSn5wVpUp": {
+      "album_name": "Run The Jewels 3",
+      "artist": "Run The Jewels, El-P, Killer Mike",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5joOfvaQlHiwKk75rSgjgh",
+        "2myH9cSudoDB7cqBvt6vi8",
+        "0b7MT4fpCPP2luL199lUeG",
+        "0w0LkoN7q9432CTohTH7Jb",
+        "214lQsuLLIKume7iLwdUT8",
+        "6kncMY43QQcLUjNNQPh14K",
+        "3qO2aAVMBybqbmaopL5Ofu",
+        "5arMJ5T57Mk7j220J0QBV8",
+        "663u1M4jyjaVHcqIV2cuLr"
+      ],
+      "first_played": "2026-05-11T21:57:02.788Z",
+      "last_played": "2026-05-11T22:24:02.545Z"
     }
   },
   "completed_albums": {
