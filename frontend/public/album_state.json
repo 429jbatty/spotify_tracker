@@ -1,17 +1,6 @@
 {
   "last_checked": "2026-05-08T22:55:09.323Z",
-  "albums_in_progress": {
-    "44ePwTuWK88vnalqutqJEG": {
-      "album_name": "Fever To Tell (Deluxe Remastered)",
-      "artist": "Yeah Yeah Yeahs",
-      "total_tracks": 29,
-      "played_tracks": [
-        "5tryzDT3iMMcONq3YHWgC9"
-      ],
-      "first_played": "2026-05-08T22:55:09.323Z",
-      "last_played": "2026-05-08T22:55:09.323Z"
-    }
-  },
+  "albums_in_progress": {},
   "completed_albums": {
     "100 gecs - 1000 gecs": {
       "artist": "100 gecs",
