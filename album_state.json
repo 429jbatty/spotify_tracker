@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-08T22:55:09.323Z",
+  "last_checked": "2026-05-11T16:41:07.724Z",
   "albums_in_progress": {},
   "completed_albums": {
     "100 gecs - 1000 gecs": {
@@ -401112,7 +401112,8 @@
       "image_url": "https://coverartarchive.org/release/20d1ecaf-7d48-45ca-a892-589895c64bb3/front",
       "source": "musicbrainz",
       "listen_history": [
-        "2026-04-11T15:09:12.287Z"
+        "2026-04-11T15:09:12.287Z",
+        "2026-05-11T16:41:07.724Z"
       ]
     },
     "Serge Gainsbourg - Histoire de Melody Nelson": {
@@ -408347,6 +408348,7 @@
     }
   },
   "most_recently_listened": [
+    "John Martyn - Solid Air",
     "LCD Soundsystem - Sound of Silver",
     "Jack White - Boarding House Reach",
     "Arcade Fire - The Suburbs",
@@ -408355,7 +408357,6 @@
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
     "Caroline Polachek - Desire, I Want To Turn Into You",
     "Orbital - Diversions",
-    "Courtney Barnett - Tell Me How You Really Feel",
-    "Angel Olsen - Big Time"
+    "Courtney Barnett - Tell Me How You Really Feel"
   ]
 }
