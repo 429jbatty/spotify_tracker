@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-11T22:24:02.545Z",
+  "last_checked": "2026-05-11T23:40:23.807Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -45,24 +45,6 @@
       ],
       "first_played": "2026-05-11T18:12:34.012Z",
       "last_played": "2026-05-11T21:53:01.679Z"
-    },
-    "6Hb0uXteh6zusGSn5wVpUp": {
-      "album_name": "Run The Jewels 3",
-      "artist": "Run The Jewels, El-P, Killer Mike",
-      "total_tracks": 14,
-      "played_tracks": [
-        "5joOfvaQlHiwKk75rSgjgh",
-        "2myH9cSudoDB7cqBvt6vi8",
-        "0b7MT4fpCPP2luL199lUeG",
-        "0w0LkoN7q9432CTohTH7Jb",
-        "214lQsuLLIKume7iLwdUT8",
-        "6kncMY43QQcLUjNNQPh14K",
-        "3qO2aAVMBybqbmaopL5Ofu",
-        "5arMJ5T57Mk7j220J0QBV8",
-        "663u1M4jyjaVHcqIV2cuLr"
-      ],
-      "first_played": "2026-05-11T21:57:02.788Z",
-      "last_played": "2026-05-11T22:24:02.545Z"
     }
   },
   "completed_albums": {
@@ -408409,9 +408391,1424 @@
       "listen_history": [
         "2026-05-06T19:48:46.132Z"
       ]
+    },
+    "Run The Jewels, El-P, Killer Mike - Run The Jewels 3": {
+      "artist": "Run the Jewels",
+      "artist_mbid": "a80c5dc5-b12e-4667-9f5a-b568961f3839",
+      "name": "Run the Jewels 3",
+      "release_group_mbid": "d568d976-f77d-4283-964b-79f100c693f0",
+      "release_mbid": "faf65b3b-e548-4645-9d08-340ec094ba59",
+      "label": "Run the Jewels, Inc.",
+      "release_year": 2016,
+      "release_month": 12,
+      "release_day": 25,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Down",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "Johannes Raassina",
+              "recording",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Joi",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "edb28312-dcef-4138-a7df-e0cd286bb785"
+        },
+        {
+          "position": "2",
+          "title": "Talk to Me",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Trackstar the DJ",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "d17593b6-9955-4b00-a673-1cd266138f17"
+        },
+        {
+          "position": "3",
+          "title": "Legend Has It",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "86e8f2e4-b73f-4eb9-9f51-349cd7675235"
+        },
+        {
+          "position": "4",
+          "title": "Call Ticketron",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "65fbafae-4589-4486-b43c-43b572cbc7ac"
+        },
+        {
+          "position": "5",
+          "title": "Hey Kids (Bumaye)",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Matt Sweeney",
+              "instrument",
+              "additional, guitar"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "Danny Brown",
+              "vocal",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Michael Marie Render",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Gabrielle Strother",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Grace Strother",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Danny Brown",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "078d805e-9d77-482c-bc54-a8656e5fa69d"
+        },
+        {
+          "position": "6",
+          "title": "Stay Gold",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Matt Sweeney",
+              "instrument",
+              "additional, guitar"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "331a5e59-0a31-4869-b7d8-6bccbadf85a7"
+        },
+        {
+          "position": "7",
+          "title": "Don\u2019t Get Captured",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Trackstar the DJ",
+              "instrument",
+              "turntable"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "\u2018Lil Zoby Poundstone Schwartz",
+              "programming",
+              "drum machine"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "0afc796a-77fa-4c15-a63f-dc0c0d171f47"
+        },
+        {
+          "position": "8",
+          "title": "Thieves! (Screamed the Ghost)",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Danger Mouse",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "Todd Monfalcone",
+              "recording",
+              "additional"
+            ],
+            [
+              "Tunde Adebimpe",
+              "vocal",
+              "additional"
+            ],
+            [
+              "BOOTS",
+              "vocal",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "BOOTS",
+              "work lyricist",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "eb0f469e-35cd-4fcf-ab59-3a7c68a77d3b"
+        },
+        {
+          "position": "9",
+          "title": "2100",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "BOOTS",
+              "vocal",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "BOOTS",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "ef2d5104-ffb6-40f2-b514-e44aa57f4095"
+        },
+        {
+          "position": "10",
+          "title": "Panther Like a Panther (Miracle mix)",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "BOOTS",
+              "producer",
+              "co"
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Trina",
+              "vocal",
+              ""
+            ],
+            [
+              "BOOTS",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "8a41aa85-fb9b-40f6-8eec-23a29390d9b8"
+        },
+        {
+          "position": "11",
+          "title": "Everybody Stay Calm",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Mike Bones",
+              "instrument",
+              "additional, guitar"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "11524857-32a2-4291-8c45-9aabcef79664"
+        },
+        {
+          "position": "12",
+          "title": "Oh Mama",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "4c3b6a99-a91e-4dc0-bfc9-5843fe85fe5e"
+        },
+        {
+          "position": "13",
+          "title": "Thursday in the Danger Room",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Kamasi Washington",
+              "instrument",
+              "horn"
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "Todd Monfalcone",
+              "recording",
+              "additional"
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "c5e2c258-c9ad-4ea7-ba94-73d4af828e3d"
+        },
+        {
+          "position": "14",
+          "title": "A Report to the Shareholders / Kill Your Masters",
+          "credits": [
+            [
+              "El\u2010P",
+              "engineer",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "engineer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "engineer",
+              ""
+            ],
+            [
+              "Wilder Zoby",
+              "engineer",
+              ""
+            ],
+            [
+              "Joey Raia",
+              "mix",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "producer",
+              ""
+            ],
+            [
+              "Little Shalimar",
+              "producer",
+              "co"
+            ],
+            [
+              "Wilder Zoby",
+              "producer",
+              "co"
+            ],
+            [
+              "Daddy Kev",
+              "recording",
+              ""
+            ],
+            [
+              "Leon Kelly",
+              "recording",
+              ""
+            ],
+            [
+              "El\u2010P",
+              "vocal",
+              ""
+            ],
+            [
+              "Killer Mike",
+              "vocal",
+              ""
+            ],
+            [
+              "Zack de la Rocha",
+              "vocal",
+              ""
+            ],
+            [
+              "\u041d\u0430\u0434\u0435\u0436\u0434\u0430 \u0422\u043e\u043b\u043e\u043a\u043e\u043d\u043d\u0438\u043a\u043e\u0432\u0430",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Jaime Meline",
+              "work composer",
+              ""
+            ],
+            [
+              "Torbitt Schwartz",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Wilder Zoby",
+              "work composer",
+              "additional"
+            ],
+            [
+              "Jaime Meline",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Michael Render",
+              "work lyricist",
+              ""
+            ],
+            [
+              "Zack de la Rocha",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "6511bc70-661a-48fb-a751-c23a0ee86331"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "experimental hip hop",
+        "hardcore hip hop",
+        "hip hop",
+        "political hip hop",
+        "self-titled"
+      ],
+      "image_url": "https://coverartarchive.org/release/faf65b3b-e548-4645-9d08-340ec094ba59/15518758679-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-11T23:40:23.807Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Run The Jewels, El-P, Killer Mike - Run The Jewels 3",
     "John Martyn - Solid Air",
     "LCD Soundsystem - Sound of Silver",
     "Jack White - Boarding House Reach",
@@ -408420,7 +409817,6 @@
     "Eric Johnson - Ah Via Musicom",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
     "Caroline Polachek - Desire, I Want To Turn Into You",
-    "Orbital - Diversions",
-    "Courtney Barnett - Tell Me How You Really Feel"
+    "Orbital - Diversions"
   ]
 }
