@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-11T23:40:23.807Z",
+  "last_checked": "2026-05-12T20:15:19.251Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -45,6 +45,29 @@
       ],
       "first_played": "2026-05-11T18:12:34.012Z",
       "last_played": "2026-05-11T21:53:01.679Z"
+    },
+    "3SUEJULSGgBDG1j4GQhfYY": {
+      "album_name": "LUX",
+      "artist": "ROSAL\u00cdA",
+      "total_tracks": 15,
+      "played_tracks": [
+        "2T8yuUKl1nhmtaIocqWo4i"
+      ],
+      "first_played": "2026-05-12T19:18:39.735Z",
+      "last_played": "2026-05-12T19:18:39.735Z"
+    },
+    "2gToC0XAblE9h3UZD6aAaQ": {
+      "album_name": "Third Eye Blind",
+      "artist": "Third Eye Blind",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5lgOUdoMBB3eZuSmc5HL4r",
+        "0DxirjMd0sE5C1annYHtt7",
+        "42et6fnHCw1HIPSrdPprMl",
+        "3354J49VpkbZJho7Ztdzpw"
+      ],
+      "first_played": "2026-05-12T19:22:41.248Z",
+      "last_played": "2026-05-12T20:15:19.251Z"
     }
   },
   "completed_albums": {
