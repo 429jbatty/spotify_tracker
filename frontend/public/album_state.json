@@ -1,41 +1,6 @@
 {
   "last_checked": "2026-05-13T16:31:06.713Z",
   "albums_in_progress": {
-    "51VTfQlLnCp93wUzp1VZXY": {
-      "album_name": "Solid Air",
-      "artist": "John Martyn",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0M0VR1YVgPQ4vNTfLyTDgb",
-        "37INkMCTOFcWXEQCAIq7On",
-        "0Ov9u8GyAwgVK4jKD0ZI1U",
-        "0wfVke1yGl5joMxNrQ1jho",
-        "5IGBxNTeRBWWWbM1gBCo9M",
-        "0wKUixDsA4jWvNKABO1Iwd"
-      ],
-      "first_played": "2026-05-11T17:06:14.439Z",
-      "last_played": "2026-05-11T17:20:43.741Z"
-    },
-    "0h1ruavpzNOYbjwg5oC0fg": {
-      "album_name": "Bless The Weather",
-      "artist": "John Martyn",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6GXOriLcYRb1ZcIvoIK90y"
-      ],
-      "first_played": "2026-05-11T17:25:13.357Z",
-      "last_played": "2026-05-11T17:25:13.357Z"
-    },
-    "3Lh1KbeS801PtOeojquUPk": {
-      "album_name": "Songs For Beginners",
-      "artist": "Graham Nash",
-      "total_tracks": 11,
-      "played_tracks": [
-        "28s5iRbX62GZG2ReZTLKDa"
-      ],
-      "first_played": "2026-05-11T17:28:43.507Z",
-      "last_played": "2026-05-11T17:28:43.507Z"
-    },
     "2y2QZ4uDpzoZHgH2il5Ktu": {
       "album_name": "Benji",
       "artist": "Sun Kil Moon",
