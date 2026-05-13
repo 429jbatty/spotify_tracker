@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-12T20:15:19.251Z",
+  "last_checked": "2026-05-13T00:45:05.249Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -56,18 +56,15 @@
       "first_played": "2026-05-12T19:18:39.735Z",
       "last_played": "2026-05-12T19:18:39.735Z"
     },
-    "2gToC0XAblE9h3UZD6aAaQ": {
-      "album_name": "Third Eye Blind",
+    "5Z1mU7iT0rfX9o9qzM1zYf": {
+      "album_name": "Out of the Vein",
       "artist": "Third Eye Blind",
       "total_tracks": 14,
       "played_tracks": [
-        "5lgOUdoMBB3eZuSmc5HL4r",
-        "0DxirjMd0sE5C1annYHtt7",
-        "42et6fnHCw1HIPSrdPprMl",
-        "3354J49VpkbZJho7Ztdzpw"
+        "51qMnEke2HrZJPy45SIh1l"
       ],
-      "first_played": "2026-05-12T19:22:41.248Z",
-      "last_played": "2026-05-12T20:15:19.251Z"
+      "first_played": "2026-05-13T00:45:05.249Z",
+      "last_played": "2026-05-13T00:45:05.249Z"
     }
   },
   "completed_albums": {
@@ -362046,7 +362043,9 @@
         "adult alternative pop/rock"
       ],
       "image_url": "https://coverartarchive.org/release/334cebf6-ae36-4953-9fa0-b70139f15a02/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-12T23:41:09.560Z"
+      ],
       "source": "musicbrainz"
     },
     "Third Eye Blind - Blue": {
@@ -409831,6 +409830,7 @@
     }
   },
   "most_recently_listened": [
+    "Third Eye Blind - Third Eye Blind",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 3",
     "John Martyn - Solid Air",
     "LCD Soundsystem - Sound of Silver",
@@ -409839,7 +409839,6 @@
     "William Tyler - Modern Country",
     "Eric Johnson - Ah Via Musicom",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
-    "Caroline Polachek - Desire, I Want To Turn Into You",
-    "Orbital - Diversions"
+    "Caroline Polachek - Desire, I Want To Turn Into You"
   ]
 }
