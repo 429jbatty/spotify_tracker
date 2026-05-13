@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-05-13T16:31:06.713Z",
+  "last_checked": "2026-05-13T21:11:12.415Z",
   "albums_in_progress": {
-    "2y2QZ4uDpzoZHgH2il5Ktu": {
-      "album_name": "Benji",
-      "artist": "Sun Kil Moon",
-      "total_tracks": 11,
-      "played_tracks": [
-        "1UbwpyozDvufPs6aNPW3ti"
-      ],
-      "first_played": "2026-05-11T18:12:34.012Z",
-      "last_played": "2026-05-11T21:53:01.679Z"
-    },
     "3SUEJULSGgBDG1j4GQhfYY": {
       "album_name": "LUX",
       "artist": "ROSAL\u00cdA",
@@ -110,6 +100,16 @@
       ],
       "first_played": "2026-05-13T16:31:06.713Z",
       "last_played": "2026-05-13T16:31:06.713Z"
+    },
+    "7xGqf9DddW89cg7m6zX88t": {
+      "album_name": "New York",
+      "artist": "Lou Reed",
+      "total_tracks": 14,
+      "played_tracks": [
+        "4TDLfAmx45EpSiQYG6hCzT"
+      ],
+      "first_played": "2026-05-13T21:11:12.415Z",
+      "last_played": "2026-05-13T21:11:12.415Z"
     }
   },
   "completed_albums": {
