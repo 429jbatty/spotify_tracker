@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-13T14:51:58.067Z",
+  "last_checked": "2026-05-13T16:31:06.713Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -66,18 +66,85 @@
       "first_played": "2026-05-13T00:45:05.249Z",
       "last_played": "2026-05-13T00:45:05.249Z"
     },
-    "5SqbMEyAt8332ISGiLX0St": {
-      "album_name": "Transformer",
+    "3Kawndiz86cIHkPsKtFiKx": {
+      "album_name": "Coney Island Baby",
       "artist": "Lou Reed",
+      "total_tracks": 8,
+      "played_tracks": [
+        "0ivHDucXMbjTjiU4lMIkBO"
+      ],
+      "first_played": "2026-05-13T15:58:36.796Z",
+      "last_played": "2026-05-13T15:58:36.796Z"
+    },
+    "5mwOo1zikswhmfHvtqVSXg": {
+      "album_name": "Pink Moon",
+      "artist": "Nick Drake",
       "total_tracks": 11,
       "played_tracks": [
-        "4A48NL57P16zSRaq3yoYry",
-        "1mrfZ1VZj8hdm39K0HUu7R",
-        "4TOMI010Sd4ZAX4aZ5TS85",
-        "4tj0T53jJzNpk5f5AByEQR"
+        "4KROoGIaPaR1pBHPnR3bwC"
       ],
-      "first_played": "2026-05-13T14:40:56.602Z",
-      "last_played": "2026-05-13T14:51:58.067Z"
+      "first_played": "2026-05-13T16:00:36.518Z",
+      "last_played": "2026-05-13T16:00:36.518Z"
+    },
+    "4pG3bKkbmReDt5QTDn3JDz": {
+      "album_name": "Astral Weeks",
+      "artist": "Van Morrison",
+      "total_tracks": 8,
+      "played_tracks": [
+        "0vz4iTEfsp2lunsRJeMzjj"
+      ],
+      "first_played": "2026-05-13T16:08:07.129Z",
+      "last_played": "2026-05-13T16:08:07.129Z"
+    },
+    "2HOf3Nb44Us8U9oEtKLSrX": {
+      "album_name": "The Velvet Underground (45th Anniversary)",
+      "artist": "The Velvet Underground",
+      "total_tracks": 10,
+      "played_tracks": [
+        "11VwZwNF29HrqwalYUMitb"
+      ],
+      "first_played": "2026-05-13T16:13:36.883Z",
+      "last_played": "2026-05-13T16:13:36.883Z"
+    },
+    "4A366gjTrYQwmRtkTezF2W": {
+      "album_name": "Still Crazy After All These Years",
+      "artist": "Paul Simon",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6Qb7gtV6Q4MnUjSbkFcopl"
+      ],
+      "first_played": "2026-05-13T16:17:06.709Z",
+      "last_played": "2026-05-13T16:17:06.709Z"
+    },
+    "3e9VtbXnl6tqrFKrnNyxaI": {
+      "album_name": "If You're Feeling Sinister",
+      "artist": "Belle and Sebastian",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6q28LN1KJpsYqG5jNFy6rX"
+      ],
+      "first_played": "2026-05-13T16:22:06.827Z",
+      "last_played": "2026-05-13T16:22:06.827Z"
+    },
+    "6k1iylSzWOs7SgavxlJ8kt": {
+      "album_name": "Electric Warrior [Expanded & Remastered]",
+      "artist": "T. Rex",
+      "total_tracks": 18,
+      "played_tracks": [
+        "5N4vVbNotNwWGG8KcCdstR"
+      ],
+      "first_played": "2026-05-13T16:26:37.193Z",
+      "last_played": "2026-05-13T16:26:37.193Z"
+    },
+    "5bHkK1X4WEOzNvRhehvOcb": {
+      "album_name": "Deja Vu",
+      "artist": "Crosby, Stills, Nash & Young",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0gCJkpD0RhF2rjiALLHBQL"
+      ],
+      "first_played": "2026-05-13T16:31:06.713Z",
+      "last_played": "2026-05-13T16:31:06.713Z"
     }
   },
   "completed_albums": {
@@ -197891,7 +197958,9 @@
         "longing"
       ],
       "image_url": "https://coverartarchive.org/release/916762d7-bcc4-4aac-bc33-6f87a7037046/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-13T15:52:13.155Z"
+      ],
       "source": "musicbrainz"
     },
     "Love - Forever Changes": {
@@ -409843,6 +409912,7 @@
     }
   },
   "most_recently_listened": [
+    "Lou Reed - Transformer",
     "Third Eye Blind - Third Eye Blind",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 3",
     "John Martyn - Solid Air",
@@ -409851,7 +409921,6 @@
     "Arcade Fire - The Suburbs",
     "William Tyler - Modern Country",
     "Eric Johnson - Ah Via Musicom",
-    "Run The Jewels, El-P, Killer Mike - Run The Jewels 2",
-    "Caroline Polachek - Desire, I Want To Turn Into You"
+    "Run The Jewels, El-P, Killer Mike - Run The Jewels 2"
   ]
 }
