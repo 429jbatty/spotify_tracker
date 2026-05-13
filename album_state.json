@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-13T00:45:05.249Z",
+  "last_checked": "2026-05-13T14:51:58.067Z",
   "albums_in_progress": {
     "51VTfQlLnCp93wUzp1VZXY": {
       "album_name": "Solid Air",
@@ -65,6 +65,19 @@
       ],
       "first_played": "2026-05-13T00:45:05.249Z",
       "last_played": "2026-05-13T00:45:05.249Z"
+    },
+    "5SqbMEyAt8332ISGiLX0St": {
+      "album_name": "Transformer",
+      "artist": "Lou Reed",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4A48NL57P16zSRaq3yoYry",
+        "1mrfZ1VZj8hdm39K0HUu7R",
+        "4TOMI010Sd4ZAX4aZ5TS85",
+        "4tj0T53jJzNpk5f5AByEQR"
+      ],
+      "first_played": "2026-05-13T14:40:56.602Z",
+      "last_played": "2026-05-13T14:51:58.067Z"
     }
   },
   "completed_albums": {
