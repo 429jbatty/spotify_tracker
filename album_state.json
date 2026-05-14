@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-13T21:11:12.415Z",
+  "last_checked": "2026-05-14T16:43:24.850Z",
   "albums_in_progress": {
     "3SUEJULSGgBDG1j4GQhfYY": {
       "album_name": "LUX",
@@ -209225,7 +209225,9 @@
         "chillwave"
       ],
       "image_url": "https://coverartarchive.org/release/c5ccb9e5-61da-473d-8369-c8f3978d18dc/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-14T16:43:24.850Z"
+      ],
       "source": "musicbrainz"
     },
     "Migos - Culture": {
@@ -409877,6 +409879,7 @@
     }
   },
   "most_recently_listened": [
+    "MGMT - Little Dark Age",
     "Lou Reed - Transformer",
     "Third Eye Blind - Third Eye Blind",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 3",
@@ -409885,7 +409888,6 @@
     "Jack White - Boarding House Reach",
     "Arcade Fire - The Suburbs",
     "William Tyler - Modern Country",
-    "Eric Johnson - Ah Via Musicom",
-    "Run The Jewels, El-P, Killer Mike - Run The Jewels 2"
+    "Eric Johnson - Ah Via Musicom"
   ]
 }
