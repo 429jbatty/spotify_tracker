@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-14T16:43:24.850Z",
+  "last_checked": "2026-05-14T18:43:17.633Z",
   "albums_in_progress": {
     "3SUEJULSGgBDG1j4GQhfYY": {
       "album_name": "LUX",
@@ -110,6 +110,172 @@
       ],
       "first_played": "2026-05-13T21:11:12.415Z",
       "last_played": "2026-05-13T21:11:12.415Z"
+    },
+    "1R8kkopLT4IAxzMMkjic6X": {
+      "album_name": "Sound of Silver",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2VGDntFPvgvqSiUf9ITEfW"
+      ],
+      "first_played": "2026-05-14T16:54:19.053Z",
+      "last_played": "2026-05-14T16:54:19.053Z"
+    },
+    "2Yy84EeclNVwFDem6yIB2s": {
+      "album_name": "Antisocialites",
+      "artist": "Alvvays",
+      "total_tracks": 10,
+      "played_tracks": [
+        "6Px7VvXLTjMP6J2nTQ6bIh",
+        "0LkjdguLEqOnRspW3N1aio",
+        "1MlU2xFOo4k1gFzIRYeQ0U"
+      ],
+      "first_played": "2026-05-14T17:01:04.236Z",
+      "last_played": "2026-05-14T18:39:07.108Z"
+    },
+    "2noRn2Aes5aoNVsU6iWThc": {
+      "album_name": "Discovery",
+      "artist": "Daft Punk",
+      "total_tracks": 14,
+      "played_tracks": [
+        "7v9Q0dAb9t7h8gJOkcJHay"
+      ],
+      "first_played": "2026-05-14T17:05:04.584Z",
+      "last_played": "2026-05-14T17:05:04.584Z"
+    },
+    "6nyf9D2M4je5BdNXwycoIe": {
+      "album_name": "Pure Comedy",
+      "artist": "Father John Misty",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7iwojpwFRi5x6qhLerUJef"
+      ],
+      "first_played": "2026-05-14T17:09:24.968Z",
+      "last_played": "2026-05-14T17:09:24.968Z"
+    },
+    "6mm1Skz3JE6AXneya9Nyiv": {
+      "album_name": "Oracular Spectacular",
+      "artist": "MGMT",
+      "total_tracks": 10,
+      "played_tracks": [
+        "5nv854ey1k43KaZ0kHmE4Z",
+        "19K3lUMJmOdeuOBTrbLm19"
+      ],
+      "first_played": "2026-05-14T17:13:12.700Z",
+      "last_played": "2026-05-14T18:43:17.633Z"
+    },
+    "4hnqM0JK4CM1phwfq1Ldyz": {
+      "album_name": "This Is Happening",
+      "artist": "LCD Soundsystem",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2cmRpmO04TLaKPzmAzySYZ",
+        "5gmv3BgePSYiHnPJgY7oTJ",
+        "2073QOEC8rBtSyTsRyaWiP"
+      ],
+      "first_played": "2026-05-14T17:22:07.811Z",
+      "last_played": "2026-05-14T18:20:49.906Z"
+    },
+    "2xkZV2Hl1Omi8rk2D7t5lN": {
+      "album_name": "The New Abnormal",
+      "artist": "The Strokes",
+      "total_tracks": 9,
+      "played_tracks": [
+        "6IRzBP4gVoV4D2zHmocoWy",
+        "5ruzrDWcT0vuJIOMW7gMnW"
+      ],
+      "first_played": "2026-05-14T17:28:22.801Z",
+      "last_played": "2026-05-14T17:57:45.926Z"
+    },
+    "1dShPPoxXfzbjFO1jIHJZz": {
+      "album_name": "Blue Rev",
+      "artist": "Alvvays",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1rw9dOKuewBiKfVHgUPDfo"
+      ],
+      "first_played": "2026-05-14T17:30:32.790Z",
+      "last_played": "2026-05-14T17:30:32.790Z"
+    },
+    "0nSzBICzQHea8grwfqa5Gb": {
+      "album_name": "The Magic Whip",
+      "artist": "Blur",
+      "total_tracks": 12,
+      "played_tracks": [
+        "61JDaStnXY3vbaEjliB5WA"
+      ],
+      "first_played": "2026-05-14T17:35:32.526Z",
+      "last_played": "2026-05-14T17:35:32.526Z"
+    },
+    "6NTrwu1XJ56jBPx7HMksbZ": {
+      "album_name": "Power Corruption and Lies",
+      "artist": "New Order",
+      "total_tracks": 8,
+      "played_tracks": [
+        "2EEinN4Zk8MUv4OQuLsTBj"
+      ],
+      "first_played": "2026-05-14T17:40:47.359Z",
+      "last_played": "2026-05-14T17:40:47.359Z"
+    },
+    "4436CQF7pmjxkHCaJCGjmt": {
+      "album_name": "Loss Of Life",
+      "artist": "MGMT",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0ydCckEdZbyPWuLpKqm0S0"
+      ],
+      "first_played": "2026-05-14T17:44:43.809Z",
+      "last_played": "2026-05-14T17:44:43.809Z"
+    },
+    "1DNojVW079FU9YnAMk3Cgr": {
+      "album_name": "Everything Now",
+      "artist": "Arcade Fire",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0KWcRXcnGoB0gWSu4mshF8"
+      ],
+      "first_played": "2026-05-14T18:11:02.269Z",
+      "last_played": "2026-05-14T18:11:02.269Z"
+    },
+    "3HA1Ru1gEAgaxTywkJmBOL": {
+      "album_name": "Congratulations",
+      "artist": "MGMT",
+      "total_tracks": 9,
+      "played_tracks": [
+        "6kblAEj0T0312fv5QWsXzo"
+      ],
+      "first_played": "2026-05-14T18:14:57.890Z",
+      "last_played": "2026-05-14T18:14:57.890Z"
+    },
+    "2Hr5EY19Y7gV7K7ogk9QcR": {
+      "album_name": "Ti Amo",
+      "artist": "Phoenix",
+      "total_tracks": 10,
+      "played_tracks": [
+        "57tOzus76E38NNNkNp1lnq"
+      ],
+      "first_played": "2026-05-14T18:24:56.947Z",
+      "last_played": "2026-05-14T18:24:56.947Z"
+    },
+    "49LA20VMk65fQyEaIzYdvf": {
+      "album_name": "Yoshimi Battles the Pink Robots",
+      "artist": "The Flaming Lips",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0UQnWjRKEphlQtzeZ83lC2"
+      ],
+      "first_played": "2026-05-14T18:29:40.416Z",
+      "last_played": "2026-05-14T18:29:40.416Z"
+    },
+    "5g4E06cxsFEMFE9hSekAt2": {
+      "album_name": "Writer's Block",
+      "artist": "Peter Bjorn and John",
+      "total_tracks": 11,
+      "played_tracks": [
+        "4dyx5SzxPPaD8xQIid5Wjj"
+      ],
+      "first_played": "2026-05-14T18:34:17.286Z",
+      "last_played": "2026-05-14T18:34:17.286Z"
     }
   },
   "completed_albums": {
