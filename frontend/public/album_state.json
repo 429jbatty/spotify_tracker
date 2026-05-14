@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-14T20:33:53.990Z",
+  "last_checked": "2026-05-14T22:25:27.365Z",
   "albums_in_progress": {
     "5Z1mU7iT0rfX9o9qzM1zYf": {
       "album_name": "Out of the Vein",
@@ -120,10 +120,11 @@
         "6Px7VvXLTjMP6J2nTQ6bIh",
         "0LkjdguLEqOnRspW3N1aio",
         "1MlU2xFOo4k1gFzIRYeQ0U",
-        "11KmXKbQEjF8fZWNZ9Pxkr"
+        "11KmXKbQEjF8fZWNZ9Pxkr",
+        "6TcxxINfeaBEQ35sHMldTD"
       ],
       "first_played": "2026-05-14T17:01:04.236Z",
-      "last_played": "2026-05-14T20:19:07.765Z"
+      "last_played": "2026-05-14T21:26:07.845Z"
     },
     "2noRn2Aes5aoNVsU6iWThc": {
       "album_name": "Discovery",
@@ -163,10 +164,11 @@
       "played_tracks": [
         "2cmRpmO04TLaKPzmAzySYZ",
         "5gmv3BgePSYiHnPJgY7oTJ",
-        "2073QOEC8rBtSyTsRyaWiP"
+        "2073QOEC8rBtSyTsRyaWiP",
+        "4Cy0NHJ8Gh0xMdwyM9RkQm"
       ],
       "first_played": "2026-05-14T17:22:07.811Z",
-      "last_played": "2026-05-14T18:20:49.906Z"
+      "last_played": "2026-05-14T21:17:15.057Z"
     },
     "2xkZV2Hl1Omi8rk2D7t5lN": {
       "album_name": "The New Abnormal",
@@ -175,10 +177,12 @@
       "played_tracks": [
         "6IRzBP4gVoV4D2zHmocoWy",
         "5ruzrDWcT0vuJIOMW7gMnW",
-        "1aOxOpH4AkGAd8OMrKjyNY"
+        "1aOxOpH4AkGAd8OMrKjyNY",
+        "55N8cxpE1QDoeaaNqUnoZ2",
+        "2mDYYGaGd9uXKkK2YhDA3i"
       ],
       "first_played": "2026-05-14T17:28:22.801Z",
-      "last_played": "2026-05-14T19:37:51.452Z"
+      "last_played": "2026-05-14T22:25:27.365Z"
     },
     "1dShPPoxXfzbjFO1jIHJZz": {
       "album_name": "Blue Rev",
@@ -216,10 +220,13 @@
       "artist": "MGMT",
       "total_tracks": 10,
       "played_tracks": [
-        "0ydCckEdZbyPWuLpKqm0S0"
+        "0ydCckEdZbyPWuLpKqm0S0",
+        "3eUBAzE9YMmOjL3V9iNXz1",
+        "58QNyQZknkVyXhxrkhmQPZ",
+        "4ep0XlEdr2fK8R4jEHTXqp"
       ],
       "first_played": "2026-05-14T17:44:43.809Z",
-      "last_played": "2026-05-14T17:44:43.809Z"
+      "last_played": "2026-05-14T22:12:53.508Z"
     },
     "1DNojVW079FU9YnAMk3Cgr": {
       "album_name": "Everything Now",
@@ -257,20 +264,24 @@
       "artist": "The Flaming Lips",
       "total_tracks": 11,
       "played_tracks": [
-        "0UQnWjRKEphlQtzeZ83lC2"
+        "0UQnWjRKEphlQtzeZ83lC2",
+        "2cVj88Q5SL5bZa8O2iFrDL",
+        "4ou3f7jaB41isbJkt6CF2b"
       ],
       "first_played": "2026-05-14T18:29:40.416Z",
-      "last_played": "2026-05-14T18:29:40.416Z"
+      "last_played": "2026-05-14T22:09:07.179Z"
     },
     "5g4E06cxsFEMFE9hSekAt2": {
       "album_name": "Writer's Block",
       "artist": "Peter Bjorn and John",
       "total_tracks": 11,
       "played_tracks": [
-        "4dyx5SzxPPaD8xQIid5Wjj"
+        "4dyx5SzxPPaD8xQIid5Wjj",
+        "5mDhD2P7Gv8Y6PjhsYHocx",
+        "6KF8tgwtvx29hM2RxqHoqP"
       ],
       "first_played": "2026-05-14T18:34:17.286Z",
-      "last_played": "2026-05-14T18:34:17.286Z"
+      "last_played": "2026-05-14T21:39:20.568Z"
     },
     "0NVvSmy2su8nXkCjK0zuWg": {
       "album_name": "Bankrupt!",
@@ -411,6 +422,78 @@
       ],
       "first_played": "2026-05-14T20:30:05.859Z",
       "last_played": "2026-05-14T20:30:05.859Z"
+    },
+    "7Kmmw7Z5D2UD5MVwdm10sT": {
+      "album_name": "Torches",
+      "artist": "Foster The People",
+      "total_tracks": 10,
+      "played_tracks": [
+        "7w87IxuO7BDcJ3YUqCyMTT"
+      ],
+      "first_played": "2026-05-14T20:37:53.256Z",
+      "last_played": "2026-05-14T20:37:53.256Z"
+    },
+    "5LlMvH379KZHgRIL5BrTOg": {
+      "album_name": "Tyranny",
+      "artist": "The Voidz",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3YB9cvd668HXBEq8rbBW8P"
+      ],
+      "first_played": "2026-05-14T20:53:22.360Z",
+      "last_played": "2026-05-14T20:53:22.360Z"
+    },
+    "1A2GTWGtFfWp7KSQTwWOyo": {
+      "album_name": "Human After All",
+      "artist": "Daft Punk",
+      "total_tracks": 10,
+      "played_tracks": [
+        "3PsJ6zisndTa3F9eOjBfCc"
+      ],
+      "first_played": "2026-05-14T21:03:30.641Z",
+      "last_played": "2026-05-14T21:03:30.641Z"
+    },
+    "79dL7FLiJFOO0EoehUHQBv": {
+      "album_name": "Currents",
+      "artist": "Tame Impala",
+      "total_tracks": 13,
+      "played_tracks": [
+        "0xtIp0lgccN85GfGOekS5L"
+      ],
+      "first_played": "2026-05-14T21:30:38.451Z",
+      "last_played": "2026-05-14T21:30:38.451Z"
+    },
+    "1K6TvnkvmnLKPhifmPb6N7": {
+      "album_name": "Alvvays",
+      "artist": "Alvvays",
+      "total_tracks": 9,
+      "played_tracks": [
+        "6LC4cyrlOPeg2WXijaYrgj",
+        "0KVWVuutF9Dn8li4HdyAeU"
+      ],
+      "first_played": "2026-05-14T21:50:06.521Z",
+      "last_played": "2026-05-14T22:16:11.790Z"
+    },
+    "1DNSmmRLfv97Yjq7MTFWng": {
+      "album_name": "InnerSpeaker",
+      "artist": "Tame Impala",
+      "total_tracks": 11,
+      "played_tracks": [
+        "2a2MbiJN2skOxohykOVcss",
+        "3Yub3anoLj8w58TVpEXUJv"
+      ],
+      "first_played": "2026-05-14T21:54:02.377Z",
+      "last_played": "2026-05-14T22:21:32.517Z"
+    },
+    "3HFbH1loOUbqCyPsLuHLLh": {
+      "album_name": "Room On Fire",
+      "artist": "The Strokes",
+      "total_tracks": 11,
+      "played_tracks": [
+        "6DUKQUhWqUySYngLXLNwP2"
+      ],
+      "first_played": "2026-05-14T21:57:29.461Z",
+      "last_played": "2026-05-14T21:57:29.461Z"
     }
   },
   "completed_albums": {
