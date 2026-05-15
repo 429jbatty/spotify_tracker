@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-05-14T22:25:27.365Z",
+  "last_checked": "2026-05-14T22:33:08.463Z",
   "albums_in_progress": {
-    "5Z1mU7iT0rfX9o9qzM1zYf": {
-      "album_name": "Out of the Vein",
-      "artist": "Third Eye Blind",
-      "total_tracks": 14,
-      "played_tracks": [
-        "51qMnEke2HrZJPy45SIh1l"
-      ],
-      "first_played": "2026-05-13T00:45:05.249Z",
-      "last_played": "2026-05-13T00:45:05.249Z"
-    },
     "3Kawndiz86cIHkPsKtFiKx": {
       "album_name": "Coney Island Baby",
       "artist": "Lou Reed",
@@ -278,10 +268,11 @@
       "played_tracks": [
         "4dyx5SzxPPaD8xQIid5Wjj",
         "5mDhD2P7Gv8Y6PjhsYHocx",
-        "6KF8tgwtvx29hM2RxqHoqP"
+        "6KF8tgwtvx29hM2RxqHoqP",
+        "4xj5OL6pyQTOsDRewbO5zv"
       ],
       "first_played": "2026-05-14T18:34:17.286Z",
-      "last_played": "2026-05-14T21:39:20.568Z"
+      "last_played": "2026-05-14T22:29:04.780Z"
     },
     "0NVvSmy2su8nXkCjK0zuWg": {
       "album_name": "Bankrupt!",
@@ -494,6 +485,16 @@
       ],
       "first_played": "2026-05-14T21:57:29.461Z",
       "last_played": "2026-05-14T21:57:29.461Z"
+    },
+    "4rP54hT8fzDosnCtzQyBRF": {
+      "album_name": "Phrazes For The Young",
+      "artist": "Julian Casablancas",
+      "total_tracks": 8,
+      "played_tracks": [
+        "6i99ThziImjuFABb8rUQvy"
+      ],
+      "first_played": "2026-05-14T22:33:08.463Z",
+      "last_played": "2026-05-14T22:33:08.463Z"
     }
   },
   "completed_albums": {
