@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-15T18:33:08.362Z",
+  "last_checked": "2026-05-15T20:00:02.817Z",
   "albums_in_progress": {
     "7xGqf9DddW89cg7m6zX88t": {
       "album_name": "New York",
@@ -415,6 +415,26 @@
       ],
       "first_played": "2026-05-14T22:33:08.463Z",
       "last_played": "2026-05-14T22:33:08.463Z"
+    },
+    "3PVx0nf16eZmTOiTu33UaK": {
+      "album_name": "My Ghosts Go Ghost",
+      "artist": "By Storm, Injury Reserve",
+      "total_tracks": 9,
+      "played_tracks": [
+        "0YzFQAxFMx5qzUemP7bK0W"
+      ],
+      "first_played": "2026-05-15T19:56:03.560Z",
+      "last_played": "2026-05-15T19:56:03.560Z"
+    },
+    "6pIeOlGVg5ZSlaIsGObkuh": {
+      "album_name": "Dopamine",
+      "artist": "Third Eye Blind",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3EXIV5EOCm3oKRV8HCMr36"
+      ],
+      "first_played": "2026-05-15T20:00:02.817Z",
+      "last_played": "2026-05-15T20:00:02.817Z"
     }
   },
   "completed_albums": {
