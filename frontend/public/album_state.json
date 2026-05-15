@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-15T16:37:16.623Z",
+  "last_checked": "2026-05-15T18:33:08.362Z",
   "albums_in_progress": {
     "7xGqf9DddW89cg7m6zX88t": {
       "album_name": "New York",
@@ -415,20 +415,6 @@
       ],
       "first_played": "2026-05-14T22:33:08.463Z",
       "last_played": "2026-05-14T22:33:08.463Z"
-    },
-    "3PVx0nf16eZmTOiTu33UaK": {
-      "album_name": "My Ghosts Go Ghost",
-      "artist": "By Storm, Injury Reserve",
-      "total_tracks": 9,
-      "played_tracks": [
-        "0voef3sKYAKr5BgUDCXIuW",
-        "2ZHALGLudOZWRLuOK4MZ0J",
-        "3Qd6Z4hclP1euAFfI1RQfK",
-        "1wlYr1YDvk1Y7NBYdIdi6N",
-        "6lbeLrYmpDNrcAC25cxU0s"
-      ],
-      "first_played": "2026-05-15T16:14:16.626Z",
-      "last_played": "2026-05-15T16:37:16.623Z"
     }
   },
   "completed_albums": {
@@ -410195,9 +410181,103 @@
       "listen_history": [
         "2026-05-11T23:40:23.807Z"
       ]
+    },
+    "By Storm, Injury Reserve - My Ghosts Go Ghost": {
+      "artist": "By Storm",
+      "artist_mbid": "7c452b7d-8350-4932-a5e0-7aa7fbedad56",
+      "name": "My Ghosts Go Ghost",
+      "release_group_mbid": "253d43b7-a040-44f8-b156-e6a0f0a5a120",
+      "release_mbid": "62a8d1bb-d291-4c8d-a258-3d217c697158",
+      "label": "deadAir",
+      "release_year": 2026,
+      "release_month": 1,
+      "release_day": 30,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Can I Have You for Myself?",
+          "credits": {},
+          "recording_mbid": "9d62d816-588a-4930-8d70-a4283123b04f"
+        },
+        {
+          "position": "2",
+          "title": "Dead Weight",
+          "credits": {},
+          "recording_mbid": "f5ff609e-f7ba-4169-a406-c9310d8f0b83"
+        },
+        {
+          "position": "3",
+          "title": "Grapefruit",
+          "credits": {},
+          "recording_mbid": "270b48c1-bffe-4f05-b4ca-e13a3b1c6c58"
+        },
+        {
+          "position": "4",
+          "title": "In My Town",
+          "credits": {},
+          "recording_mbid": "d9ea46ee-1e59-42cc-a03a-9099492d7070"
+        },
+        {
+          "position": "5",
+          "title": "Zig Zag",
+          "credits": {},
+          "recording_mbid": "740e3a05-8d8a-474b-b932-1c413c2e5445"
+        },
+        {
+          "position": "6",
+          "title": "Best Interest",
+          "credits": {},
+          "recording_mbid": "d25a6d03-e006-4e5d-b29c-07f5e6d39ac8"
+        },
+        {
+          "position": "7",
+          "title": "Double Trio 2",
+          "credits": [
+            [
+              "Patrick Shiroishi",
+              "instrument",
+              "saxophone"
+            ]
+          ],
+          "recording_mbid": "ce01c92b-8f39-4da1-9439-e9e956005c84"
+        },
+        {
+          "position": "8",
+          "title": "And I Dance",
+          "credits": {},
+          "recording_mbid": "343d8456-6ffd-4350-8708-59a836640ca1"
+        },
+        {
+          "position": "9",
+          "title": "GGG",
+          "credits": {},
+          "recording_mbid": "b6e47576-1322-48d3-8cdc-4a671c025d29"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "abstract hip hop",
+        "alternative r&b",
+        "electronic",
+        "english",
+        "experimental hip hop",
+        "folktronica",
+        "glitch",
+        "glitch hop",
+        "illbient",
+        "laut.de [4/5]",
+        "neo-psychedelia",
+        "ph_2_stars"
+      ],
+      "image_url": "https://coverartarchive.org/release/62a8d1bb-d291-4c8d-a258-3d217c697158/44751126864-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-15T18:33:08.362Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "By Storm, Injury Reserve - My Ghosts Go Ghost",
     "MGMT - Little Dark Age",
     "Lou Reed - Transformer",
     "Third Eye Blind - Third Eye Blind",
@@ -410206,7 +410286,6 @@
     "LCD Soundsystem - Sound of Silver",
     "Jack White - Boarding House Reach",
     "Arcade Fire - The Suburbs",
-    "William Tyler - Modern Country",
-    "Eric Johnson - Ah Via Musicom"
+    "William Tyler - Modern Country"
   ]
 }
