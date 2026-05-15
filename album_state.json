@@ -1,16 +1,6 @@
 {
-  "last_checked": "2026-05-15T20:00:02.817Z",
+  "last_checked": "2026-05-15T21:41:07.809Z",
   "albums_in_progress": {
-    "7xGqf9DddW89cg7m6zX88t": {
-      "album_name": "New York",
-      "artist": "Lou Reed",
-      "total_tracks": 14,
-      "played_tracks": [
-        "4TDLfAmx45EpSiQYG6hCzT"
-      ],
-      "first_played": "2026-05-13T21:11:12.415Z",
-      "last_played": "2026-05-13T21:11:12.415Z"
-    },
     "1R8kkopLT4IAxzMMkjic6X": {
       "album_name": "Sound of Silver",
       "artist": "LCD Soundsystem",
@@ -426,15 +416,17 @@
       "first_played": "2026-05-15T19:56:03.560Z",
       "last_played": "2026-05-15T19:56:03.560Z"
     },
-    "6pIeOlGVg5ZSlaIsGObkuh": {
-      "album_name": "Dopamine",
+    "5m8uXHRPJB7XMX1FUsRsbj": {
+      "album_name": "We Are Drugs",
       "artist": "Third Eye Blind",
-      "total_tracks": 12,
+      "total_tracks": 7,
       "played_tracks": [
-        "3EXIV5EOCm3oKRV8HCMr36"
+        "72FsXvvIe3XimrXQcZ706n",
+        "110g3C3giAxFQPA3rb2UKm",
+        "6yuYsYSTJWHzLCdRyQ5i8J"
       ],
-      "first_played": "2026-05-15T20:00:02.817Z",
-      "last_played": "2026-05-15T20:00:02.817Z"
+      "first_played": "2026-05-15T21:33:38.002Z",
+      "last_played": "2026-05-15T21:41:07.809Z"
     }
   },
   "completed_albums": {
@@ -364496,7 +364488,9 @@
         "pop rock"
       ],
       "image_url": "https://coverartarchive.org/release/135bac24-7ff6-4198-a422-51787d1423a4/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-15T21:30:08.056Z"
+      ],
       "source": "musicbrainz"
     },
     "Third Eye Blind - We Are Drugs": {
@@ -410297,6 +410291,7 @@
     }
   },
   "most_recently_listened": [
+    "Third Eye Blind - Dopamine",
     "By Storm, Injury Reserve - My Ghosts Go Ghost",
     "MGMT - Little Dark Age",
     "Lou Reed - Transformer",
@@ -410305,7 +410300,6 @@
     "John Martyn - Solid Air",
     "LCD Soundsystem - Sound of Silver",
     "Jack White - Boarding House Reach",
-    "Arcade Fire - The Suburbs",
-    "William Tyler - Modern Country"
+    "Arcade Fire - The Suburbs"
   ]
 }
