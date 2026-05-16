@@ -1,33 +1,6 @@
 {
-  "last_checked": "2026-05-15T22:50:24.512Z",
+  "last_checked": "2026-05-16T22:17:39.552Z",
   "albums_in_progress": {
-    "2Yy84EeclNVwFDem6yIB2s": {
-      "album_name": "Antisocialites",
-      "artist": "Alvvays",
-      "total_tracks": 10,
-      "played_tracks": [
-        "6Px7VvXLTjMP6J2nTQ6bIh",
-        "0LkjdguLEqOnRspW3N1aio",
-        "1MlU2xFOo4k1gFzIRYeQ0U",
-        "11KmXKbQEjF8fZWNZ9Pxkr",
-        "6TcxxINfeaBEQ35sHMldTD"
-      ],
-      "first_played": "2026-05-14T17:01:04.236Z",
-      "last_played": "2026-05-14T21:26:07.845Z"
-    },
-    "4hnqM0JK4CM1phwfq1Ldyz": {
-      "album_name": "This Is Happening",
-      "artist": "LCD Soundsystem",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2cmRpmO04TLaKPzmAzySYZ",
-        "5gmv3BgePSYiHnPJgY7oTJ",
-        "2073QOEC8rBtSyTsRyaWiP",
-        "4Cy0NHJ8Gh0xMdwyM9RkQm"
-      ],
-      "first_played": "2026-05-14T17:22:07.811Z",
-      "last_played": "2026-05-14T21:17:15.057Z"
-    },
     "2xkZV2Hl1Omi8rk2D7t5lN": {
       "album_name": "The New Abnormal",
       "artist": "The Strokes",
@@ -42,31 +15,6 @@
       "first_played": "2026-05-14T17:28:22.801Z",
       "last_played": "2026-05-14T22:25:27.365Z"
     },
-    "4436CQF7pmjxkHCaJCGjmt": {
-      "album_name": "Loss Of Life",
-      "artist": "MGMT",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0ydCckEdZbyPWuLpKqm0S0",
-        "3eUBAzE9YMmOjL3V9iNXz1",
-        "58QNyQZknkVyXhxrkhmQPZ",
-        "4ep0XlEdr2fK8R4jEHTXqp"
-      ],
-      "first_played": "2026-05-14T17:44:43.809Z",
-      "last_played": "2026-05-14T22:12:53.508Z"
-    },
-    "49LA20VMk65fQyEaIzYdvf": {
-      "album_name": "Yoshimi Battles the Pink Robots",
-      "artist": "The Flaming Lips",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0UQnWjRKEphlQtzeZ83lC2",
-        "2cVj88Q5SL5bZa8O2iFrDL",
-        "4ou3f7jaB41isbJkt6CF2b"
-      ],
-      "first_played": "2026-05-14T18:29:40.416Z",
-      "last_played": "2026-05-14T22:09:07.179Z"
-    },
     "5g4E06cxsFEMFE9hSekAt2": {
       "album_name": "Writer's Block",
       "artist": "Peter Bjorn and John",
@@ -80,87 +28,6 @@
       "first_played": "2026-05-14T18:34:17.286Z",
       "last_played": "2026-05-14T22:29:04.780Z"
     },
-    "7g4qoHjkYvfFkXJEZCjtc1": {
-      "album_name": "Wolfgang Amadeus Phoenix",
-      "artist": "Phoenix",
-      "total_tracks": 10,
-      "played_tracks": [
-        "4N7159SXtxwObOFhimCLGW"
-      ],
-      "first_played": "2026-05-14T20:22:53.007Z",
-      "last_played": "2026-05-14T20:22:53.007Z"
-    },
-    "33qkK1brpt6t8unIpeM2Oy": {
-      "album_name": "Unknown Pleasures (Collector's Edition)",
-      "artist": "Joy Division",
-      "total_tracks": 22,
-      "played_tracks": [
-        "5fbQCQt91LsVgXusFS0CCD"
-      ],
-      "first_played": "2026-05-14T20:26:21.752Z",
-      "last_played": "2026-05-14T20:26:21.752Z"
-    },
-    "2k8KgmDp9oHrmu0MIj4XDE": {
-      "album_name": "Is This It",
-      "artist": "The Strokes",
-      "total_tracks": 11,
-      "played_tracks": [
-        "0OM9ri37LIbPc9hffwsyb1"
-      ],
-      "first_played": "2026-05-14T20:30:05.859Z",
-      "last_played": "2026-05-14T20:30:05.859Z"
-    },
-    "7Kmmw7Z5D2UD5MVwdm10sT": {
-      "album_name": "Torches",
-      "artist": "Foster The People",
-      "total_tracks": 10,
-      "played_tracks": [
-        "7w87IxuO7BDcJ3YUqCyMTT"
-      ],
-      "first_played": "2026-05-14T20:37:53.256Z",
-      "last_played": "2026-05-14T20:37:53.256Z"
-    },
-    "5LlMvH379KZHgRIL5BrTOg": {
-      "album_name": "Tyranny",
-      "artist": "The Voidz",
-      "total_tracks": 12,
-      "played_tracks": [
-        "3YB9cvd668HXBEq8rbBW8P"
-      ],
-      "first_played": "2026-05-14T20:53:22.360Z",
-      "last_played": "2026-05-14T20:53:22.360Z"
-    },
-    "1A2GTWGtFfWp7KSQTwWOyo": {
-      "album_name": "Human After All",
-      "artist": "Daft Punk",
-      "total_tracks": 10,
-      "played_tracks": [
-        "3PsJ6zisndTa3F9eOjBfCc"
-      ],
-      "first_played": "2026-05-14T21:03:30.641Z",
-      "last_played": "2026-05-14T21:03:30.641Z"
-    },
-    "79dL7FLiJFOO0EoehUHQBv": {
-      "album_name": "Currents",
-      "artist": "Tame Impala",
-      "total_tracks": 13,
-      "played_tracks": [
-        "0xtIp0lgccN85GfGOekS5L"
-      ],
-      "first_played": "2026-05-14T21:30:38.451Z",
-      "last_played": "2026-05-14T21:30:38.451Z"
-    },
-    "1K6TvnkvmnLKPhifmPb6N7": {
-      "album_name": "Alvvays",
-      "artist": "Alvvays",
-      "total_tracks": 9,
-      "played_tracks": [
-        "6LC4cyrlOPeg2WXijaYrgj",
-        "0KVWVuutF9Dn8li4HdyAeU"
-      ],
-      "first_played": "2026-05-14T21:50:06.521Z",
-      "last_played": "2026-05-14T22:16:11.790Z"
-    },
     "1DNSmmRLfv97Yjq7MTFWng": {
       "album_name": "InnerSpeaker",
       "artist": "Tame Impala",
@@ -171,16 +38,6 @@
       ],
       "first_played": "2026-05-14T21:54:02.377Z",
       "last_played": "2026-05-14T22:21:32.517Z"
-    },
-    "3HFbH1loOUbqCyPsLuHLLh": {
-      "album_name": "Room On Fire",
-      "artist": "The Strokes",
-      "total_tracks": 11,
-      "played_tracks": [
-        "6DUKQUhWqUySYngLXLNwP2"
-      ],
-      "first_played": "2026-05-14T21:57:29.461Z",
-      "last_played": "2026-05-14T21:57:29.461Z"
     },
     "4rP54hT8fzDosnCtzQyBRF": {
       "album_name": "Phrazes For The Young",
@@ -214,6 +71,18 @@
       ],
       "first_played": "2026-05-15T21:33:38.002Z",
       "last_played": "2026-05-15T22:50:24.512Z"
+    },
+    "7aNclGRxTysfh6z0d8671k": {
+      "album_name": "Selected Ambient Works 85-92",
+      "artist": "Aphex Twin",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7o2AeQZzfCERsRmOM86EcB",
+        "4Sxv0whUHWzHK5T8uuP66S",
+        "643gyipSU7dkmrFhJ8UAIm"
+      ],
+      "first_played": "2026-05-16T21:59:59.074Z",
+      "last_played": "2026-05-16T22:17:39.552Z"
     }
   },
   "completed_albums": {
