@@ -1,17 +1,6 @@
 {
   "last_checked": "2026-05-15T22:50:24.512Z",
   "albums_in_progress": {
-    "1R8kkopLT4IAxzMMkjic6X": {
-      "album_name": "Sound of Silver",
-      "artist": "LCD Soundsystem",
-      "total_tracks": 9,
-      "played_tracks": [
-        "2VGDntFPvgvqSiUf9ITEfW",
-        "0Ct2XTT4UBt9Y196i0Ido2"
-      ],
-      "first_played": "2026-05-14T16:54:19.053Z",
-      "last_played": "2026-05-14T18:50:29.302Z"
-    },
     "2Yy84EeclNVwFDem6yIB2s": {
       "album_name": "Antisocialites",
       "artist": "Alvvays",
@@ -25,17 +14,6 @@
       ],
       "first_played": "2026-05-14T17:01:04.236Z",
       "last_played": "2026-05-14T21:26:07.845Z"
-    },
-    "6mm1Skz3JE6AXneya9Nyiv": {
-      "album_name": "Oracular Spectacular",
-      "artist": "MGMT",
-      "total_tracks": 10,
-      "played_tracks": [
-        "5nv854ey1k43KaZ0kHmE4Z",
-        "19K3lUMJmOdeuOBTrbLm19"
-      ],
-      "first_played": "2026-05-14T17:13:12.700Z",
-      "last_played": "2026-05-14T18:43:17.633Z"
     },
     "4hnqM0JK4CM1phwfq1Ldyz": {
       "album_name": "This Is Happening",
@@ -64,17 +42,6 @@
       "first_played": "2026-05-14T17:28:22.801Z",
       "last_played": "2026-05-14T22:25:27.365Z"
     },
-    "1dShPPoxXfzbjFO1jIHJZz": {
-      "album_name": "Blue Rev",
-      "artist": "Alvvays",
-      "total_tracks": 14,
-      "played_tracks": [
-        "1rw9dOKuewBiKfVHgUPDfo",
-        "4eTzgPhzCAQxHU0Y308Sk8"
-      ],
-      "first_played": "2026-05-14T17:30:32.790Z",
-      "last_played": "2026-05-14T19:47:21.369Z"
-    },
     "4436CQF7pmjxkHCaJCGjmt": {
       "album_name": "Loss Of Life",
       "artist": "MGMT",
@@ -87,17 +54,6 @@
       ],
       "first_played": "2026-05-14T17:44:43.809Z",
       "last_played": "2026-05-14T22:12:53.508Z"
-    },
-    "3HA1Ru1gEAgaxTywkJmBOL": {
-      "album_name": "Congratulations",
-      "artist": "MGMT",
-      "total_tracks": 9,
-      "played_tracks": [
-        "6kblAEj0T0312fv5QWsXzo",
-        "2wNK1PjIS9NbBIchakaL7k"
-      ],
-      "first_played": "2026-05-14T18:14:57.890Z",
-      "last_played": "2026-05-14T20:12:10.643Z"
     },
     "49LA20VMk65fQyEaIzYdvf": {
       "album_name": "Yoshimi Battles the Pink Robots",
@@ -123,116 +79,6 @@
       ],
       "first_played": "2026-05-14T18:34:17.286Z",
       "last_played": "2026-05-14T22:29:04.780Z"
-    },
-    "0NVvSmy2su8nXkCjK0zuWg": {
-      "album_name": "Bankrupt!",
-      "artist": "Phoenix",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0LucKGxWYkj2d0SHdx2WBh"
-      ],
-      "first_played": "2026-05-14T18:54:34.109Z",
-      "last_played": "2026-05-14T18:54:34.109Z"
-    },
-    "5vIHyC05mGdavofoKHyKot": {
-      "album_name": "The Flaming Lips and Heady Fwends",
-      "artist": "The Flaming Lips",
-      "total_tracks": 13,
-      "played_tracks": [
-        "5Mf8N03cwVWG0p7vcP75qR"
-      ],
-      "first_played": "2026-05-14T19:00:06.372Z",
-      "last_played": "2026-05-14T19:00:06.372Z"
-    },
-    "3AQgdwMNCiN7awXch5fAaG": {
-      "album_name": "Remain in Light (Deluxe Version)",
-      "artist": "Talking Heads",
-      "total_tracks": 12,
-      "played_tracks": [
-        "4eBCTzBsSjYgrLH5clQf2x"
-      ],
-      "first_played": "2026-05-14T19:05:55.799Z",
-      "last_played": "2026-05-14T19:05:55.799Z"
-    },
-    "3C2MFZ2iHotUQOSBzdSvM7": {
-      "album_name": "Lonerism",
-      "artist": "Tame Impala",
-      "total_tracks": 12,
-      "played_tracks": [
-        "6qZjm61s6u8Ead9sWxCDro"
-      ],
-      "first_played": "2026-05-14T19:19:40.743Z",
-      "last_played": "2026-05-14T19:19:40.743Z"
-    },
-    "4zM61adzXFpgNQYyBSSufT": {
-      "album_name": "Mercy Mountain",
-      "artist": "Moses Gunn Collective",
-      "total_tracks": 13,
-      "played_tracks": [
-        "0Bl1Gt8R9kjz7JO7SYAuhe"
-      ],
-      "first_played": "2026-05-14T19:23:28.990Z",
-      "last_played": "2026-05-14T19:23:28.990Z"
-    },
-    "0WzgtSoa9ktjOCa8DKI3lJ": {
-      "album_name": "Fantasy Special Edition",
-      "artist": "DyE",
-      "total_tracks": 7,
-      "played_tracks": [
-        "6k1xNkCGj3t8TIzRn1JbL0"
-      ],
-      "first_played": "2026-05-14T19:28:18.505Z",
-      "last_played": "2026-05-14T19:28:18.505Z"
-    },
-    "2FKVlcqyS9nzKEHrOzbuwb": {
-      "album_name": "Melody's Echo Chamber",
-      "artist": "Melody's Echo Chamber",
-      "total_tracks": 11,
-      "played_tracks": [
-        "6rv4gfOtrlYFrcu03gZkUW"
-      ],
-      "first_played": "2026-05-14T19:44:59.340Z",
-      "last_played": "2026-05-14T19:44:59.340Z"
-    },
-    "4AF1M7bGCFL3LHCtXUUXw5": {
-      "album_name": "american dream",
-      "artist": "LCD Soundsystem",
-      "total_tracks": 10,
-      "played_tracks": [
-        "53PkA8aXiwH4ppa0V0iO7o"
-      ],
-      "first_played": "2026-05-14T19:53:11.422Z",
-      "last_played": "2026-05-14T19:53:11.422Z"
-    },
-    "755yBlrk0Sz8tIgMMTgyr1": {
-      "album_name": "We Will Always Love You",
-      "artist": "The Avalanches",
-      "total_tracks": 25,
-      "played_tracks": [
-        "3A0cAzFKPefBCz7Z02UnnO"
-      ],
-      "first_played": "2026-05-14T19:56:18.351Z",
-      "last_played": "2026-05-14T19:56:18.351Z"
-    },
-    "4WnkQO4xD9ljQooB3VIxCV": {
-      "album_name": "Comedown Machine",
-      "artist": "The Strokes",
-      "total_tracks": 11,
-      "played_tracks": [
-        "2ThdB23G9Rgf1ExndFGEEg"
-      ],
-      "first_played": "2026-05-14T20:00:01.034Z",
-      "last_played": "2026-05-14T20:00:01.034Z"
-    },
-    "4Tm0dXi3s3aSAqng2DACHr": {
-      "album_name": "Wincing The Night Away",
-      "artist": "The Shins",
-      "total_tracks": 11,
-      "played_tracks": [
-        "3Bz3lj6E9VFBk1Wj1hC8vw"
-      ],
-      "first_played": "2026-05-14T20:16:08.357Z",
-      "last_played": "2026-05-14T20:16:08.357Z"
     },
     "7g4qoHjkYvfFkXJEZCjtc1": {
       "album_name": "Wolfgang Amadeus Phoenix",
