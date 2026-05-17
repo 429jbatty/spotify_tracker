@@ -1,54 +1,6 @@
 {
-  "last_checked": "2026-05-16T22:17:39.552Z",
+  "last_checked": "2026-05-17T00:53:24.182Z",
   "albums_in_progress": {
-    "2xkZV2Hl1Omi8rk2D7t5lN": {
-      "album_name": "The New Abnormal",
-      "artist": "The Strokes",
-      "total_tracks": 9,
-      "played_tracks": [
-        "6IRzBP4gVoV4D2zHmocoWy",
-        "5ruzrDWcT0vuJIOMW7gMnW",
-        "1aOxOpH4AkGAd8OMrKjyNY",
-        "55N8cxpE1QDoeaaNqUnoZ2",
-        "2mDYYGaGd9uXKkK2YhDA3i"
-      ],
-      "first_played": "2026-05-14T17:28:22.801Z",
-      "last_played": "2026-05-14T22:25:27.365Z"
-    },
-    "5g4E06cxsFEMFE9hSekAt2": {
-      "album_name": "Writer's Block",
-      "artist": "Peter Bjorn and John",
-      "total_tracks": 11,
-      "played_tracks": [
-        "4dyx5SzxPPaD8xQIid5Wjj",
-        "5mDhD2P7Gv8Y6PjhsYHocx",
-        "6KF8tgwtvx29hM2RxqHoqP",
-        "4xj5OL6pyQTOsDRewbO5zv"
-      ],
-      "first_played": "2026-05-14T18:34:17.286Z",
-      "last_played": "2026-05-14T22:29:04.780Z"
-    },
-    "1DNSmmRLfv97Yjq7MTFWng": {
-      "album_name": "InnerSpeaker",
-      "artist": "Tame Impala",
-      "total_tracks": 11,
-      "played_tracks": [
-        "2a2MbiJN2skOxohykOVcss",
-        "3Yub3anoLj8w58TVpEXUJv"
-      ],
-      "first_played": "2026-05-14T21:54:02.377Z",
-      "last_played": "2026-05-14T22:21:32.517Z"
-    },
-    "4rP54hT8fzDosnCtzQyBRF": {
-      "album_name": "Phrazes For The Young",
-      "artist": "Julian Casablancas",
-      "total_tracks": 8,
-      "played_tracks": [
-        "6i99ThziImjuFABb8rUQvy"
-      ],
-      "first_played": "2026-05-14T22:33:08.463Z",
-      "last_played": "2026-05-14T22:33:08.463Z"
-    },
     "3PVx0nf16eZmTOiTu33UaK": {
       "album_name": "My Ghosts Go Ghost",
       "artist": "By Storm, Injury Reserve",
@@ -71,18 +23,6 @@
       ],
       "first_played": "2026-05-15T21:33:38.002Z",
       "last_played": "2026-05-15T22:50:24.512Z"
-    },
-    "7aNclGRxTysfh6z0d8671k": {
-      "album_name": "Selected Ambient Works 85-92",
-      "artist": "Aphex Twin",
-      "total_tracks": 13,
-      "played_tracks": [
-        "7o2AeQZzfCERsRmOM86EcB",
-        "4Sxv0whUHWzHK5T8uuP66S",
-        "643gyipSU7dkmrFhJ8UAIm"
-      ],
-      "first_played": "2026-05-16T21:59:59.074Z",
-      "last_played": "2026-05-16T22:17:39.552Z"
     }
   },
   "completed_albums": {
@@ -409944,9 +409884,771 @@
       "listen_history": [
         "2026-05-15T18:33:08.362Z"
       ]
+    },
+    "Aphex Twin - Selected Ambient Works 85-92": {
+      "artist": "Aphex Twin",
+      "artist_mbid": "f22942a1-6f70-4f48-866e-238cb2308fbd",
+      "name": "Selected Ambient Works 85\u201392",
+      "release_group_mbid": "6842c81d-ea77-3dfd-abf7-4323add3f4d4",
+      "release_mbid": "0c8b4425-795e-4772-8cbf-e3f9694110cc",
+      "label": "R&S Records",
+      "release_year": 1992,
+      "release_month": 11,
+      "release_day": 1,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Xtal",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "e5e5e3c9-8515-4abf-aebb-7529b4e9aa0b"
+        },
+        {
+          "position": "2",
+          "title": "Tha",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ],
+            [
+              "Samantha Robinson",
+              "work named after artist",
+              ""
+            ]
+          ],
+          "recording_mbid": "213757f0-41cd-4daa-bc6a-4d990fa5d5ab"
+        },
+        {
+          "position": "3",
+          "title": "Pulsewidth",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "213d4632-7d0a-4d14-b458-a9cb7fb7dd6a"
+        },
+        {
+          "position": "4",
+          "title": "Ageispolis",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4c52fe7c-a5f9-4f22-980d-cb79eef521d7"
+        },
+        {
+          "position": "5",
+          "title": "i",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "12db16d7-6541-4a3e-9fc1-fa1f27501bbb"
+        },
+        {
+          "position": "6",
+          "title": "Green Calx",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c6f0f3cd-0099-4592-8e68-86cdfff99c6e"
+        },
+        {
+          "position": "7",
+          "title": "Heliosphan",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "3038681f-15e7-4268-948f-e290540a4393"
+        },
+        {
+          "position": "8",
+          "title": "We Are the Music Makers",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "365e1251-3776-4a1a-8ef2-d3b52c69cbf7"
+        },
+        {
+          "position": "9",
+          "title": "Schottkey 7th Path",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "de45845e-0366-4cc5-b72c-d8aca5450617"
+        },
+        {
+          "position": "10",
+          "title": "Ptolemy",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "3a028d7d-d5ba-40c7-9547-ba6af62a275a"
+        },
+        {
+          "position": "11",
+          "title": "Hedphelym",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8acc6607-51b4-4440-a75a-73173ddfa670"
+        },
+        {
+          "position": "12",
+          "title": "Delphium",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "008083c0-3a73-4072-a14d-860eaa628f05"
+        },
+        {
+          "position": "13",
+          "title": "Actium",
+          "credits": [
+            [
+              "Richard D. James",
+              "producer",
+              ""
+            ],
+            [
+              "Richard D. James",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "7ae7dc7f-852c-4737-bf4c-acb0e5c2ad34"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "acid techno",
+        "ambient",
+        "ambient techno",
+        "electronic",
+        "idm"
+      ],
+      "image_url": "https://coverartarchive.org/release/0c8b4425-795e-4772-8cbf-e3f9694110cc/35882942766-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-16T23:14:33.421Z"
+      ]
+    },
+    "Boards of Canada - Twoism": {
+      "artist": "Boards of Canada",
+      "artist_mbid": "69158f97-4c07-4c4e-baf8-4e4ab1ed666e",
+      "name": "Twoism",
+      "release_group_mbid": "e0243657-01ef-3516-b9aa-03d417d6e944",
+      "release_mbid": "ee482171-4b18-495e-86eb-af07e18fb23c",
+      "label": "Warp",
+      "release_year": 1995,
+      "release_month": 8,
+      "release_day": 15,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Sixtyniner",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "08d66297-7232-437f-b49a-0e006d0395db"
+        },
+        {
+          "position": "2",
+          "title": "Oirectine",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "recording",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "recording",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "recording",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "278d7dbe-a901-4b5f-ba1e-2021ade61f0c"
+        },
+        {
+          "position": "3",
+          "title": "Iced Cooly",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "recording",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "recording",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "recording",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6062b038-ed92-48ee-8e2a-82686af03c86"
+        },
+        {
+          "position": "4",
+          "title": "Basefree",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "recording",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "recording",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "recording",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5cc99165-115e-4396-8a64-e62c85087be8"
+        },
+        {
+          "position": "5",
+          "title": "Twoism",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "recording",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "recording",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "recording",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d25d3359-b673-449e-b25e-84e0c267e94e"
+        },
+        {
+          "position": "6",
+          "title": "Seeya Later",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "recording",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "recording",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a7efe1e0-ebee-45cb-9a0f-deafb4be90cd"
+        },
+        {
+          "position": "7",
+          "title": "Melissa Juice",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "producer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "producer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "recording",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "recording",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "recording",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "dc5ffc48-88d7-4920-bace-363b217bb160"
+        },
+        {
+          "position": "8",
+          "title": "Smokes Quantity / 1986 Summer Fire",
+          "credits": [
+            [
+              "Boards of Canada",
+              "producer",
+              ""
+            ],
+            [
+              "Boards of Canada",
+              "recording",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ],
+            [
+              "Marcus Eoin",
+              "work composer",
+              ""
+            ],
+            [
+              "Chris Horne",
+              "work composer",
+              ""
+            ],
+            [
+              "Michael Sandison",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "875dea14-17fb-45f9-8533-c075217dc44d"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "ambient",
+        "downtempo",
+        "electronic",
+        "idm",
+        "psychedelic rock",
+        "rock"
+      ],
+      "image_url": "https://coverartarchive.org/release/ee482171-4b18-495e-86eb-af07e18fb23c/8866560215-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-17T00:53:24.182Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Boards of Canada - Twoism",
+    "Aphex Twin - Selected Ambient Works 85-92",
     "Third Eye Blind - Dopamine",
     "By Storm, Injury Reserve - My Ghosts Go Ghost",
     "MGMT - Little Dark Age",
@@ -409954,8 +410656,6 @@
     "Third Eye Blind - Third Eye Blind",
     "Run The Jewels, El-P, Killer Mike - Run The Jewels 3",
     "John Martyn - Solid Air",
-    "LCD Soundsystem - Sound of Silver",
-    "Jack White - Boarding House Reach",
-    "Arcade Fire - The Suburbs"
+    "LCD Soundsystem - Sound of Silver"
   ]
 }
