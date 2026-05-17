@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-17T03:29:45.450Z",
+  "last_checked": "2026-05-17T22:20:36.364Z",
   "albums_in_progress": {
     "5m8uXHRPJB7XMX1FUsRsbj": {
       "album_name": "We Are Drugs",
@@ -26,6 +26,24 @@
       ],
       "first_played": "2026-05-17T03:18:51.052Z",
       "last_played": "2026-05-17T03:29:45.450Z"
+    },
+    "0IXxmmlfSQxgJNWnNjHhgJ": {
+      "album_name": "Interstate Gospel",
+      "artist": "Pistol Annies, Miranda Lambert",
+      "total_tracks": 14,
+      "played_tracks": [
+        "4EThBTDTkdhN9Rijqk8J80",
+        "2Je5HiZUABcRsPV6DQwhph",
+        "6mTSw3gE4k9U7CK8pzX9c0",
+        "43MIVrZt62ldBLMvkMYzGe",
+        "2mjLtamAJllcpmctzpJ5RF",
+        "2Z7l1SoG7MBedLxJNiF332",
+        "2WPE0Z7u5PafvN2aWk5pFl",
+        "0onvnJVl8K9ldJvufVgwSR",
+        "3nJvx36ecMGNrUnWzHDTM7"
+      ],
+      "first_played": "2026-05-17T21:51:58.036Z",
+      "last_played": "2026-05-17T22:20:36.364Z"
     }
   },
   "completed_albums": {
