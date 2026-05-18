@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T14:59:12.430Z",
+  "last_checked": "2026-05-18T16:28:56.300Z",
   "albums_in_progress": {
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
@@ -371,18 +371,16 @@
       "first_played": "2026-05-18T03:28:59.817Z",
       "last_played": "2026-05-18T03:28:59.817Z"
     },
-    "4UlGauD7ROb3YbVOFMgW5u": {
-      "album_name": "ANTI (Deluxe)",
-      "artist": "Rihanna",
-      "total_tracks": 16,
+    "7dK54iZuOxXFarGhXwEXfF": {
+      "album_name": "Lemonade",
+      "artist": "Beyonc\u00e9",
+      "total_tracks": 13,
       "played_tracks": [
-        "6t90Z9XkdsHD8xMxro6KRP",
-        "6K4Co1NQyOnoFEJMkZHkln",
-        "0UHB9METy4VCXNgkcGqHqS",
-        "72TFWvU3wUYdUuxejTTIzt"
+        "7rLDARtJALM7QdiJDMXW7m",
+        "0rzNMzZsubFcXSEh7dnem7"
       ],
-      "first_played": "2026-05-18T14:50:11.311Z",
-      "last_played": "2026-05-18T14:59:12.430Z"
+      "first_played": "2026-05-18T16:15:56.735Z",
+      "last_played": "2026-05-18T16:28:56.300Z"
     }
   },
   "completed_albums": {
@@ -413430,7 +413428,8 @@
       "image_url": "https://coverartarchive.org/release/8d6ed300-dc16-43ac-899f-de0e96562a4d/32325551768-1200.jpg",
       "source": "musicbrainz",
       "listen_history": [
-        "2026-05-18T00:12:42.376Z"
+        "2026-05-18T00:12:42.376Z",
+        "2026-05-18T16:11:56.231Z"
       ]
     }
   },
