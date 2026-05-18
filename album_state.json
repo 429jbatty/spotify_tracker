@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T20:35:24.506Z",
+  "last_checked": "2026-05-18T21:33:23.394Z",
   "albums_in_progress": {
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
@@ -371,24 +371,25 @@
       "first_played": "2026-05-18T03:28:59.817Z",
       "last_played": "2026-05-18T03:28:59.817Z"
     },
-    "7dK54iZuOxXFarGhXwEXfF": {
-      "album_name": "Lemonade",
+    "2m1enA3YrMLVvR3q0MqLpL": {
+      "album_name": "COWBOY CARTER",
       "artist": "Beyonc\u00e9",
-      "total_tracks": 13,
+      "total_tracks": 27,
       "played_tracks": [
-        "7rLDARtJALM7QdiJDMXW7m",
-        "0rzNMzZsubFcXSEh7dnem7",
-        "78eouBKVRyhbSzJwChr6QM",
-        "0lnIJmgcUpEpe4AZACjayW",
-        "0pxNyJJiL2zZZ5GgJ4JhsQ",
-        "71OvX5NNLrmz7rpq1ANTQn",
-        "2RQAG0wQt35UzAPEyVJFWN",
-        "2FNPJWVdGxYhWaotd6rULS",
-        "2bOWJIYSbhwg2NMQq1QMYH",
-        "7aBxcRw77817BrkdPChAGY"
+        "7x5ziCOQFir0AQN8dFisK6"
       ],
-      "first_played": "2026-05-18T16:15:56.735Z",
-      "last_played": "2026-05-18T20:35:24.506Z"
+      "first_played": "2026-05-18T20:51:23.529Z",
+      "last_played": "2026-05-18T20:51:23.529Z"
+    },
+    "4FWvo9oS4gRgHtAwDwUjiO": {
+      "album_name": "The Black Album",
+      "artist": "JA\u0178-Z",
+      "total_tracks": 14,
+      "played_tracks": [
+        "1GzNGrxi4NIOKu0Z4npUss"
+      ],
+      "first_played": "2026-05-18T21:33:23.394Z",
+      "last_played": "2026-05-18T21:33:23.394Z"
     }
   },
   "completed_albums": {
@@ -22408,7 +22409,9 @@
         "visual album"
       ],
       "image_url": "https://coverartarchive.org/release/19c88bb5-1300-4bf3-b743-76e159d60b3a/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-18T20:47:23.435Z"
+      ],
       "source": "musicbrainz"
     },
     "Barry Ryan - Love Is Love": {
@@ -413439,9 +413442,391 @@
         "2026-05-18T00:12:42.376Z",
         "2026-05-18T16:11:56.231Z"
       ]
+    },
+    "JA\u0178-Z - 4:44": {
+      "artist": "JAY\u2010Z",
+      "artist_mbid": "f82bcf78-5b69-4622-a5ef-73800768d9ac",
+      "name": "4:44",
+      "release_group_mbid": "aa35dd3d-b629-4a5f-abe9-a8463f80b37e",
+      "release_mbid": "79c806c8-546b-4d04-b03c-9e1d64b62589",
+      "label": "Roc Nation",
+      "release_year": 2017,
+      "release_month": 6,
+      "release_day": 30,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Kill Jay Z",
+          "credits": [
+            [
+              "No I.D.",
+              "producer",
+              ""
+            ],
+            [
+              "The Alan Parsons Project",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "76452468-d6c6-4b4f-9320-fdfa59645c21"
+        },
+        {
+          "position": "2",
+          "title": "The Story of O.J.",
+          "credits": [
+            [
+              "Steve Wyreman",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "celesta"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "electric piano"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Funk Inc.",
+              "samples from artist",
+              ""
+            ],
+            [
+              "Kool & the Gang",
+              "samples from artist",
+              ""
+            ],
+            [
+              "Nina Simone",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "8e89413e-ec45-406e-85d6-93f9a7b83187"
+        },
+        {
+          "position": "3",
+          "title": "Smile",
+          "credits": [
+            [
+              "Stevie Wonder",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "02e6fd0b-b631-4660-ba6f-fd64b8791c94"
+        },
+        {
+          "position": "4",
+          "title": "Caught Their Eyes",
+          "credits": [
+            [
+              "Nina Simone",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "fad4ffe8-32f4-43db-b2a2-1b4b0c8ac10f"
+        },
+        {
+          "position": "5",
+          "title": "4:44",
+          "credits": [
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d75571f3-0005-429e-ab44-c6b47b856dd0"
+        },
+        {
+          "position": "6",
+          "title": "Family Feud",
+          "credits": [
+            [
+              "Stuart White",
+              "recording",
+              "additional"
+            ],
+            [
+              "The Clark Sisters",
+              "samples from artist",
+              ""
+            ],
+            [
+              "Beyonc\u00e9",
+              "work writer",
+              ""
+            ],
+            [
+              "Twinkie Clark",
+              "work writer",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "08aac726-602a-4263-81f7-a236ce33ba31"
+        },
+        {
+          "position": "7",
+          "title": "Bam",
+          "credits": [
+            [
+              "Casey Cuayo",
+              "engineer",
+              "assistant"
+            ],
+            [
+              "Kenneth Whalum III",
+              "instrument",
+              "tenor saxophone"
+            ],
+            [
+              "Jona Levine",
+              "instrument",
+              "trombone"
+            ],
+            [
+              "Nate Mercereau",
+              "instrument",
+              "French horn"
+            ],
+            [
+              "R\u00d8V\u00c9L",
+              "instrument",
+              "flugelhorn, trumpet"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "bass, electric piano, guitar, synthesizer"
+            ],
+            [
+              "Michael \u201cLaw\u201d Thomas",
+              "recording",
+              "additional"
+            ],
+            [
+              "Jacob Miller",
+              "samples from artist",
+              ""
+            ],
+            [
+              "Sister Nancy",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "fcbd09be-acc3-42f0-a17e-f1b1c020c3b4"
+        },
+        {
+          "position": "8",
+          "title": "Moonlight",
+          "credits": [
+            [
+              "Fugees",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4e8435ad-f930-40db-b894-acfacbe395de"
+        },
+        {
+          "position": "9",
+          "title": "Marcy Me",
+          "credits": [
+            [
+              "Ron Gilmore, Jr.",
+              "instrument",
+              "vocoder"
+            ],
+            [
+              "Nate Mercereau",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Nate Mercereau",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Nate Mercereau",
+              "instrument",
+              "Moog"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "synthesizer"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "Hammond organ"
+            ],
+            [
+              "Steve Wyreman",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Mike Miller",
+              "recording",
+              "additional"
+            ],
+            [
+              "Quarteto 1111",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "5214aa73-6980-4976-a700-794fe92ac4d2"
+        },
+        {
+          "position": "10",
+          "title": "Legacy",
+          "credits": [
+            [
+              "Donny Hathaway",
+              "samples from artist",
+              ""
+            ],
+            [
+              "Raekwon",
+              "samples from artist",
+              ""
+            ],
+            [
+              "JAY\u2010Z",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "67566f73-8bd8-4d49-aa08-baefccb34399"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "chipmunk soul",
+        "conscious hip hop",
+        "east coast hip hop",
+        "hip hop"
+      ],
+      "image_url": "https://coverartarchive.org/release/79c806c8-546b-4d04-b03c-9e1d64b62589/25519071748-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-18T21:28:53.339Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "JA\u0178-Z - 4:44",
+    "Beyonc\u00e9 - Lemonade",
     "Rihanna - ANTI (Deluxe)",
     "Cream - Disraeli Gears",
     "Pistol Annies, Miranda Lambert - Interstate Gospel",
@@ -413449,8 +413834,6 @@
     "Aphex Twin - Selected Ambient Works 85-92",
     "Third Eye Blind - Dopamine",
     "By Storm, Injury Reserve - My Ghosts Go Ghost",
-    "MGMT - Little Dark Age",
-    "Lou Reed - Transformer",
-    "Third Eye Blind - Third Eye Blind"
+    "MGMT - Little Dark Age"
   ]
 }
