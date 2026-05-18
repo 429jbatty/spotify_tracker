@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T03:28:59.817Z",
+  "last_checked": "2026-05-18T14:59:12.430Z",
   "albums_in_progress": {
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
@@ -370,6 +370,19 @@
       ],
       "first_played": "2026-05-18T03:28:59.817Z",
       "last_played": "2026-05-18T03:28:59.817Z"
+    },
+    "4UlGauD7ROb3YbVOFMgW5u": {
+      "album_name": "ANTI (Deluxe)",
+      "artist": "Rihanna",
+      "total_tracks": 16,
+      "played_tracks": [
+        "6t90Z9XkdsHD8xMxro6KRP",
+        "6K4Co1NQyOnoFEJMkZHkln",
+        "0UHB9METy4VCXNgkcGqHqS",
+        "72TFWvU3wUYdUuxejTTIzt"
+      ],
+      "first_played": "2026-05-18T14:50:11.311Z",
+      "last_played": "2026-05-18T14:59:12.430Z"
     }
   },
   "completed_albums": {
