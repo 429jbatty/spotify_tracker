@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T00:55:21.171Z",
+  "last_checked": "2026-05-18T03:11:45.389Z",
   "albums_in_progress": {
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
@@ -49,10 +49,11 @@
       "artist": "Childish Gambino",
       "total_tracks": 11,
       "played_tracks": [
-        "0NkkbKSzQ50mAoSUbQpgLw"
+        "0NkkbKSzQ50mAoSUbQpgLw",
+        "3vQ4T78TTMOjQXGfXVKQJo"
       ],
       "first_played": "2026-05-18T00:23:28.021Z",
-      "last_played": "2026-05-18T00:23:28.021Z"
+      "last_played": "2026-05-18T02:22:47.134Z"
     },
     "7pomP86PUhoJpY3fsC0WDQ": {
       "album_name": "XSCAPE",
@@ -99,20 +100,25 @@
       "artist": "Rihanna",
       "total_tracks": 17,
       "played_tracks": [
-        "76VtA90NKurNqaQpV126Ue"
+        "76VtA90NKurNqaQpV126Ue",
+        "4hXLxBb41Xs1KzCD0gfsC8",
+        "0aUWfpD3PlSv3FTTKcT2rN",
+        "7I5iWxgkVGe4M9msr9BMp9",
+        "3DZQ6mzUkAdHqZWzqxBKIK"
       ],
       "first_played": "2026-05-18T00:42:14.188Z",
-      "last_played": "2026-05-18T00:42:14.188Z"
+      "last_played": "2026-05-18T02:59:00.798Z"
     },
     "01MRGgNbfWrE291tQjw9ta": {
       "album_name": "Camp",
       "artist": "Childish Gambino",
       "total_tracks": 13,
       "played_tracks": [
-        "7ghKr0pCYyPPyp7t1FH8k4"
+        "7ghKr0pCYyPPyp7t1FH8k4",
+        "5AGQSF0ytihJyt96K5vW9d"
       ],
       "first_played": "2026-05-18T00:47:31.654Z",
-      "last_played": "2026-05-18T00:47:31.654Z"
+      "last_played": "2026-05-18T01:57:02.683Z"
     },
     "0tcExuDWMQdBbwSpqN8Ku2": {
       "album_name": "FutureSex/LoveSounds Deluxe Edition",
@@ -133,6 +139,216 @@
       ],
       "first_played": "2026-05-18T00:55:21.171Z",
       "last_played": "2026-05-18T00:55:21.171Z"
+    },
+    "4eLPsYPBmXABThSJ821sqY": {
+      "album_name": "DAMN.",
+      "artist": "Kendrick Lamar",
+      "total_tracks": 14,
+      "played_tracks": [
+        "6SwRhMLwNqEi6alNPVG00n"
+      ],
+      "first_played": "2026-05-18T00:59:08.739Z",
+      "last_played": "2026-05-18T00:59:08.739Z"
+    },
+    "2m1DkB7oqaZu8BzAAUfwlq": {
+      "album_name": "The Gifted",
+      "artist": "Wale",
+      "total_tracks": 16,
+      "played_tracks": [
+        "5yhKaacMZGRo4s6evJx9vk"
+      ],
+      "first_played": "2026-05-18T01:03:07.476Z",
+      "last_played": "2026-05-18T01:03:07.476Z"
+    },
+    "3rhOyuUoF8cpN1vPumdBSm": {
+      "album_name": "Skin",
+      "artist": "Flume",
+      "total_tracks": 16,
+      "played_tracks": [
+        "2ZYz5aPLnEkGR1DfWGZGn6"
+      ],
+      "first_played": "2026-05-18T01:11:14.359Z",
+      "last_played": "2026-05-18T01:11:14.359Z"
+    },
+    "2scB1uhcCI1TSf6b9TCZK3": {
+      "album_name": "FutureSex/LoveSounds",
+      "artist": "Justin Timberlake",
+      "total_tracks": 12,
+      "played_tracks": [
+        "3pD0f7hSJg2XdQ6udw5Tey"
+      ],
+      "first_played": "2026-05-18T01:18:42.586Z",
+      "last_played": "2026-05-18T01:18:42.586Z"
+    },
+    "5qUlPoDmNxCSzqVx81RDLJ": {
+      "album_name": "Songs In A Minor",
+      "artist": "Alicia Keys",
+      "total_tracks": 16,
+      "played_tracks": [
+        "0KQx6HOpJueiSkztcS0r7D"
+      ],
+      "first_played": "2026-05-18T01:22:13.022Z",
+      "last_played": "2026-05-18T01:22:13.022Z"
+    },
+    "1Ss0ArMRr91m83mOgRBjSZ": {
+      "album_name": "GNX",
+      "artist": "Kendrick Lamar",
+      "total_tracks": 12,
+      "played_tracks": [
+        "2CGNAOSuO1MEFCbBRgUzjd"
+      ],
+      "first_played": "2026-05-18T01:25:11.187Z",
+      "last_played": "2026-05-18T01:25:11.187Z"
+    },
+    "22tn8fUpD1lurSga9yuqhM": {
+      "album_name": "MTV Unplugged No. 2.0",
+      "artist": "Ms. Lauryn Hill",
+      "total_tracks": 22,
+      "played_tracks": [
+        "6ocxCGYgcmZhCeTT1yuNkt"
+      ],
+      "first_played": "2026-05-18T01:34:29.703Z",
+      "last_played": "2026-05-18T01:34:29.703Z"
+    },
+    "2qCyMMQ785sPH4Yx25GQZ8": {
+      "album_name": "Z",
+      "artist": "SZA",
+      "total_tracks": 10,
+      "played_tracks": [
+        "0Kz9aGVgFvndWkcaiylIt5"
+      ],
+      "first_played": "2026-05-18T01:43:28.553Z",
+      "last_played": "2026-05-18T01:43:28.553Z"
+    },
+    "1rknZw4cyL9NInAqSwc8AA": {
+      "album_name": "Journals",
+      "artist": "Justin Bieber",
+      "total_tracks": 16,
+      "played_tracks": [
+        "3JsydWaf2Ev4ehaLUjj3SY"
+      ],
+      "first_played": "2026-05-18T01:47:36.859Z",
+      "last_played": "2026-05-18T01:47:36.859Z"
+    },
+    "493HYe7N5pleudEZRyhE7R": {
+      "album_name": "All I Want Is You",
+      "artist": "Miguel",
+      "total_tracks": 13,
+      "played_tracks": [
+        "5VA4Ispp52EA1sOqzMz3Av"
+      ],
+      "first_played": "2026-05-18T01:52:32.558Z",
+      "last_played": "2026-05-18T01:52:32.558Z"
+    },
+    "76290XdXVF9rPzGdNRWdCh": {
+      "album_name": "Ctrl",
+      "artist": "SZA",
+      "total_tracks": 14,
+      "played_tracks": [
+        "6gU9OKjOE7ghfEd55oRO57"
+      ],
+      "first_played": "2026-05-18T02:09:30.097Z",
+      "last_played": "2026-05-18T02:09:30.097Z"
+    },
+    "0mwf6u9KVhZDCNVyIi6JuU": {
+      "album_name": "K.T.S.E.",
+      "artist": "Teyana Taylor",
+      "total_tracks": 8,
+      "played_tracks": [
+        "38HcgcQC4suvti0Sa0e5yc"
+      ],
+      "first_played": "2026-05-18T02:13:04.819Z",
+      "last_played": "2026-05-18T02:13:04.819Z"
+    },
+    "7bdjtx1RTkWoSoOaIl7a8E": {
+      "album_name": "Settle (Special Edition)",
+      "artist": "Disclosure",
+      "total_tracks": 37,
+      "played_tracks": [
+        "51ODNNDZm21HU7wI7cccRr"
+      ],
+      "first_played": "2026-05-18T02:17:20.106Z",
+      "last_played": "2026-05-18T02:17:20.106Z"
+    },
+    "5PfepkNWgRR2DI02Y8AawC": {
+      "album_name": "Paper Trail",
+      "artist": "T.I.",
+      "total_tracks": 16,
+      "played_tracks": [
+        "3jlbL2OTD5YmIunYzgQTAN"
+      ],
+      "first_played": "2026-05-18T02:28:25.832Z",
+      "last_played": "2026-05-18T02:28:25.832Z"
+    },
+    "3CogjJSvRqbIQuNJVR2JcP": {
+      "album_name": "Dawn",
+      "artist": "Yebba",
+      "total_tracks": 12,
+      "played_tracks": [
+        "14qNHvX8h6HoynFuV0RxWS"
+      ],
+      "first_played": "2026-05-18T02:38:46.615Z",
+      "last_played": "2026-05-18T02:38:46.615Z"
+    },
+    "0OcMap99vLEeGkBCfCwRwS": {
+      "album_name": "Watch The Throne",
+      "artist": "JA\u0178-Z, Kanye West",
+      "total_tracks": 12,
+      "played_tracks": [
+        "7r6PigmGzlB3YPB7wvBBbi"
+      ],
+      "first_played": "2026-05-18T02:43:19.669Z",
+      "last_played": "2026-05-18T02:43:19.669Z"
+    },
+    "07w0rG5TETcyihsEIZR3qG": {
+      "album_name": "SOS",
+      "artist": "SZA",
+      "total_tracks": 23,
+      "played_tracks": [
+        "2GAhgAjOhEmItWLfgisyOn"
+      ],
+      "first_played": "2026-05-18T02:49:56.009Z",
+      "last_played": "2026-05-18T02:49:56.009Z"
+    },
+    "6QPkyl04rXwTGlGlcYaRoW": {
+      "album_name": "Justified",
+      "artist": "Justin Timberlake",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7Lf7oSEVdzZqTA0kEDSlS5"
+      ],
+      "first_played": "2026-05-18T02:54:44.265Z",
+      "last_played": "2026-05-18T02:54:44.265Z"
+    },
+    "1j2x7FJXTgUT0X5hZ8TDXE": {
+      "album_name": "Dark Sky Paradise",
+      "artist": "Big Sean",
+      "total_tracks": 12,
+      "played_tracks": [
+        "6rje9f1wRFJDO2iTORw0lH"
+      ],
+      "first_played": "2026-05-18T03:04:20.776Z",
+      "last_played": "2026-05-18T03:04:20.776Z"
+    },
+    "2CUT0104gySOIvqwtXeFsX": {
+      "album_name": "The Blueprint 3",
+      "artist": "JA\u0178-Z",
+      "total_tracks": 15,
+      "played_tracks": [
+        "7LR85XLWw2yXqKBSI5brbG"
+      ],
+      "first_played": "2026-05-18T03:08:49.360Z",
+      "last_played": "2026-05-18T03:08:49.360Z"
+    },
+    "1nAQbHeOWTfQzbOoFrvndW": {
+      "album_name": "Planet Her",
+      "artist": "Doja Cat",
+      "total_tracks": 14,
+      "played_tracks": [
+        "5lAnYvAIkSDNXqfo7DyFUm"
+      ],
+      "first_played": "2026-05-18T03:11:45.389Z",
+      "last_played": "2026-05-18T03:11:45.389Z"
     }
   },
   "completed_albums": {
