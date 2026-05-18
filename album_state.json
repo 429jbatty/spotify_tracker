@@ -1,19 +1,6 @@
 {
-  "last_checked": "2026-05-17T22:20:36.364Z",
+  "last_checked": "2026-05-18T00:55:21.171Z",
   "albums_in_progress": {
-    "5m8uXHRPJB7XMX1FUsRsbj": {
-      "album_name": "We Are Drugs",
-      "artist": "Third Eye Blind",
-      "total_tracks": 7,
-      "played_tracks": [
-        "72FsXvvIe3XimrXQcZ706n",
-        "110g3C3giAxFQPA3rb2UKm",
-        "6yuYsYSTJWHzLCdRyQ5i8J",
-        "7umpAeke502Vxh0vgAQgBw"
-      ],
-      "first_played": "2026-05-15T21:33:38.002Z",
-      "last_played": "2026-05-15T22:50:24.512Z"
-    },
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
       "artist": "Boards of Canada",
@@ -27,23 +14,125 @@
       "first_played": "2026-05-17T03:18:51.052Z",
       "last_played": "2026-05-17T03:29:45.450Z"
     },
-    "0IXxmmlfSQxgJNWnNjHhgJ": {
-      "album_name": "Interstate Gospel",
+    "2zJVeRorn9q3XBeH7twIjc": {
+      "album_name": "Hell On Heels",
       "artist": "Pistol Annies, Miranda Lambert",
-      "total_tracks": 14,
+      "total_tracks": 10,
       "played_tracks": [
-        "4EThBTDTkdhN9Rijqk8J80",
-        "2Je5HiZUABcRsPV6DQwhph",
-        "6mTSw3gE4k9U7CK8pzX9c0",
-        "43MIVrZt62ldBLMvkMYzGe",
-        "2mjLtamAJllcpmctzpJ5RF",
-        "2Z7l1SoG7MBedLxJNiF332",
-        "2WPE0Z7u5PafvN2aWk5pFl",
-        "0onvnJVl8K9ldJvufVgwSR",
-        "3nJvx36ecMGNrUnWzHDTM7"
+        "0sgnJ5LFjEy2IuQ99NEZ1C"
       ],
-      "first_played": "2026-05-17T21:51:58.036Z",
-      "last_played": "2026-05-17T22:20:36.364Z"
+      "first_played": "2026-05-17T22:41:50.241Z",
+      "last_played": "2026-05-17T22:41:50.241Z"
+    },
+    "6iyKqDoL9pRSHUsDBYemlB": {
+      "album_name": "Fresh Cream",
+      "artist": "Cream",
+      "total_tracks": 11,
+      "played_tracks": [
+        "62nYkaIBesfvQSSwTjPnYS"
+      ],
+      "first_played": "2026-05-17T23:19:39.303Z",
+      "last_played": "2026-05-17T23:19:39.303Z"
+    },
+    "6UHhmTLl9T1scRYLmpHcDX": {
+      "album_name": "Loud",
+      "artist": "Rihanna",
+      "total_tracks": 11,
+      "played_tracks": [
+        "454h9zAIuTe1eJyw9iTnj4"
+      ],
+      "first_played": "2026-05-18T00:17:07.830Z",
+      "last_played": "2026-05-18T00:17:07.830Z"
+    },
+    "4JCybsNZUXWrK2Jpyn12Ni": {
+      "album_name": "\"Awaken, My Love!\"",
+      "artist": "Childish Gambino",
+      "total_tracks": 11,
+      "played_tracks": [
+        "0NkkbKSzQ50mAoSUbQpgLw"
+      ],
+      "first_played": "2026-05-18T00:23:28.021Z",
+      "last_played": "2026-05-18T00:23:28.021Z"
+    },
+    "7pomP86PUhoJpY3fsC0WDQ": {
+      "album_name": "XSCAPE",
+      "artist": "Michael Jackson",
+      "total_tracks": 17,
+      "played_tracks": [
+        "5BKKy9fIJL5uM9fz1SnqyP"
+      ],
+      "first_played": "2026-05-18T00:27:34.678Z",
+      "last_played": "2026-05-18T00:27:34.678Z"
+    },
+    "0zjbNtfnMLmt2q50E3wDx8": {
+      "album_name": "Imagination & the Misfit Kid",
+      "artist": "Labrinth",
+      "total_tracks": 15,
+      "played_tracks": [
+        "76YSWx6L6FNsuaP6GWBb8P"
+      ],
+      "first_played": "2026-05-18T00:30:46.641Z",
+      "last_played": "2026-05-18T00:30:46.641Z"
+    },
+    "1x7IPmap6ALHrqcyWGnFT2": {
+      "album_name": "EVERYTHING IS LOVE (Clean)",
+      "artist": "The Carters",
+      "total_tracks": 9,
+      "played_tracks": [
+        "7zmleW3XZx0uUsL2CkFuDe"
+      ],
+      "first_played": "2026-05-18T00:35:33.258Z",
+      "last_played": "2026-05-18T00:35:33.258Z"
+    },
+    "3arNdjotCvtiiLFfjKngMc": {
+      "album_name": "AT.LONG.LAST.A$AP",
+      "artist": "A$AP Rocky",
+      "total_tracks": 18,
+      "played_tracks": [
+        "4S7YHmlWwfwArgd8LfSPud"
+      ],
+      "first_played": "2026-05-18T00:39:32.781Z",
+      "last_played": "2026-05-18T00:39:32.781Z"
+    },
+    "4eddbruVtOqw8khwxSH6H2": {
+      "album_name": "Unapologetic (Deluxe)",
+      "artist": "Rihanna",
+      "total_tracks": 17,
+      "played_tracks": [
+        "76VtA90NKurNqaQpV126Ue"
+      ],
+      "first_played": "2026-05-18T00:42:14.188Z",
+      "last_played": "2026-05-18T00:42:14.188Z"
+    },
+    "01MRGgNbfWrE291tQjw9ta": {
+      "album_name": "Camp",
+      "artist": "Childish Gambino",
+      "total_tracks": 13,
+      "played_tracks": [
+        "7ghKr0pCYyPPyp7t1FH8k4"
+      ],
+      "first_played": "2026-05-18T00:47:31.654Z",
+      "last_played": "2026-05-18T00:47:31.654Z"
+    },
+    "0tcExuDWMQdBbwSpqN8Ku2": {
+      "album_name": "FutureSex/LoveSounds Deluxe Edition",
+      "artist": "Justin Timberlake",
+      "total_tracks": 15,
+      "played_tracks": [
+        "4NeOWqHmlrGRuBvsLJC9rL"
+      ],
+      "first_played": "2026-05-18T00:52:08.061Z",
+      "last_played": "2026-05-18T00:52:08.061Z"
+    },
+    "7gsWAHLeT0w7es6FofOXk1": {
+      "album_name": "The Life Of Pablo",
+      "artist": "Kanye West",
+      "total_tracks": 20,
+      "played_tracks": [
+        "3cCxoOgfi6hgt8MNteuiiD"
+      ],
+      "first_played": "2026-05-18T00:55:21.171Z",
+      "last_played": "2026-05-18T00:55:21.171Z"
     }
   },
   "completed_albums": {
@@ -410666,18 +410755,2445 @@
         "2026-05-17T00:53:24.182Z",
         "2026-05-17T03:12:45.600Z"
       ]
+    },
+    "Pistol Annies, Miranda Lambert - Interstate Gospel": {
+      "artist": "Pistol Annies",
+      "artist_mbid": "c8b457e5-cfb7-42bf-99a2-af151867f6cc",
+      "name": "Interstate Gospel",
+      "release_group_mbid": "3d9908a8-57b1-4d32-8e47-5962b17205ad",
+      "release_mbid": "0fe9a967-66c9-4124-8710-f93cb6dd885b",
+      "label": "RCA Nashville",
+      "release_year": 2018,
+      "release_month": 11,
+      "release_day": 2,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Interstate Prelude",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "46b888a8-3845-4a84-a7bb-361a2d9ef0bf"
+        },
+        {
+          "position": "2",
+          "title": "Stop Drop and Roll One",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "24ed3da2-83b3-4f4b-9b5e-c1bb1507ddd4"
+        },
+        {
+          "position": "3",
+          "title": "Best Years of My Life",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "steel guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "9e129e18-471f-46f9-bbb0-5a700ec72195"
+        },
+        {
+          "position": "4",
+          "title": "5 Acres of Turnips",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c619a438-4cd9-4ae9-89af-fa9d360c083d"
+        },
+        {
+          "position": "5",
+          "title": "When I Was His Wife",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a25497c8-08a1-4b59-874d-ed19739efd96"
+        },
+        {
+          "position": "6",
+          "title": "Cheyenne",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "fiddle"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "1328d89f-efea-4bb3-a473-64b48e9c27ca"
+        },
+        {
+          "position": "7",
+          "title": "Got My Name Changed Back",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "resonator guitar"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "28242ed9-4c4f-4723-b130-2f1ee66b1a88"
+        },
+        {
+          "position": "8",
+          "title": "Sugar Daddy",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "6a6903e7-a1d4-48c5-9d0e-5ddcfa8a0ef2"
+        },
+        {
+          "position": "9",
+          "title": "Leavers Lullaby",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chris Coleman",
+              "instrument",
+              "horn"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "steel guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "739b05df-8e70-4ea8-a7da-ded62d54bfbf"
+        },
+        {
+          "position": "10",
+          "title": "Milkman",
+          "credits": [
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Angaleena Presley",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "0553394a-93f6-4dd8-8daf-db9832aa732f"
+        },
+        {
+          "position": "11",
+          "title": "Commissary",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "steel guitar"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c9ca9705-0abd-4c5a-a87b-e2abc2dfaf69"
+        },
+        {
+          "position": "12",
+          "title": "Masterpiece",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "steel guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "2f746dd8-9704-4ad7-9e9c-c4be2a15d795"
+        },
+        {
+          "position": "13",
+          "title": "Interstate Gospel",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Chuck Leavell",
+              "instrument",
+              "piano"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Miranda Lambert",
+              "work writer",
+              ""
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ab491532-2361-4af7-8595-560eb2c3bde9"
+        },
+        {
+          "position": "14",
+          "title": "This Too Shall Pass",
+          "credits": [
+            [
+              "Matt Chamberlain",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Chris Coleman",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Dan Dugmore",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Fats Kaplin",
+              "instrument",
+              "acoustic guitar"
+            ],
+            [
+              "Frank Carter Rische",
+              "instrument",
+              "electric guitar"
+            ],
+            [
+              "Glenn Worf",
+              "instrument",
+              "bass"
+            ],
+            [
+              "Frank Liddell",
+              "producer",
+              "co"
+            ],
+            [
+              "Eric Masse",
+              "producer",
+              "co"
+            ],
+            [
+              "Glenn Worf",
+              "producer",
+              "co"
+            ],
+            [
+              "Ashley Monroe",
+              "work writer",
+              ""
+            ],
+            [
+              "Angaleena Presley",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "466954e8-480f-4790-9cfc-5a87547fa7ee"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "country"
+      ],
+      "image_url": "https://coverartarchive.org/release/0fe9a967-66c9-4124-8710-f93cb6dd885b/21470332826-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-17T22:38:34.313Z"
+      ]
+    },
+    "Cream - Disraeli Gears": {
+      "artist": "Cream",
+      "artist_mbid": "04cd0cfd-bfd1-4c36-bc38-95c35e2c045f",
+      "name": "Disraeli Gears",
+      "release_group_mbid": "bbd66e31-ac27-3432-81a7-0d4b4b4c5de5",
+      "release_mbid": "0af62ed3-25fb-4a3f-9663-a5614cc3f365",
+      "label": "Polydor",
+      "release_year": 1967,
+      "release_month": 11,
+      "release_day": 2,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Strange Brew",
+          "credits": [
+            [
+              "Eric Clapton",
+              "work writer",
+              ""
+            ],
+            [
+              "Gail Collins",
+              "work writer",
+              ""
+            ],
+            [
+              "Felix Pappalardi",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "a9ad1d35-c4e8-4bbf-aedb-31c7c86f2a96"
+        },
+        {
+          "position": "2",
+          "title": "Sunshine of Your Love",
+          "credits": [
+            [
+              "Pete Brown",
+              "work writer",
+              ""
+            ],
+            [
+              "Jack Bruce",
+              "work writer",
+              ""
+            ],
+            [
+              "Eric Clapton",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f42aa246-2840-49ad-9cc1-440766107179"
+        },
+        {
+          "position": "3",
+          "title": "World of Pain",
+          "credits": [
+            [
+              "Gail Collins",
+              "work writer",
+              ""
+            ],
+            [
+              "Felix Pappalardi",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "02b457d0-e1d4-4f89-9e67-84994ff3d1c8"
+        },
+        {
+          "position": "4",
+          "title": "Dance the Night Away",
+          "credits": [
+            [
+              "Pete Brown",
+              "work composer",
+              ""
+            ],
+            [
+              "Jack Bruce",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f946836d-cd71-4b2d-893f-34bd01bf4062"
+        },
+        {
+          "position": "5",
+          "title": "Blue Condition",
+          "credits": [
+            [
+              "Ginger Baker",
+              "work composer",
+              ""
+            ],
+            [
+              "Ginger Baker",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "4df13103-c2cd-4479-89a3-76b7fe4b5b0f"
+        },
+        {
+          "position": "6",
+          "title": "Tales of Brave Ulysses",
+          "credits": [
+            [
+              "Eric Clapton",
+              "work composer",
+              ""
+            ],
+            [
+              "Martin Sharp",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "6455aa8c-df3c-4aeb-966d-69ee9f6ddbf6"
+        },
+        {
+          "position": "7",
+          "title": "SWLABR",
+          "credits": [
+            [
+              "Jack Bruce",
+              "work composer",
+              ""
+            ],
+            [
+              "Pete Brown",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "b802e6f7-a648-4bcc-96c7-5a46a7f27c21"
+        },
+        {
+          "position": "8",
+          "title": "We\u2019re Going Wrong",
+          "credits": [
+            [
+              "Jack Bruce",
+              "work composer",
+              ""
+            ],
+            [
+              "Jack Bruce",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "969cae48-e67c-4cc8-adf0-7a6ea60f3d2a"
+        },
+        {
+          "position": "9",
+          "title": "Outside Woman Blues",
+          "credits": [
+            [
+              "Blind Joe Reynolds",
+              "work composer",
+              ""
+            ],
+            [
+              "Blind Joe Reynolds",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "b6163131-4681-4ebc-b113-66bdd13ca4c7"
+        },
+        {
+          "position": "10",
+          "title": "Take It Back",
+          "credits": [
+            [
+              "Pete Brown",
+              "work composer",
+              ""
+            ],
+            [
+              "Jack Bruce",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "135af5a7-9f4f-439e-9dd0-da8d29c242bb"
+        },
+        {
+          "position": "11",
+          "title": "Mother\u2019s Lament",
+          "credits": [
+            [
+              "[unknown]",
+              "work composer",
+              ""
+            ]
+          ],
+          "recording_mbid": "90d8a636-5531-4ddb-b69f-c8f4de573750"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "blues rock",
+        "blues-rock",
+        "classic rock",
+        "hard rock",
+        "psychedelic rock",
+        "rock",
+        "rock/pop"
+      ],
+      "image_url": "https://coverartarchive.org/release/0af62ed3-25fb-4a3f-9663-a5614cc3f365/19274030173-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-17T23:16:47.703Z"
+      ]
+    },
+    "Rihanna - ANTI (Deluxe)": {
+      "artist": "Rihanna",
+      "artist_mbid": "73e5e69d-3554-40d8-8516-00cb38737a1c",
+      "name": "ANTI",
+      "release_group_mbid": "0c482acd-35a2-466b-b833-ef5f2f1297d4",
+      "release_mbid": "8d6ed300-dc16-43ac-899f-de0e96562a4d",
+      "label": "Rihanna",
+      "release_year": 2016,
+      "release_month": 1,
+      "release_day": 28,
+      "tracklist": [
+        {
+          "position": "1",
+          "title": "Consideration",
+          "credits": [
+            [
+              "Carter Lang",
+              "instrument",
+              "organ"
+            ],
+            [
+              "Carter Lang",
+              "instrument",
+              "bass synthesizer"
+            ],
+            [
+              "Shea Taylor",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Tyran Donaldson",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Brendan Morawski",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Tyran Donaldson",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "SZA",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "f7a18eea-d7a5-4b0d-aa33-ce57718a131a"
+        },
+        {
+          "position": "2",
+          "title": "James Joint",
+          "credits": [
+            [
+              "Shea Taylor",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Shea Taylor",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Blake Mares",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "James Fauntleroy",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Shea Taylor",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "49e11c6b-a06e-4138-8aaa-ba471cec2ba7"
+        },
+        {
+          "position": "3",
+          "title": "Kiss It Better",
+          "credits": [
+            [
+              "Nuno Bettencourt",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Jeff Bhasker",
+              "producer",
+              ""
+            ],
+            [
+              "John Glass",
+              "producer",
+              "additional"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Blake Mares",
+              "recording",
+              "assistant, guitar"
+            ],
+            [
+              "Brendan Morawski",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Jeff Bhasker",
+              "work writer",
+              ""
+            ],
+            [
+              "John Glass",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Teddy Sinclair",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "ce079a88-fe62-41ae-be1d-b156b30963e8"
+        },
+        {
+          "position": "4",
+          "title": "Work",
+          "credits": [
+            [
+              "40",
+              "mix",
+              ""
+            ],
+            [
+              "Noel Campbell",
+              "mix",
+              ""
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "40",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Boi\u20101da",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "40",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Noel Cadastre",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Thomas Warren",
+              "recording",
+              "assistant, lead vocals"
+            ],
+            [
+              "PARTYNEXTDOOR",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Boi\u20101da",
+              "work writer",
+              ""
+            ],
+            [
+              "Drake",
+              "work writer",
+              ""
+            ],
+            [
+              "Monte Moir",
+              "work writer",
+              ""
+            ],
+            [
+              "PARTYNEXTDOOR",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Allen Ritter",
+              "work writer",
+              ""
+            ],
+            [
+              "Sevn Thomas",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "771e2d85-e47a-4438-bfd4-c760b97786cf"
+        },
+        {
+          "position": "5",
+          "title": "Desperado",
+          "credits": [
+            [
+              "Brian Schultz",
+              "instrument",
+              "bass guitar"
+            ],
+            [
+              "Mick Schultz",
+              "instrument",
+              "guitar"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Mick Shultz",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Thomas Warren",
+              "recording",
+              "assistant"
+            ],
+            [
+              "James Fauntleroy",
+              "vocal",
+              "additional, background vocals"
+            ],
+            [
+              "James Fauntleroy",
+              "vocal arranger",
+              "additional"
+            ],
+            [
+              "Krystin Watkins",
+              "vocal arranger",
+              "additional"
+            ],
+            [
+              "BANKS",
+              "work writer",
+              ""
+            ],
+            [
+              "James Fauntleroy",
+              "work writer",
+              ""
+            ],
+            [
+              "Derrus Rachel",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Mick Schultz",
+              "work writer",
+              ""
+            ],
+            [
+              "Krystin Watkins",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4a1ecb54-2d42-483d-a2e9-db2694baa4c4"
+        },
+        {
+          "position": "6",
+          "title": "Woo",
+          "credits": [
+            [
+              "Nathaniel Alford",
+              "engineer",
+              "additional"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Hit\u2010Boy",
+              "producer",
+              ""
+            ],
+            [
+              "Travis Scott",
+              "producer",
+              "additional"
+            ],
+            [
+              "Ray Charles Brown, Jr",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Travis Scott",
+              "vocal",
+              "additional"
+            ],
+            [
+              "Jean Baptiste",
+              "work writer",
+              ""
+            ],
+            [
+              "Hit\u2010Boy",
+              "work writer",
+              ""
+            ],
+            [
+              "Jeremih",
+              "work writer",
+              ""
+            ],
+            [
+              "Derrus Rachel",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Travis Scott",
+              "work writer",
+              ""
+            ],
+            [
+              "The\u2010Dream",
+              "work writer",
+              ""
+            ],
+            [
+              "The Weeknd",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "c11ccc51-7802-46aa-a5db-8b1eee0a93ea"
+        },
+        {
+          "position": "7",
+          "title": "Needed Me",
+          "credits": [
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Frank Dukes",
+              "producer",
+              "co"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Mustard",
+              "producer",
+              ""
+            ],
+            [
+              "Twice as Nice",
+              "producer",
+              "co"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Blake Mares",
+              "recording",
+              "additional"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Thomas Warren",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Nick Valentino Audino",
+              "work writer",
+              ""
+            ],
+            [
+              "Prince Charlez",
+              "work writer",
+              ""
+            ],
+            [
+              "Frank Dukes",
+              "work writer",
+              ""
+            ],
+            [
+              "Lewis One",
+              "work writer",
+              ""
+            ],
+            [
+              "Mustard",
+              "work writer",
+              ""
+            ],
+            [
+              "Derrus Rachel",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Khaled Rohaim",
+              "work writer",
+              ""
+            ],
+            [
+              "Sickdrumz",
+              "work writer",
+              ""
+            ],
+            [
+              "Starrah",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "20ca09ca-6d25-40f8-9488-ea1c12836fa2"
+        },
+        {
+          "position": "8",
+          "title": "Yeah, I Said It",
+          "credits": [
+            [
+              "Chris Godbey",
+              "mix",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Daniel Jones",
+              "producer",
+              ""
+            ],
+            [
+              "Fade MaJah",
+              "producer",
+              ""
+            ],
+            [
+              "Timbaland",
+              "producer",
+              ""
+            ],
+            [
+              "Ray Charles Brown, Jr",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Chris Godbey",
+              "recording",
+              "additional"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Evon Barnes",
+              "work writer",
+              ""
+            ],
+            [
+              "Bibi Bourelly",
+              "work writer",
+              ""
+            ],
+            [
+              "Jean-Paul Bourelly",
+              "work writer",
+              ""
+            ],
+            [
+              "Chris Godbey",
+              "work writer",
+              ""
+            ],
+            [
+              "Daniel Jones",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Timbaland",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "bc5146a5-7ab9-4161-83c1-b77e9fe8f7fb"
+        },
+        {
+          "position": "9",
+          "title": "Same Ol\u2019 Mistakes",
+          "credits": [
+            [
+              "Kevin Parker",
+              "instrument",
+              ""
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Kevin Parker",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "\u00c9tienne Macor",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Kevin Parker",
+              "work composer",
+              ""
+            ],
+            [
+              "Kevin Parker",
+              "work lyricist",
+              ""
+            ]
+          ],
+          "recording_mbid": "1f79c73c-a376-4edf-a3b1-ad4ab636fa18"
+        },
+        {
+          "position": "10",
+          "title": "Never Ending",
+          "credits": [
+            [
+              "Stan Greene",
+              "mix",
+              ""
+            ],
+            [
+              "Daniela Rivera",
+              "mix",
+              "additional"
+            ],
+            [
+              "Chad Sabo",
+              "mix",
+              ""
+            ],
+            [
+              "Phil Tan",
+              "mix",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Chad Sabo",
+              "producer",
+              ""
+            ],
+            [
+              "Ray Charles Brown, Jr",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Stan Greene",
+              "recording",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Chad Sabo",
+              "recording",
+              ""
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Dido",
+              "work writer",
+              ""
+            ],
+            [
+              "Paul Herman",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Chad Sabo",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "bc38a43a-9a57-48c4-90d9-b53afb17d730"
+        },
+        {
+          "position": "11",
+          "title": "Love on the Brain",
+          "credits": [
+            [
+              "Joseph Angel",
+              "arranger",
+              ""
+            ],
+            [
+              "Joseph Angel",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Joseph Angel",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Fred Ball",
+              "instrument",
+              "drums (drum set)"
+            ],
+            [
+              "Fred Ball",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Jeff Jackson",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Fred Ball",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Chad Wilson",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Joseph Angel",
+              "work writer",
+              ""
+            ],
+            [
+              "Fred Ball",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "85465eb1-f250-4f7f-845e-856ef8e16297"
+        },
+        {
+          "position": "12",
+          "title": "Higher",
+          "credits": [
+            [
+              "No I.D.",
+              "instrument",
+              "keyboard"
+            ],
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "No I.D.",
+              "producer",
+              ""
+            ],
+            [
+              "Ray Charles Brown, Jr",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Bibi Bourelly",
+              "work writer",
+              ""
+            ],
+            [
+              "Jerry Butler",
+              "work writer",
+              ""
+            ],
+            [
+              "James Fauntleroy",
+              "work writer",
+              ""
+            ],
+            [
+              "Leon Huff",
+              "work writer",
+              ""
+            ],
+            [
+              "No I.D.",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "d96975c9-cf03-42c6-9af6-61afddf19a64"
+        },
+        {
+          "position": "13",
+          "title": "Close to You",
+          "credits": [
+            [
+              "James Fauntleroy",
+              "work writer",
+              ""
+            ],
+            [
+              "Brian Kennedy",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "649b6d16-68af-4bb5-9da9-3819758a01dc"
+        },
+        {
+          "position": "14",
+          "title": "Goodnight Gotham",
+          "credits": [
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Mitus",
+              "producer",
+              ""
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Blake Mares",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Paul Epworth",
+              "work writer",
+              ""
+            ],
+            [
+              "Mitus",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Florence Welch",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "3575a003-ec81-445a-b165-a68a04da4a4d"
+        },
+        {
+          "position": "15",
+          "title": "Pose",
+          "credits": [
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Hit\u2010Boy",
+              "producer",
+              ""
+            ],
+            [
+              "Travis Scott",
+              "producer",
+              "additional"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Thomas Warren",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Bibi Bourelly",
+              "work writer",
+              ""
+            ],
+            [
+              "Hit\u2010Boy",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Travis Scott",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "b74c25e1-42ff-4e32-9073-e72e69261b78"
+        },
+        {
+          "position": "16",
+          "title": "Sex With Me",
+          "credits": [
+            [
+              "Chris Galland",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Manny Marroquin",
+              "mix",
+              ""
+            ],
+            [
+              "Ike Schultz",
+              "mix",
+              "assistant"
+            ],
+            [
+              "Boi\u20101da",
+              "producer",
+              ""
+            ],
+            [
+              "Frank Dukes",
+              "producer",
+              "co"
+            ],
+            [
+              "Kuk Harrell",
+              "producer",
+              "lead vocals"
+            ],
+            [
+              "Vinylz",
+              "producer",
+              "additional"
+            ],
+            [
+              "Kuk Harrell",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Blake Mares",
+              "recording",
+              "additional"
+            ],
+            [
+              "Marcos Tovar",
+              "recording",
+              "lead vocals"
+            ],
+            [
+              "Thomas Warren",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Chad Wilson",
+              "recording",
+              "assistant"
+            ],
+            [
+              "Boi\u20101da",
+              "work writer",
+              ""
+            ],
+            [
+              "Junior Braithwaite",
+              "work writer",
+              ""
+            ],
+            [
+              "Frank Dukes",
+              "work writer",
+              ""
+            ],
+            [
+              "Chris Hansen",
+              "work writer",
+              ""
+            ],
+            [
+              "Rihanna",
+              "work writer",
+              ""
+            ],
+            [
+              "Vinylz",
+              "work writer",
+              ""
+            ]
+          ],
+          "recording_mbid": "4ac23353-0812-42e5-878c-1c1b6479eeca"
+        }
+      ],
+      "genres": [],
+      "tags": [
+        "contemporary r&b",
+        "neo-soul",
+        "pop",
+        "soul"
+      ],
+      "image_url": "https://coverartarchive.org/release/8d6ed300-dc16-43ac-899f-de0e96562a4d/32325551768-1200.jpg",
+      "source": "musicbrainz",
+      "listen_history": [
+        "2026-05-18T00:12:42.376Z"
+      ]
     }
   },
   "most_recently_listened": [
+    "Rihanna - ANTI (Deluxe)",
+    "Cream - Disraeli Gears",
+    "Pistol Annies, Miranda Lambert - Interstate Gospel",
     "Boards of Canada - Twoism",
     "Aphex Twin - Selected Ambient Works 85-92",
     "Third Eye Blind - Dopamine",
     "By Storm, Injury Reserve - My Ghosts Go Ghost",
     "MGMT - Little Dark Age",
     "Lou Reed - Transformer",
-    "Third Eye Blind - Third Eye Blind",
-    "Run The Jewels, El-P, Killer Mike - Run The Jewels 3",
-    "John Martyn - Solid Air",
-    "LCD Soundsystem - Sound of Silver"
+    "Third Eye Blind - Third Eye Blind"
   ]
 }
