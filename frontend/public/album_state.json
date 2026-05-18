@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T03:11:45.389Z",
+  "last_checked": "2026-05-18T03:28:59.817Z",
   "albums_in_progress": {
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
@@ -235,10 +235,11 @@
       "artist": "Miguel",
       "total_tracks": 13,
       "played_tracks": [
-        "5VA4Ispp52EA1sOqzMz3Av"
+        "5VA4Ispp52EA1sOqzMz3Av",
+        "0JXXNGljqupsJaZsgSbMZV"
       ],
       "first_played": "2026-05-18T01:52:32.558Z",
-      "last_played": "2026-05-18T01:52:32.558Z"
+      "last_played": "2026-05-18T03:24:53.390Z"
     },
     "76290XdXVF9rPzGdNRWdCh": {
       "album_name": "Ctrl",
@@ -349,6 +350,26 @@
       ],
       "first_played": "2026-05-18T03:11:45.389Z",
       "last_played": "2026-05-18T03:11:45.389Z"
+    },
+    "392p3shh2jkxUxY2VHvlH8": {
+      "album_name": "channel ORANGE",
+      "artist": "Frank Ocean",
+      "total_tracks": 17,
+      "played_tracks": [
+        "4QhWbupniDd44EDtnh2bFJ"
+      ],
+      "first_played": "2026-05-18T03:21:38.822Z",
+      "last_played": "2026-05-18T03:21:38.822Z"
+    },
+    "4OXnPSBtZo8PBFiTOfuumP": {
+      "album_name": "Good Girl Gone Bad",
+      "artist": "Rihanna",
+      "total_tracks": 12,
+      "played_tracks": [
+        "4xbnEZeBgAkt1qJdnB8gf0"
+      ],
+      "first_played": "2026-05-18T03:28:59.817Z",
+      "last_played": "2026-05-18T03:28:59.817Z"
     }
   },
   "completed_albums": {
