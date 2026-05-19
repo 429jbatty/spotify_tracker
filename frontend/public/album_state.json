@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T21:33:23.394Z",
+  "last_checked": "2026-05-18T23:03:10.282Z",
   "albums_in_progress": {
     "46YfeDd8YhuAcywdxZkRqf": {
       "album_name": "Twoism",
@@ -390,6 +390,16 @@
       ],
       "first_played": "2026-05-18T21:33:23.394Z",
       "last_played": "2026-05-18T21:33:23.394Z"
+    },
+    "5ll74bqtkcXlKE7wwkMq4g": {
+      "album_name": "Late Registration",
+      "artist": "Kanye West",
+      "total_tracks": 21,
+      "played_tracks": [
+        "34KUIBsIUiPV7oCIzSdDAU"
+      ],
+      "first_played": "2026-05-18T23:03:10.282Z",
+      "last_played": "2026-05-18T23:03:10.282Z"
     }
   },
   "completed_albums": {
