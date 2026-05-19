@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-18T23:03:10.282Z",
+  "last_checked": "2026-05-19T15:11:38.133Z",
   "albums_in_progress": {
     "2zJVeRorn9q3XBeH7twIjc": {
       "album_name": "Hell On Heels",
@@ -387,6 +387,17 @@
       ],
       "first_played": "2026-05-18T23:03:10.282Z",
       "last_played": "2026-05-18T23:03:10.282Z"
+    },
+    "59hAqiqCmbfLBDtMzGCNpp": {
+      "album_name": "Shepherd in a Sheepskin Vest",
+      "artist": "Bill Callahan",
+      "total_tracks": 20,
+      "played_tracks": [
+        "5imF1gGEUJ4Ub8FrDKDW3Y",
+        "6UOaThrcCkUk5WF6OAJMBf"
+      ],
+      "first_played": "2026-05-19T15:09:08.240Z",
+      "last_played": "2026-05-19T15:11:38.133Z"
     }
   },
   "completed_albums": {
