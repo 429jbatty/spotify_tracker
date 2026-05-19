@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-19T15:11:38.133Z",
+  "last_checked": "2026-05-19T15:21:48.097Z",
   "albums_in_progress": {
     "2zJVeRorn9q3XBeH7twIjc": {
       "album_name": "Hell On Heels",
@@ -394,10 +394,13 @@
       "total_tracks": 20,
       "played_tracks": [
         "5imF1gGEUJ4Ub8FrDKDW3Y",
-        "6UOaThrcCkUk5WF6OAJMBf"
+        "6UOaThrcCkUk5WF6OAJMBf",
+        "3HvYwCmXw2ggMNt7o3e9oy",
+        "5vc2hxK6C28pMhA9MseVRX",
+        "6Bh0i8updnT6EKpqd5bG5m"
       ],
       "first_played": "2026-05-19T15:09:08.240Z",
-      "last_played": "2026-05-19T15:11:38.133Z"
+      "last_played": "2026-05-19T15:21:48.097Z"
     }
   },
   "completed_albums": {
