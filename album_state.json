@@ -1,5 +1,5 @@
 {
-  "last_checked": "2026-05-19T20:37:24.293Z",
+  "last_checked": "2026-05-19T22:16:24.090Z",
   "albums_in_progress": {
     "2zJVeRorn9q3XBeH7twIjc": {
       "album_name": "Hell On Heels",
@@ -388,28 +388,45 @@
       "first_played": "2026-05-18T23:03:10.282Z",
       "last_played": "2026-05-18T23:03:10.282Z"
     },
-    "59hAqiqCmbfLBDtMzGCNpp": {
-      "album_name": "Shepherd in a Sheepskin Vest",
+    "13VVtuvboNAaPFcKsQsjLP": {
+      "album_name": "Apocalypse",
       "artist": "Bill Callahan",
+      "total_tracks": 7,
+      "played_tracks": [
+        "0FprsPFNEr74lZRbH49MMK"
+      ],
+      "first_played": "2026-05-19T21:03:54.555Z",
+      "last_played": "2026-05-19T21:03:54.555Z"
+    },
+    "7uk1aaKzZp5c3qsKmWKy73": {
+      "album_name": "Supper",
+      "artist": "Smog",
+      "total_tracks": 9,
+      "played_tracks": [
+        "2Psu2QEd3oEsNuk6TtiFmD"
+      ],
+      "first_played": "2026-05-19T21:09:54.050Z",
+      "last_played": "2026-05-19T21:09:54.050Z"
+    },
+    "6YM4MpYgz6BhIeqQkxp3u4": {
+      "album_name": "Purple Mountains",
+      "artist": "Purple Mountains",
+      "total_tracks": 10,
+      "played_tracks": [
+        "4djPwQlldGMPqhKAonFMeO"
+      ],
+      "first_played": "2026-05-19T21:16:24.160Z",
+      "last_played": "2026-05-19T21:16:24.160Z"
+    },
+    "66EuOM4JX57MTYRtSzQp4q": {
+      "album_name": "In Concert",
+      "artist": "Joan Baez",
       "total_tracks": 20,
       "played_tracks": [
-        "5imF1gGEUJ4Ub8FrDKDW3Y",
-        "6UOaThrcCkUk5WF6OAJMBf",
-        "3HvYwCmXw2ggMNt7o3e9oy",
-        "5vc2hxK6C28pMhA9MseVRX",
-        "6Bh0i8updnT6EKpqd5bG5m",
-        "7hFxEn86wLqe4ncwOmPjcn",
-        "3Z50m8nGRisSWiLTEn83u2",
-        "2mYg3AC8FRjveHdu9iWV5W",
-        "76DtXKw2bLxgxiTyFku00u",
-        "5hLhoj9jdTUNgyLZZKN25m",
-        "3sSfpC7N0UC5GeaqwquTMq",
-        "6ncw0RQa5p0KFeD3okhb6R",
-        "42Wm2GgeHNmUZ7opcbhG8Z",
-        "0LiC1BmFM3qRQCzBFvUSDZ"
+        "1jWMYvFjuSzWda5mswu8r4"
       ],
-      "first_played": "2026-05-19T15:09:08.240Z",
-      "last_played": "2026-05-19T20:37:24.293Z"
+      "first_played": "2026-05-19T22:16:24.090Z",
+      "last_played": "2026-05-19T22:16:24.090Z"
     }
   },
   "completed_albums": {
@@ -23874,7 +23891,9 @@
         "alternative country"
       ],
       "image_url": "https://coverartarchive.org/release/c283c6e9-570f-418c-ae7d-281bf2e2069b/front",
-      "listen_history": [],
+      "listen_history": [
+        "2026-05-19T20:58:24.018Z"
+      ],
       "source": "musicbrainz"
     },
     "Billie Eilish - WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?": {
@@ -397175,7 +397194,8 @@
       "source": "musicbrainz",
       "listen_history": [
         "2026-03-12T21:03:37.348Z",
-        "2026-04-05T03:01:00.543Z"
+        "2026-04-05T03:01:00.543Z",
+        "2026-05-19T22:12:54.001Z"
       ],
       "completion_logged": true
     },
@@ -413845,6 +413865,8 @@
     }
   },
   "most_recently_listened": [
+    "Joan Baez - Joan Baez",
+    "Bill Callahan - Shepherd in a Sheepskin Vest",
     "JA\u0178-Z - 4:44",
     "Beyonc\u00e9 - Lemonade",
     "Rihanna - ANTI (Deluxe)",
@@ -413852,8 +413874,6 @@
     "Pistol Annies, Miranda Lambert - Interstate Gospel",
     "Boards of Canada - Twoism",
     "Aphex Twin - Selected Ambient Works 85-92",
-    "Third Eye Blind - Dopamine",
-    "By Storm, Injury Reserve - My Ghosts Go Ghost",
-    "MGMT - Little Dark Age"
+    "Third Eye Blind - Dopamine"
   ]
 }
