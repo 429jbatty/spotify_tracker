@@ -1,36 +1,6 @@
 {
-  "last_checked": "2026-05-19T22:16:24.090Z",
+  "last_checked": "2026-05-19T23:52:08.083Z",
   "albums_in_progress": {
-    "2zJVeRorn9q3XBeH7twIjc": {
-      "album_name": "Hell On Heels",
-      "artist": "Pistol Annies, Miranda Lambert",
-      "total_tracks": 10,
-      "played_tracks": [
-        "0sgnJ5LFjEy2IuQ99NEZ1C"
-      ],
-      "first_played": "2026-05-17T22:41:50.241Z",
-      "last_played": "2026-05-17T22:41:50.241Z"
-    },
-    "6iyKqDoL9pRSHUsDBYemlB": {
-      "album_name": "Fresh Cream",
-      "artist": "Cream",
-      "total_tracks": 11,
-      "played_tracks": [
-        "62nYkaIBesfvQSSwTjPnYS"
-      ],
-      "first_played": "2026-05-17T23:19:39.303Z",
-      "last_played": "2026-05-17T23:19:39.303Z"
-    },
-    "6UHhmTLl9T1scRYLmpHcDX": {
-      "album_name": "Loud",
-      "artist": "Rihanna",
-      "total_tracks": 11,
-      "played_tracks": [
-        "454h9zAIuTe1eJyw9iTnj4"
-      ],
-      "first_played": "2026-05-18T00:17:07.830Z",
-      "last_played": "2026-05-18T00:17:07.830Z"
-    },
     "4JCybsNZUXWrK2Jpyn12Ni": {
       "album_name": "\"Awaken, My Love!\"",
       "artist": "Childish Gambino",
@@ -41,46 +11,6 @@
       ],
       "first_played": "2026-05-18T00:23:28.021Z",
       "last_played": "2026-05-18T02:22:47.134Z"
-    },
-    "7pomP86PUhoJpY3fsC0WDQ": {
-      "album_name": "XSCAPE",
-      "artist": "Michael Jackson",
-      "total_tracks": 17,
-      "played_tracks": [
-        "5BKKy9fIJL5uM9fz1SnqyP"
-      ],
-      "first_played": "2026-05-18T00:27:34.678Z",
-      "last_played": "2026-05-18T00:27:34.678Z"
-    },
-    "0zjbNtfnMLmt2q50E3wDx8": {
-      "album_name": "Imagination & the Misfit Kid",
-      "artist": "Labrinth",
-      "total_tracks": 15,
-      "played_tracks": [
-        "76YSWx6L6FNsuaP6GWBb8P"
-      ],
-      "first_played": "2026-05-18T00:30:46.641Z",
-      "last_played": "2026-05-18T00:30:46.641Z"
-    },
-    "1x7IPmap6ALHrqcyWGnFT2": {
-      "album_name": "EVERYTHING IS LOVE (Clean)",
-      "artist": "The Carters",
-      "total_tracks": 9,
-      "played_tracks": [
-        "7zmleW3XZx0uUsL2CkFuDe"
-      ],
-      "first_played": "2026-05-18T00:35:33.258Z",
-      "last_played": "2026-05-18T00:35:33.258Z"
-    },
-    "3arNdjotCvtiiLFfjKngMc": {
-      "album_name": "AT.LONG.LAST.A$AP",
-      "artist": "A$AP Rocky",
-      "total_tracks": 18,
-      "played_tracks": [
-        "4S7YHmlWwfwArgd8LfSPud"
-      ],
-      "first_played": "2026-05-18T00:39:32.781Z",
-      "last_played": "2026-05-18T00:39:32.781Z"
     },
     "4eddbruVtOqw8khwxSH6H2": {
       "album_name": "Unapologetic (Deluxe)",
@@ -106,36 +36,6 @@
       ],
       "first_played": "2026-05-18T00:47:31.654Z",
       "last_played": "2026-05-18T01:57:02.683Z"
-    },
-    "0tcExuDWMQdBbwSpqN8Ku2": {
-      "album_name": "FutureSex/LoveSounds Deluxe Edition",
-      "artist": "Justin Timberlake",
-      "total_tracks": 15,
-      "played_tracks": [
-        "4NeOWqHmlrGRuBvsLJC9rL"
-      ],
-      "first_played": "2026-05-18T00:52:08.061Z",
-      "last_played": "2026-05-18T00:52:08.061Z"
-    },
-    "7gsWAHLeT0w7es6FofOXk1": {
-      "album_name": "The Life Of Pablo",
-      "artist": "Kanye West",
-      "total_tracks": 20,
-      "played_tracks": [
-        "3cCxoOgfi6hgt8MNteuiiD"
-      ],
-      "first_played": "2026-05-18T00:55:21.171Z",
-      "last_played": "2026-05-18T00:55:21.171Z"
-    },
-    "4eLPsYPBmXABThSJ821sqY": {
-      "album_name": "DAMN.",
-      "artist": "Kendrick Lamar",
-      "total_tracks": 14,
-      "played_tracks": [
-        "6SwRhMLwNqEi6alNPVG00n"
-      ],
-      "first_played": "2026-05-18T00:59:08.739Z",
-      "last_played": "2026-05-18T00:59:08.739Z"
     },
     "2m1DkB7oqaZu8BzAAUfwlq": {
       "album_name": "The Gifted",
@@ -427,6 +327,16 @@
       ],
       "first_played": "2026-05-19T22:16:24.090Z",
       "last_played": "2026-05-19T22:16:24.090Z"
+    },
+    "2JQDn2wgm2nLVxdWE0GJJa": {
+      "album_name": "Folksongs & Ballads",
+      "artist": "Tia Blake",
+      "total_tracks": 11,
+      "played_tracks": [
+        "7hVdEYX4w0ELKoD8F7NGze"
+      ],
+      "first_played": "2026-05-19T23:52:08.083Z",
+      "last_played": "2026-05-19T23:52:08.083Z"
     }
   },
   "completed_albums": {
