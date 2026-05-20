@@ -1,14 +1,20 @@
+import json
 import logging
+from dataclasses import asdict
+from datetime import datetime
+from pathlib import Path
 
 import metadata_refresh_service as refresh_service
-import utils
+from backend.app.config import get_settings
 
 # Edit these values, then run:
 # ./.venv/bin/python refresh_metadata.py
 
-REFRESH_ALL = False
+REFRESH_ALL = True
 
-ALBUM_KEYS = ["Bridget St John - Songs For The Gentle Man"]
+ALBUM_KEYS = [
+    #
+]
 
 ALBUMS = [
     # {
@@ -22,32 +28,59 @@ CONTINUE_ON_ERROR = True
 
 
 def _print_summary(results):
-    refreshed = [result for result in results if result.refreshed]
-    failed = [result for result in results if not result.refreshed]
+    statuses = {}
+    for result in results:
+        statuses[result.status] = statuses.get(result.status, 0) + 1
 
-    print(f"Refreshed: {len(refreshed)}")
-    print(f"Failed: {len(failed)}")
+    for status, count in sorted(statuses.items()):
+        print(f"{status}: {count}")
 
-    for result in refreshed:
-        print(f"[OK] {result.key}")
+    for result in results:
+        if result.refreshed and not result.warnings:
+            continue
 
-    for result in failed:
-        print(f"[FAILED] {result.key}: {result.error}")
+        detail = f": {result.error}" if result.error else ""
+        warning_detail = (
+            f" ({len(result.warnings)} warning{'s' if len(result.warnings) != 1 else ''})"
+            if result.warnings
+            else ""
+        )
+        print(f"[{result.status}] {result.key}{warning_detail}{detail}")
+
+
+def _write_report(results):
+    report_dir = Path(get_settings().data_dir) / "refresh_reports"
+    report_dir.mkdir(parents=True, exist_ok=True)
+    report_path = report_dir / (
+        f"metadata_refresh_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+    )
+    payload = {
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+        "summary": _status_counts(results),
+        "results": [asdict(result) for result in results],
+    }
+    report_path.write_text(json.dumps(payload, indent=2), encoding="utf-8")
+    return report_path
+
+
+def _status_counts(results):
+    counts = {}
+    for result in results:
+        counts[result.status] = counts.get(result.status, 0) + 1
+    return counts
 
 
 def refresh_configured_albums():
-    state = utils.load_state()
     results = []
 
     if REFRESH_ALL:
-        results = refresh_service.refresh_all_albums_in_state(
-            state,
+        results = refresh_service.refresh_all_albums_and_save(
             continue_on_error=CONTINUE_ON_ERROR,
         )
     else:
         for key in ALBUM_KEYS:
             try:
-                result = refresh_service.refresh_album_in_state(state, key=key)
+                result = refresh_service.refresh_album_and_save(key=key)
             except Exception as exc:
                 if not CONTINUE_ON_ERROR:
                     raise
@@ -58,6 +91,7 @@ def refresh_configured_albums():
                         album="",
                         refreshed=False,
                         error=str(exc),
+                        status=refresh_service.classify_refresh_error(exc),
                     )
                 )
             else:
@@ -70,8 +104,7 @@ def refresh_configured_albums():
             key = f"{artist} - {album}"
 
             try:
-                result = refresh_service.refresh_album_in_state(
-                    state,
+                result = refresh_service.refresh_album_and_save(
                     artist=artist,
                     album=album,
                     spotify_url=spotify_url,
@@ -86,12 +119,12 @@ def refresh_configured_albums():
                         album=album,
                         refreshed=False,
                         error=str(exc),
+                        status=refresh_service.classify_refresh_error(exc),
                     )
                 )
             else:
                 results.append(result)
 
-    utils.save_state(state)
     return results
 
 
@@ -107,6 +140,8 @@ def main():
 
     results = refresh_configured_albums()
     _print_summary(results)
+    report_path = _write_report(results)
+    print(f"Report: {report_path}")
 
 
 if __name__ == "__main__":

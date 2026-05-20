@@ -5,10 +5,23 @@ import { fileURLToPath } from "url"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const basePath = process.env.VITE_BASE_PATH || "/"
 
 export default defineConfig({
   plugins: [react()],
-  base: "/spotify_tracker/",
+  base: basePath,
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+      "/media": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

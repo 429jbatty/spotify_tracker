@@ -2,6 +2,8 @@ import os
 import unittest
 from unittest.mock import patch
 
+import musicbrainzngs
+
 import album_metadata_service as metadata
 
 
@@ -187,6 +189,46 @@ class AlbumMetadataServiceTests(unittest.TestCase):
             album = metadata.get_album_metadata("Missing Artist", "Missing Album")
 
         self.assertEqual(album, {})
+
+    def test_cover_art_network_error_does_not_prevent_metadata_refresh(self):
+        release_summaries = [
+            {
+                "id": "release-1",
+                "title": "Test Album",
+                "status": "Official",
+                "date": "2020-05-12",
+                "country": "US",
+                "medium-list": [{"format": "Digital Media"}],
+            },
+        ]
+
+        with (
+            patch(
+                "album_metadata_service.mb.search_release_groups",
+                return_value=[release_group()],
+            ),
+            patch(
+                "album_metadata_service.mb.get_release_group_by_id",
+                return_value=release_group(),
+            ),
+            patch(
+                "album_metadata_service.mb.get_releases_for_group",
+                return_value=release_summaries,
+            ),
+            patch(
+                "album_metadata_service.mb.get_release_by_id",
+                return_value=full_release(),
+            ),
+            patch(
+                "album_metadata_service.mb.get_cover_art_url",
+                side_effect=musicbrainzngs.NetworkError(cause=OSError("dns")),
+            ),
+        ):
+            album = metadata.get_album_metadata("Test Artist", "Test Album")
+
+        self.assertEqual(album["artist"], "Test Artist")
+        self.assertEqual(album["name"], "Test Album")
+        self.assertIsNone(album["image_url"])
 
     def test_choose_best_enriched_release_prefers_cover_art_and_base_track_count(self):
         enriched = [

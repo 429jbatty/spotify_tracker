@@ -45,7 +45,7 @@ function AlbumRow({ albumId, album, onRowClick }) {
       </TableCell>
 
       <TableCell className="text-foreground/60">
-        {formatDate(album.release_date)}
+        {album.release_year || "Unknown"}
       </TableCell>
 
       <TableCell className="text-foreground/60 truncate max-w-0">

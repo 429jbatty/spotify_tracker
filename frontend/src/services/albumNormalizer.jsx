@@ -29,6 +29,26 @@ function aggregateAlbumCredits(album) {
  * - Adds derived release_date
  * - Adds album-level album_credits
  */
+export function normalizeAlbum(album) {
+  if (!album || typeof album !== "object") {
+    return album;
+  }
+
+  // Derived release_date (YYYY-MM-DD) for sorting and chart grouping.
+  const release_date = album.release_year
+    ? `${album.release_year}-${String(album.release_month || 1).padStart(2, "0")}-${String(album.release_day || 1).padStart(2, "0")}`
+    : null;
+
+  // Aggregate album-level credits
+  const album_credits = aggregateAlbumCredits(album);
+
+  return {
+    ...album,
+    release_date,
+    album_credits, // array of arrays: [name, role, detail]
+  };
+}
+
 function normalizeAlbums(rawAlbums) {
   if (!rawAlbums || typeof rawAlbums !== "object") {
     return {};
@@ -36,22 +56,7 @@ function normalizeAlbums(rawAlbums) {
 
   return Object.fromEntries(
     Object.entries(rawAlbums).map(([key, album]) => {
-      // Derived release_date (YYYY-MM-DD)
-      const release_date = album.release_year
-        ? `${album.release_year}-${String(album.release_month || 1).padStart(2, "0")}-${String(album.release_day || 1).padStart(2, "0")}`
-        : null;
-
-      // Aggregate album-level credits
-      const album_credits = aggregateAlbumCredits(album);
-
-      return [
-        key,
-        {
-          ...album,
-          release_date,
-          album_credits, // array of arrays: [name, role, detail]
-        },
-      ];
+      return [key, normalizeAlbum(album)];
     })
   );
 }

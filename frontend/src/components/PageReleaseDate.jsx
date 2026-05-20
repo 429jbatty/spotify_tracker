@@ -5,7 +5,7 @@ import AlbumTimeline from "@/components/timeline/AlbumTimeline";
 import AlbumSidePanel from "./AlbumSidePanel";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 
-function AlbumTimeView({ albums, onFilterSelect }) {
+function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
   const [filter, setFilter] = useState({ decade: null, year: null });
   const [chartMode, setChartMode] = useState("decade"); // "decade" or "year"
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -28,6 +28,15 @@ function AlbumTimeView({ albums, onFilterSelect }) {
     setPanelOpen(true);
   };
 
+  const updateSelectedAlbum = (album) => {
+    setSelectedAlbum((current) => (current ? { ...current, ...album } : album));
+  };
+
+  const handleAlbumDeleted = () => {
+    setSelectedAlbum(null);
+    setPanelOpen(false);
+  };
+
   return (
     <>
       <div className="space-y-10">
@@ -44,7 +53,11 @@ function AlbumTimeView({ albums, onFilterSelect }) {
         </div>
         <AlbumTimeline albums={filteredAlbums} onAlbumClick={openAlbum} />
         <div>
-          <AlbumTable albums={filteredAlbums} onFilterSelect={onFilterSelect} />
+          <AlbumTable
+            albums={filteredAlbums}
+            onFilterSelect={onFilterSelect}
+            onDataChanged={onDataChanged}
+          />
         </div>
       </div>
 
@@ -54,7 +67,13 @@ function AlbumTimeView({ albums, onFilterSelect }) {
           className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
         >
           {selectedAlbum && (
-            <AlbumSidePanel album={selectedAlbum} onFilterSelect={onFilterSelect} />
+            <AlbumSidePanel
+              album={selectedAlbum}
+              onFilterSelect={onFilterSelect}
+              onAlbumUpdated={updateSelectedAlbum}
+              onAlbumDeleted={handleAlbumDeleted}
+              onDataChanged={onDataChanged}
+            />
           )}
         </SheetContent>
       </Sheet>

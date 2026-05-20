@@ -1,11 +1,13 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import AlbumCreateDialog from "./AlbumCreateDialog";
+import { spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
+import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
 import {
   BarChart3,
   CalendarDays,
-  DatabaseZap,
   Library,
-  Plus,
   ShieldCheck,
   Table2,
 } from "lucide-react";
@@ -45,19 +47,56 @@ const NAV_ITEMS = [
   },
 ];
 
-function UniversalHeader({ view, setView }) {
+function UniversalHeader({
+  view,
+  setView,
+  albums,
+  onDataChanged,
+  selectedUser,
+  spotifyStatus,
+  onSpotifyStatusChanged,
+  onSwitchUser,
+}) {
+  const { toast } = useToast();
+  const [isSyncing, setIsSyncing] = useState(false);
+  const handleConnectSpotify = () => {
+    const url = spotifyConnectUrl(selectedUser?.slug);
+    if (url) window.location.href = url;
+  };
+
+  const handleSyncNow = async () => {
+    setIsSyncing(true);
+    try {
+      await syncSpotifyNow(selectedUser?.slug);
+      await onSpotifyStatusChanged?.();
+      await onDataChanged?.();
+      toast({
+        title: "Sync Complete",
+        description: "Your Spotify data has been synchronized successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Sync Failed",
+        description: error.message || "An error occurred while syncing.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-30 border-b border-primary/20 bg-[linear-gradient(90deg,hsl(var(--chart-1)/0.18),hsl(var(--background)/0.96)_34%,hsl(var(--chart-4)/0.10))] backdrop-blur">
+    <header className="sticky top-0 z-30 border-b border-primary/20 bg-muted backdrop-blur">
       <div className="px-6 py-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary shadow-sm">
+              <div className="flex size-11 items-center justify-center rounded-md border border-primary/20 bg-primary/30 text-primary shadow-sm">
                 <Library className="size-5" />
               </div>
               <div>
                 <h1 className="text-xl font-semibold text-foreground">
-                  SoundStats
+                  Albumary
                 </h1>
                 <p className="text-xs text-muted-foreground">
                   Album listening history
@@ -65,18 +104,20 @@ function UniversalHeader({ view, setView }) {
               </div>
             </div>
 
-            <Button
+            <AlbumCreateDialog
+              albums={albums}
+              onDataChanged={onDataChanged}
               variant="outline"
-              size="sm"
-              className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 xl:hidden"
-            >
-              <Plus className="size-4" />
-              Add Album
-            </Button>
+              triggerClassName="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 xl:hidden"
+            />
           </div>
 
-          <Tabs value={view} onValueChange={setView} className="min-w-0">
-            <TabsList className="h-auto w-full justify-start gap-1 overflow-x-auto rounded-md border border-primary/15 bg-background/70 p-1 shadow-sm xl:w-auto">
+          <Tabs
+            value={view}
+            onValueChange={setView}
+            className="min-w-0 w-full xl:flex-1 xl:items-center"
+          >
+            <TabsList className="!h-auto w-full flex-wrap items-stretch justify-center gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
 
@@ -84,10 +125,10 @@ function UniversalHeader({ view, setView }) {
                   <TabsTrigger
                     key={item.value}
                     value={item.value}
-                    className={`min-w-[10.5rem] justify-start gap-3 rounded-md px-3 py-2 hover:bg-muted/70 ${item.accent}`}
+                    className={`h-auto min-w-[11.25rem] flex-none self-stretch justify-start gap-3 rounded-md px-4 py-3.5 hover:bg-muted/70 after:hidden ${item.accent}`}
                   >
                     <Icon className={`size-4 ${item.iconAccent}`} />
-                    <span className="flex flex-col items-start leading-tight">
+                    <span className="flex flex-col items-start leading-snug">
                       <span className="text-sm font-medium">{item.label}</span>
                       <span className="text-[11px] font-normal text-muted-foreground">
                         {item.description}
@@ -100,22 +141,50 @@ function UniversalHeader({ view, setView }) {
           </Tabs>
 
           <div className="hidden items-center gap-2 xl:flex">
-            <Button
-              variant="outline"
-              size="sm"
-              className="border-chart-3/30 bg-chart-3/10 text-foreground hover:bg-chart-3/15"
-            >
-              <DatabaseZap className="size-4" />
-              Refresh Metadata
-            </Button>
-            <Button
-              size="sm"
-              className="bg-primary text-primary-foreground hover:bg-primary/85"
-            >
-              <Plus className="size-4" />
-              Add Album
-            </Button>
+            <div className="mr-2 flex flex-col items-end text-xs">
+              <span className="font-medium text-foreground">
+                {selectedUser?.display_name}
+              </span>
+              <button
+                type="button"
+                onClick={onSwitchUser}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Switch user
+              </button>
+            </div>
+            {spotifyStatus?.connected ? (
+              <Button variant="outline" onClick={handleSyncNow} disabled={isSyncing}>
+                {isSyncing ? "Syncing..." : "Sync Spotify"}
+              </Button>
+            ) : (
+              <Button variant="outline" onClick={handleConnectSpotify}>
+                Connect Spotify
+              </Button>
+            )}
+            <AlbumCreateDialog
+              albums={albums}
+              onDataChanged={onDataChanged}
+              triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
+            />
           </div>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-2 xl:hidden">
+          <span className="text-sm font-medium text-foreground">
+            {selectedUser?.display_name}
+          </span>
+          <Button variant="outline" size="sm" onClick={onSwitchUser}>
+            Switch user
+          </Button>
+          {spotifyStatus?.connected ? (
+            <Button variant="outline" size="sm" onClick={handleSyncNow} disabled={isSyncing}>
+              {isSyncing ? "Syncing..." : "Sync Spotify"}
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" onClick={handleConnectSpotify}>
+              Connect Spotify
+            </Button>
+          )}
         </div>
       </div>
     </header>

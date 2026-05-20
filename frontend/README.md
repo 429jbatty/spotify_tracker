@@ -1,16 +1,49 @@
-# React + Vite
+# Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React/Vite frontend for the album tracker.
 
-Currently, two official plugins are available:
+The app reads album data from FastAPI through:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```text
+/api/album-state
+```
 
-## React Compiler
+During local development, `frontend/vite.config.js` proxies `/api` to:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```text
+http://localhost:8000
+```
 
-## Expanding the ESLint configuration
+Run the backend first from the repo root:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+make api
+```
+
+Then start the frontend:
+
+```bash
+npm run dev
+```
+
+This project uses Vite 7, which requires Node `20.19+` or `22.12+`.
+If needed:
+
+```bash
+PATH="$HOME/.nvm/versions/node/v22.22.0/bin:$PATH" npm run dev
+```
+
+Build:
+
+```bash
+npm run build
+```
+
+Lint:
+
+```bash
+npm run lint
+```
+
+Current note: lint reports existing shadcn/Radix fast-refresh export warnings
+in UI component files.

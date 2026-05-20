@@ -4,6 +4,7 @@ import re
 from datetime import datetime
 from unidecode import unidecode
 from rapidfuzz import fuzz
+import musicbrainzngs
 import musicbrainz_client as mb
 
 import logging
@@ -262,6 +263,18 @@ def _artist_credit_name(artist_credit):
     )
 
 
+def _safe_cover_art_url(release_mbid: str, release_group_mbid: str | None = None):
+    try:
+        return mb.get_cover_art_url(release_mbid, release_group_mbid)
+    except musicbrainzngs.NetworkError as exc:
+        logger.warning(
+            "Cover art lookup failed for release %s: %s",
+            release_mbid,
+            exc,
+        )
+        return None
+
+
 def _resolve_release(artist: str, album: str, spotify_url: str | None = None):
     """
     Returns: (release_group, chosen_release, image_url)
@@ -275,7 +288,7 @@ def _resolve_release(artist: str, album: str, spotify_url: str | None = None):
                 mb.get_release_group_by_id(release_group["id"]) or release_group
             )
             full_release = mb.get_release_by_id(release["id"])
-            image_url = mb.get_cover_art_url(release["id"], best_release_group["id"])
+            image_url = _safe_cover_art_url(release["id"], best_release_group["id"])
             return best_release_group, full_release, image_url
 
     # --- Path B: Artist/Album search ---
@@ -298,7 +311,7 @@ def _resolve_release(artist: str, album: str, spotify_url: str | None = None):
     enriched_releases = []
     for release_summary in release_summaries:
         full_release = mb.get_release_by_id(release_summary["id"])
-        image_url = mb.get_cover_art_url(full_release["id"], best_release_group["id"])
+        image_url = _safe_cover_art_url(full_release["id"], best_release_group["id"])
         enriched_releases.append(
             {
                 "summary": release_summary,
@@ -351,8 +364,6 @@ def _build_album_record(release_group, release, image_url=None):
 
     labels = release.get("label-info-list", [])
     label = labels[0].get("label", {}).get("name") if labels else None
-
-    image_url = image_url or mb.get_cover_art_url(release["id"], release_group_mbid)
 
     # Split date
     date_parts = (

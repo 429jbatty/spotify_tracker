@@ -4,3 +4,7 @@ pandas
 unidecode
 rapidfuzz
 musicbrainzngs
+fastapi
+uvicorn
+httpx
+sqlalchemy

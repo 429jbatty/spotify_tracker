@@ -14,8 +14,7 @@ function FilterChip({ children, onClick }) {
 }
 
 function AlbumMetadata({ album, onFilterSelect }) {
-  const tags = [...(album.genres || []), ...(album.tags || [])];
-  const uniqueTags = Array.from(new Set(tags)).slice(0, 10);
+  const genres = Array.from(new Set(album.genres || [])).slice(0, 10);
   const decade = album.release_year
     ? Math.floor(Number(album.release_year) / 10) * 10
     : null;
@@ -67,12 +66,12 @@ function AlbumMetadata({ album, onFilterSelect }) {
             </FilterChip>
           )}
 
-          {uniqueTags.map((tag) => (
+          {genres.map((genre) => (
             <FilterChip
-              key={tag}
-              onClick={() => onFilterSelect(createAlbumFilter("tag", tag, tag))}
+              key={genre}
+              onClick={() => onFilterSelect(createAlbumFilter("genre", genre, genre))}
             >
-              {tag}
+              {genre}
             </FilterChip>
           ))}
         </div>

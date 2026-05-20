@@ -1,0 +1,15 @@
+[Unit]
+Description=Spotify Tracker API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=jacob
+WorkingDirectory=/opt/spotify_tracker
+EnvironmentFile=/opt/spotify_tracker/.env
+ExecStart=/opt/spotify_tracker/.venv/bin/python -m uvicorn backend.app.main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
