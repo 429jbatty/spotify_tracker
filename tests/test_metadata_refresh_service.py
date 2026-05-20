@@ -147,6 +147,53 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             ["2026-04-01T10:00:00.000Z"],
         )
 
+    def test_refresh_album_rejects_artist_identity_change(self):
+        state = state_with_album()
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            return_value={
+                "artist": "Wrong Artist",
+                "name": "Old Title",
+                "release_year": 2001,
+                "source": "musicbrainz",
+            },
+        ):
+            with self.assertRaisesRegex(LookupError, "changed artist identity"):
+                refresh.refresh_album_in_state(
+                    state,
+                    key="Artist - Old Title",
+                )
+
+        self.assertIn("Artist - Old Title", state["completed_albums"])
+        self.assertEqual(
+            state["completed_albums"]["Artist - Old Title"]["artist"],
+            "Artist",
+        )
+        self.assertEqual(
+            state["completed_albums"]["Artist - Old Title"]["release_year"],
+            1999,
+        )
+
+    def test_refresh_album_rejects_artist_mbid_change(self):
+        state = state_with_album()
+        state["completed_albums"]["Artist - Old Title"]["artist_mbid"] = "artist-1"
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            return_value={
+                "artist": "Artist",
+                "artist_mbid": "artist-2",
+                "name": "Old Title",
+                "source": "musicbrainz",
+            },
+        ):
+            with self.assertRaisesRegex(LookupError, "changed artist identity"):
+                refresh.refresh_album_in_state(
+                    state,
+                    key="Artist - Old Title",
+                )
+
     def test_refresh_all_records_failures_when_continuing(self):
         state = {
             "completed_albums": {

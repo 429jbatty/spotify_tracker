@@ -12,6 +12,9 @@ from collections import Counter
 
 logger = logging.getLogger(__name__)
 
+MIN_ARTIST_MATCH_SCORE = 75
+MIN_ALBUM_MATCH_SCORE = 80
+
 # ---------------------------
 # Normalization
 # ---------------------------
@@ -32,21 +35,63 @@ def normalize(text: str) -> str:
 # ---------------------------
 
 
+def _artist_credit_names(candidate):
+    return [
+        name
+        for credit in candidate.get("artist-credit", [])
+        if (name := _artist_credit_name(credit))
+    ]
+
+
+def _best_artist_score(candidate, artist):
+    expected_artist = normalize(artist)
+    return max(
+        (
+            text_similarity(normalize(candidate_artist), expected_artist)
+            for candidate_artist in _artist_credit_names(candidate)
+        ),
+        default=0,
+    )
+
+
+def _album_score(candidate, album):
+    return text_similarity(normalize(candidate.get("title", "")), normalize(album))
+
+
+def text_similarity(left: str, right: str):
+    if left == right:
+        return 100
+    return max(
+        fuzz.ratio(left, right),
+        fuzz.token_sort_ratio(left, right),
+    )
+
+
+def release_group_matches_query(candidate, artist, album):
+    return (
+        _best_artist_score(candidate, artist) >= MIN_ARTIST_MATCH_SCORE
+        and _album_score(candidate, album) >= MIN_ALBUM_MATCH_SCORE
+    )
+
+
 def compute_match_score(candidate, artist, album):
-    candidate_artist = normalize(candidate["artist-credit"][0]["name"])
-    candidate_album = normalize(candidate["title"])
+    artist_score = _best_artist_score(candidate, artist)
+    album_score = _album_score(candidate, album)
 
-    artist_score = fuzz.token_set_ratio(candidate_artist, normalize(artist))
-    album_score = fuzz.token_set_ratio(candidate_album, normalize(album))
-
-    return (album_score * 0.8) + (artist_score * 0.2)
+    return (album_score * 0.7) + (artist_score * 0.3)
 
 
 def choose_best_release_group(candidates, artist, album, threshold=75):
     if not candidates:
         return None
 
-    scored = [(compute_match_score(c, artist, album), c) for c in candidates]
+    matching_candidates = [
+        candidate
+        for candidate in candidates
+        if release_group_matches_query(candidate, artist, album)
+    ]
+
+    scored = [(compute_match_score(c, artist, album), c) for c in matching_candidates]
     scored.sort(reverse=True, key=lambda x: x[0])
 
     scored = [(score, c) for score, c in scored if score >= threshold]
@@ -256,6 +301,9 @@ def _extract_recording_credits(recording: dict):
 
 
 def _artist_credit_name(artist_credit):
+    if not isinstance(artist_credit, dict):
+        return None
+
     return (
         artist_credit.get("name")
         or artist_credit.get("artist", {}).get("name")
@@ -287,6 +335,16 @@ def _resolve_release(artist: str, album: str, spotify_url: str | None = None):
             best_release_group = (
                 mb.get_release_group_by_id(release_group["id"]) or release_group
             )
+            if not release_group_matches_query(best_release_group, artist, album):
+                logger.warning(
+                    "Spotify URL MusicBrainz match failed artist/title validation "
+                    "for %s - %s: %s - %s",
+                    artist,
+                    album,
+                    ", ".join(_artist_credit_names(best_release_group)) or "Unknown",
+                    best_release_group.get("title"),
+                )
+                return None, None, None
             full_release = mb.get_release_by_id(release["id"])
             image_url = _safe_cover_art_url(release["id"], best_release_group["id"])
             return best_release_group, full_release, image_url

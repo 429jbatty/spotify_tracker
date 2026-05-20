@@ -190,6 +190,78 @@ class AlbumMetadataServiceTests(unittest.TestCase):
 
         self.assertEqual(album, {})
 
+    def test_get_album_metadata_rejects_same_title_wrong_artist_match(self):
+        wrong_artist_release_group = {
+            **release_group(),
+            "artist-credit": [
+                {
+                    "name": "Wrong Artist",
+                    "artist": {"id": "wrong-artist"},
+                }
+            ],
+        }
+
+        with patch(
+            "album_metadata_service.mb.search_release_groups",
+            return_value=[wrong_artist_release_group],
+        ):
+            album = metadata.get_album_metadata("Test Artist", "Test Album")
+
+        self.assertEqual(album, {})
+
+    def test_release_group_matching_handles_artist_credit_join_strings(self):
+        candidate = {
+            **release_group(),
+            "artist-credit": [
+                {"name": "Test Artist", "artist": {"id": "artist-1"}},
+                " feat. ",
+                {"name": "Guest Artist", "artist": {"id": "artist-2"}},
+            ],
+        }
+
+        self.assertTrue(
+            metadata.release_group_matches_query(
+                candidate,
+                "Test Artist",
+                "Test Album",
+            )
+        )
+
+    def test_get_album_metadata_rejects_spotify_url_wrong_artist_match(self):
+        wrong_artist_release_group = {
+            **release_group(),
+            "artist-credit": [
+                {
+                    "name": "Wrong Artist",
+                    "artist": {"id": "wrong-artist"},
+                }
+            ],
+        }
+        spotify_release = {
+            "id": "release-1",
+            "release-group": wrong_artist_release_group,
+        }
+
+        with (
+            patch(
+                "album_metadata_service.mb.search_release_by_spotify_url",
+                return_value=spotify_release,
+            ),
+            patch(
+                "album_metadata_service.mb.get_release_group_by_id",
+                return_value=wrong_artist_release_group,
+            ),
+            patch("album_metadata_service.mb.get_release_by_id") as get_release_by_id,
+        ):
+            album = metadata.get_album_metadata(
+                "Test Artist",
+                "Test Album",
+                spotify_url="https://open.spotify.com/album/test",
+            )
+
+        get_release_by_id.assert_not_called()
+        self.assertEqual(album, {})
+
     def test_cover_art_network_error_does_not_prevent_metadata_refresh(self):
         release_summaries = [
             {

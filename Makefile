@@ -1,4 +1,4 @@
-.PHONY: test api track track-all refresh-metadata cache-artwork deploy
+.PHONY: test api track track-all refresh-metadata benchmark-metadata cache-artwork deploy
 
 PYTHON := ./.venv/bin/python
 
@@ -16,6 +16,9 @@ track-all:
 
 refresh-metadata:
 	$(PYTHON) -m one_time_scripts._refresh_metadata
+
+benchmark-metadata:
+	$(PYTHON) -m one_time_scripts._musicbrainz_lookup_benchmark
 
 cache-artwork:
 	$(PYTHON) -m one_time_scripts._cache_artwork

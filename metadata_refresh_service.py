@@ -20,6 +20,8 @@ IGNORED_MERGE_FIELDS = {
     "album_key",
 }
 
+MIN_REFRESH_ARTIST_MATCH_SCORE = 85
+
 
 @dataclass
 class RefreshResult:
@@ -97,6 +99,34 @@ def _merge_refreshed_metadata(record: dict, refreshed: dict) -> dict:
     return merged
 
 
+def _artist_identity_matches(record: dict, refreshed: dict) -> bool:
+    existing_artist_mbid = record.get("artist_mbid")
+    refreshed_artist_mbid = refreshed.get("artist_mbid")
+    if existing_artist_mbid and refreshed_artist_mbid:
+        return existing_artist_mbid == refreshed_artist_mbid
+
+    existing_artist = record.get("artist")
+    refreshed_artist = refreshed.get("artist")
+    if not existing_artist or not refreshed_artist:
+        return True
+
+    score = metadata_service.text_similarity(
+        metadata_service.normalize(str(existing_artist)),
+        metadata_service.normalize(str(refreshed_artist)),
+    )
+    return score >= MIN_REFRESH_ARTIST_MATCH_SCORE
+
+
+def _validate_refreshed_metadata_identity(record: dict, refreshed: dict) -> None:
+    if _artist_identity_matches(record, refreshed):
+        return
+
+    raise LookupError(
+        "Refreshed metadata changed artist identity from "
+        f"{record.get('artist')} to {refreshed.get('artist')}."
+    )
+
+
 def _find_album_key(completed_albums: dict, artist: str | None, album: str | None):
     if artist and album:
         exact_key = _album_key(artist, album)
@@ -142,6 +172,8 @@ def refresh_album_record(record: dict, spotify_url: str | None = None):
 
     if not refreshed:
         raise LookupError(f"No metadata returned for {artist} - {album}.")
+
+    _validate_refreshed_metadata_identity(record, refreshed)
 
     return _merge_refreshed_metadata(record, refreshed)
 
