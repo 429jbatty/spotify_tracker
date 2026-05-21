@@ -69,6 +69,9 @@ Important environment variables:
 Spotify refresh tokens are stored per user in SQLite through the in-app Spotify
 connect flow, not in `.env`.
 
+Bug reports submitted from the frontend are stored under
+`DATA_DIR/bug_reports` as paired JSON metadata and PNG screenshot files.
+
 ## Documentation
 
 - [Architecture](docs/architecture.md): application flow and source layout.

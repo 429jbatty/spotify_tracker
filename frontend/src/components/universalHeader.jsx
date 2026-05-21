@@ -1,6 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import AlbumCreateDialog from "./AlbumCreateDialog";
+import BugReportDialog from "./BugReportDialog";
 import { spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
@@ -162,6 +163,7 @@ function UniversalHeader({
                 Connect Spotify
               </Button>
             )}
+            <BugReportDialog selectedUser={selectedUser} />
             <AlbumCreateDialog
               albums={albums}
               onDataChanged={onDataChanged}
@@ -185,6 +187,7 @@ function UniversalHeader({
               Connect Spotify
             </Button>
           )}
+          <BugReportDialog selectedUser={selectedUser} />
         </div>
       </div>
     </header>

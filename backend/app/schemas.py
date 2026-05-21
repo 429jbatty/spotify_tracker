@@ -132,3 +132,25 @@ class UserAlbumTagsUpdate(BaseModel):
 class UserAlbumFeedbackUpdate(BaseModel):
     rating: int | None = Field(default=None, ge=1, le=10)
     notes: str | None = None
+
+
+class BugReportViewport(BaseModel):
+    width: int | None = Field(default=None, ge=0, le=10000)
+    height: int | None = Field(default=None, ge=0, le=10000)
+    device_pixel_ratio: float | None = Field(default=None, ge=0, le=10)
+
+
+class BugReportCreate(BaseModel):
+    description: str = Field(min_length=5, max_length=2000)
+    screenshot_data_url: str = Field(min_length=32)
+    page_url: str | None = Field(default=None, max_length=2048)
+    user_agent: str | None = Field(default=None, max_length=512)
+    user_slug: str | None = Field(default=None, max_length=100)
+    viewport: BugReportViewport | None = None
+
+
+class BugReportResponse(BaseModel):
+    id: str
+    created_at: str
+    report_path: str
+    screenshot_path: str

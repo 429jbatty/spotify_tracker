@@ -153,6 +153,13 @@ export async function deleteAlbum(albumId) {
   });
 }
 
+export async function submitBugReport(payload) {
+  return requestJson("/bug-reports", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export function getSelectedUserSlug() {
   return window.localStorage.getItem(SELECTED_USER_STORAGE_KEY);
 }
