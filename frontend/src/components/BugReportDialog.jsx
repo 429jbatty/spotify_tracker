@@ -16,10 +16,11 @@ import { submitBugReport } from "../services/albumApi";
 const initialForm = {
   description: "",
   screenshotDataUrl: "",
+  screenshotSource: "",
 };
 
 async function captureScreenFrame() {
-  if (!navigator.mediaDevices?.getDisplayMedia) {
+  if (!window.isSecureContext || !navigator.mediaDevices?.getDisplayMedia) {
     throw new Error("Screen capture is not supported in this browser.");
   }
 
@@ -58,6 +59,48 @@ async function captureScreenFrame() {
   }
 }
 
+async function capturePageSnapshot() {
+  const { default: html2canvas } = await import("html2canvas");
+  const canvas = await html2canvas(document.documentElement, {
+    allowTaint: false,
+    backgroundColor: null,
+    height: window.innerHeight,
+    ignoreElements: (element) =>
+      element.dataset?.bugReportDialog === "true" ||
+      element.dataset?.slot === "dialog-overlay",
+    logging: false,
+    scale: Math.min(window.devicePixelRatio || 1, 2),
+    scrollX: window.scrollX,
+    scrollY: window.scrollY,
+    useCORS: true,
+    width: window.innerWidth,
+    windowHeight: window.innerHeight,
+    windowWidth: window.innerWidth,
+  });
+
+  return canvas.toDataURL("image/png");
+}
+
+async function captureScreenshot() {
+  if (window.isSecureContext && navigator.mediaDevices?.getDisplayMedia) {
+    try {
+      return {
+        dataUrl: await captureScreenFrame(),
+        source: "screen",
+      };
+    } catch (error) {
+      if (error.name === "NotAllowedError") {
+        throw error;
+      }
+    }
+  }
+
+  return {
+    dataUrl: await capturePageSnapshot(),
+    source: "page",
+  };
+}
+
 function BugReportDialog({ selectedUser }) {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -82,8 +125,12 @@ function BugReportDialog({ selectedUser }) {
     setIsCapturing(true);
     setError(null);
     try {
-      const screenshotDataUrl = await captureScreenFrame();
-      setForm((current) => ({ ...current, screenshotDataUrl }));
+      const screenshot = await captureScreenshot();
+      setForm((current) => ({
+        ...current,
+        screenshotDataUrl: screenshot.dataUrl,
+        screenshotSource: screenshot.source,
+      }));
     } catch (err) {
       setError(err.message || "Could not capture a screenshot.");
     } finally {
@@ -101,6 +148,7 @@ function BugReportDialog({ selectedUser }) {
       await submitBugReport({
         description: form.description.trim(),
         screenshot_data_url: form.screenshotDataUrl,
+        screenshot_source: form.screenshotSource || null,
         page_url: window.location.href,
         user_agent: navigator.userAgent,
         user_slug: selectedUser?.slug || null,
@@ -136,11 +184,14 @@ function BugReportDialog({ selectedUser }) {
           Report bug
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-xl">
+      <DialogContent
+        data-bug-report-dialog="true"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-xl"
+      >
         <DialogHeader>
           <DialogTitle>Report a bug</DialogTitle>
           <DialogDescription>
-            Capture what you are seeing and add a short note.
+            Capture the current page and add a short note.
           </DialogDescription>
         </DialogHeader>
 
@@ -169,7 +220,8 @@ function BugReportDialog({ selectedUser }) {
               <div>
                 <p className="text-sm font-medium text-foreground">Screenshot</p>
                 <p className="text-xs text-muted-foreground">
-                  Your browser will ask which screen, window, or tab to share.
+                  Secure browsers may ask which tab to share. Otherwise the app will
+                  capture the visible page.
                 </p>
               </div>
               <Button
@@ -185,11 +237,20 @@ function BugReportDialog({ selectedUser }) {
             </div>
 
             {form.screenshotDataUrl ? (
-              <img
-                src={form.screenshotDataUrl}
-                alt="Captured bug report screenshot"
-                className="max-h-64 w-full rounded-md border border-border object-contain"
-              />
+              <div className="space-y-2">
+                <img
+                  src={form.screenshotDataUrl}
+                  alt="Captured bug report screenshot"
+                  className="max-h-64 w-full rounded-md border border-border object-contain"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Captured{" "}
+                  {form.screenshotSource === "screen"
+                    ? "from browser screen sharing"
+                    : "from the visible app page"}
+                  .
+                </p>
+              </div>
             ) : (
               <div className="flex h-32 items-center justify-center rounded-md border border-dashed border-border text-sm text-muted-foreground">
                 No screenshot captured yet

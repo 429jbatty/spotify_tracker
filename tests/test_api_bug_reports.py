@@ -32,6 +32,7 @@ class ApiBugReportTests(unittest.TestCase):
                 json={
                     "description": "The album table filter stopped responding.",
                     "screenshot_data_url": f"data:image/png;base64,{screenshot}",
+                    "screenshot_source": "page",
                     "page_url": "http://localhost:5173/?user=jacob",
                     "user_agent": "Test Browser",
                     "user_slug": "jacob",
@@ -57,6 +58,7 @@ class ApiBugReportTests(unittest.TestCase):
                 report["description"],
                 "The album table filter stopped responding.",
             )
+            self.assertEqual(report["screenshot_source"], "page")
             self.assertEqual(report["screenshot_file"], f"{payload['id']}.png")
             self.assertEqual(report["viewport"]["width"], 1280)
 

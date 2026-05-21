@@ -43,6 +43,7 @@ def store_bug_report(settings: Settings, request: BugReportCreate) -> StoredBugR
                 "created_at": created_at,
                 "description": request.description,
                 "page_url": request.page_url,
+                "screenshot_source": request.screenshot_source,
                 "user_agent": request.user_agent,
                 "user_slug": request.user_slug,
                 "viewport": (

@@ -143,6 +143,7 @@ class BugReportViewport(BaseModel):
 class BugReportCreate(BaseModel):
     description: str = Field(min_length=5, max_length=2000)
     screenshot_data_url: str = Field(min_length=32)
+    screenshot_source: str | None = Field(default=None, max_length=50)
     page_url: str | None = Field(default=None, max_length=2048)
     user_agent: str | None = Field(default=None, max_length=512)
     user_slug: str | None = Field(default=None, max_length=100)
