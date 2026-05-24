@@ -1229,6 +1229,10 @@ def _is_lastfm_importable_album_metadata(
     metadata: dict[str, Any],
     total_track_count: int,
 ) -> bool:
+    confidence = album_metadata_service.metadata_match_confidence(metadata)
+    if confidence < album_metadata_service.IMPORT_MATCH_CONFIDENCE:
+        return False
+
     primary_type = (metadata.get("primary_type") or "").strip().casefold()
     if primary_type:
         return primary_type == "album"
@@ -1331,9 +1335,13 @@ def _existing_album_index(
 
 def _album_metadata_cache_key(artist: str, album: str) -> str:
     return hashlib.sha256(
-        "|".join(["musicbrainz-import", artist.strip().casefold(), album.strip().casefold()]).encode(
-            "utf-8"
-        )
+        "|".join(
+            [
+                "musicbrainz-import-v2",
+                artist.strip().casefold(),
+                album.strip().casefold(),
+            ]
+        ).encode("utf-8")
     ).hexdigest()
 
 

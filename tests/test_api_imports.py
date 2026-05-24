@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import hashlib
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -928,6 +929,8 @@ class ApiImportTests(unittest.TestCase):
             metadata = {
                 "artist": "Remote Artist",
                 "name": "Remote Album",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 91},
                 "tracklist": [
                     {"title": "Track 1"},
                     {"title": "Track 2"},
@@ -955,6 +958,52 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(metadata_lookup.call_count, 1)
         self.assertEqual(summary["derived_album_listens"], 1)
         self.assertIn("Remote Artist - Remote Album", state_response.json()["completed_albums"])
+
+    def test_lastfm_commit_does_not_auto_create_from_low_confidence_musicbrainz_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            lastfm_payload = self._lastfm_payload(
+                "Low Confidence Artist",
+                "Low Confidence Album",
+                ["Track 1", "Track 2", "Track 3"],
+            )
+            metadata = {
+                "artist": "Low Confidence Artist",
+                "name": "Low Confidence Album",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 60},
+                "tracklist": [
+                    {"title": "Track 1"},
+                    {"title": "Track 2"},
+                    {"title": "Track 3"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.lastfm_import_client.httpx.Client",
+                return_value=self._mock_lastfm_client(lastfm_payload),
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/commit",
+                    json={"source": "lastfm", "lastfm_username": "jacobfm"},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+                state_response = client.get("/api/users/jacob/album-state")
+                partial_listen_count = self._imported_event_count(database_url, "partial_listen")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["derived_album_listens"], 0)
+        self.assertEqual(summary["review_candidates"], 0)
+        self.assertEqual(partial_listen_count, 3)
+        self.assertNotIn(
+            "Low Confidence Artist - Low Confidence Album",
+            state_response.json()["completed_albums"],
+        )
 
     def test_lastfm_commit_does_not_negative_cache_transient_musicbrainz_failure(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1232,6 +1281,70 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(summary["review_candidates"], 1)
         self.assertEqual(review_count, 3)
         self.assertEqual(len(review_response.json()), 1)
+
+    def test_lastfm_commit_ignores_legacy_negative_metadata_cache_key(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            engine = get_engine(database_url)
+            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+            artist = "Legacy Cache Artist"
+            album = "Legacy Cache Album"
+            legacy_cache_key = hashlib.sha256(
+                "|".join(
+                    ["musicbrainz-import", artist.casefold(), album.casefold()]
+                ).encode("utf-8")
+            ).hexdigest()
+            with session_factory() as session:
+                session.add(
+                    AlbumMetadataCache(
+                        cache_key=legacy_cache_key,
+                        artist=artist,
+                        album=album,
+                        status="not_found",
+                        metadata_json={},
+                        error_message="Legacy negative cache row.",
+                        updated_at="2026-01-01T00:00:00+00:00",
+                    )
+                )
+                session.commit()
+
+            lastfm_payload = self._lastfm_payload(
+                artist,
+                album,
+                ["Track 1", "Track 2", "Track 3"],
+            )
+            metadata = {
+                "artist": artist,
+                "name": album,
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 90},
+                "tracklist": [
+                    {"title": "Track 1"},
+                    {"title": "Track 2"},
+                    {"title": "Track 3"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.lastfm_import_client.httpx.Client",
+                return_value=self._mock_lastfm_client(lastfm_payload),
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ) as metadata_lookup:
+                response = client.post(
+                    "/api/users/jacob/imports/commit",
+                    json={"source": "lastfm", "lastfm_username": "jacobfm"},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+                state_response = client.get("/api/users/jacob/album-state")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(metadata_lookup.call_count, 1)
+        self.assertEqual(summary["derived_album_listens"], 1)
+        self.assertIn(f"{artist} - {album}", state_response.json()["completed_albums"])
 
     def test_resolving_one_review_album_resolves_all_unresolved_sessions_for_album(self):
         with tempfile.TemporaryDirectory() as temp_dir:

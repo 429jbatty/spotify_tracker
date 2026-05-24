@@ -12,13 +12,23 @@ here so future changes can target it directly.
 - `musicbrainz_client.py`: low-level MusicBrainz API calls, user agent, rate
   limiting, retries, release-group search, release lookup, cover art lookup,
   and Spotify URL search.
-- `album_metadata_service.py`: normalization, fuzzy matching, release-group
-  selection, release selection, tracklist/credit extraction, and album-record
-  shaping.
+- `musicbrainz_resolver.py`: release-group search/ranking, bounded candidate
+  evaluation, confidence diagnostics, Spotify URL resolution, and safe cover art
+  lookup.
+- `album_metadata_service.py`: public metadata entry points, tracklist/credit
+  extraction, album-record shaping, and compatibility wrappers around resolver
+  scoring helpers.
 - `metadata_refresh_service.py`: refresh orchestration that updates stored
   metadata while preserving listen history and user data.
 - `backend/app/services/artwork_cache_service.py`: downloads remote artwork
   into local media storage and records `local_image_path`.
+
+## Benchmark
+
+Use `one_time_scripts/_benchmark_musicbrainz_resolver.py` to compare the current
+bounded resolver against a local copy of the previous one-shot selection logic.
+See `docs/musicbrainz-resolver-benchmark.md` for the command and how to read
+accuracy, auto-apply, confidence, and wrapper-call metrics.
 
 ## MusicBrainz Terms Used By This App
 
@@ -32,7 +42,7 @@ that model into a single album record.
 | `Artist credit` | The credited display name for an entity, possibly including multiple artists and join phrases. | The app reads the first release-group artist credit and stores its display name as canonical `artist`. |
 | `Release group` | The abstract concept of an album/single/EP across editions. | The app searches release groups first and stores the selected release-group MBID as the shared album identity from MusicBrainz. |
 | `Primary type` | Release-group type such as `Album`, `Single`, `EP`, `Broadcast`, or `Other`. | Last.fm import only derives new album listens from MusicBrainz metadata when `primary_type == "Album"`. |
-| `Secondary type` | Extra release-group classification such as `Compilation`, `Soundtrack`, `Live`, `Remix`, etc. | Currently stored but not strongly used in ranking. This is a known weakness for import matching. |
+| `Secondary type` | Extra release-group classification such as `Compilation`, `Soundtrack`, `Live`, `Remix`, etc. | Stored and used by the resolver to penalize unrequested variants such as live, compilation, and remix releases. |
 | `Release` | A concrete issued product/version: country, date, barcode, label, media format, packaging, cover art, and tracklist can differ. | The app chooses one release inside the selected release group to get release MBID, label, cover art, media, recordings, and tracklist. |
 | `Status` | How official a release is, e.g. `Official`, `Promotion`, `Bootleg`, `Pseudo-Release`. | The client browses official releases for a release group and the normal metadata path prefers official summaries. |
 | `Medium` | A disc, digital medium, vinyl side grouping, or similar container inside a release. | The app walks each release medium to build one flattened album `tracklist`. |
@@ -63,8 +73,9 @@ The wrapper methods used by album lookup are:
 
 | Wrapper | MusicBrainz operation | Important request details |
 | --- | --- | --- |
-| `search_release_groups(artist, album)` | Search release groups. | Uses `releasegroup=album`, `artist=artist`, `limit=10`. |
-| `get_release_group_by_id(release_group_mbid)` | Lookup one release group. | Includes `artist-credits`, `tags`, and `url-rels`. |
+| `search_release_groups(artist, album, limit=25)` | Fielded release-group search. | Uses `releasegroup=album`, `artist=artist`, and a caller-provided limit. |
+| `search_release_groups_by_query(query, limit=25)` | Broad release-group query search. | Used as a fallback for cases where fielded search misses alternate or symbolic titles. |
+| `get_release_group_by_id(release_group_mbid)` | Lookup one release group. | Includes `artist-credits`, `aliases`, `tags`, and `url-rels`. |
 | `get_releases_for_group(release_group_mbid)` | Browse releases in a release group. | Includes `artist-credits`, `labels`, and `media`; asks for official releases; limit 100. |
 | `get_release_by_id(release_id)` | Lookup one full release. | Includes recordings, labels, tags, artist credits, release relationships, release-group relationships, work relationships, URL relationships, and recording-level relationships. |
 | `get_cover_art_url(release_mbid, release_group_mbid)` | Cover Art Archive lookup. | Tries release images first, then release-group images. |
@@ -80,14 +91,16 @@ This is the full enrichment path used by normal metadata refresh and album
 creation paths. It tries to return an album record with canonical artist/title,
 MusicBrainz IDs, release date, label, tracklist, tags, genres, and cover art.
 
-Internally it calls `_resolve_release(...)`, then `_build_album_record(...)`.
+Internally it calls `resolve_spotify_candidate(...)` when a Spotify URL is
+available, otherwise `resolve_musicbrainz_candidate(...)`, then
+`_build_album_record(...)`.
 
 ### `get_album_metadata_for_import_matching(artist, album)`
 
-This is a lighter Last.fm import matching path. It returns the same album-record
-shape but skips cover art lookup and uses a cheaper release selection path. The
-importer mainly needs `primary_type` and `tracklist` to decide whether a
-candidate Last.fm session is a completed album listen.
+This is the Last.fm import matching path. It returns the same album-record shape
+but skips cover art lookup. The importer mainly needs `primary_type`, confidence
+diagnostics, and `tracklist` to decide whether a candidate Last.fm session is a
+completed album listen.
 
 Because this path writes into `album_metadata_cache`, a bad or empty result can
 become a persistent negative cache hit for later imports.
@@ -105,11 +118,10 @@ When a Spotify album URL is available:
 2. If a release is found, the code reads the release's embedded
    `release-group`.
 3. `get_release_group_by_id(release_group["id"])` reloads the release group
-   with artist credits, tags, and URL relationships.
+   with artist credits, aliases, tags, and URL relationships.
 4. `get_release_by_id(release["id"])` loads the full release, including media,
    tracks, recordings, labels, tags, and relationship data.
-5. `_safe_cover_art_url(release["id"], release_group["id"])` gets release
-   cover art or falls back to release-group cover art.
+5. The resolver gets release cover art or falls back to release-group cover art.
 6. `_build_album_record(...)` converts the selected MusicBrainz entities into
    the app's album metadata shape.
 
@@ -119,67 +131,68 @@ If this path finds a release, artist/album search is skipped.
 
 When there is no Spotify URL match:
 
-1. `search_release_groups(artist, album)` asks MusicBrainz for up to 10 release
-   groups matching the supplied artist and album strings.
-2. `choose_best_release_group(candidates, artist, album)` scores each release
-   group locally.
-3. If no candidate passes the local threshold, lookup returns `{}`.
-4. `get_release_group_by_id(best_release_group["id"])` reloads the selected
-   release group with richer fields.
-5. `get_releases_for_group(best_release_group["id"])` browses releases inside
-   the selected group.
-6. The full path filters release summaries to `Official` status when any
-   official summaries exist.
-7. For every remaining release summary, the app calls:
-   - `get_release_by_id(release_summary["id"])`
-   - `_safe_cover_art_url(full_release["id"], best_release_group["id"])`
-8. `_choose_best_enriched_release(...)` scores the full releases and picks one.
-9. `_build_album_record(...)` converts the selected release group and release
-   into the app's album metadata shape.
+1. `search_release_groups(artist, album, limit=25)` runs the fielded
+   MusicBrainz search.
+2. The resolver scores release groups by album-title match, artist match,
+   MusicBrainz search score, primary type, secondary type, and date presence.
+3. If the fielded results do not contain a strong album candidate, the resolver
+   runs `search_release_groups_by_query(...)` with a broad query shaped like
+   `artist:"Artist Name" AND Album Title`.
+4. Fielded and fallback candidates are merged by release-group MBID, then ranked
+   together.
+5. The resolver evaluates the top bounded set of release groups and release
+   summaries, preferring official releases and usable tracklists.
+6. Each full release is scored for title fit, official status, track count,
+   label/date presence, cover art, country, media format, and relationship
+   richness.
+7. The selected release group/release is returned with match diagnostics and a
+   confidence score, then `_build_album_record(...)` converts it into the app's
+   album metadata shape.
 
 ## Release Group Scoring Today
 
-`compute_match_score(candidate, artist, album)` normalizes the input and
-candidate values, then computes:
+`musicbrainz_resolver.py` scores release groups before loading full release
+details. The title score uses the best match among release-group title,
+disambiguation, and aliases. This handles cases such as David Bowie's
+`Blackstar`, where MusicBrainz stores the title as `★` and exposes `Blackstar`
+as disambiguation.
 
-- artist score: fuzzy token-set ratio of candidate artist credit vs input
-  artist
-- album score: fuzzy token-set ratio of candidate release-group title vs input
-  album
-- final score: `album_score * 0.8 + artist_score * 0.2`
+The release-group score combines:
 
-`choose_best_release_group(...)` then:
+- album title-like score: normalized/fuzzy match against title,
+  disambiguation, and aliases
+- artist score: fuzzy token-set ratio of candidate artist credit vs input artist
+- MusicBrainz search score
+- primary-type adjustment, with albums preferred and singles penalized
+- secondary-type penalties for unrequested live, compilation, remix, DJ-mix, and
+  mixtape variants
+- a small bonus when first-release date is present
 
-1. Scores all candidates.
-2. Drops candidates below a threshold of 75.
-3. Applies a type priority:
-   - `Album` = 2
-   - `EP` = 1
-   - everything else = 0
-4. Sorts by type priority first, then local fuzzy score.
-5. Returns the first candidate.
+The resolver keeps low-confidence best guesses in diagnostics, but automatic
+write paths use confidence thresholds:
+
+- canonical refresh auto-apply threshold: `CANONICAL_AUTO_APPLY_CONFIDENCE`
+- Last.fm import matching threshold: `IMPORT_MATCH_CONFIDENCE`
 
 Current implications:
 
-- MusicBrainz's own search score is not used after the raw candidate list is
-  returned.
-- `secondary-type-list` is not considered.
-- Token-set matching can over-score subset titles. For example, a title like
-  `Purple Rain Debut` can score as well as `Purple Rain` because the requested
-  tokens are a subset of the candidate title.
-- A live album, compilation, remix, or soundtrack can outrank a plain studio
-  album if local fuzzy/type scoring makes it look better.
-- The code only chooses one release group. If that group cannot produce a
-  usable release or tracklist, the current full path returns no metadata instead
-  of trying the next high-confidence release-group candidate.
+- Symbolic titles, aliases, and disambiguation text can satisfy title matching
+  without hardcoded album exceptions.
+- A strong title-like match does not override weak artist matching by itself.
+- Import and refresh flows can skip low-confidence metadata instead of
+  overwriting local state with a plausible but unsafe match.
+- The resolver may perform more bounded MusicBrainz wrapper calls than the old
+  one-shot flow in order to avoid bad metadata writes.
 
 ## Release Selection Today
 
-There are two release selection functions.
+There are legacy release selection helpers plus the resolver's bounded release
+candidate scoring.
 
 ### `choose_best_release(...)`
 
-This cheaper path is used by `get_album_metadata_for_import_matching`.
+This helper is retained for compatibility and tests, but the main public
+metadata entry points now use `resolve_musicbrainz_candidate(...)`.
 
 It receives release summaries from `get_releases_for_group(...)`, then:
 
@@ -200,7 +213,9 @@ tracklists, cover art, labels, or relationship richness before choosing.
 
 ### `_choose_best_enriched_release(...)`
 
-This fuller path is used by `get_album_metadata`.
+This fuller helper is retained for compatibility and the benchmark's legacy
+comparison path. The resolver has its own full-release scoring for current
+metadata lookups.
 
 It receives full releases plus cover art URLs and scores each option:
 
@@ -271,9 +286,8 @@ Archive through `musicbrainzngs`:
 4. It chooses the largest useful thumbnail in this order: `1200`, `500`,
    `large`, then the original image URL.
 5. URLs are normalized from `http://` to `https://`.
-6. Cover art `ResponseError` returns `None`; `NetworkError` is caught in
-   `album_metadata_service._safe_cover_art_url(...)` so metadata refresh can
-   continue without artwork.
+6. Cover art `ResponseError` returns `None`; `NetworkError` is caught in the
+   resolver so metadata refresh can continue without artwork.
 
 ## Last.fm Import Metadata Cache
 
@@ -283,7 +297,8 @@ existing user albums, then checks `album_metadata_cache`.
 
 For MusicBrainz-backed import matching:
 
-1. The cache key is based on normalized `artist` and `album`.
+1. The cache key is based on normalized `artist` and `album`, with a versioned
+   prefix so matcher changes can bypass stale negative cache rows.
 2. `status = "matched"` stores the metadata JSON returned by
    `get_album_metadata_for_import_matching(...)`.
 3. `status = "not_found"` stores a negative lookup.
@@ -294,30 +309,28 @@ For MusicBrainz-backed import matching:
 6. Candidates with a tracklist are judged by unique scrobbled track coverage
    against the MusicBrainz tracklist.
 
-This is why a bad release-group choice can persist as confusing review state:
-if the wrong release group cannot produce a usable release/tracklist, the app
-may write `not_found` for the artist/album pair and future imports will not
-retry until the cache/import rows are cleared or reprocessed.
+This is why a bad release-group choice can persist as confusing review state.
+When matcher semantics change, the cache key version should change if old
+matched or negative cache rows are no longer trustworthy.
 
 ## Current Failure Modes To Understand Before Fixing
 
-- **Subset title overmatch:** token-set fuzzy scoring can treat `Purple Rain
-  Debut` as a perfect title match for `Purple Rain`.
-- **Secondary types ignored:** `Live`, `Compilation`, `Soundtrack`, and
-  `Remix` are stored but not strongly considered during release-group ranking.
-- **MusicBrainz score ignored after search:** the API search result score is not
-  part of local sorting.
-- **No fallback release-group attempt:** after selecting one release group, the
-  lookup does not try the next candidate if release browsing or full release
-  lookup fails.
-- **Import path chooses releases cheaply:** `get_album_metadata_for_import_matching`
-  uses `choose_best_release(...)`, which does not inspect full tracklist quality
-  before choosing a release summary.
+- **External search misses:** MusicBrainz fielded search can miss albums whose
+  canonical title is symbolic or alternate text, so the resolver has a bounded
+  broad-query fallback.
+- **Ambiguous variants:** live, compilation, remix, and single release groups can
+  still appear in candidate sets; resolver scoring and confidence thresholds are
+  the guardrail.
+- **Low-confidence best guesses:** lookup can return a diagnostic best guess
+  while refresh/import auto-write paths reject it below their confidence
+  thresholds.
 - **Canonical metadata can differ from source text:** `_build_album_record`
   stores the MusicBrainz release-group title and first artist credit, not the
-  imported/entered strings.
-- **Negative cache can outlive code fixes:** after matcher changes, affected
-  `album_metadata_cache` rows may need to be cleared for retesting.
+  imported/entered strings. For example, a symbolic MusicBrainz title can remain
+  the canonical stored album name.
+- **Cache semantics can outlive code fixes:** after matcher changes, bump the
+  versioned cache key or clear affected `album_metadata_cache` rows for
+  retesting.
 
 ## Source Notes
 
