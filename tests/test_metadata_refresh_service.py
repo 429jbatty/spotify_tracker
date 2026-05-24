@@ -183,6 +183,30 @@ class MetadataRefreshServiceTests(unittest.TestCase):
         self.assertEqual(results[1].status, "skipped_no_match")
         self.assertIn("No metadata returned", results[1].error)
 
+    def test_refresh_all_skips_low_confidence_metadata_without_overwriting(self):
+        state = state_with_album()
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            return_value={
+                "artist": "Wrong Artist",
+                "name": "Wrong Album",
+                "release_year": 2026,
+                "source": "musicbrainz",
+                "_musicbrainz_match": {"confidence": 60},
+            },
+        ):
+            results = refresh.refresh_all_albums_in_state(state)
+
+        album = state["completed_albums"]["Artist - Old Title"]
+
+        self.assertEqual(len(results), 1)
+        self.assertFalse(results[0].refreshed)
+        self.assertEqual(results[0].status, "skipped_low_confidence")
+        self.assertEqual(album["artist"], "Artist")
+        self.assertEqual(album["name"], "Old Title")
+        self.assertEqual(album["release_year"], 1999)
+
     def test_refresh_album_and_save_uses_direct_sqlite_update(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

@@ -59,12 +59,21 @@ def _with_retries(func, *args, **kwargs):
 # ---------------------------
 
 
-def search_release_groups(artist: str, album: str):
+def search_release_groups(artist: str, album: str, limit: int = 25):
     result = _with_retries(
         musicbrainzngs.search_release_groups,
         releasegroup=album,
         artist=artist,
-        limit=10,
+        limit=limit,
+    )
+    return result.get("release-group-list", [])
+
+
+def search_release_groups_by_query(query: str, limit: int = 25):
+    result = _with_retries(
+        musicbrainzngs.search_release_groups,
+        query=query,
+        limit=limit,
     )
     return result.get("release-group-list", [])
 
@@ -73,7 +82,7 @@ def get_release_group_by_id(release_group_mbid: str):
     result = _with_retries(
         musicbrainzngs.get_release_group_by_id,
         release_group_mbid,
-        includes=["artist-credits", "tags", "url-rels"],
+        includes=["artist-credits", "aliases", "tags", "url-rels"],
     )
     return result.get("release-group")
 

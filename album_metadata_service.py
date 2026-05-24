@@ -1,31 +1,28 @@
 import pandas as pd
 import json
-import re
 from datetime import datetime
-from unidecode import unidecode
 from rapidfuzz import fuzz
-import musicbrainzngs
-import musicbrainz_client as mb
 
 import logging
 from collections import Counter
 
+from musicbrainz_resolver import (
+    CANONICAL_AUTO_APPLY_CONFIDENCE,
+    IMPORT_MATCH_CONFIDENCE,
+    MATCH_ALGORITHM_VERSION,
+    RELEASE_GROUP_SEARCH_LIMIT,
+    _artist_credit_display,
+    _rank_release_groups,
+    _search_normalize,
+    _title_match_score,
+    match_diagnostics,
+    metadata_match_confidence,
+    normalize,
+    resolve_musicbrainz_candidate,
+    resolve_spotify_candidate,
+)
+
 logger = logging.getLogger(__name__)
-
-# ---------------------------
-# Normalization
-# ---------------------------
-
-
-def normalize(text: str) -> str:
-    text = unidecode(text.lower())
-    text = text.replace("&", "and")
-    text = re.sub(r"\(.*?deluxe.*?\)", "", text)
-    text = re.sub(r"\(.*?remaster.*?\)", "", text)
-    text = re.sub(r"\(.*?anniversary.*?\)", "", text)
-    text = re.sub(r"[^\w\s]", "", text)
-    return text.strip()
-
 
 # ---------------------------
 # Release Group Matching
@@ -33,11 +30,12 @@ def normalize(text: str) -> str:
 
 
 def compute_match_score(candidate, artist, album):
-    candidate_artist = normalize(candidate["artist-credit"][0]["name"])
-    candidate_album = normalize(candidate["title"])
-
-    artist_score = fuzz.token_set_ratio(candidate_artist, normalize(artist))
-    album_score = fuzz.token_set_ratio(candidate_album, normalize(album))
+    candidate_artist = _artist_credit_display(candidate.get("artist-credit"))
+    album_score, _, _ = _title_match_score(candidate.get("title", ""), album)
+    artist_score = fuzz.token_set_ratio(
+        _search_normalize(candidate_artist),
+        _search_normalize(artist),
+    )
 
     return (album_score * 0.8) + (artist_score * 0.2)
 
@@ -46,22 +44,13 @@ def choose_best_release_group(candidates, artist, album, threshold=75):
     if not candidates:
         return None
 
-    scored = [(compute_match_score(c, artist, album), c) for c in candidates]
+    ranked = _rank_release_groups(candidates, artist, album, "canonical")
+    scored = [(item.score, item.release_group) for item in ranked]
     scored.sort(reverse=True, key=lambda x: x[0])
 
     scored = [(score, c) for score, c in scored if score >= threshold]
     if not scored:
         return None
-
-    def type_priority(candidate):
-        ptype = candidate.get("primary-type", "").lower()
-        if ptype == "album":
-            return 2
-        elif ptype == "ep":
-            return 1
-        return 0
-
-    scored.sort(key=lambda x: (type_priority(x[1]), x[0]), reverse=True)
 
     return scored[0][1]
 
@@ -263,83 +252,50 @@ def _artist_credit_name(artist_credit):
     )
 
 
-def _safe_cover_art_url(release_mbid: str, release_group_mbid: str | None = None):
-    try:
-        return mb.get_cover_art_url(release_mbid, release_group_mbid)
-    except musicbrainzngs.NetworkError as exc:
-        logger.warning(
-            "Cover art lookup failed for release %s: %s",
-            release_mbid,
-            exc,
-        )
-        return None
-
-
 def _resolve_release(artist: str, album: str, spotify_url: str | None = None):
     """
     Returns: (release_group, chosen_release, image_url)
     """
-    # --- Path A: Spotify URL ---
-    if spotify_url:
-        release = mb.search_release_by_spotify_url(spotify_url)
-        if release:
-            release_group = release["release-group"]
-            best_release_group = (
-                mb.get_release_group_by_id(release_group["id"]) or release_group
-            )
-            full_release = mb.get_release_by_id(release["id"])
-            image_url = _safe_cover_art_url(release["id"], best_release_group["id"])
-            return best_release_group, full_release, image_url
-
-    # --- Path B: Artist/Album search ---
-    candidates = mb.search_release_groups(artist, album)
-    best_release_group = choose_best_release_group(candidates, artist, album)
-
-    if not best_release_group:
-        return None, None, None
-
-    best_release_group = (
-        mb.get_release_group_by_id(best_release_group["id"]) or best_release_group
-    )
-
-    release_summaries = mb.get_releases_for_group(best_release_group["id"])
-    official_summaries = [
-        release for release in release_summaries if release.get("status") == "Official"
-    ]
-    release_summaries = official_summaries or release_summaries
-
-    enriched_releases = []
-    for release_summary in release_summaries:
-        full_release = mb.get_release_by_id(release_summary["id"])
-        image_url = _safe_cover_art_url(full_release["id"], best_release_group["id"])
-        enriched_releases.append(
-            {
-                "summary": release_summary,
-                "release": full_release,
-                "image_url": image_url,
-            }
+    resolved = resolve_spotify_candidate(spotify_url, "canonical")
+    if resolved is None:
+        resolved = resolve_musicbrainz_candidate(
+            artist,
+            album,
+            lookup_intent="canonical",
+            include_cover_art=True,
         )
 
-    chosen_release = _choose_best_enriched_release(
-        enriched_releases, best_release_group["title"]
-    )
-
-    if not chosen_release:
+    if not resolved:
         return None, None, None
 
-    return best_release_group, chosen_release["release"], chosen_release["image_url"]
+    return resolved.release_group, resolved.release, resolved.image_url
+
+
+def _album_record_from_candidate(candidate, lookup_intent: str) -> dict:
+    record = _build_album_record(
+        candidate.release_group,
+        candidate.release,
+        candidate.image_url,
+    )
+    record["_musicbrainz_match"] = match_diagnostics(candidate, lookup_intent)
+    return record
 
 
 def get_album_metadata(artist: str, album: str, spotify_url: str | None = None):
-    release_group, full_release, image_url = _resolve_release(
-        artist, album, spotify_url
-    )
+    candidate = resolve_spotify_candidate(spotify_url, "canonical")
+    if candidate is None:
+        candidate = resolve_musicbrainz_candidate(
+            artist,
+            album,
+            lookup_intent="canonical",
+            include_cover_art=True,
+        )
 
-    if not release_group or not full_release:
+    if not candidate:
         logging.warning(f"No metadata found for {artist} - {album}")
         return {}
 
-    album_record = _build_album_record(release_group, full_release, image_url)
+    album_record = _album_record_from_candidate(candidate, "canonical")
 
     # log any null values from metadata pull
     for key, value in album_record.items():
@@ -350,29 +306,18 @@ def get_album_metadata(artist: str, album: str, spotify_url: str | None = None):
 
 
 def get_album_metadata_for_import_matching(artist: str, album: str):
-    candidates = mb.search_release_groups(artist, album)
-    best_release_group = choose_best_release_group(candidates, artist, album)
+    candidate = resolve_musicbrainz_candidate(
+        artist,
+        album,
+        lookup_intent="import_matching",
+        include_cover_art=False,
+    )
 
-    if not best_release_group:
+    if not candidate:
         logging.warning(f"No metadata found for {artist} - {album}")
         return {}
 
-    best_release_group = (
-        mb.get_release_group_by_id(best_release_group["id"]) or best_release_group
-    )
-
-    release_summaries = mb.get_releases_for_group(best_release_group["id"])
-    chosen_release = choose_best_release(release_summaries, best_release_group["title"])
-    if not chosen_release:
-        logging.warning(f"No release found for {artist} - {album}")
-        return {}
-
-    full_release = mb.get_release_by_id(chosen_release["id"])
-    if not full_release:
-        logging.warning(f"No full release found for {artist} - {album}")
-        return {}
-
-    return _build_album_record(best_release_group, full_release, image_url=None)
+    return _album_record_from_candidate(candidate, "import_matching")
 
 
 def _build_album_record(release_group, release, image_url=None):

@@ -36,11 +36,17 @@ class RefreshResult:
             self.status = "refreshed" if self.refreshed else "failed"
 
 
+class LowConfidenceMetadataError(LookupError):
+    pass
+
+
 def _album_key(artist: str, album: str) -> str:
     return f"{artist} - {album}"
 
 
 def classify_refresh_error(exc: Exception) -> str:
+    if isinstance(exc, LowConfidenceMetadataError):
+        return "skipped_low_confidence"
     if isinstance(exc, LookupError):
         return "skipped_no_match"
     if isinstance(exc, ValueError) and "Album key already exists" in str(exc):
@@ -142,6 +148,13 @@ def refresh_album_record(record: dict, spotify_url: str | None = None):
 
     if not refreshed:
         raise LookupError(f"No metadata returned for {artist} - {album}.")
+
+    confidence = metadata_service.metadata_match_confidence(refreshed)
+    if confidence < metadata_service.CANONICAL_AUTO_APPLY_CONFIDENCE:
+        raise LowConfidenceMetadataError(
+            f"Metadata confidence {confidence} is below automatic refresh threshold "
+            f"for {artist} - {album}."
+        )
 
     return _merge_refreshed_metadata(record, refreshed)
 
