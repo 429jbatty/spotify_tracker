@@ -93,6 +93,17 @@ similarity score. These are intentionally review-only because they can include
 legitimate separate albums, artist aliases, deluxe editions, live releases, or
 other cases that need human judgment.
 
+Near-match reporting is intentionally narrow. A pair is only reported when:
+
+- the artist names are highly similar
+- the album titles are highly similar
+- the albums do not both have different non-null MusicBrainz release-group MBIDs
+
+This keeps the report focused on likely duplicate rows such as artist alias
+variants, punctuation differences, or near-identical titles. It should not report
+separate albums by the same artist merely because they share the artist name or
+belong to the same series.
+
 To resolve a review-only group, inspect the album IDs in the app's Data Quality
 view or database, then use the existing manual merge flow if the records are
 really duplicates.

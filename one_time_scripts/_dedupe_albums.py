@@ -21,7 +21,8 @@ from backend.app.repositories.sqlite_state_repository import SqliteStateReposito
 from musicbrainz_resolver import normalize
 
 
-NEAR_MATCH_THRESHOLD = 92
+NEAR_MATCH_TITLE_THRESHOLD = 92
+NEAR_MATCH_ARTIST_THRESHOLD = 96
 SAFE_REASONS = {"same_release_group_mbid", "exact_normalized_artist_album"}
 
 
@@ -54,9 +55,40 @@ def _normalized_identity(album: AlbumSummary) -> str:
     return f"{artist} - {name}"
 
 
-def _near_identity(album: AlbumSummary) -> str:
-    text = unidecode(f"{album.artist} {album.name}".casefold())
+def _near_text(value: str) -> str:
+    text = unidecode(value.casefold())
     return " ".join(text.split())
+
+
+def _near_artist(album: AlbumSummary) -> str:
+    return _near_text(album.artist)
+
+
+def _near_title(album: AlbumSummary) -> str:
+    return _near_text(album.name)
+
+
+def _has_conflicting_release_group(left: AlbumSummary, right: AlbumSummary) -> bool:
+    return bool(
+        left.release_group_mbid
+        and right.release_group_mbid
+        and left.release_group_mbid != right.release_group_mbid
+    )
+
+
+def _near_match_score(left: AlbumSummary, right: AlbumSummary) -> int | None:
+    if _has_conflicting_release_group(left, right):
+        return None
+
+    artist_score = fuzz.token_set_ratio(_near_artist(left), _near_artist(right))
+    if artist_score < NEAR_MATCH_ARTIST_THRESHOLD:
+        return None
+
+    title_score = fuzz.ratio(_near_title(left), _near_title(right))
+    if title_score < NEAR_MATCH_TITLE_THRESHOLD:
+        return None
+
+    return round(min(artist_score, title_score))
 
 
 def _album_summaries(session) -> list[AlbumSummary]:
@@ -129,8 +161,8 @@ def find_duplicate_groups(session) -> list[DuplicateGroup]:
             ids = frozenset({left.id, right.id})
             if ids in grouped_ids:
                 continue
-            score = fuzz.token_set_ratio(_near_identity(left), _near_identity(right))
-            if score >= NEAR_MATCH_THRESHOLD:
+            score = _near_match_score(left, right)
+            if score is not None:
                 grouped_ids.add(ids)
                 groups.append(
                     DuplicateGroup(

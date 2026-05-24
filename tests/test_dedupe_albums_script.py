@@ -53,6 +53,34 @@ def duplicate_state():
                 "source": "manual",
                 "listen_history": ["2026-04-06T10:00:00.000Z"],
             },
+            "Alvvays - Alvvays": {
+                "artist": "Alvvays",
+                "name": "Alvvays",
+                "release_group_mbid": "rg-alvvays",
+                "source": "musicbrainz",
+                "listen_history": [],
+            },
+            "Alvvays - Antisocialites": {
+                "artist": "Alvvays",
+                "name": "Antisocialites",
+                "release_group_mbid": "rg-antisocialites",
+                "source": "musicbrainz",
+                "listen_history": [],
+            },
+            "BROCKHAMPTON - SATURATION": {
+                "artist": "BROCKHAMPTON",
+                "name": "SATURATION",
+                "release_group_mbid": "rg-saturation",
+                "source": "musicbrainz",
+                "listen_history": [],
+            },
+            "BROCKHAMPTON - SATURATION II": {
+                "artist": "BROCKHAMPTON",
+                "name": "SATURATION II",
+                "release_group_mbid": "rg-saturation-ii",
+                "source": "musicbrainz",
+                "listen_history": [],
+            },
         },
         "most_recently_listened": [],
     }
@@ -84,6 +112,38 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
             safe_reasons,
             {"same_release_group_mbid", "exact_normalized_artist_album"},
         )
+        near_pairs = {
+            frozenset((album.artist, album.name) for album in group.albums)
+            for group in groups
+            if group.reason == "near_normalized_artist_album"
+        }
+        self.assertIn(
+            frozenset(
+                {
+                    ("The Beatles", "Revolver"),
+                    ("Beatles", "Revolver"),
+                }
+            ),
+            near_pairs,
+        )
+        self.assertNotIn(
+            frozenset(
+                {
+                    ("Alvvays", "Alvvays"),
+                    ("Alvvays", "Antisocialites"),
+                }
+            ),
+            near_pairs,
+        )
+        self.assertNotIn(
+            frozenset(
+                {
+                    ("BROCKHAMPTON", "SATURATION"),
+                    ("BROCKHAMPTON", "SATURATION II"),
+                }
+            ),
+            near_pairs,
+        )
 
     def test_dry_run_detection_does_not_mutate_albums(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -93,8 +153,8 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                 dedupe.find_duplicate_groups(session)
                 after = len(SqliteStateRepository(session).load_album_state()["completed_albums"])
 
-        self.assertEqual(before, 6)
-        self.assertEqual(after, 6)
+        self.assertEqual(before, 10)
+        self.assertEqual(after, 10)
 
     def test_apply_merges_only_safe_duplicate_groups(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -108,7 +168,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         self.assertEqual(len(actions), 2)
         self.assertIn("The Beatles - Revolver", state["completed_albums"])
         self.assertIn("Beatles - Revolver", state["completed_albums"])
-        self.assertEqual(len(state["completed_albums"]), 4)
+        self.assertEqual(len(state["completed_albums"]), 8)
 
         merged_same_mbid = state["completed_albums"]["Artist A - First Copy"]
         self.assertEqual(
