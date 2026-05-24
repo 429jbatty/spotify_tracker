@@ -3,11 +3,18 @@ import AlbumHeader from "./AlbumCardHeader";
 import ListenCountBadge from "./ListenCountBadge";
 import AlbumRatingBadge from "./AlbumRatingBadge";
 import AlbumListenHistory from "./AlbumListenHistory";
+import AlbumListenEditor from "./dataQuality/AlbumListenEditor";
 import AlbumMetadata from "./AlbumMetadata";
 import AlbumMetadataActions from "./AlbumMetadataActions";
 import AlbumTrackDetails from "./AlbumTrackDetails";
 import AlbumUserFeedback from "./AlbumUserFeedback";
 import AlbumUserTags from "./AlbumUserTags";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { normalizeAlbum } from "../services/albumNormalizer";
 import { buildSparkline } from "./utils/albumHelpers";
 
@@ -60,14 +67,7 @@ function AlbumSidePanel({
   const hasTrackDetails = displayAlbum.tracklist?.length > 0;
 
   return (
-    <div
-      className={`relative grid gap-6 p-6 ${
-        trackDetailsOpen && hasTrackDetails
-          ? "lg:grid-cols-[minmax(18rem,24rem)_minmax(30rem,1fr)]"
-          : ""
-      }`}
-    >
-      <div className="flex flex-col gap-6">
+    <div className="relative flex flex-col gap-6 p-6">
 
       {listenStats && listenStats.count > 0 ? (
         <div className="absolute right-6 top-6 z-10">
@@ -94,15 +94,38 @@ function AlbumSidePanel({
       </div>
 
       {/* Listen history */}
-      {showListenHistory && (
-        <section className="border-t pt-4">
-          <h3 className="text-sm font-semibold text-foreground">
-            Listen history
-          </h3>
-          {showListenGraph && <Sparkline counts={sparklineCounts} />}
-          <AlbumListenHistory listenStats={listenStats} />
-        </section>
-      )}
+      <section className="border-t pt-4">
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="listen-history" className="border-0">
+            <AccordionTrigger className="hover:no-underline py-2 px-0">
+              <div className="flex w-full items-center justify-between gap-4 pr-2 text-left">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">
+                    Listen history
+                  </h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {listenStats?.count
+                      ? `${listenStats.count} listen${listenStats.count === 1 ? "" : "s"} logged`
+                      : "No listens logged"}
+                  </p>
+                </div>
+              </div>
+            </AccordionTrigger>
+
+            <AccordionContent className="pb-0">
+              {showListenGraph && <Sparkline counts={sparklineCounts} />}
+              {showListenHistory && <AlbumListenHistory listenStats={listenStats} />}
+              <div className="mt-4">
+                <AlbumListenEditor
+                  album={displayAlbum}
+                  onAlbumUpdated={handleAlbumUpdated}
+                  onDataChanged={onDataChanged}
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </section>
 
       {/* Metadata */}
       <section className="border-t pt-4">
@@ -131,21 +154,26 @@ function AlbumSidePanel({
         onAlbumDeleted={onAlbumDeleted}
         onDataChanged={onDataChanged}
       />
-      </div>
 
       {/* Tracks and credits */}
       {hasTrackDetails && (
-        <section
-          className={`border-t pt-4 ${
-            trackDetailsOpen ? "lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0" : ""
-          }`}
-        >
-          <AlbumTrackDetails
-            album={displayAlbum}
-            onFilterSelect={onFilterSelect}
-            open={trackDetailsOpen}
-            onOpenChange={onTrackDetailsOpenChange}
-          />
+        <section className="border-t pt-4">
+          <div className="hidden lg:block">
+            <AlbumTrackDetails
+              album={displayAlbum}
+              open={trackDetailsOpen}
+              onOpenChange={onTrackDetailsOpenChange}
+              variant="trigger"
+            />
+          </div>
+          <div className="lg:hidden">
+            <AlbumTrackDetails
+              album={displayAlbum}
+              onFilterSelect={onFilterSelect}
+              open={trackDetailsOpen}
+              onOpenChange={onTrackDetailsOpenChange}
+            />
+          </div>
         </section>
       )}
 

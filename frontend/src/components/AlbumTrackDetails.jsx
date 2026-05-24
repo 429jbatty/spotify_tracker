@@ -39,14 +39,14 @@ function TrackCredits({ credits, onFilterSelect }) {
 
   if (entries.length === 0) {
     return (
-      <p className="pl-10 text-xs text-muted-foreground">
+      <p className="pl-16 text-xs text-muted-foreground">
         No track credits in the current metadata.
       </p>
     );
   }
 
   return (
-    <div className="pl-10 space-y-2">
+    <div className="pl-16 space-y-2">
       {entries.map(([name, roles]) => (
         <div key={name} className="text-xs leading-relaxed">
           {onFilterSelect ? (
@@ -77,7 +77,7 @@ function TrackRow({ track, index, onFilterSelect }) {
   return (
     <AccordionItem value={value} className="border-b border-border last:border-b-0">
       <AccordionTrigger className="hover:no-underline py-3">
-        <div className="grid w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 pr-2 text-left">
+        <div className="grid w-full grid-cols-[2.75rem_1fr_auto] items-center gap-3 pl-4 pr-2 text-left">
           <span className="text-xs font-mono text-muted-foreground">
             {track.position || index + 1}
           </span>
@@ -96,7 +96,44 @@ function TrackRow({ track, index, onFilterSelect }) {
   );
 }
 
-function AlbumTrackDetails({ album, onFilterSelect, open, onOpenChange }) {
+function TrackDetailsSummary({ trackCount, tracksWithCredits }) {
+  return (
+    <div>
+      <h3 className="text-sm font-semibold text-foreground">
+        Tracks and credits
+      </h3>
+      <p className="mt-1 text-xs text-muted-foreground">
+        {trackCount} tracks, credits on {tracksWithCredits}
+      </p>
+    </div>
+  );
+}
+
+function TrackList({ tracklist, onFilterSelect, className = "" }) {
+  return (
+    <Accordion
+      type="multiple"
+      className={`rounded-lg border border-border ${className}`}
+    >
+      {tracklist.map((track, index) => (
+        <TrackRow
+          key={getTrackKey(track, index)}
+          track={track}
+          index={index}
+          onFilterSelect={onFilterSelect}
+        />
+      ))}
+    </Accordion>
+  );
+}
+
+function AlbumTrackDetails({
+  album,
+  onFilterSelect,
+  open,
+  onOpenChange,
+  variant = "accordion",
+}) {
   const tracklist = album.tracklist || [];
 
   if (tracklist.length === 0) return null;
@@ -113,37 +150,39 @@ function AlbumTrackDetails({ album, onFilterSelect, open, onOpenChange }) {
           onValueChange: (value) => onOpenChange?.(value === "tracks"),
         };
 
+  if (variant === "panel") {
+    return (
+      <div className="flex min-h-full flex-col gap-4 p-6">
+        <TrackDetailsSummary
+          trackCount={tracklist.length}
+          tracksWithCredits={tracksWithCredits}
+        />
+        <TrackList tracklist={tracklist} onFilterSelect={onFilterSelect} />
+      </div>
+    );
+  }
+
   return (
     <Accordion type="single" collapsible className="w-full" {...accordionProps}>
       <AccordionItem value="tracks" className="border-0">
         <AccordionTrigger className="hover:no-underline py-2 px-0">
           <div className="flex w-full items-center justify-between gap-4 pr-2 text-left">
-            <div>
-              <h3 className="text-sm font-semibold text-foreground">
-                Tracks and credits
-              </h3>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {tracklist.length} tracks, credits on {tracksWithCredits}
-              </p>
-            </div>
+            <TrackDetailsSummary
+              trackCount={tracklist.length}
+              tracksWithCredits={tracksWithCredits}
+            />
           </div>
         </AccordionTrigger>
 
-        <AccordionContent className="pb-0">
-          <Accordion
-            type="multiple"
-            className="rounded-lg border border-border lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto"
-          >
-            {tracklist.map((track, index) => (
-              <TrackRow
-                key={getTrackKey(track, index)}
-                track={track}
-                index={index}
-                onFilterSelect={onFilterSelect}
-              />
-            ))}
-          </Accordion>
-        </AccordionContent>
+        {variant === "trigger" ? null : (
+          <AccordionContent className="pb-0">
+            <TrackList
+              tracklist={tracklist}
+              onFilterSelect={onFilterSelect}
+              className="lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto"
+            />
+          </AccordionContent>
+        )}
       </AccordionItem>
     </Accordion>
   );

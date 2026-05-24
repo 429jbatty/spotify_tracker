@@ -1,7 +1,9 @@
 import { useState } from "react";
 import AlbumSidePanel from "./AlbumSidePanel";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import AlbumTrackDetails from "./AlbumTrackDetails";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { normalizeAlbum } from "../services/albumNormalizer";
 
 function AlbumPanelSheet({
   open,
@@ -12,35 +14,53 @@ function AlbumPanelSheet({
   onAlbumDeleted,
   onDataChanged,
 }) {
-  const [wideModeState, setWideModeState] = useState({
+  const [trackDetailsState, setTrackDetailsState] = useState({
     albumId: null,
     open: false,
   });
   const albumId = album?.id || null;
-  const wideMode = open && wideModeState.albumId === albumId && wideModeState.open;
-  const setWideMode = (nextOpen) => {
-    setWideModeState({ albumId, open: nextOpen });
+  const displayAlbum = album ? normalizeAlbum(album) : null;
+  const hasTrackDetails = (displayAlbum?.tracklist?.length || 0) > 0;
+  const trackDetailsOpen =
+    open && trackDetailsState.albumId === albumId && trackDetailsState.open;
+  const setTrackDetailsOpen = (nextOpen) => {
+    setTrackDetailsState({ albumId, open: nextOpen });
   };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side="right"
+        aria-describedby={undefined}
         className={cn(
-          "!w-[min(100vw,42rem)] !max-w-none overflow-y-auto p-0 sm:!w-[42rem] sm:!max-w-none",
-          wideMode && "lg:!w-[min(92vw,88rem)] xl:!w-[min(88vw,96rem)]"
+          "!w-[min(100vw,42rem)] !max-w-none overflow-visible p-0 sm:!w-[42rem] sm:!max-w-none"
         )}
       >
-        {album && (
-          <AlbumSidePanel
-            album={album}
-            onFilterSelect={onFilterSelect}
-            onAlbumUpdated={onAlbumUpdated}
-            onAlbumDeleted={onAlbumDeleted}
-            onDataChanged={onDataChanged}
-            trackDetailsOpen={wideMode}
-            onTrackDetailsOpenChange={setWideMode}
-          />
+        <SheetTitle className="sr-only">Album details</SheetTitle>
+        {displayAlbum && (
+          <>
+            {trackDetailsOpen && hasTrackDetails ? (
+              <aside className="absolute right-full top-0 hidden h-full w-[min(44vw,36rem)] overflow-y-auto border-l border-r border-border bg-background shadow-lg lg:block">
+                <AlbumTrackDetails
+                  album={displayAlbum}
+                  onFilterSelect={onFilterSelect}
+                  variant="panel"
+                />
+              </aside>
+            ) : null}
+
+            <div className="h-full overflow-y-auto">
+              <AlbumSidePanel
+                album={displayAlbum}
+                onFilterSelect={onFilterSelect}
+                onAlbumUpdated={onAlbumUpdated}
+                onAlbumDeleted={onAlbumDeleted}
+                onDataChanged={onDataChanged}
+                trackDetailsOpen={trackDetailsOpen}
+                onTrackDetailsOpenChange={setTrackDetailsOpen}
+              />
+            </div>
+          </>
         )}
       </SheetContent>
     </Sheet>
