@@ -30,6 +30,12 @@ bounded resolver against a local copy of the previous one-shot selection logic.
 See `docs/musicbrainz-resolver-benchmark.md` for the command and how to read
 accuracy, auto-apply, confidence, and wrapper-call metrics.
 
+## Duplicate Cleanup
+
+Use `one_time_scripts/_dedupe_albums.py` to report duplicate album records and
+apply conservative safe merges. See `docs/dedupe-albums.md` for dry-run,
+`--apply`, and `--refresh-candidates` usage.
+
 ## MusicBrainz Terms Used By This App
 
 MusicBrainz's model is more precise than the word "album." The app has to map
