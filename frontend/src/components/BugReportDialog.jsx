@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
+import { captureScreenshot } from "./utils/bugReportScreenshot";
 import { submitBugReport } from "../services/albumApi";
 
 const initialForm = {
@@ -18,88 +19,6 @@ const initialForm = {
   screenshotDataUrl: "",
   screenshotSource: "",
 };
-
-async function captureScreenFrame() {
-  if (!window.isSecureContext || !navigator.mediaDevices?.getDisplayMedia) {
-    throw new Error("Screen capture is not supported in this browser.");
-  }
-
-  const stream = await navigator.mediaDevices.getDisplayMedia({
-    video: {
-      displaySurface: "browser",
-    },
-    audio: false,
-  });
-
-  try {
-    const video = document.createElement("video");
-    const loaded = new Promise((resolve, reject) => {
-      video.onloadedmetadata = resolve;
-      video.onerror = () => reject(new Error("Could not read the screen capture."));
-    });
-    video.srcObject = stream;
-    video.muted = true;
-    await loaded;
-    await video.play();
-
-    if (!video.videoWidth || !video.videoHeight) {
-      throw new Error("The captured screen did not include a video frame.");
-    }
-
-    const canvas = document.createElement("canvas");
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-    const context = canvas.getContext("2d");
-    if (!context) throw new Error("Could not prepare screenshot capture.");
-
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL("image/png");
-  } finally {
-    stream.getTracks().forEach((track) => track.stop());
-  }
-}
-
-async function capturePageSnapshot() {
-  const { default: html2canvas } = await import("html2canvas");
-  const canvas = await html2canvas(document.documentElement, {
-    allowTaint: false,
-    backgroundColor: null,
-    height: window.innerHeight,
-    ignoreElements: (element) =>
-      element.dataset?.bugReportDialog === "true" ||
-      element.dataset?.slot === "dialog-overlay",
-    logging: false,
-    scale: Math.min(window.devicePixelRatio || 1, 2),
-    scrollX: window.scrollX,
-    scrollY: window.scrollY,
-    useCORS: true,
-    width: window.innerWidth,
-    windowHeight: window.innerHeight,
-    windowWidth: window.innerWidth,
-  });
-
-  return canvas.toDataURL("image/png");
-}
-
-async function captureScreenshot() {
-  if (window.isSecureContext && navigator.mediaDevices?.getDisplayMedia) {
-    try {
-      return {
-        dataUrl: await captureScreenFrame(),
-        source: "screen",
-      };
-    } catch (error) {
-      if (error.name === "NotAllowedError") {
-        throw error;
-      }
-    }
-  }
-
-  return {
-    dataUrl: await capturePageSnapshot(),
-    source: "page",
-  };
-}
 
 function BugReportDialog({ selectedUser }) {
   const { toast } = useToast();
