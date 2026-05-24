@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import AlbumArtwork from "./AlbumArtwork";
-import AlbumSidePanel from "./AlbumSidePanel";
+import AlbumPanelSheet from "./AlbumPanelSheet";
 import {
   getQualityIssueIds,
   QUALITY_ISSUES,
 } from "./utils/albumFilters";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 function albumKey(album) {
   return album.id || album.release_group_mbid || `${album.artist}-${album.name}`;
@@ -248,22 +247,15 @@ function PageDataQuality({ albums, onDataChanged, onFilterSelect }) {
         </section>
       </div>
 
-      <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
-        <SheetContent
-          side="right"
-          className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
-        >
-          {selectedAlbum && (
-            <AlbumSidePanel
-              album={selectedAlbum}
-              onFilterSelect={onFilterSelect}
-              onAlbumUpdated={updateSelectedAlbum}
-              onAlbumDeleted={handleAlbumDeleted}
-              onDataChanged={onDataChanged}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
+      <AlbumPanelSheet
+        open={panelOpen}
+        onOpenChange={setPanelOpen}
+        album={selectedAlbum}
+        onFilterSelect={onFilterSelect}
+        onAlbumUpdated={updateSelectedAlbum}
+        onAlbumDeleted={handleAlbumDeleted}
+        onDataChanged={onDataChanged}
+      />
     </>
   );
 }

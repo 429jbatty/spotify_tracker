@@ -15,6 +15,7 @@ class Settings:
     database_url: str = f"sqlite:///{DEFAULT_DATA_DIR / 'spotify_tracker.sqlite'}"
     frontend_origin: str = "http://localhost:5173"
     media_dir: str = str(DEFAULT_DATA_DIR / "media")
+    lastfm_api_key: str | None = None
 
 
 def get_settings() -> Settings:
@@ -35,4 +36,5 @@ def get_settings() -> Settings:
             Settings.frontend_origin,
         ),
         media_dir=media_dir,
+        lastfm_api_key=os.environ.get("LASTFM_API_KEY"),
     )

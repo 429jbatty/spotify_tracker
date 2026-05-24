@@ -43,6 +43,11 @@ from backend.app.services.lastfm_import_client import fetch_lastfm_recent_tracks
 LASTFM_ALBUM_LISTEN_WINDOW_HOURS = 48
 LASTFM_PREVIEW_MAX_PAGES = 5
 LASTFM_PREVIEW_MAX_SCROBBLES = 1000
+LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 3
+
+
+_ALBUM_METADATA_CACHE_MISS = object()
+
 
 @dataclass
 class LastfmCandidate:
@@ -274,13 +279,14 @@ def unresolved_review_items(
         .limit(1000)
     ).all()
 
-    grouped: dict[str, ImportedListeningEvent] = {}
+    grouped: dict[tuple[str, str, str, str], ImportedListeningEvent] = {}
     passthrough: list[ImportedListeningEvent] = []
     for row in rows:
-        if row.match_status == "candidate_review" and row.candidate_key:
-            current = grouped.get(row.candidate_key)
+        group_key = _review_album_group_key(row)
+        if row.match_status == "candidate_review" and group_key:
+            current = grouped.get(group_key)
             if current is None or row.listened_at > current.listened_at:
-                grouped[row.candidate_key] = row
+                grouped[group_key] = row
             continue
         passthrough.append(row)
 
@@ -323,20 +329,15 @@ def resolve_review_item(
     if (request.existing_album_id is None) == (request.create_album is None):
         raise ValueError("Provide either existing_album_id or create_album.")
 
-    target_rows = [review_item]
-    if review_item.candidate_key:
-        target_rows = session.scalars(
-            select(ImportedListeningEvent).where(
-                ImportedListeningEvent.user_id == repository.user.id,
-                ImportedListeningEvent.candidate_key == review_item.candidate_key,
-            )
-        ).all()
-        target_rows.sort(key=lambda row: row.listened_at)
+    target_rows = _review_resolution_target_rows(session, repository, review_item)
 
-    representative = target_rows[-1]
+    representative_rows = _review_candidate_representatives(target_rows)
+    representative = representative_rows[-1]
     if request.existing_album_id is not None:
         album_id = request.existing_album_id
-        album = repository.add_album_listen(album_id, representative.listened_at)
+        album = {}
+        for target in representative_rows:
+            album = repository.add_album_listen(album_id, target.listened_at)
         if representative.rating is not None or representative.notes:
             album = repository.update_user_album_feedback(
                 album_id,
@@ -359,10 +360,12 @@ def resolve_review_item(
                 "source": representative.source,
                 "entry_source": representative.source,
             },
-            listen_date=create_payload.listened_at,
+            listen_date=representative.listened_at,
         )
         album_id = created["id"]
         album = created
+        for target in representative_rows[:-1]:
+            album = repository.add_album_listen(album_id, target.listened_at)
         if representative.rating is not None or representative.notes:
             album = repository.update_user_album_feedback(
                 album_id,
@@ -378,6 +381,66 @@ def resolve_review_item(
 
     session.commit()
     return album
+
+
+def _review_album_group_key(
+    row: ImportedListeningEvent,
+) -> tuple[str, str, str, str] | None:
+    if not row.artist or not row.album:
+        return None
+    return (
+        row.source or "",
+        row.source_user_id or "",
+        row.artist.strip().casefold(),
+        row.album.strip().casefold(),
+    )
+
+
+def _review_resolution_target_rows(
+    session: Session,
+    repository: SqliteStateRepository,
+    review_item: ImportedListeningEvent,
+) -> list[ImportedListeningEvent]:
+    group_key = _review_album_group_key(review_item)
+    if review_item.match_status == "candidate_review" and group_key:
+        candidates = session.scalars(
+            select(ImportedListeningEvent).where(
+                ImportedListeningEvent.user_id == repository.user.id,
+                ImportedListeningEvent.source == review_item.source,
+                ImportedListeningEvent.source_user_id == review_item.source_user_id,
+                ImportedListeningEvent.match_status == "candidate_review",
+            )
+        ).all()
+        target_rows = [
+            row for row in candidates if _review_album_group_key(row) == group_key
+        ]
+    elif review_item.candidate_key:
+        target_rows = session.scalars(
+            select(ImportedListeningEvent).where(
+                ImportedListeningEvent.user_id == repository.user.id,
+                ImportedListeningEvent.candidate_key == review_item.candidate_key,
+            )
+        ).all()
+    else:
+        target_rows = [review_item]
+
+    target_rows.sort(key=lambda row: row.listened_at)
+    return target_rows
+
+
+def _review_candidate_representatives(
+    rows: list[ImportedListeningEvent],
+) -> list[ImportedListeningEvent]:
+    grouped: dict[str, ImportedListeningEvent] = {}
+    for row in rows:
+        key = row.candidate_key or f"row:{row.id}"
+        current = grouped.get(key)
+        if current is None or row.listened_at > current.listened_at:
+            grouped[key] = row
+
+    representatives = list(grouped.values())
+    representatives.sort(key=lambda row: row.listened_at)
+    return representatives
 
 
 def _preview_lastfm_import(
@@ -707,16 +770,19 @@ def _persist_lastfm_raw_events(
     progress_callback: Any | None = None,
 ) -> list[ImportedListeningEvent]:
     persisted: list[ImportedListeningEvent] = []
+    seen_fingerprints: set[str] = set()
     total = len(rows)
     for index, row in enumerate(rows, start=1):
         if not row.listened_at or not row.artist:
             if progress_callback:
                 progress_callback(index, total, len(persisted))
             continue
-        if _event_exists(session, repository.user.id, row):
+        fingerprint = _fingerprint(row)
+        if fingerprint in seen_fingerprints or _event_exists(session, repository.user.id, row):
             if progress_callback:
                 progress_callback(index, total, len(persisted))
             continue
+        seen_fingerprints.add(fingerprint)
 
         match_status = "raw_imported" if row.album else "ignored_missing_album"
         error_message = None if row.album else "Album is missing in the source data."
@@ -727,7 +793,7 @@ def _persist_lastfm_raw_events(
             source="lastfm",
             source_user_id=source_user_id,
             source_event_id=row.source_event_id,
-            event_fingerprint=_fingerprint(row),
+            event_fingerprint=fingerprint,
             candidate_key=None,
             listened_at=row.listened_at,
             artist=row.artist,
@@ -1059,6 +1125,15 @@ def _build_lastfm_candidate(
     listened_at = max(event.listened_at for event in events if event.listened_at)
     matched_album = existing_album_index.get(_album_match_key(artist, album))
     matched_album_id = matched_album.album_id if matched_album else None
+    unique_tracks = {
+        _normalize_track_name(event.track)
+        for event in events
+        if _normalize_track_name(event.track)
+    }
+    remote_metadata_allowed = (
+        allow_remote_metadata
+        and len(unique_tracks) >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
+    )
     metadata = (
         _lastfm_album_metadata(
             repository.session,
@@ -1067,17 +1142,11 @@ def _build_lastfm_candidate(
             metadata_cache,
             matched_album_id=matched_album_id,
             matched_album_record=matched_album.record if matched_album else None,
-            allow_remote_metadata=allow_remote_metadata,
+            allow_remote_metadata=remote_metadata_allowed,
         )
         if load_metadata
         else None
     )
-
-    unique_tracks = {
-        _normalize_track_name(event.track)
-        for event in events
-        if _normalize_track_name(event.track)
-    }
 
     matched_track_count = 0
     total_track_count = 0
@@ -1101,7 +1170,16 @@ def _build_lastfm_candidate(
         matched_track_count = len(unique_tracks & metadata_tracks)
         if total_track_count > 0:
             confidence = round((matched_track_count / total_track_count) * 100)
-        if total_track_count > 0 and (matched_track_count / total_track_count) >= ALBUM_COMPLETION_THRESHOLD:
+        if matched_album_id is None and not _is_lastfm_importable_album_metadata(
+            metadata,
+            total_track_count,
+        ):
+            status = "partial_listen"
+            detail = (
+                "MusicBrainz matched this to a single or short non-album release, "
+                "so it does not count as a completed album listen."
+            )
+        elif total_track_count > 0 and (matched_track_count / total_track_count) >= ALBUM_COMPLETION_THRESHOLD:
             status = "matched_existing" if matched_album_id is not None else "new_album"
             detail = (
                 f"Matched {matched_track_count} of {total_track_count} tracks. "
@@ -1113,6 +1191,12 @@ def _build_lastfm_candidate(
                 f"Matched {matched_track_count} of {total_track_count or len(unique_tracks)} tracks. "
                 "This does not count as a completed album listen."
             )
+    elif len(unique_tracks) < LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS:
+        status = "partial_listen"
+        detail = (
+            f"Only {len(unique_tracks)} unique tracks were scrobbled; skipped remote metadata "
+            "lookup because this is not enough evidence for a full album listen."
+        )
     elif not allow_remote_metadata:
         status = "no_tracklist"
         detail = (
@@ -1139,6 +1223,17 @@ def _build_lastfm_candidate(
         confidence=confidence,
         metadata=metadata,
     )
+
+
+def _is_lastfm_importable_album_metadata(
+    metadata: dict[str, Any],
+    total_track_count: int,
+) -> bool:
+    primary_type = (metadata.get("primary_type") or "").strip().casefold()
+    if primary_type:
+        return primary_type == "album"
+
+    return total_track_count >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
 
 
 def _split_lastfm_sessions(
@@ -1190,9 +1285,9 @@ def _lastfm_album_metadata(
         return matched_album_record
 
     cached = _read_album_metadata_cache(session, artist, album)
-    if cached is not None:
-        metadata_cache[cache_key] = cached
-        return cached
+    if cached is not _ALBUM_METADATA_CACHE_MISS:
+        metadata_cache[cache_key] = cached if isinstance(cached, dict) else None
+        return metadata_cache[cache_key]
 
     if not allow_remote_metadata:
         metadata_cache[cache_key] = None
@@ -1202,9 +1297,10 @@ def _lastfm_album_metadata(
         metadata = album_metadata_service.get_album_metadata_for_import_matching(artist, album)
         if metadata:
             metadata["entry_source"] = "lastfm"
-        metadata.pop("_refresh_warnings", None)
+            metadata.pop("_refresh_warnings", None)
     except Exception:
-        metadata = None
+        metadata_cache[cache_key] = None
+        return None
 
     _write_album_metadata_cache(session, artist, album, metadata)
     metadata_cache[cache_key] = metadata
@@ -1245,14 +1341,14 @@ def _read_album_metadata_cache(
     session: Session,
     artist: str,
     album: str,
-) -> dict[str, Any] | None:
+) -> dict[str, Any] | None | object:
     row = session.scalars(
         select(AlbumMetadataCache).where(
             AlbumMetadataCache.cache_key == _album_metadata_cache_key(artist, album)
         )
     ).first()
     if row is None:
-        return None
+        return _ALBUM_METADATA_CACHE_MISS
     return row.metadata_json if row.status == "matched" else None
 
 

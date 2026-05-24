@@ -322,6 +322,112 @@ def migrate_user_album_feedback(engine: Engine) -> None:
             columns.add("notes")
 
 
+def migrate_album_entry_source(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    if not _table_exists(engine, "albums"):
+        return
+
+    columns = _table_columns(engine, "albums")
+
+    with engine.begin() as connection:
+        if "entry_source" not in columns:
+            connection.execute(text("ALTER TABLE albums ADD COLUMN entry_source VARCHAR"))
+            columns.add("entry_source")
+
+        connection.execute(
+            text(
+                """
+                UPDATE albums
+                SET entry_source = CASE
+                    WHEN source = 'manual' THEN 'manual'
+                    WHEN source = 'csv' THEN 'csv_upload'
+                    WHEN source = 'lastfm' THEN 'lastfm_import'
+                    WHEN source = 'spotify_export' THEN 'spotify_export_upload'
+                    WHEN source = 'musicbrainz' THEN 'spotify_sync'
+                    WHEN source = 'unknown' THEN 'unknown'
+                    WHEN source IS NULL OR source = '' THEN 'unknown'
+                    ELSE lower(source)
+                END
+                WHERE entry_source IS NULL OR entry_source = ''
+                """
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_albums_entry_source ON albums (entry_source)"
+            )
+        )
+
+
+def migrate_imported_event_candidate_key(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    if not _table_exists(engine, "imported_listening_events"):
+        return
+
+    columns = _table_columns(engine, "imported_listening_events")
+
+    with engine.begin() as connection:
+        if "candidate_key" not in columns:
+            connection.execute(
+                text(
+                    "ALTER TABLE imported_listening_events ADD COLUMN candidate_key VARCHAR"
+                )
+            )
+            columns.add("candidate_key")
+
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_imported_listening_events_candidate_key "
+                "ON imported_listening_events (candidate_key)"
+            )
+        )
+
+
+def migrate_album_metadata_cache(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS album_metadata_cache (
+                    id INTEGER NOT NULL PRIMARY KEY,
+                    cache_key VARCHAR NOT NULL UNIQUE,
+                    artist VARCHAR NOT NULL,
+                    album VARCHAR NOT NULL,
+                    status VARCHAR NOT NULL,
+                    metadata_json JSON NOT NULL,
+                    error_message TEXT,
+                    updated_at VARCHAR NOT NULL
+                )
+                """
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_album_metadata_cache_cache_key "
+                "ON album_metadata_cache (cache_key)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_album_metadata_cache_status "
+                "ON album_metadata_cache (status)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_album_metadata_cache_updated_at "
+                "ON album_metadata_cache (updated_at)"
+            )
+        )
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
@@ -331,3 +437,6 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_albums_in_progress_user_scope(engine)
     migrate_user_album_tags(engine)
     migrate_user_album_feedback(engine)
+    migrate_album_entry_source(engine)
+    migrate_imported_event_candidate_key(engine)
+    migrate_album_metadata_cache(engine)

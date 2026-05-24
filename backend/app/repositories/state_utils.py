@@ -23,6 +23,7 @@ def _normalize_completed_albums(completed_albums: dict[str, Any]) -> dict[str, A
             "name": record.get("name") or album,
             "listen_history": record.get("listen_history") or [],
             "source": record.get("source") or "unknown",
+            "entry_source": record.get("entry_source") or record.get("source") or "unknown",
         }
 
     return normalized

@@ -63,11 +63,18 @@ Important environment variables:
 - `DATA_DIR`: runtime data directory.
 - `DATABASE_URL`: optional SQLite URL override.
 - `MEDIA_DIR`: optional media directory override.
+- `LASTFM_API_KEY`: required for Last.fm username imports.
 - `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REDIRECT_URI`:
   Spotify OAuth settings.
 
 Spotify refresh tokens are stored per user in SQLite through the in-app Spotify
 connect flow, not in `.env`.
+
+## Import Formats
+
+The UI supports Last.fm imports for users with public scrobbles. Imported
+tracks are grouped into album-listen candidates, and entries that cannot be
+matched confidently stay in the review queue instead of being silently dropped.
 
 ## Documentation
 

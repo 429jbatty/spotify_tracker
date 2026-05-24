@@ -57,6 +57,7 @@ class CompletedAlbum(BaseModel):
     remote_image_url: str | None = None
     local_image_path: str | None = None
     source: str
+    entry_source: str | None = None
 
 
 class AlbumInProgress(BaseModel):
@@ -92,6 +93,7 @@ class ManualAlbumCreate(BaseModel):
     spotify_url: str | None = None
     musicbrainz_url: str | None = None
     source: str = "manual"
+    entry_source: str | None = None
 
 
 class AlbumMetadataUpdate(BaseModel):
@@ -107,6 +109,7 @@ class AlbumMetadataUpdate(BaseModel):
     spotify_url: str | None = None
     musicbrainz_url: str | None = None
     source: str | None = None
+    entry_source: str | None = None
 
 
 class AlbumListenCreate(BaseModel):
@@ -132,3 +135,111 @@ class UserAlbumTagsUpdate(BaseModel):
 class UserAlbumFeedbackUpdate(BaseModel):
     rating: int | None = Field(default=None, ge=1, le=10)
     notes: str | None = None
+
+
+class ImportPreviewRequest(BaseModel):
+    source: str
+    lastfm_username: str | None = None
+    session_name: str | None = None
+
+
+class ImportPreviewRow(BaseModel):
+    listened_at: str | None = None
+    artist: str | None = None
+    album: str | None = None
+    track: str | None = None
+    source_label: str | None = None
+    rating: int | None = None
+    notes: str | None = None
+    status: str
+    status_detail: str | None = None
+    confidence: int | None = None
+
+
+class ImportPreviewSummary(BaseModel):
+    total_rows: int
+    new_event_rows: int
+    valid_rows: int
+    duplicate_rows: int
+    unresolved_rows: int
+    failed_rows: int
+    matched_existing_rows: int
+    new_album_rows: int
+    missing_album_rows: int
+    distinct_album_candidates: int
+    estimated_new_unique_albums: int
+    derived_album_listens: int
+    review_candidates: int
+    pending_metadata_candidates: int = 0
+    progress_current: int = 0
+    progress_total: int = 0
+    progress_label: str | None = None
+
+
+class ImportPreviewResponse(BaseModel):
+    source: str
+    session_name: str | None = None
+    source_user_id: str | None = None
+    columns: list[str] = Field(default_factory=list)
+    summary: ImportPreviewSummary
+    rows: list[ImportPreviewRow] = Field(default_factory=list)
+
+
+class ImportCommitResponse(BaseModel):
+    import_session_id: int
+    source: str
+    status: str = "queued"
+    session_name: str | None = None
+    source_user_id: str | None = None
+    summary: ImportPreviewSummary
+
+
+class ImportDeleteResponse(BaseModel):
+    import_session_id: int
+    deleted_events: int
+    deleted_listens: int
+    removed_user_albums: int
+    deleted_albums: int
+
+
+class ImportSessionSummary(BaseModel):
+    id: int
+    source: str
+    source_user_id: str | None = None
+    status: str
+    session_name: str | None = None
+    started_at: str
+    completed_at: str | None = None
+    summary: ImportPreviewSummary
+
+
+class ImportReviewItem(BaseModel):
+    id: int
+    source: str
+    source_user_id: str | None = None
+    listened_at: str
+    artist: str
+    album: str | None = None
+    track: str | None = None
+    status: str
+    status_detail: str | None = None
+    confidence: int | None = None
+    session_name: str | None = None
+
+
+class ImportResolveCreateAlbum(BaseModel):
+    artist: str
+    name: str
+    listened_at: str
+    release_year: int | None = None
+    release_month: int | None = None
+    release_day: int | None = None
+    label: str | None = None
+    image_url: str | None = None
+    spotify_url: str | None = None
+    musicbrainz_url: str | None = None
+
+
+class ImportResolveRequest(BaseModel):
+    existing_album_id: int | None = None
+    create_album: ImportResolveCreateAlbum | None = None

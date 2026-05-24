@@ -1,35 +1,103 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import AlbumColumnFilter from "./AlbumColumnFilter";
 import AlbumRow from "./AlbumRow";
-import {
-  Sheet,
-  SheetContent,
-} from "@/components/ui/sheet";
-
-import AlbumSidePanel from "./AlbumSidePanel"
+import AlbumPanelSheet from "./AlbumPanelSheet";
+import { getSourceLabel } from "./utils/sourceLabels";
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
+const TABLE_HEADERS = [
+  { key: "image_url", label: "", sortable: false, filterable: false, width: "w-[72px]" },
+  { key: "name", label: "Album", sortable: true, filterable: true, width: "w-[24%]" },
+  { key: "artist", label: "Artist", sortable: true, filterable: true, width: "w-[16%]" },
+  { key: "release_year", label: "Release year", sortable: true, filterable: true, width: "w-[10%]" },
+  { key: "label", label: "Label", sortable: true, filterable: true, width: "w-[14%]" },
+  { key: "entry_source", label: "Source", sortable: true, filterable: true, width: "w-[12%]" },
+  { key: "totalListens", label: "Listens", sortable: true, filterable: true, width: "w-[8%]" },
+  { key: "latestListen", label: "Last listen", sortable: true, filterable: true, width: "w-[12%]" },
+];
+
+function formatDate(isoString) {
+  if (!isoString || isoString === "Unknown") return "Unknown";
+  const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) return "Unknown";
+  const m = String(date.getMonth() + 1);
+  const dd = String(date.getDate()).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  return `${m}/${dd}/${yyyy}`;
+}
+
+function getColumnValue(album, key) {
+  if (key === "entry_source") return album.entry_source || album.source || "unknown";
+  if (key === "label") return album.label || "Unknown";
+  if (key === "release_year") return album.release_year || "Unknown";
+  if (key === "totalListens") return album.totalListens ?? 0;
+  if (key === "latestListen") return album.latestListen || "Unknown";
+  return album[key] || "Unknown";
+}
+
+function getColumnLabel(album, key) {
+  const value = getColumnValue(album, key);
+  if (key === "entry_source") return getSourceLabel(value);
+  if (key === "latestListen") return formatDate(value);
+  return String(value);
+}
+
 function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
-  const [sortBy, setSortBy] = useState("listen_history");
+  const [sortBy, setSortBy] = useState("latestListen");
   const [ascending, setAscending] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
+  const [columnFilters, setColumnFilters] = useState({});
 
-  
-  const albumArray = Object.entries(albums).map(([id, data]) => ({
-    id,
-    ...data,
-  }));
+  const albumArray = useMemo(
+    () =>
+      Object.entries(albums).map(([id, data]) => ({
+        id,
+        ...data,
+      })),
+    [albums]
+  );
 
-  const sortedAlbums = albumArray.sort((a, b) => {
+  const filterOptions = useMemo(() => {
+    return Object.fromEntries(
+      TABLE_HEADERS
+        .filter((header) => header.filterable)
+        .map((header) => {
+          const optionMap = new Map();
+          albumArray.forEach((album) => {
+            const value = getColumnLabel(album, header.key);
+            optionMap.set(value, value);
+          });
+          const options = [...optionMap.entries()]
+            .map(([value, label]) => ({ value, label }))
+            .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+
+          return [header.key, options];
+        })
+    );
+  }, [albumArray]);
+
+  const filteredByColumns = albumArray.filter((album) =>
+    Object.entries(columnFilters).every(([key, values]) => {
+      if (!values.length) return false;
+      return values.includes(getColumnLabel(album, key));
+    })
+  );
+
+  const sortedAlbums = [...filteredByColumns].sort((a, b) => {
     let aValue = a[sortBy];
     let bValue = b[sortBy];
+
+    if (sortBy === "entry_source") {
+      aValue = getSourceLabel(a.entry_source || a.source);
+      bValue = getSourceLabel(b.entry_source || b.source);
+    }
 
     if (aValue === null || aValue === undefined) return 1;
     if (bValue === null || bValue === undefined) return -1;
@@ -45,7 +113,7 @@ function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
     }
 
     return ascending
-      ? String(aValue).localeCompare(String(aValue))
+      ? String(aValue).localeCompare(String(bValue))
       : String(bValue).localeCompare(String(aValue));
   });
 
@@ -71,15 +139,14 @@ function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
     setPanelOpen(false);
   };
 
-  const headers = [
-    { key: "image_url", label: "", sortable: false, width: "w-[100px]" },
-    { key: "name", label: "Album", sortable: true, width: "w-[37%]" },
-    { key: "artist", label: "Artist", sortable: true, width: "w-[20%]" },
-    { key: "release_year", label: "Release year", sortable: true, width: "w-[10%]" },
-    { key: "label", label: "Label", sortable: true, width: "w-[15%]" },
-    { key: "totalListens", label: "Listens", sortable: true, width: "w-[8%]" },
-    { key: "latestListen", label: "Last listen", sortable: true, width: "w-[10%]" },
-  ];
+  const updateColumnFilter = (key, values) => {
+    setColumnFilters((current) => {
+      const next = { ...current };
+      if (values === null) delete next[key];
+      else next[key] = values;
+      return next;
+    });
+  };
 
   return (
     <>
@@ -87,18 +154,35 @@ function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
         <Table className="w-full table-fixed bg-card">
           <TableHeader className="bg-muted">
             <TableRow>
-              {headers.map((header) => (
+              {TABLE_HEADERS.map((header) => (
                 <TableHead
                   key={header.key}
-                  className={`py-2 text-left text-sm font-medium select-none text-foreground ${header.sortable ? "cursor-pointer" : ""} ${header.width}`}
-                  onClick={header.sortable ? () => handleSort(header.key) : undefined}
+                  className={`py-2 align-top text-left text-sm font-medium select-none text-foreground ${header.width}`}
                 >
-                  {header.label}{" "}
-                  {header.sortable && sortBy === header.key
-                    ? ascending
-                      ? "▲"
-                      : "▼"
-                    : ""}
+                  {header.sortable ? (
+                    <button
+                      type="button"
+                      className="block max-w-full truncate text-left font-medium leading-tight text-foreground hover:text-primary"
+                      onClick={() => handleSort(header.key)}
+                      title={`Sort by ${header.label}`}
+                    >
+                      {header.label}{" "}
+                      {sortBy === header.key ? (ascending ? "▲" : "▼") : ""}
+                    </button>
+                  ) : (
+                    <span className="block leading-tight">{header.label}</span>
+                  )}
+                  {header.filterable && (
+                    <div className="mt-1">
+                      <AlbumColumnFilter
+                        align={["totalListens", "latestListen"].includes(header.key) ? "right" : "left"}
+                        label={header.label}
+                        selectedValues={columnFilters[header.key]}
+                        options={filterOptions[header.key] || []}
+                        onApply={(values) => updateColumnFilter(header.key, values)}
+                      />
+                    </div>
+                  )}
                 </TableHead>
               ))}
             </TableRow>
@@ -117,22 +201,15 @@ function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
         </Table>
       </div>
 
-      <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
-        <SheetContent
-          side="right"
-          className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
-        >
-          {selectedAlbum && (
-            <AlbumSidePanel
-              album={selectedAlbum}
-              onFilterSelect={onFilterSelect}
-              onAlbumUpdated={updateSelectedAlbum}
-              onAlbumDeleted={handleAlbumDeleted}
-              onDataChanged={onDataChanged}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
+      <AlbumPanelSheet
+        open={panelOpen}
+        onOpenChange={setPanelOpen}
+        album={selectedAlbum}
+        onFilterSelect={onFilterSelect}
+        onAlbumUpdated={updateSelectedAlbum}
+        onAlbumDeleted={handleAlbumDeleted}
+        onDataChanged={onDataChanged}
+      />
 
     </>
   );

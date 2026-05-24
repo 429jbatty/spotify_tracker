@@ -91,6 +91,7 @@ class ApiAlbumStateTests(unittest.TestCase):
         self.assertIsNone(album["notes"])
         self.assertEqual(album["image_url"], "https://example.test/cover.jpg")
         self.assertEqual(album["source"], "musicbrainz")
+        self.assertEqual(album["entry_source"], "spotify_sync")
 
     def test_album_state_endpoint_fills_missing_album_identity_from_key(self):
         state = sample_album_state()
@@ -125,6 +126,7 @@ class ApiAlbumStateTests(unittest.TestCase):
         self.assertEqual(album["artist"], "Soft Soundscapes")
         self.assertEqual(album["name"], "River")
         self.assertEqual(album["source"], "unknown")
+        self.assertEqual(album["entry_source"], "unknown")
 
     def test_album_state_endpoint_reads_from_sqlite_by_default(self):
         with tempfile.TemporaryDirectory() as temp_dir:

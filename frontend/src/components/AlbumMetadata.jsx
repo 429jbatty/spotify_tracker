@@ -1,5 +1,6 @@
 import AlbumInfoRow from "./AlbumInfoRow";
 import { createAlbumFilter } from "./utils/albumFilters";
+import { getSourceLabel } from "./utils/sourceLabels";
 
 function FilterChip({ children, onClick }) {
   return (
@@ -31,6 +32,11 @@ function AlbumMetadata({ album, onFilterSelect }) {
         value={album.label}
         color="muted"
       />
+      <AlbumInfoRow
+        label="Source"
+        value={getSourceLabel(album.entry_source || album.source)}
+        color="accent"
+      />
 
       {onFilterSelect && (
         <div className="flex flex-wrap gap-2 pt-1">
@@ -53,6 +59,22 @@ function AlbumMetadata({ album, onFilterSelect }) {
               }
             >
               {album.release_year}
+            </FilterChip>
+          )}
+
+          {(album.entry_source || album.source) && (
+            <FilterChip
+              onClick={() =>
+                onFilterSelect(
+                  createAlbumFilter(
+                    "entry-source",
+                    album.entry_source || album.source,
+                    getSourceLabel(album.entry_source || album.source)
+                  )
+                )
+              }
+            >
+              {getSourceLabel(album.entry_source || album.source)}
             </FilterChip>
           )}
 

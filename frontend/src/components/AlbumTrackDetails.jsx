@@ -96,7 +96,7 @@ function TrackRow({ track, index, onFilterSelect }) {
   );
 }
 
-function AlbumTrackDetails({ album, onFilterSelect }) {
+function AlbumTrackDetails({ album, onFilterSelect, open, onOpenChange }) {
   const tracklist = album.tracklist || [];
 
   if (tracklist.length === 0) return null;
@@ -105,8 +105,16 @@ function AlbumTrackDetails({ album, onFilterSelect }) {
     (track) => getTrackCredits(track).length > 0
   ).length;
 
+  const accordionProps =
+    open === undefined
+      ? {}
+      : {
+          value: open ? "tracks" : "",
+          onValueChange: (value) => onOpenChange?.(value === "tracks"),
+        };
+
   return (
-    <Accordion type="single" collapsible className="w-full">
+    <Accordion type="single" collapsible className="w-full" {...accordionProps}>
       <AccordionItem value="tracks" className="border-0">
         <AccordionTrigger className="hover:no-underline py-2 px-0">
           <div className="flex w-full items-center justify-between gap-4 pr-2 text-left">
@@ -122,7 +130,10 @@ function AlbumTrackDetails({ album, onFilterSelect }) {
         </AccordionTrigger>
 
         <AccordionContent className="pb-0">
-          <Accordion type="multiple" className="rounded-lg border border-border">
+          <Accordion
+            type="multiple"
+            className="rounded-lg border border-border lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto"
+          >
             {tracklist.map((track, index) => (
               <TrackRow
                 key={getTrackKey(track, index)}

@@ -349,6 +349,32 @@ def get_album_metadata(artist: str, album: str, spotify_url: str | None = None):
     return album_record
 
 
+def get_album_metadata_for_import_matching(artist: str, album: str):
+    candidates = mb.search_release_groups(artist, album)
+    best_release_group = choose_best_release_group(candidates, artist, album)
+
+    if not best_release_group:
+        logging.warning(f"No metadata found for {artist} - {album}")
+        return {}
+
+    best_release_group = (
+        mb.get_release_group_by_id(best_release_group["id"]) or best_release_group
+    )
+
+    release_summaries = mb.get_releases_for_group(best_release_group["id"])
+    chosen_release = choose_best_release(release_summaries, best_release_group["title"])
+    if not chosen_release:
+        logging.warning(f"No release found for {artist} - {album}")
+        return {}
+
+    full_release = mb.get_release_by_id(chosen_release["id"])
+    if not full_release:
+        logging.warning(f"No full release found for {artist} - {album}")
+        return {}
+
+    return _build_album_record(best_release_group, full_release, image_url=None)
+
+
 def _build_album_record(release_group, release, image_url=None):
     release_group_mbid = release_group["id"]
     primary_artist_credit = release_group["artist-credit"][0]
@@ -375,6 +401,8 @@ def _build_album_record(release_group, release, image_url=None):
         "artist": canonical_artist,
         "artist_mbid": artist_mbid,
         "name": canonical_title,
+        "primary_type": release_group.get("primary-type"),
+        "secondary_types": release_group.get("secondary-type-list", []),
         "release_group_mbid": release_group_mbid,
         "release_mbid": release["id"],
         "label": label,
