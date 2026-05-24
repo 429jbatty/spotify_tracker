@@ -5,12 +5,27 @@ function normalize(value) {
   return String(value || "").toLowerCase();
 }
 
+function valueMatches(value, term) {
+  return normalize(value).includes(term);
+}
+
 function normalizeTagList(values) {
   return (values || []).map((value) =>
     typeof value === "string"
       ? getUserTagLabel(value)
       : value?.label || getUserTagLabel(value?.id) || ""
   );
+}
+
+function addAlbumFieldMatch(matches, term, field, label, value) {
+  if (!valueMatches(value, term)) return;
+
+  matches.push({
+    type: "album",
+    field,
+    label,
+    value: String(value),
+  });
 }
 
 export function getAlbumCredits(album) {
@@ -27,27 +42,63 @@ export function getAlbumCredits(album) {
   return credits;
 }
 
+export function getAlbumSearchMatches(album, searchTerm) {
+  const term = normalize(searchTerm).trim();
+  if (!term) return [];
+
+  const matches = [];
+
+  addAlbumFieldMatch(matches, term, "name", "album", album.name);
+  addAlbumFieldMatch(matches, term, "artist", "artist", album.artist);
+  addAlbumFieldMatch(matches, term, "label", "label", album.label);
+  addAlbumFieldMatch(matches, term, "release_year", "release year", album.release_year);
+  addAlbumFieldMatch(matches, term, "release_date", "release date", album.release_date);
+  addAlbumFieldMatch(matches, term, "notes", "notes", album.notes);
+  addAlbumFieldMatch(
+    matches,
+    term,
+    "entry_source",
+    "source",
+    getSourceLabel(album.entry_source || album.source)
+  );
+
+  for (const genre of album.genres || []) {
+    addAlbumFieldMatch(matches, term, "genre", "genre", genre);
+  }
+
+  for (const tag of normalizeTagList(album.your_tags)) {
+    addAlbumFieldMatch(matches, term, "your_tag", "your tag", tag);
+  }
+
+  for (const track of album.tracklist || []) {
+    if (!Array.isArray(track.credits)) continue;
+
+    for (const credit of track.credits) {
+      if (!Array.isArray(credit)) continue;
+
+      const [name, role, detail] = credit;
+      if (![name, role, detail].some((value) => valueMatches(value, term))) continue;
+
+      matches.push({
+        type: "credit",
+        field: "credit",
+        value: [name, role, detail].filter(Boolean).join(" - "),
+        trackTitle: track.title,
+        trackPosition: track.position,
+        name,
+        role,
+        detail,
+      });
+    }
+  }
+
+  return matches;
+}
+
 export function albumMatchesSearch(album, searchTerm) {
   const term = normalize(searchTerm).trim();
   if (!term) return true;
-
-  const searchableValues = [
-    album.name,
-    album.artist,
-    album.label,
-    album.release_year,
-    album.release_date,
-    album.notes,
-    getSourceLabel(album.entry_source || album.source),
-    ...(album.genres || []),
-    ...normalizeTagList(album.your_tags),
-  ];
-
-  for (const [name, role, detail] of getAlbumCredits(album)) {
-    searchableValues.push(name, role, detail);
-  }
-
-  return searchableValues.some((value) => normalize(value).includes(term));
+  return getAlbumSearchMatches(album, searchTerm).length > 0;
 }
 
 export function createAlbumFilter(type, value, label = value) {
@@ -93,9 +144,16 @@ export function albumMatchesFilters(album, filters = []) {
 }
 
 export function filterAlbums(albums, searchTerm, filters = []) {
-  return albums.filter(
-    (album) => albumMatchesSearch(album, searchTerm) && albumMatchesFilters(album, filters)
-  );
+  const term = normalize(searchTerm).trim();
+
+  return albums.reduce((matchedAlbums, album) => {
+    const searchMatches = term ? getAlbumSearchMatches(album, searchTerm) : [];
+    if (term && searchMatches.length === 0) return matchedAlbums;
+    if (!albumMatchesFilters(album, filters)) return matchedAlbums;
+
+    matchedAlbums.push(term ? { ...album, searchMatches } : album);
+    return matchedAlbums;
+  }, []);
 }
 
 export const QUALITY_ISSUES = [

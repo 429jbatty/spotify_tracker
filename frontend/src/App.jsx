@@ -226,6 +226,7 @@ function App() {
         {view === "table" && (
           <AlbumTable
             albums={filteredAlbums}
+            searchTerm={searchTerm}
             onFilterSelect={handleFilterSelect}
             onDataChanged={loadAlbumState}
           />

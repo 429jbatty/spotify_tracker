@@ -48,7 +48,7 @@ function getColumnLabel(album, key) {
   return String(value);
 }
 
-function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
+function AlbumTable({ albums, searchTerm, onFilterSelect, onDataChanged }) {
   const [sortBy, setSortBy] = useState("latestListen");
   const [ascending, setAscending] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -205,6 +205,7 @@ function AlbumTable({ albums, onFilterSelect, onDataChanged }) {
         open={panelOpen}
         onOpenChange={setPanelOpen}
         album={selectedAlbum}
+        searchTerm={searchTerm}
         onFilterSelect={onFilterSelect}
         onAlbumUpdated={updateSelectedAlbum}
         onAlbumDeleted={handleAlbumDeleted}

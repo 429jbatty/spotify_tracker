@@ -44,6 +44,7 @@ function Sparkline({ counts = [], barWidth = 4, maxHeight = 40 }) {
 
 function AlbumSidePanel({
   album,
+  searchTerm,
   onFilterSelect,
   onAlbumUpdated,
   onAlbumDeleted,
@@ -161,6 +162,8 @@ function AlbumSidePanel({
           <div className="hidden lg:block">
             <AlbumTrackDetails
               album={displayAlbum}
+              searchTerm={searchTerm}
+              searchMatches={displayAlbum.searchMatches}
               open={trackDetailsOpen}
               onOpenChange={onTrackDetailsOpenChange}
               variant="trigger"
@@ -169,6 +172,8 @@ function AlbumSidePanel({
           <div className="lg:hidden">
             <AlbumTrackDetails
               album={displayAlbum}
+              searchTerm={searchTerm}
+              searchMatches={displayAlbum.searchMatches}
               onFilterSelect={onFilterSelect}
               open={trackDetailsOpen}
               onOpenChange={onTrackDetailsOpenChange}
