@@ -1,12 +1,13 @@
 import { useState } from "react";
 import AlbumSidePanel from "./AlbumSidePanel";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
 function AlbumPanelSheet({
   open,
   onOpenChange,
   album,
+  searchTerm,
   onFilterSelect,
   onAlbumUpdated,
   onAlbumDeleted,
@@ -17,7 +18,14 @@ function AlbumPanelSheet({
     open: false,
   });
   const albumId = album?.id || null;
-  const wideMode = open && wideModeState.albumId === albumId && wideModeState.open;
+  const hasCreditSearchMatches = (album?.searchMatches || []).some(
+    (match) => match.type === "credit"
+  );
+  const wideMode = Boolean(
+    open &&
+    albumId &&
+    (wideModeState.albumId === albumId ? wideModeState.open : hasCreditSearchMatches)
+  );
   const setWideMode = (nextOpen) => {
     setWideModeState({ albumId, open: nextOpen });
   };
@@ -31,9 +39,13 @@ function AlbumPanelSheet({
           wideMode && "lg:!w-[min(92vw,88rem)] xl:!w-[min(88vw,96rem)]"
         )}
       >
+        <SheetTitle className="sr-only">
+          {album?.name ? `${album.name} details` : "Album details"}
+        </SheetTitle>
         {album && (
           <AlbumSidePanel
             album={album}
+            searchTerm={searchTerm}
             onFilterSelect={onFilterSelect}
             onAlbumUpdated={onAlbumUpdated}
             onAlbumDeleted={onAlbumDeleted}

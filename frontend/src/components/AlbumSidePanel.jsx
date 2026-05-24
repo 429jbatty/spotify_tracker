@@ -37,6 +37,7 @@ function Sparkline({ counts = [], barWidth = 4, maxHeight = 40 }) {
 
 function AlbumSidePanel({
   album,
+  searchTerm,
   onFilterSelect,
   onAlbumUpdated,
   onAlbumDeleted,
@@ -142,6 +143,8 @@ function AlbumSidePanel({
         >
           <AlbumTrackDetails
             album={displayAlbum}
+            searchTerm={searchTerm}
+            searchMatches={displayAlbum.searchMatches}
             onFilterSelect={onFilterSelect}
             open={trackDetailsOpen}
             onOpenChange={onTrackDetailsOpenChange}

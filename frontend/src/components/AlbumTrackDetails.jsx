@@ -4,7 +4,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 import { createAlbumFilter } from "./utils/albumFilters";
+
+function normalize(value) {
+  return String(value || "").toLowerCase();
+}
 
 function getTrackCredits(track) {
   return Array.isArray(track.credits) ? track.credits : [];
@@ -33,7 +38,22 @@ function groupCreditsByPerson(credits) {
   );
 }
 
-function TrackCredits({ credits, onFilterSelect }) {
+function creditMatchesTerm(name, roles, searchTerm) {
+  const term = normalize(searchTerm).trim();
+  if (!term) return false;
+  return [name, ...roles].some((value) => normalize(value).includes(term));
+}
+
+function trackMatchesCreditSearch(track, searchTerm) {
+  const term = normalize(searchTerm).trim();
+  if (!term) return false;
+
+  return getTrackCredits(track).some(([name, role, detail]) =>
+    [name, role, detail].some((value) => normalize(value).includes(term))
+  );
+}
+
+function TrackCredits({ credits, searchTerm, highlightMatches, onFilterSelect }) {
   const groupedCredits = groupCreditsByPerson(credits);
   const entries = Object.entries(groupedCredits);
 
@@ -47,35 +67,52 @@ function TrackCredits({ credits, onFilterSelect }) {
 
   return (
     <div className="pl-10 space-y-2">
-      {entries.map(([name, roles]) => (
-        <div key={name} className="text-xs leading-relaxed">
-          {onFilterSelect ? (
-            <button
-              type="button"
-              onClick={() =>
-                onFilterSelect(createAlbumFilter("credit", name, name))
-              }
-              className="font-medium text-foreground hover:underline"
-            >
-              {name}
-            </button>
-          ) : (
-            <span className="font-medium text-foreground">{name}</span>
-          )}
-          <span className="text-muted-foreground"> - {roles.join(", ")}</span>
-        </div>
-      ))}
+      {entries.map(([name, roles]) => {
+        const isMatch = highlightMatches && creditMatchesTerm(name, roles, searchTerm);
+
+        return (
+          <div
+            key={name}
+            className={cn(
+              "rounded-md px-2 py-1 text-xs leading-relaxed",
+              isMatch && "border border-primary/30 bg-primary/10"
+            )}
+          >
+            {onFilterSelect ? (
+              <button
+                type="button"
+                onClick={() =>
+                  onFilterSelect(createAlbumFilter("credit", name, name))
+                }
+                className="font-medium text-foreground hover:underline"
+              >
+                {name}
+              </button>
+            ) : (
+              <span className="font-medium text-foreground">{name}</span>
+            )}
+            <span className="text-muted-foreground"> - {roles.join(", ")}</span>
+          </div>
+        );
+      })}
     </div>
   );
 }
 
-function TrackRow({ track, index, onFilterSelect }) {
+function TrackRow({ track, index, searchTerm, highlightMatches, onFilterSelect }) {
   const credits = getTrackCredits(track);
   const hasCredits = credits.length > 0;
   const value = getTrackKey(track, index);
+  const isMatch = highlightMatches && trackMatchesCreditSearch(track, searchTerm);
 
   return (
-    <AccordionItem value={value} className="border-b border-border last:border-b-0">
+    <AccordionItem
+      value={value}
+      className={cn(
+        "border-b border-border last:border-b-0",
+        isMatch && "bg-primary/5"
+      )}
+    >
       <AccordionTrigger className="hover:no-underline py-3">
         <div className="grid w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 pr-2 text-left">
           <span className="text-xs font-mono text-muted-foreground">
@@ -90,20 +127,40 @@ function TrackRow({ track, index, onFilterSelect }) {
         </div>
       </AccordionTrigger>
       <AccordionContent className="pb-4">
-        <TrackCredits credits={credits} onFilterSelect={onFilterSelect} />
+        <TrackCredits
+          credits={credits}
+          searchTerm={searchTerm}
+          highlightMatches={highlightMatches}
+          onFilterSelect={onFilterSelect}
+        />
       </AccordionContent>
     </AccordionItem>
   );
 }
 
-function AlbumTrackDetails({ album, onFilterSelect, open, onOpenChange }) {
+function AlbumTrackDetails({
+  album,
+  searchTerm,
+  searchMatches = [],
+  onFilterSelect,
+  open,
+  onOpenChange,
+}) {
   const tracklist = album.tracklist || [];
 
   if (tracklist.length === 0) return null;
 
+  const hasCreditSearchMatches = searchMatches.some((match) => match.type === "credit");
   const tracksWithCredits = tracklist.filter(
     (track) => getTrackCredits(track).length > 0
   ).length;
+  const matchedTrackValues = hasCreditSearchMatches
+    ? tracklist
+        .map((track, index) =>
+          trackMatchesCreditSearch(track, searchTerm) ? getTrackKey(track, index) : null
+        )
+        .filter(Boolean)
+    : [];
 
   const accordionProps =
     open === undefined
@@ -131,7 +188,9 @@ function AlbumTrackDetails({ album, onFilterSelect, open, onOpenChange }) {
 
         <AccordionContent className="pb-0">
           <Accordion
+            key={searchTerm || "track-details"}
             type="multiple"
+            defaultValue={matchedTrackValues}
             className="rounded-lg border border-border lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto"
           >
             {tracklist.map((track, index) => (
@@ -139,6 +198,8 @@ function AlbumTrackDetails({ album, onFilterSelect, open, onOpenChange }) {
                 key={getTrackKey(track, index)}
                 track={track}
                 index={index}
+                searchTerm={searchTerm}
+                highlightMatches={hasCreditSearchMatches}
                 onFilterSelect={onFilterSelect}
               />
             ))}

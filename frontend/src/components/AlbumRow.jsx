@@ -1,4 +1,5 @@
 import { TableRow, TableCell } from "@/components/ui/table";
+import AlbumSearchMatches from "./search/AlbumSearchMatches";
 import { getSourceLabel } from "./utils/sourceLabels";
 
 function AlbumRow({ albumId, album, onRowClick }) {
@@ -34,11 +35,13 @@ function AlbumRow({ albumId, album, onRowClick }) {
         </div>
       </TableCell>
 
-      <TableCell
-        className="text-left text-foreground font-medium truncate max-w-0"
-        title={album.name}
-      >
-        {album.name}
+      <TableCell className="max-w-0 text-left text-foreground">
+        <div className="min-w-0">
+          <div className="truncate font-medium" title={album.name}>
+            {album.name}
+          </div>
+          <AlbumSearchMatches matches={album.searchMatches} />
+        </div>
       </TableCell>
 
       <TableCell className="text-foreground/70 truncate max-w-0">
