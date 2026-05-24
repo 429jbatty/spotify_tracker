@@ -237,6 +237,146 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertEqual(row.listened_at, "2026-04-18T10:00:00.000Z")
         self.assertEqual(row.value, "2026-04-18T10:02:00.000Z")
 
+    def test_create_schema_backfills_album_entry_source_from_legacy_source(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_engine(database_url)
+
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE albums (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            album_key VARCHAR NOT NULL,
+                            artist VARCHAR NOT NULL,
+                            name VARCHAR NOT NULL,
+                            image_url TEXT,
+                            source VARCHAR NOT NULL,
+                            metadata_json JSON NOT NULL
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO albums (
+                            id, album_key, artist, name, image_url, source, metadata_json
+                        )
+                        VALUES
+                            (1, 'Manual Artist - Album', 'Manual Artist', 'Album', NULL, 'manual', '{}'),
+                            (2, 'CSV Artist - Album', 'CSV Artist', 'Album', NULL, 'csv', '{}'),
+                            (3, 'Lastfm Artist - Album', 'Lastfm Artist', 'Album', NULL, 'lastfm', '{}'),
+                            (4, 'Spotify Artist - Album', 'Spotify Artist', 'Album', NULL, 'musicbrainz', '{}')
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = {
+                    row[1] for row in connection.execute(text("PRAGMA table_info(albums)"))
+                }
+                rows = connection.execute(
+                    text("SELECT source, entry_source FROM albums ORDER BY id")
+                ).all()
+
+        self.assertIn("entry_source", columns)
+        self.assertEqual(
+            [(row.source, row.entry_source) for row in rows],
+            [
+                ("manual", "manual"),
+                ("csv", "csv_upload"),
+                ("lastfm", "lastfm_import"),
+                ("musicbrainz", "spotify_sync"),
+            ],
+        )
+
+    def test_create_schema_adds_candidate_key_to_existing_imported_events_table(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_engine(database_url)
+
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE imported_listening_events (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            user_id INTEGER NOT NULL,
+                            import_session_id INTEGER,
+                            album_id INTEGER,
+                            source VARCHAR NOT NULL,
+                            source_user_id VARCHAR,
+                            source_event_id VARCHAR,
+                            event_fingerprint VARCHAR NOT NULL,
+                            listened_at VARCHAR NOT NULL,
+                            artist VARCHAR NOT NULL,
+                            album VARCHAR,
+                            track VARCHAR,
+                            source_label VARCHAR,
+                            rating INTEGER,
+                            notes TEXT,
+                            match_status VARCHAR NOT NULL,
+                            match_confidence INTEGER,
+                            error_message TEXT,
+                            raw_payload JSON NOT NULL
+                        )
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = [
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA table_info(imported_listening_events)")
+                    )
+                ]
+
+        self.assertEqual(columns.count("candidate_key"), 1)
+
+    def test_create_schema_creates_album_metadata_cache_idempotently(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA table_info(album_metadata_cache)")
+                    )
+                }
+                indexes = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA index_list(album_metadata_cache)")
+                    )
+                }
+
+        self.assertEqual(
+            columns,
+            {
+                "id",
+                "cache_key",
+                "artist",
+                "album",
+                "status",
+                "metadata_json",
+                "error_message",
+                "updated_at",
+            },
+        )
+        self.assertIn("ix_album_metadata_cache_cache_key", indexes)
+        self.assertIn("ix_album_metadata_cache_status", indexes)
+        self.assertIn("ix_album_metadata_cache_updated_at", indexes)
+
 
 if __name__ == "__main__":
     unittest.main()

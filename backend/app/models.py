@@ -29,6 +29,7 @@ class Album(Base):
     remote_image_url: Mapped[str | None] = mapped_column(Text, nullable=True)
     local_image_path: Mapped[str | None] = mapped_column(Text, nullable=True)
     source: Mapped[str] = mapped_column(String, default="unknown")
+    entry_source: Mapped[str] = mapped_column(String, default="unknown", index=True)
     metadata_json: Mapped[dict] = mapped_column(JSON, default=dict)
 
     listens: Mapped[list["AlbumListen"]] = relationship(
@@ -39,6 +40,19 @@ class Album(Base):
         back_populates="album",
         cascade="all, delete-orphan",
     )
+
+
+class AlbumMetadataCache(Base):
+    __tablename__ = "album_metadata_cache"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    cache_key: Mapped[str] = mapped_column(String, unique=True, index=True)
+    artist: Mapped[str] = mapped_column(String)
+    album: Mapped[str] = mapped_column(String)
+    status: Mapped[str] = mapped_column(String, default="matched", index=True)
+    metadata_json: Mapped[dict] = mapped_column(JSON, default=dict)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    updated_at: Mapped[str] = mapped_column(String, index=True)
 
 
 class User(Base):
@@ -56,6 +70,14 @@ class User(Base):
     )
     app_state: Mapped[list["UserAppState"]] = relationship(back_populates="user")
     spotify_credentials: Mapped["UserSpotifyCredentials | None"] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    import_sessions: Mapped[list["ImportSession"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    imported_events: Mapped[list["ImportedListeningEvent"]] = relationship(
         back_populates="user",
         cascade="all, delete-orphan",
     )
@@ -159,3 +181,63 @@ class UserSpotifyCredentials(Base):
     last_sync_error: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     user: Mapped[User] = relationship(back_populates="spotify_credentials")
+
+
+class ImportSession(Base):
+    __tablename__ = "import_sessions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    source: Mapped[str] = mapped_column(String, index=True)
+    source_user_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String, default="completed", index=True)
+    session_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    started_at: Mapped[str] = mapped_column(String, index=True)
+    completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    summary_json: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    user: Mapped[User] = relationship(back_populates="import_sessions")
+    events: Mapped[list["ImportedListeningEvent"]] = relationship(
+        back_populates="import_session",
+        cascade="all, delete-orphan",
+    )
+
+
+class ImportedListeningEvent(Base):
+    __tablename__ = "imported_listening_events"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "event_fingerprint",
+            name="uq_imported_event_fingerprint",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    import_session_id: Mapped[int | None] = mapped_column(
+        ForeignKey("import_sessions.id"),
+        nullable=True,
+        index=True,
+    )
+    album_id: Mapped[int | None] = mapped_column(ForeignKey("albums.id"), nullable=True)
+    source: Mapped[str] = mapped_column(String, index=True)
+    source_user_id: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    source_event_id: Mapped[str | None] = mapped_column(String, nullable=True)
+    event_fingerprint: Mapped[str] = mapped_column(String, index=True)
+    candidate_key: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    listened_at: Mapped[str] = mapped_column(String, index=True)
+    artist: Mapped[str] = mapped_column(String)
+    album: Mapped[str | None] = mapped_column(String, nullable=True)
+    track: Mapped[str | None] = mapped_column(String, nullable=True)
+    source_label: Mapped[str | None] = mapped_column(String, nullable=True)
+    rating: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    match_status: Mapped[str] = mapped_column(String, index=True)
+    match_confidence: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    error_message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    raw_payload: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    user: Mapped[User] = relationship(back_populates="imported_events")
+    import_session: Mapped[ImportSession | None] = relationship(back_populates="events")
+    album_ref: Mapped[Album | None] = relationship()

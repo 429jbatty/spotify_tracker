@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
 import AlbumCardVertical from "./AlbumCardVertical";
-import AlbumSidePanel from "./AlbumSidePanel";
+import AlbumPanelSheet from "./AlbumPanelSheet";
 import DiscoveryLineChart from "./DiscoveryChart";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 const TIME_RANGES = {
   "7d": 7,
@@ -251,22 +250,15 @@ export default function Discovery({
       </section>
     </div>
 
-      <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
-        <SheetContent
-          side="right"
-          className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
-        >
-          {selectedAlbum && (
-            <AlbumSidePanel
-              album={selectedAlbum}
-              onFilterSelect={onFilterSelect}
-              onAlbumUpdated={updateSelectedAlbum}
-              onAlbumDeleted={handleAlbumDeleted}
-              onDataChanged={onDataChanged}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
+      <AlbumPanelSheet
+        open={panelOpen}
+        onOpenChange={setPanelOpen}
+        album={selectedAlbum}
+        onFilterSelect={onFilterSelect}
+        onAlbumUpdated={updateSelectedAlbum}
+        onAlbumDeleted={handleAlbumDeleted}
+        onDataChanged={onDataChanged}
+      />
     </>
   );
 }

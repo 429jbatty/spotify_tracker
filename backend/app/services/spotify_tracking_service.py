@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 import tracking
 import utils as util
+from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
 from backend.app.config import get_settings
 from backend.app.database import create_schema
 from backend.app.repositories.spotify_credentials_repository import (
@@ -15,7 +16,6 @@ from backend.app.repositories.user_repository import DEFAULT_USER_SLUG, UserRepo
 from spotify_manager import SpotifyAPI
 
 
-THRESHOLD = 0.9
 STALE_HOURS = 48
 
 logger = logging.getLogger(__name__)
@@ -76,7 +76,7 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
         )
         completed_album_ids = tracking.check_album_completion(
             updated_tracks_state,
-            threshold=THRESHOLD,
+            threshold=ALBUM_COMPLETION_THRESHOLD,
         )
         logger.info("Newly completed albums from Spotify: %s", len(completed_album_ids))
 

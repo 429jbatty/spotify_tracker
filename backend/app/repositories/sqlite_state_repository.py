@@ -22,6 +22,22 @@ STATE_LAST_CHECKED = "last_checked"
 ARTWORK_URL_PREFIX = "/media/artwork/"
 
 
+def _normalize_entry_source(value: str | None) -> str:
+    normalized = str(value or "").strip().lower()
+    if not normalized:
+        return "unknown"
+    legacy_map = {
+        "manual": "manual",
+        "csv": "csv_upload",
+        "lastfm": "lastfm_import",
+        "spotify_export": "spotify_export_upload",
+        "spotify_sync": "spotify_sync",
+        "musicbrainz": "spotify_sync",
+        "unknown": "unknown",
+    }
+    return legacy_map.get(normalized, normalized)
+
+
 def _album_lookup_statement(album_key: str) -> Select:
     return select(Album).where(Album.album_key == album_key)
 
@@ -38,6 +54,7 @@ def _album_metadata(record: dict[str, Any]) -> dict[str, Any]:
             "your_tags",
             "remote_image_url",
             "local_image_path",
+            "entry_source",
         }
     }
 
@@ -187,6 +204,9 @@ class SqliteStateRepository:
         album.release_day = record.get("release_day")
         self._apply_album_artwork_fields(album, record)
         album.source = record.get("source") or "unknown"
+        album.entry_source = _normalize_entry_source(
+            record.get("entry_source") or record.get("source")
+        )
         album.metadata_json = _album_metadata(record)
         self.session.commit()
         return new_key
@@ -627,6 +647,7 @@ class SqliteStateRepository:
             "remote_image_url": album.remote_image_url,
             "local_image_path": album.local_image_path,
             "source": album.source,
+            "entry_source": album.entry_source,
             "listen_history": listen_history,
             "your_tags": normalize_user_tags(membership.your_tags if membership else []),
             "rating": membership.rating if membership else None,
@@ -677,6 +698,9 @@ class SqliteStateRepository:
         album.release_day = normalized.get("release_day")
         self._apply_album_artwork_fields(album, normalized)
         album.source = normalized.get("source") or "unknown"
+        album.entry_source = _normalize_entry_source(
+            normalized.get("entry_source") or normalized.get("source")
+        )
         album.metadata_json = _album_metadata(normalized)
 
     def _add_listen(

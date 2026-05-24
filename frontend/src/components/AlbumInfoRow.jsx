@@ -4,7 +4,8 @@ function AlbumInfoRow({ label, value, color = "primary" }) {
   const colors = {
     primary: "bg-primary/10 text-primary hover:bg-primary/20",
     muted: "bg-muted text-foreground/80 hover:bg-muted/50",
-    accent: "bg-accent/10 text-accent hover:bg-accent/20",
+    accent:
+      "border border-primary/15 bg-primary/5 text-foreground hover:bg-primary/10",
     destructive: "bg-destructive/10 text-destructive hover:bg-destructive/20",
   };
 

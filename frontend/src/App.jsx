@@ -17,6 +17,7 @@ import PageDataQuality from "./components/PageDataQuality";
 import { filterAlbums } from "./components/utils/albumFilters";
 import UserHome from "./components/UserHome";
 import { Toaster } from "./components/Toaster";
+import ImportHistoryDialog from "./components/ImportHistoryDialog";
 
 function App() {
   const [data, setData] = useState(null);
@@ -27,6 +28,7 @@ function App() {
   const [view, setView] = useState("discovery");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState([]);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
 
   const loadAlbumState = useCallback(async () => {
     if (!selectedUser) return null;
@@ -174,6 +176,8 @@ function App() {
             spotifyStatus={spotifyStatus}
             onSpotifyStatusChanged={loadSpotifyStatus}
             onSwitchUser={handleSwitchUser}
+            importDialogOpen={importDialogOpen}
+            onImportDialogOpenChange={setImportDialogOpen}
           />
 
           {/* Search box (skip on dashboard) */}
@@ -242,6 +246,14 @@ function App() {
         )}
       </div>
       <Toaster />
+      <ImportHistoryDialog
+        selectedUser={selectedUser}
+        albums={processedAlbums}
+        onDataChanged={loadAlbumState}
+        open={importDialogOpen}
+        onOpenChange={setImportDialogOpen}
+        hideTrigger
+      />
     </>
   );
 }

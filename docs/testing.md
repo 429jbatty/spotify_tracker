@@ -15,8 +15,7 @@ npm run build
 npm run lint
 ```
 
-`npm run lint` may report existing shadcn/Radix fast-refresh export warnings in
-UI primitive files.
+`npm run lint` should pass without warnings before opening a PR.
 
 ## Coverage Map
 
@@ -31,6 +30,9 @@ UI primitive files.
 - `tests/test_api_album_state.py`: album-state API behavior.
 - `tests/test_api_album_actions.py`: manual album, listen, refresh, merge,
   tag, feedback, and delete actions.
+- `tests/test_api_imports.py`: Last.fm preview, background import, duplicate
+  handling, MusicBrainz matching, review grouping, cleanup, and import domain
+  guardrails.
 - `tests/test_multi_user_album_state.py`: user-scoped isolation.
 - `tests/test_spotify_tracking_service.py`: user-scoped Spotify tracking.
 - `tests/test_spotify_oauth_service.py`: OAuth callback and credential storage.

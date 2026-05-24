@@ -104,6 +104,7 @@ def log_completed_album(state, album_id):
     if key not in state["completed_albums"]:
         album_metadata = meta.get_album_metadata(artist, album_name)
         album_metadata["listen_history"] = [listen_datetime]
+        album_metadata["entry_source"] = "spotify_sync"
         logging.info(f"New album logged: {artist} - {album_name}")
         entry = {key: album_metadata}
 

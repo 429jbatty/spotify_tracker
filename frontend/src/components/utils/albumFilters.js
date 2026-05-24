@@ -1,4 +1,5 @@
 import { getUserTagLabel } from "./userTags";
+import { getSourceLabel } from "./sourceLabels";
 
 function normalize(value) {
   return String(value || "").toLowerCase();
@@ -37,6 +38,7 @@ export function albumMatchesSearch(album, searchTerm) {
     album.release_year,
     album.release_date,
     album.notes,
+    getSourceLabel(album.entry_source || album.source),
     ...(album.genres || []),
     ...normalizeTagList(album.your_tags),
   ];
@@ -77,6 +79,9 @@ export function albumMatchesFilter(album, filter) {
   }
   if (filter.type === "credit-role") {
     return getAlbumCredits(album).some(([, role]) => normalize(role) === value);
+  }
+  if (filter.type === "entry-source") {
+    return normalize(album.entry_source || album.source) === value;
   }
   if (filter.type === "quality") return getQualityIssueIds(album).includes(filter.value);
 

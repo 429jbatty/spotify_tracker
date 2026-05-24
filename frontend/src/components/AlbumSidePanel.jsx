@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import AlbumArtwork from "./AlbumArtwork";
 import AlbumHeader from "./AlbumCardHeader";
 import ListenCountBadge from "./ListenCountBadge";
@@ -42,16 +41,13 @@ function AlbumSidePanel({
   onAlbumUpdated,
   onAlbumDeleted,
   onDataChanged,
+  trackDetailsOpen = false,
+  onTrackDetailsOpenChange,
 }) {
-  const [displayAlbum, setDisplayAlbum] = useState(() => normalizeAlbum(album));
-
-  useEffect(() => {
-    setDisplayAlbum(normalizeAlbum(album));
-  }, [album]);
+  const displayAlbum = normalizeAlbum(album);
 
   const handleAlbumUpdated = (updatedAlbum) => {
     const normalizedAlbum = normalizeAlbum(updatedAlbum);
-    setDisplayAlbum(normalizedAlbum);
     onAlbumUpdated?.(normalizedAlbum);
   };
 
@@ -60,9 +56,18 @@ function AlbumSidePanel({
   const showListenGraph =
     (displayAlbum.listen_history?.length || 0) >= 3 &&
     sparklineCounts.some((count) => count > 0);
+  const showListenHistory = listenStats && listenStats.count > 0;
+  const hasTrackDetails = displayAlbum.tracklist?.length > 0;
 
   return (
-    <div className="relative flex flex-col gap-6 p-6 overflow-y-auto">
+    <div
+      className={`relative grid gap-6 p-6 ${
+        trackDetailsOpen && hasTrackDetails
+          ? "lg:grid-cols-[minmax(18rem,24rem)_minmax(30rem,1fr)]"
+          : ""
+      }`}
+    >
+      <div className="flex flex-col gap-6">
 
       {listenStats && listenStats.count > 0 ? (
         <div className="absolute right-6 top-6 z-10">
@@ -88,25 +93,22 @@ function AlbumSidePanel({
         <AlbumHeader album={displayAlbum} /> {/* header no longer contains stats */}
       </div>
 
-      {/* Sparkline (only renders if data exists) */}
-      {showListenGraph && (
+      {/* Listen history */}
+      {showListenHistory && (
         <section className="border-t pt-4">
-          <h3 className="text-sm font-medium text-muted-foreground mb-2">
-            Listen History
+          <h3 className="text-sm font-semibold text-foreground">
+            Listen history
           </h3>
-          <Sparkline counts={sparklineCounts} />
-        </section>
-      )}
-
-      {/* Album Listen History (raw details) */}
-      {showListenGraph && listenStats && (
-        <section className="border-t pt-4">
+          {showListenGraph && <Sparkline counts={sparklineCounts} />}
           <AlbumListenHistory listenStats={listenStats} />
         </section>
       )}
 
       {/* Metadata */}
       <section className="border-t pt-4">
+        <h3 className="mb-3 text-sm font-semibold text-foreground">
+          Album metadata
+        </h3>
         <AlbumMetadata album={displayAlbum} onFilterSelect={onFilterSelect} />
       </section>
 
@@ -129,11 +131,21 @@ function AlbumSidePanel({
         onAlbumDeleted={onAlbumDeleted}
         onDataChanged={onDataChanged}
       />
+      </div>
 
       {/* Tracks and credits */}
-      {displayAlbum.tracklist?.length > 0 && (
-        <section className="border-t pt-4">
-          <AlbumTrackDetails album={displayAlbum} onFilterSelect={onFilterSelect} />
+      {hasTrackDetails && (
+        <section
+          className={`border-t pt-4 ${
+            trackDetailsOpen ? "lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0" : ""
+          }`}
+        >
+          <AlbumTrackDetails
+            album={displayAlbum}
+            onFilterSelect={onFilterSelect}
+            open={trackDetailsOpen}
+            onOpenChange={onTrackDetailsOpenChange}
+          />
         </section>
       )}
 

@@ -127,14 +127,21 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
                     key={user.slug}
                     type="button"
                     onClick={() => onSelectUser(user)}
-                    className="rounded-2xl border border-border/70 bg-background px-4 py-4 text-left transition-colors hover:bg-muted"
+                    className="rounded-2xl border border-border/70 bg-background px-4 py-4 text-left transition-colors hover:bg-muted/40"
                   >
-                    <span className="block text-base font-medium text-foreground">
-                      {user.display_name}
-                    </span>
-                    <span className="mt-1 block text-sm text-muted-foreground">
-                      Open listener profile
-                    </span>
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <span className="block text-base font-medium text-foreground">
+                          {user.display_name}
+                        </span>
+                        <span className="mt-1 block text-sm text-muted-foreground">
+                          Open listener profile
+                        </span>
+                      </div>
+                      <span className="text-xs font-medium text-muted-foreground">
+                        Open
+                      </span>
+                    </div>
                   </button>
                 ))}
               </div>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { updateAlbumUserFeedback } from "../services/albumApi";
@@ -24,17 +24,12 @@ function RatingButton({ active, disabled, children, onClick }) {
   );
 }
 
-function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
+function AlbumUserFeedbackForm({ album, onAlbumUpdated, onDataChanged }) {
   const { toast } = useToast();
   const [rating, setRating] = useState(album.rating ?? null);
   const [notes, setNotes] = useState(album.notes ?? "");
   const [saveState, setSaveState] = useState("idle");
   const notesTimeoutRef = useRef(null);
-
-  useEffect(() => {
-    setRating(album.rating ?? null);
-    setNotes(album.notes ?? "");
-  }, [album.rating, album.notes]);
 
   useEffect(() => {
     return () => {
@@ -44,7 +39,7 @@ function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
     };
   }, []);
 
-  const saveFeedback = async (payload, successMessage = null) => {
+  const saveFeedback = useCallback(async (payload, successMessage = null) => {
     setSaveState("saving");
     try {
       const updatedAlbum = await updateAlbumUserFeedback(album.id, payload);
@@ -65,12 +60,11 @@ function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
         variant: "destructive",
       });
     }
-  };
+  }, [album.id, onAlbumUpdated, onDataChanged, toast]);
 
   useEffect(() => {
     if (notes === (album.notes ?? "")) return undefined;
 
-    setSaveState("pending");
     if (notesTimeoutRef.current) {
       window.clearTimeout(notesTimeoutRef.current);
     }
@@ -90,7 +84,13 @@ function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
         window.clearTimeout(notesTimeoutRef.current);
       }
     };
-  }, [album.notes, notes, rating]);
+  }, [album.notes, notes, rating, saveFeedback]);
+
+  const handleNotesChange = (event) => {
+    const nextNotes = event.target.value;
+    setNotes(nextNotes);
+    setSaveState(nextNotes === (album.notes ?? "") ? "idle" : "pending");
+  };
 
   const handleRatingClick = (value) => {
     const nextRating = rating === value ? null : value;
@@ -154,7 +154,7 @@ function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
         <h3 className="text-sm font-medium text-muted-foreground">Notes</h3>
         <textarea
           value={notes}
-          onChange={(event) => setNotes(event.target.value)}
+          onChange={handleNotesChange}
           rows={5}
           placeholder="Write a few thoughts about this album..."
           className="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -165,6 +165,17 @@ function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
         <div className="text-right text-xs text-muted-foreground">{saveStatusText}</div>
       ) : null}
     </section>
+  );
+}
+
+function AlbumUserFeedback({ album, onAlbumUpdated, onDataChanged }) {
+  return (
+    <AlbumUserFeedbackForm
+      key={`${album.id}:${album.rating ?? ""}:${album.notes ?? ""}`}
+      album={album}
+      onAlbumUpdated={onAlbumUpdated}
+      onDataChanged={onDataChanged}
+    />
   );
 }
 

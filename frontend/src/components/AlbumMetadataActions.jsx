@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { DatabaseZap, Pencil } from "lucide-react";
+import { ChevronDown, ChevronUp, DatabaseZap, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { refreshAlbumMetadata } from "../services/albumApi";
 import AlbumEditForm from "./dataQuality/AlbumEditForm";
@@ -107,38 +107,50 @@ function AlbumMetadataActions({
 
   return (
     <section className="border-t pt-4">
-      <button
-        type="button"
-        className="flex w-full items-center justify-between rounded-md border border-border/70 bg-muted/40 px-3 py-2 text-left text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        aria-expanded={open}
-        onClick={toggleOpen}
-      >
-        <span>Metadata tools</span>
-        <span>{pending ? "Refreshing..." : open ? "Hide" : "Refresh / edit"}</span>
-      </button>
-
-      {(error || message) && (
-        <div className="mt-2">
-          <StatusMessage error={error} message={message} />
+      <div className="space-y-3">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-foreground">
+              Metadata actions
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Pull fresh MusicBrainz metadata without opening edit tools.
+            </p>
+          </div>
+          <Button
+            type="button"
+            disabled={!hasWritableId || pending}
+            onClick={refreshMetadata}
+            className="w-full sm:w-auto"
+          >
+            <DatabaseZap className="size-4" />
+            {pending ? "Refreshing..." : "Refresh metadata"}
+          </Button>
         </div>
-      )}
+
+        {(error || message) && <StatusMessage error={error} message={message} />}
+
+        <button
+          type="button"
+          className="flex w-full items-center justify-between rounded-md border border-border/70 bg-muted/40 px-3 py-2 text-left text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+          aria-expanded={open}
+          onClick={toggleOpen}
+        >
+          <span>Metadata tools</span>
+          <span className="inline-flex items-center gap-1">
+            {open ? "Hide edit/delete" : "Edit/delete"}
+            {open ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
+          </span>
+        </button>
+      </div>
 
       {open && (
         <div className="mt-3 flex flex-col gap-3 rounded-md border border-border/70 bg-background/70 p-3">
           <p className="text-xs text-muted-foreground">
-            Refresh pulls from MusicBrainz and may replace manual edits. Use edit
-            for deliberate overrides.
+            Edit is for deliberate overrides. Delete removes the album record and
+            its listen history.
           </p>
           <div className="flex flex-wrap gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              disabled={!hasWritableId || pending}
-              onClick={refreshMetadata}
-            >
-              <DatabaseZap className="size-4" />
-              {pending ? "Refreshing..." : "Refresh metadata"}
-            </Button>
             <Button
               type="button"
               variant={editing ? "secondary" : "ghost"}

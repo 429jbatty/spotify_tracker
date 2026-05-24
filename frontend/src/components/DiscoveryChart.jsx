@@ -1,5 +1,6 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useElementSize } from "@/hooks/useElementSize";
 
 const TIME_RANGES = {
   "7d": 7,
@@ -36,17 +37,12 @@ export default function DiscoveryLineChart({
   timeRange,
   chartHeight = 260,
 }) {
-  const [chartWidth, setChartWidth] = useState(800);
+  const chartRef = useRef(null);
+  const { width: containerWidth } = useElementSize(chartRef);
   const [hoveredPoint, setHoveredPoint] = useState(null);
 
-  useEffect(() => {
-    const handleResize = () => setChartWidth(window.innerWidth - 80);
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const margin = { top: 30, right: 30, bottom: 55, left: 50 };
+  const chartWidth = Math.max(containerWidth || 720, 560);
 
   const innerWidth = chartWidth - margin.left - margin.right;
   const innerHeight = chartHeight - margin.top - margin.bottom;
@@ -113,8 +109,10 @@ export default function DiscoveryLineChart({
     ...chartData.flatMap((d) => [d.newAlbums, d.newArtists])
   );
 
-  const scaleX = (i) =>
-    (i / Math.max(chartData.length - 1, 1)) * innerWidth;
+  const scaleX = (i) => {
+    if (chartData.length === 1) return innerWidth / 2;
+    return (i / Math.max(chartData.length - 1, 1)) * innerWidth;
+  };
 
   const scaleY = (v) =>
     innerHeight - (v / maxY) * innerHeight;
@@ -137,6 +135,9 @@ export default function DiscoveryLineChart({
 
   const tickEvery = Math.max(1, Math.floor(chartData.length / 10));
   const xTicks = chartData.filter((_, i) => i % tickEvery === 0);
+  const yTicks = chartData.length === 0
+    ? [0, 1]
+    : [...new Set([0, Math.ceil(maxY / 2), maxY])];
 
   return (
     <Card className="w-full bg-background/85 ring-foreground/5">
@@ -156,12 +157,12 @@ export default function DiscoveryLineChart({
         </div>
       </CardHeader>
 
-      <CardContent>
-        <svg width={chartWidth} height={chartHeight}>
+      <CardContent ref={chartRef}>
+        <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
           <g transform={`translate(${margin.left},${margin.top})`}>
 
             {/* Y grid lines */}
-            {[0, maxY / 2, maxY].map((tick, i) => {
+            {yTicks.map((tick, i) => {
               const y = scaleY(tick);
 
               return (
@@ -186,6 +187,18 @@ export default function DiscoveryLineChart({
                 </g>
               );
             })}
+
+            {chartData.length === 0 && (
+              <text
+                x={innerWidth / 2}
+                y={innerHeight / 2}
+                textAnchor="middle"
+                fontSize={13}
+                fill="var(--muted-foreground)"
+              >
+                No listens in this range.
+              </text>
+            )}
 
             {/* Y label */}
             <text
@@ -236,20 +249,24 @@ export default function DiscoveryLineChart({
             </text>
 
             {/* Album line */}
-            <polyline
-              fill="none"
-              stroke="var(--chart-1)"
-              strokeWidth={2}
-              points={albumPoints.map(p => `${p.x},${p.y}`).join(" ")}
-            />
+            {albumPoints.length > 1 && (
+              <polyline
+                fill="none"
+                stroke="var(--chart-1)"
+                strokeWidth={2}
+                points={albumPoints.map(p => `${p.x},${p.y}`).join(" ")}
+              />
+            )}
 
             {/* Artist line */}
-            <polyline
-              fill="none"
-              stroke="var(--primary)"
-              strokeWidth={2}
-              points={artistPoints.map(p => `${p.x},${p.y}`).join(" ")}
-            />
+            {artistPoints.length > 1 && (
+              <polyline
+                fill="none"
+                stroke="var(--primary)"
+                strokeWidth={2}
+                points={artistPoints.map(p => `${p.x},${p.y}`).join(" ")}
+              />
+            )}
 
             {/* Album points */}
             {albumPoints.map((p, i) => (

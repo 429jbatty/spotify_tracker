@@ -153,6 +153,47 @@ export async function deleteAlbum(albumId) {
   });
 }
 
+export async function previewImport(payload, userSlug = getSelectedUserSlug()) {
+  if (!userSlug) throw new Error("Select a user before importing history.");
+  return requestJson(`/users/${userSlug}/imports/preview`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function commitImport(payload, userSlug = getSelectedUserSlug()) {
+  if (!userSlug) throw new Error("Select a user before importing history.");
+  return requestJson(`/users/${userSlug}/imports/commit`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function fetchImportHistory(userSlug = getSelectedUserSlug()) {
+  if (!userSlug) return [];
+  return requestJson(`/users/${userSlug}/imports`);
+}
+
+export async function fetchImportReview(userSlug = getSelectedUserSlug()) {
+  if (!userSlug) return [];
+  return requestJson(`/users/${userSlug}/imports/review`);
+}
+
+export async function deleteImportSession(importSessionId, userSlug = getSelectedUserSlug()) {
+  if (!userSlug) throw new Error("Select a user before deleting an import.");
+  return requestJson(`/users/${userSlug}/imports/${importSessionId}`, {
+    method: "DELETE",
+  });
+}
+
+export async function resolveImportReview(reviewItemId, payload, userSlug = getSelectedUserSlug()) {
+  if (!userSlug) throw new Error("Select a user before resolving imported rows.");
+  return requestJson(`/users/${userSlug}/imports/review/${reviewItemId}/resolve`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 export function getSelectedUserSlug() {
   return window.localStorage.getItem(SELECTED_USER_STORAGE_KEY);
 }

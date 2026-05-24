@@ -113,6 +113,8 @@ class AlbumMetadataServiceTests(unittest.TestCase):
         self.assertEqual(album["artist"], "Test Artist")
         self.assertEqual(album["artist_mbid"], "artist-1")
         self.assertEqual(album["name"], "Test Album")
+        self.assertEqual(album["primary_type"], "Album")
+        self.assertEqual(album["secondary_types"], [])
         self.assertEqual(album["release_group_mbid"], "release-group-1")
         self.assertEqual(album["release_mbid"], "release-1")
         self.assertEqual(album["label"], "Test Label")

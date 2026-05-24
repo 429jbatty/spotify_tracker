@@ -56,6 +56,8 @@ function UniversalHeader({
   spotifyStatus,
   onSpotifyStatusChanged,
   onSwitchUser,
+  importDialogOpen,
+  onImportDialogOpenChange,
 }) {
   const { toast } = useToast();
   const [isSyncing, setIsSyncing] = useState(false);
@@ -153,6 +155,12 @@ function UniversalHeader({
                 Switch user
               </button>
             </div>
+            <Button
+              variant="outline"
+              onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}
+            >
+              Import History
+            </Button>
             {spotifyStatus?.connected ? (
               <Button variant="outline" onClick={handleSyncNow} disabled={isSyncing}>
                 {isSyncing ? "Syncing..." : "Sync Spotify"}
@@ -175,6 +183,13 @@ function UniversalHeader({
           </span>
           <Button variant="outline" size="sm" onClick={onSwitchUser}>
             Switch user
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}
+          >
+            Import History
           </Button>
           {spotifyStatus?.connected ? (
             <Button variant="outline" size="sm" onClick={handleSyncNow} disabled={isSyncing}>

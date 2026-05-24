@@ -1,5 +1,6 @@
 # musicbrainz_client.py
 
+import socket
 import time
 import musicbrainzngs
 import threading
@@ -20,6 +21,9 @@ musicbrainzngs.set_useragent(
 RATE_LIMIT = 1.1
 MAX_RETRIES = 5
 REQUEST_DELAY = 1.1
+REQUEST_TIMEOUT_SECONDS = 20
+
+socket.setdefaulttimeout(REQUEST_TIMEOUT_SECONDS)
 
 _rate_lock = threading.Lock()
 _last_request_time = 0

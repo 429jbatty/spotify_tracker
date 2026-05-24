@@ -2,8 +2,7 @@ import React, { useState, useMemo } from "react";
 import ReleaseDateChart from "./ReleaseDateChart";
 import AlbumTable from "./AlbumTable";
 import AlbumTimeline from "@/components/timeline/AlbumTimeline";
-import AlbumSidePanel from "./AlbumSidePanel";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import AlbumPanelSheet from "./AlbumPanelSheet";
 
 function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
   const [filter, setFilter] = useState({ decade: null, year: null });
@@ -39,7 +38,7 @@ function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
 
   return (
     <>
-      <div className="space-y-10">
+      <div className="space-y-10 px-6">
         <div>
           <ReleaseDateChart
             albums={albums}
@@ -61,22 +60,15 @@ function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
         </div>
       </div>
 
-      <Sheet open={panelOpen} onOpenChange={setPanelOpen}>
-        <SheetContent
-          side="right"
-          className="w-[650px] sm:w-[750px] overflow-y-auto p-6"
-        >
-          {selectedAlbum && (
-            <AlbumSidePanel
-              album={selectedAlbum}
-              onFilterSelect={onFilterSelect}
-              onAlbumUpdated={updateSelectedAlbum}
-              onAlbumDeleted={handleAlbumDeleted}
-              onDataChanged={onDataChanged}
-            />
-          )}
-        </SheetContent>
-      </Sheet>
+      <AlbumPanelSheet
+        open={panelOpen}
+        onOpenChange={setPanelOpen}
+        album={selectedAlbum}
+        onFilterSelect={onFilterSelect}
+        onAlbumUpdated={updateSelectedAlbum}
+        onAlbumDeleted={handleAlbumDeleted}
+        onDataChanged={onDataChanged}
+      />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { TableRow, TableCell } from "@/components/ui/table";
+import { getSourceLabel } from "./utils/sourceLabels";
 
 function AlbumRow({ albumId, album, onRowClick }) {
   const BASE = import.meta.env.BASE_URL;
@@ -18,7 +19,7 @@ function AlbumRow({ albumId, album, onRowClick }) {
       onClick={onRowClick}
       className="group transition-colors duration-200 hover:bg-muted cursor-pointer border-b border-border"
     >
-      <TableCell className="py-3 w-[100px]">
+      <TableCell className="py-3 w-[72px]">
         <div className="relative overflow-hidden rounded-md border border-border w-12 h-12 bg-card shadow-sm">
           <img
             loading="lazy"
@@ -49,7 +50,11 @@ function AlbumRow({ albumId, album, onRowClick }) {
       </TableCell>
 
       <TableCell className="text-foreground/60 truncate max-w-0">
-        {album.label}
+        {album.label || "Unknown"}
+      </TableCell>
+
+      <TableCell className="text-foreground/60 truncate max-w-0">
+        {getSourceLabel(album.entry_source || album.source)}
       </TableCell>
 
       <TableCell className="text-foreground/60">

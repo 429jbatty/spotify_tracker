@@ -1,7 +1,8 @@
-import React, { useMemo, useState, useEffect } from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import React, { useMemo, useRef, useState } from "react";
+import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getNiceStep } from "./utils/chartUtils";
+import { useElementSize } from "@/hooks/useElementSize";
 
 function ReleaseDateChart({
   albums,
@@ -12,21 +13,11 @@ function ReleaseDateChart({
   onToggle,
   chartHeight = 300,
 }) {
-  const margin = { top: 20, right: 20, bottom: 50, left: 50 };
+  const chartRef = useRef(null);
+  const { width: containerWidth } = useElementSize(chartRef);
+  const margin = { top: 16, right: 24, bottom: 56, left: 52 };
   const barGap = 2;
   const [hoveredBar, setHoveredBar] = useState(null);
-  const [chartWidth, setChartWidth] = useState(800);
-
-  // responsive chart width
-  useEffect(() => {
-    const handleResize = () => setChartWidth(window.innerWidth - 32); // padding
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const innerWidth = chartWidth - margin.left - margin.right;
-  const innerHeight = chartHeight - margin.top - margin.bottom;
 
   // -----------------------
   // Compute bars
@@ -61,6 +52,10 @@ function ReleaseDateChart({
       ? albumsPerDecade.map((d) => ({ label: d.decade, count: d.count }))
       : allYears.map((y) => ({ label: y.year, count: y.count }));
 
+  const minChartWidth = chartMode === "year" ? Math.max(760, bars.length * 14) : 640;
+  const chartWidth = Math.max(containerWidth || minChartWidth, minChartWidth);
+  const innerWidth = Math.max(1, chartWidth - margin.left - margin.right);
+  const innerHeight = chartHeight - margin.top - margin.bottom;
   const currentMax = bars.length > 0 ? Math.max(...bars.map((b) => b.count)) : 1;
   const tickCount = 5;
   const step = getNiceStep(currentMax, tickCount);
@@ -80,15 +75,18 @@ function ReleaseDateChart({
   const labelColor = "var(--foreground)";
 
   return (
-    <Card className="bg-card rounded-xl shadow-md p-4 w-full">
-      {/* Header */}
-      <CardHeader className="relative w-full flex items-center justify-center pb-4">
+    <Card className="w-full rounded-lg bg-background/85 ring-foreground/5">
+      <CardHeader className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div>
+          <CardTitle>Albums by release date</CardTitle>
+          <CardDescription>
+            Browse the library by original release year or decade.
+          </CardDescription>
+        </div>
 
-
-        {/* Chart Mode Tabs */}
-        <div className="absolute right-0 flex gap-2">
+        <div className="flex shrink-0">
           <Tabs value={chartMode} onValueChange={onToggle}>
-            <TabsList className="grid grid-cols-2 rounded-lg bg-muted p-1">
+            <TabsList className="grid grid-cols-2 rounded-md bg-muted p-1">
               <TabsTrigger
                 value="year"
                 className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
@@ -106,10 +104,9 @@ function ReleaseDateChart({
         </div>
       </CardHeader>
 
-      {/* Chart */}
-      <CardContent className="w-full overflow-x-auto">
+      <CardContent ref={chartRef} className="w-full overflow-x-auto pb-4">
         <svg
-          width="100%"
+          width={chartWidth}
           height={chartHeight}
           viewBox={`0 0 ${chartWidth} ${chartHeight}`}
           onClick={onReset}
@@ -143,6 +140,18 @@ function ReleaseDateChart({
             />
 
             {/* Bars */}
+            {bars.length === 0 && (
+              <text
+                x={innerWidth / 2}
+                y={innerHeight / 2}
+                textAnchor="middle"
+                fontSize={13}
+                fill="var(--muted-foreground)"
+              >
+                No release dates available.
+              </text>
+            )}
+
             {bars.map((bar, index) => {
               const barHeight = (bar.count / niceMax) * innerHeight;
               const x = index * (barWidth + barGap);

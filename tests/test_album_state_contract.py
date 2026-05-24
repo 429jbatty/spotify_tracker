@@ -40,6 +40,7 @@ def sample_album_state():
                 "tags": ["indie"],
                 "image_url": "https://example.test/cover.jpg",
                 "source": "musicbrainz",
+                "entry_source": "spotify_sync",
                 "listen_history": ["2026-04-18T15:45:00.000Z"],
             }
         },
@@ -79,6 +80,7 @@ class AlbumStateContractTests(unittest.TestCase):
         self.assertIsNone(album.notes)
         self.assertEqual(album.image_url, "https://example.test/cover.jpg")
         self.assertEqual(album.source, "musicbrainz")
+        self.assertEqual(album.entry_source, "spotify_sync")
 
 
 if __name__ == "__main__":
