@@ -56,14 +56,18 @@ class MultiUserAlbumStateTests(unittest.TestCase):
             )
             self.assertEqual(create_user_response.status_code, 201)
 
-            friend_create_response = client.post(
-                "/api/users/friend/albums",
-                json={
-                    "artist": "Artist",
-                    "name": "Shared Album",
-                    "listen_date": "2026-04-18T15:45:00.000Z",
-                },
-            )
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                friend_create_response = client.post(
+                    "/api/users/friend/albums",
+                    json={
+                        "artist": "Artist",
+                        "name": "Shared Album",
+                        "listen_date": "2026-04-18T15:45:00.000Z",
+                    },
+                )
             self.assertEqual(friend_create_response.status_code, 201)
 
             default_state = client.get("/api/album-state").json()
@@ -119,14 +123,18 @@ class MultiUserAlbumStateTests(unittest.TestCase):
             album_id = client.get("/api/album-state").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
-            client.post(
-                "/api/users/friend/albums",
-                json={
-                    "artist": "Artist",
-                    "name": "Shared Album",
-                    "listen_date": "2026-04-18T15:45:00.000Z",
-                },
-            )
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                client.post(
+                    "/api/users/friend/albums",
+                    json={
+                        "artist": "Artist",
+                        "name": "Shared Album",
+                        "listen_date": "2026-04-18T15:45:00.000Z",
+                    },
+                )
 
             response = client.put(
                 f"/api/users/friend/albums/{album_id}/your-tags",
@@ -152,14 +160,18 @@ class MultiUserAlbumStateTests(unittest.TestCase):
             album_id = client.get("/api/album-state").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
-            client.post(
-                "/api/users/friend/albums",
-                json={
-                    "artist": "Artist",
-                    "name": "Shared Album",
-                    "listen_date": "2026-04-18T15:45:00.000Z",
-                },
-            )
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                client.post(
+                    "/api/users/friend/albums",
+                    json={
+                        "artist": "Artist",
+                        "name": "Shared Album",
+                        "listen_date": "2026-04-18T15:45:00.000Z",
+                    },
+                )
 
             response = client.put(
                 f"/api/users/friend/albums/{album_id}/your-feedback",

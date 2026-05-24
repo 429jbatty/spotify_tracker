@@ -5,6 +5,7 @@ from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.repositories.user_repository import UserRepository
+from backend.app.services.manual_album_service import create_manual_album
 from backend.app.schemas import (
     AlbumListenCreate,
     AlbumListenDelete,
@@ -81,11 +82,7 @@ def create_user_album(user_slug: str, request: ManualAlbumCreate) -> dict:
     with session_factory() as session:
         try:
             repository = SqliteStateRepository(session, user_slug=user_slug)
-            record = request.model_dump(exclude={"listen_date"})
-            return repository.create_completed_album(
-                record,
-                listen_date=request.listen_date,
-            )
+            return create_manual_album(repository, request)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
         except ValueError as exc:

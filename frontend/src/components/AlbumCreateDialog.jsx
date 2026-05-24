@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { addAlbumListen, createAlbum } from "../services/albumApi";
 import { Field, StatusMessage } from "./dataQuality/FormBits";
-import { buildMetadataPayload, inputClass } from "./dataQuality/formUtils";
+import { inputClass, textOrUndefined } from "./dataQuality/formUtils";
 
 const MODE_OPTIONS = [
   { id: "listen", label: "Log listen" },
@@ -44,13 +44,6 @@ function AlbumCreateDialog({
       artist: "",
       name: "",
       listen_date: "",
-      release_year: "",
-      release_month: "",
-      release_day: "",
-      label: "",
-      image_url: "",
-      spotify_url: "",
-      musicbrainz_url: "",
     }),
     []
   );
@@ -129,8 +122,9 @@ function AlbumCreateDialog({
     setError(null);
     try {
       await createAlbum({
-        ...buildMetadataPayload(form),
-        listen_date: form.listen_date,
+        artist: textOrUndefined(form.artist),
+        name: textOrUndefined(form.name),
+        listen_date: textOrUndefined(form.listen_date),
       });
       await onDataChanged?.();
       setOpen(false);
@@ -321,68 +315,19 @@ function AlbumCreateDialog({
                   type="date"
                   value={form.listen_date}
                   onChange={(event) => updateField("listen_date", event.target.value)}
-                  required
-                />
-              </Field>
-              <Field label="Release year">
-                <input
-                  className={inputClass}
-                  inputMode="numeric"
-                  value={form.release_year}
-                  onChange={(event) => updateField("release_year", event.target.value)}
-                />
-              </Field>
-              <Field label="Release month">
-                <input
-                  className={inputClass}
-                  inputMode="numeric"
-                  value={form.release_month}
-                  onChange={(event) => updateField("release_month", event.target.value)}
-                />
-              </Field>
-              <Field label="Release day">
-                <input
-                  className={inputClass}
-                  inputMode="numeric"
-                  value={form.release_day}
-                  onChange={(event) => updateField("release_day", event.target.value)}
-                />
-              </Field>
-            </div>
-
-            <Field label="Label">
-              <input
-                className={inputClass}
-                value={form.label}
-                onChange={(event) => updateField("label", event.target.value)}
-              />
-            </Field>
-            <Field label="Artwork URL">
-              <input
-                className={inputClass}
-                value={form.image_url}
-                onChange={(event) => updateField("image_url", event.target.value)}
-              />
-            </Field>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <Field label="Spotify URL">
-                <input
-                  className={inputClass}
-                  value={form.spotify_url}
-                  onChange={(event) => updateField("spotify_url", event.target.value)}
-                />
-              </Field>
-              <Field label="MusicBrainz URL">
-                <input
-                  className={inputClass}
-                  value={form.musicbrainz_url}
-                  onChange={(event) => updateField("musicbrainz_url", event.target.value)}
                 />
               </Field>
             </div>
 
             <div className="flex items-center gap-3 pt-2">
-              <Button type="submit" disabled={pending}>
+              <Button
+                type="submit"
+                disabled={
+                  pending ||
+                  !textOrUndefined(form.artist) ||
+                  !textOrUndefined(form.name)
+                }
+              >
                 {pending ? "Adding..." : "Create album"}
               </Button>
               <StatusMessage error={error} />

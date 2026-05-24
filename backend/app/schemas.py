@@ -82,7 +82,7 @@ class AlbumState(BaseModel):
 class ManualAlbumCreate(BaseModel):
     artist: str
     name: str
-    listen_date: str
+    listen_date: str | None = None
     release_year: int | None = None
     release_month: int | None = None
     release_day: int | None = None

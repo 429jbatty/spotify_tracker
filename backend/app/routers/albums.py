@@ -5,6 +5,7 @@ import metadata_refresh_service
 from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.services.manual_album_service import create_manual_album
 from backend.app.schemas import (
     AlbumListenCreate,
     AlbumListenDelete,
@@ -83,11 +84,7 @@ def refresh_album_metadata(
 def create_album(request: ManualAlbumCreate) -> dict:
     session, repository = _repository()
     try:
-        record = request.model_dump(exclude={"listen_date"})
-        return repository.create_completed_album(
-            record,
-            listen_date=request.listen_date,
-        )
+        return create_manual_album(repository, request)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
     finally:
