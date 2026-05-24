@@ -98,34 +98,116 @@ class ApiAlbumActionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)
 
-            response = client.post(
-                "/api/albums",
-                json={
-                    "artist": "New Artist",
-                    "name": "New Album",
-                    "listen_date": "2026-04-02T10:00:00.000Z",
-                    "release_year": 2026,
-                },
-            )
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={
+                        "artist": "New Artist",
+                        "name": "New Album",
+                        "listen_date": "2026-04-02T10:00:00.000Z",
+                    },
+                )
 
         self.assertEqual(response.status_code, 201)
         payload = response.json()
         self.assertEqual(payload["artist"], "New Artist")
         self.assertEqual(payload["name"], "New Album")
         self.assertEqual(payload["listen_history"], ["2026-04-02T10:00:00.000Z"])
+        self.assertEqual(payload["source"], "manual")
+        self.assertEqual(payload["entry_source"], "manual")
+
+    def test_manual_album_creation_without_listen_date_creates_album_only(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={"artist": "New Artist", "name": "No Listen Album"},
+                )
+
+        self.assertEqual(response.status_code, 201)
+        payload = response.json()
+        self.assertEqual(payload["artist"], "New Artist")
+        self.assertEqual(payload["name"], "No Listen Album")
+        self.assertEqual(payload["listen_history"], [])
+
+    def test_manual_album_creation_uses_high_confidence_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={
+                    "artist": "Canonical Artist",
+                    "name": "Canonical Album",
+                    "release_year": 2026,
+                    "release_group_mbid": "release-group-1",
+                    "source": "musicbrainz",
+                    "_musicbrainz_match": {"confidence": 91},
+                },
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={"artist": "Input Artist", "name": "Input Album"},
+                )
+
+        self.assertEqual(response.status_code, 201)
+        payload = response.json()
+        self.assertEqual(payload["artist"], "Canonical Artist")
+        self.assertEqual(payload["name"], "Canonical Album")
+        self.assertEqual(payload["release_year"], 2026)
+        self.assertEqual(payload["release_group_mbid"], "release-group-1")
+        self.assertEqual(payload["source"], "musicbrainz")
+        self.assertEqual(payload["entry_source"], "manual")
+
+    def test_manual_album_creation_falls_back_for_low_confidence_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={
+                    "artist": "Wrong Artist",
+                    "name": "Wrong Album",
+                    "source": "musicbrainz",
+                    "_musicbrainz_match": {"confidence": 60},
+                },
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={"artist": "Input Artist", "name": "Input Album"},
+                )
+
+        self.assertEqual(response.status_code, 201)
+        payload = response.json()
+        self.assertEqual(payload["artist"], "Input Artist")
+        self.assertEqual(payload["name"], "Input Album")
+        self.assertEqual(payload["source"], "manual")
+        self.assertEqual(payload["entry_source"], "manual")
 
     def test_duplicate_album_creation_returns_clear_error(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)
 
-            response = client.post(
-                "/api/albums",
-                json={
-                    "artist": "Artist",
-                    "name": "Old Title",
-                    "listen_date": "2026-04-02T10:00:00.000Z",
-                },
-            )
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={
+                        "artist": "Artist",
+                        "name": "Old Title",
+                        "listen_date": "2026-04-02T10:00:00.000Z",
+                    },
+                )
 
         self.assertEqual(response.status_code, 409)
         self.assertIn("Album already exists", response.json()["detail"])
