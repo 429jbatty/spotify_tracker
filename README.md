@@ -72,9 +72,10 @@ connect flow, not in `.env`.
 
 ## Import Formats
 
-The UI supports Last.fm imports for users with public scrobbles. Imported
-tracks are grouped into album-listen candidates, and entries that cannot be
-matched confidently stay in the review queue instead of being silently dropped.
+The UI supports Last.fm imports for users with public scrobbles and Spotify
+Extended Streaming History ZIP uploads. Imported tracks/plays are grouped into
+album-listen candidates, and entries that cannot be matched confidently stay in
+the review queue instead of being silently dropped.
 
 ## Documentation
 
@@ -89,6 +90,8 @@ matched confidently stay in the review queue instead of being silently dropped.
   artwork behavior.
 - [Imports](docs/imports.md): current import status and how historical/import
   data should enter the system.
+- [Spotify ZIP Import](docs/spotify-zip-import.md): direct Spotify export ZIP
+  upload, raw event storage, album-session derivation, and safety limits.
 - [Testing](docs/testing.md): test commands, coverage map, and expectations.
 - [Deployment](docs/deployment.md): native LXC/systemd/Caddy deployment notes.
 - [Agent Guide](AGENTS.md): AI-agent and maintainer implementation guidance.
