@@ -428,6 +428,87 @@ def migrate_album_metadata_cache(engine: Engine) -> None:
         )
 
 
+def migrate_import_sessions_artifact_path(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    if not _table_exists(engine, "import_sessions"):
+        return
+
+    columns = _table_columns(engine, "import_sessions")
+    if "artifact_path" in columns:
+        return
+
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE import_sessions ADD COLUMN artifact_path TEXT"))
+
+
+def migrate_spotify_streaming_events(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS spotify_streaming_events (
+                    id INTEGER NOT NULL PRIMARY KEY,
+                    user_id INTEGER NOT NULL,
+                    import_session_id INTEGER,
+                    event_fingerprint VARCHAR NOT NULL,
+                    played_at VARCHAR NOT NULL,
+                    ms_played INTEGER NOT NULL,
+                    spotify_track_uri VARCHAR,
+                    track_name VARCHAR,
+                    artist_name VARCHAR,
+                    album_name VARCHAR,
+                    platform VARCHAR,
+                    country VARCHAR,
+                    reason_start VARCHAR,
+                    reason_end VARCHAR,
+                    skipped BOOLEAN,
+                    offline BOOLEAN,
+                    raw_payload JSON NOT NULL,
+                    FOREIGN KEY(user_id) REFERENCES users (id),
+                    FOREIGN KEY(import_session_id) REFERENCES import_sessions (id),
+                    CONSTRAINT uq_spotify_streaming_event_fingerprint
+                        UNIQUE (user_id, event_fingerprint)
+                )
+                """
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_user_id "
+                "ON spotify_streaming_events (user_id)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_import_session_id "
+                "ON spotify_streaming_events (import_session_id)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_event_fingerprint "
+                "ON spotify_streaming_events (event_fingerprint)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_played_at "
+                "ON spotify_streaming_events (played_at)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_track_uri "
+                "ON spotify_streaming_events (spotify_track_uri)"
+            )
+        )
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
@@ -440,3 +521,5 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_album_entry_source(engine)
     migrate_imported_event_candidate_key(engine)
     migrate_album_metadata_cache(engine)
+    migrate_import_sessions_artifact_path(engine)
+    migrate_spotify_streaming_events(engine)

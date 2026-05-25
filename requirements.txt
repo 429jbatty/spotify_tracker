@@ -8,3 +8,5 @@ fastapi
 uvicorn
 httpx
 sqlalchemy
+python-multipart
+ijson

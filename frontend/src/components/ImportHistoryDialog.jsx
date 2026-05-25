@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Upload, History, RefreshCcw, Trash2 } from "lucide-react";
+import { FileArchive, Upload, History, RefreshCcw, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -16,6 +16,7 @@ import {
   fetchImportReview,
   previewImport,
   resolveImportReview,
+  uploadSpotifyImportZip,
 } from "../services/albumApi";
 import {
   IMPORT_STATUS_LABELS,
@@ -40,7 +41,9 @@ function ImportHistoryDialog({
   triggerVariant = "outline",
   hideTrigger = false,
 }) {
+  const [activeSource, setActiveSource] = useState("lastfm");
   const [lastfmUsername, setLastfmUsername] = useState("");
+  const [spotifyFile, setSpotifyFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [history, setHistory] = useState([]);
   const [reviewItems, setReviewItems] = useState([]);
@@ -131,7 +134,9 @@ function ImportHistoryDialog({
   }, [activeImportId, activeImportStatus, onDataChanged, open, pendingCommit, selectedUserSlug]);
 
   const resetState = () => {
+    setActiveSource("lastfm");
     setLastfmUsername("");
+    setSpotifyFile(null);
     setPreview(null);
     setHistory([]);
     setReviewItems([]);
@@ -153,6 +158,30 @@ function ImportHistoryDialog({
       setError(err.message);
     } finally {
       setPendingPreview(false);
+    }
+  };
+
+  const handleSpotifyUpload = async () => {
+    if (!spotifyFile) {
+      setError("Choose a Spotify ZIP file first.");
+      return;
+    }
+    setPendingCommit(true);
+    setError(null);
+    try {
+      await uploadSpotifyImportZip(spotifyFile, selectedUserSlug);
+      const { historyPayload } = await refreshImportData();
+      const nextActiveImport = historyPayload.find(
+        (item) => !["completed", "failed"].includes(item.status)
+      );
+      if (!nextActiveImport) {
+        await onDataChanged?.();
+      }
+      setSpotifyFile(null);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setPendingCommit(false);
     }
   };
 
@@ -273,37 +302,101 @@ function ImportHistoryDialog({
         <DialogHeader>
           <DialogTitle>Import listening history</DialogTitle>
           <DialogDescription>
-            Preview and import Last.fm history into {selectedUser?.display_name}.
+            Import Last.fm or Spotify history into {selectedUser?.display_name}.
           </DialogDescription>
         </DialogHeader>
 
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-5">
             <div className="space-y-4 rounded-2xl border border-border/70 bg-card p-5">
-              <SourceGuide source="lastfm" />
-
-              <label className="space-y-1">
-                <span className="text-xs font-medium text-muted-foreground">Last.fm username</span>
-                <input
-                  value={lastfmUsername}
-                  onChange={(event) => setLastfmUsername(event.target.value)}
-                  className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
-                  placeholder="your-lastfm-name"
-                />
-              </label>
-
-              <div className="flex flex-wrap items-center gap-3">
-                <Button type="button" onClick={handlePreview} disabled={pendingPreview}>
-                  {pendingPreview ? "Previewing..." : "Preview Import"}
-                </Button>
-                {preview && (
-                  <Button type="button" variant="outline" onClick={handleCommit} disabled={!canCommit || pendingCommit}>
-                    {pendingCommit ? "Starting..." : "Start Background Import"}
-                  </Button>
-                )}
-                {error && <p className="text-sm text-destructive">{error}</p>}
+              <div className="grid grid-cols-2 gap-2 rounded-md border border-border/70 bg-background/70 p-1">
+                {[
+                  ["lastfm", "Last.fm"],
+                  ["spotify_import", "Spotify ZIP"],
+                ].map(([source, label]) => (
+                  <button
+                    key={source}
+                    type="button"
+                    onClick={() => {
+                      setActiveSource(source);
+                      setPreview(null);
+                      setError(null);
+                    }}
+                    className={[
+                      "rounded-md px-3 py-2 text-sm font-medium",
+                      activeSource === source
+                        ? "bg-foreground text-background"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground",
+                    ].join(" ")}
+                  >
+                    {label}
+                  </button>
+                ))}
               </div>
 
+              <SourceGuide source={activeSource} />
+
+              {activeSource === "lastfm" ? (
+                <>
+                  <label className="space-y-1">
+                    <span className="text-xs font-medium text-muted-foreground">Last.fm username</span>
+                    <input
+                      value={lastfmUsername}
+                      onChange={(event) => setLastfmUsername(event.target.value)}
+                      className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm"
+                      placeholder="your-lastfm-name"
+                    />
+                  </label>
+
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button type="button" onClick={handlePreview} disabled={pendingPreview}>
+                      {pendingPreview ? "Previewing..." : "Preview Import"}
+                    </Button>
+                    {preview && (
+                      <Button type="button" variant="outline" onClick={handleCommit} disabled={!canCommit || pendingCommit}>
+                        {pendingCommit ? "Starting..." : "Start Background Import"}
+                      </Button>
+                    )}
+                    {error && <p className="text-sm text-destructive">{error}</p>}
+                  </div>
+                </>
+              ) : (
+                <div className="space-y-3">
+                  <label
+                    onDragOver={(event) => event.preventDefault()}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      const file = event.dataTransfer.files?.[0];
+                      if (file) setSpotifyFile(file);
+                    }}
+                    className="flex min-h-36 cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-background/70 p-5 text-center hover:bg-muted/30"
+                  >
+                    <FileArchive className="size-8 text-muted-foreground" />
+                    <span className="text-sm font-medium text-foreground">
+                      {spotifyFile ? spotifyFile.name : "Drop Spotify ZIP here"}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      Or choose the Extended Streaming History ZIP from Spotify.
+                    </span>
+                    <input
+                      type="file"
+                      accept=".zip,application/zip"
+                      className="sr-only"
+                      onChange={(event) => setSpotifyFile(event.target.files?.[0] || null)}
+                    />
+                  </label>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <Button
+                      type="button"
+                      onClick={handleSpotifyUpload}
+                      disabled={!spotifyFile || pendingCommit}
+                    >
+                      {pendingCommit ? "Uploading..." : "Upload and Start Import"}
+                    </Button>
+                    {error && <p className="text-sm text-destructive">{error}</p>}
+                  </div>
+                </div>
+              )}
               {showImportStatus && (
                 <div className="rounded-xl border border-border/70 bg-muted/30 p-3 text-sm">
                   <p className="font-medium text-foreground">
@@ -313,7 +406,7 @@ function ImportHistoryDialog({
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
                     You can leave this dialog open while Albumary updates the import history below.
-                    Large Last.fm imports store scrobbles first, then match albums from local or
+                    Large imports store source events first, then match albums from local or
                     cached tracklists before fetching MusicBrainz metadata in the background.
                   </p>
                 </div>
@@ -323,7 +416,7 @@ function ImportHistoryDialog({
             {summary && (
               <div className="space-y-4 rounded-2xl border border-border/70 bg-card p-5">
                 <div className="grid gap-3 sm:grid-cols-2">
-                  {summaryCards("lastfm", summary).map((card) => (
+                  {summaryCards(activeSource, summary).map((card) => (
                     <SummaryStat key={card.label} label={card.label} value={card.value} />
                   ))}
                 </div>
@@ -465,7 +558,7 @@ function ImportHistoryDialog({
             <div className="rounded-2xl border border-border/70 bg-card p-5">
               <p className="text-sm font-medium text-foreground">Unresolved album sessions</p>
               <p className="text-xs text-muted-foreground">
-                Imported Last.fm sessions that might be album listens but could not be matched automatically. Match one to an existing album or create an album when you are confident it belongs in your album history.
+                Imported sessions that might be album listens but could not be matched automatically. Match one to an existing album or create an album when you are confident it belongs in your album history.
               </p>
 
               {reviewItems.length > 0 ? (

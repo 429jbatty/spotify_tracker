@@ -1,6 +1,9 @@
 import tempfile
 import unittest
 import hashlib
+import io
+import json
+import zipfile
 from pathlib import Path
 from unittest.mock import Mock, patch
 
@@ -9,7 +12,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema, get_engine
-from backend.app.models import AlbumMetadataCache, ImportedListeningEvent
+from backend.app.models import AlbumMetadataCache, ImportedListeningEvent, SpotifyStreamingEvent
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import import_service
 
@@ -127,6 +130,36 @@ class ApiImportTests(unittest.TestCase):
         with session_factory() as session:
             return session.query(AlbumMetadataCache).count()
 
+    def _spotify_event_count(self, database_url):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            return session.query(SpotifyStreamingEvent).count()
+
+    def _spotify_zip(self, files):
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for filename, rows in files.items():
+                archive.writestr(filename, json.dumps(rows))
+        buffer.seek(0)
+        return buffer
+
+    def _spotify_rows(self, artist="Existing Artist", album="Existing Album", tracks=None):
+        tracks = tracks or ["Track 1", "Track 2", "Track 3", "Track 4"]
+        return [
+            {
+                "ts": f"2026-02-02T02:{45 + index:02d}:00Z",
+                "ms_played": 180000,
+                "master_metadata_track_name": track,
+                "master_metadata_album_artist_name": artist,
+                "master_metadata_album_album_name": album,
+                "spotify_track_uri": f"spotify:track:{artist}:{album}:{index}",
+                "platform": "ios",
+                "conn_country": "US",
+            }
+            for index, track in enumerate(tracks)
+        ]
+
     def _lastfm_payload(self, artist, album, tracks, start_uts=1770000000):
         return {
             "recenttracks": {
@@ -171,6 +204,382 @@ class ApiImportTests(unittest.TestCase):
         self.assertIsNotNone(response.json()["import_session_id"])
         start_worker.assert_called_once_with(response.json()["import_session_id"])
         self.assertEqual(history_response.json()[0]["status"], "queued")
+
+    def test_spotify_zip_upload_returns_queued_session_before_parsing(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir)
+            zip_file = self._spotify_zip(
+                {"Spotify Extended Streaming History/Streaming_History_Audio_2026_0.json": []}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker") as start_worker:
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+            history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["source"], "spotify_import")
+        self.assertEqual(response.json()["status"], "queued")
+        start_worker.assert_called_once_with(response.json()["import_session_id"])
+        self.assertEqual(history_response.json()[0]["status"], "queued")
+
+    def test_spotify_zip_rejects_non_zip_upload(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir)
+
+            response = client.post(
+                "/api/users/jacob/imports/spotify/upload",
+                files={"file": ("history.txt", io.BytesIO(b"not a zip"), "text/plain")},
+            )
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn(".zip", response.json()["detail"])
+
+    def test_spotify_zip_rejects_oversized_upload(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir)
+            with patch.dict("os.environ", {"SPOTIFY_IMPORT_MAX_ZIP_BYTES": "10"}):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={
+                        "file": (
+                            "spotify.zip",
+                            self._spotify_zip({"Streaming_History_Audio_0.json": []}),
+                            "application/zip",
+                        )
+                    },
+                )
+
+        self.assertEqual(response.status_code, 422)
+        self.assertIn("too large", response.json()["detail"])
+
+    def test_spotify_zip_rejects_missing_user(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir)
+
+            response = client.post(
+                "/api/users/missing/imports/spotify/upload",
+                files={
+                    "file": (
+                        "spotify.zip",
+                        self._spotify_zip({"Streaming_History_Audio_0.json": []}),
+                        "application/zip",
+                    )
+                },
+            )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_spotify_background_import_rejects_path_traversal_zip(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, "w") as archive:
+                archive.writestr("../Streaming_History_Audio_0.json", "[]")
+            buffer.seek(0)
+
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", buffer, "application/zip")},
+                )
+                with self.assertRaises(ValueError):
+                    self._run_import_session(database_url, response.json()["import_session_id"])
+            history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(history_response.json()[0]["status"], "failed")
+
+    def test_spotify_background_import_rejects_zip_bomb(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows() * 50
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch.dict(
+                "os.environ",
+                {"SPOTIFY_IMPORT_MAX_UNCOMPRESSED_BYTES": "100"},
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                with self.assertRaises(ValueError):
+                    self._run_import_session(database_url, response.json()["import_session_id"])
+            history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(history_response.json()[0]["status"], "failed")
+
+    def test_spotify_background_import_rejects_invalid_json(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            buffer = io.BytesIO()
+            with zipfile.ZipFile(buffer, "w") as archive:
+                archive.writestr("Streaming_History_Audio_0.json", "{")
+            buffer.seek(0)
+
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", buffer, "application/zip")},
+                )
+                with self.assertRaises(ValueError):
+                    self._run_import_session(database_url, response.json()["import_session_id"])
+            history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(history_response.json()[0]["status"], "failed")
+
+    def test_spotify_background_import_stores_events_and_derives_album_listen(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows()}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+            history_response = client.get("/api/users/jacob/imports")
+            state_response = client.get("/api/album-state")
+            spotify_event_count = self._spotify_event_count(database_url)
+            imported_event_count = self._imported_event_count(database_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(spotify_event_count, 4)
+        self.assertEqual(imported_event_count, 1)
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(history_response.json()[0]["status"], "completed")
+        self.assertEqual(summary["new_event_rows"], 4)
+        self.assertEqual(summary["derived_album_listens"], 1)
+        self.assertIn(
+            "2026-02-02T02:48:00Z",
+            state_response.json()["completed_albums"]["Existing Artist - Existing Album"][
+                "listen_history"
+            ],
+        )
+
+    def test_spotify_background_import_deduplicates_uri_and_name_fallback_rows(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            rows = self._spotify_rows()
+            duplicate_uri = dict(rows[0])
+            fallback = dict(rows[1])
+            fallback.pop("spotify_track_uri")
+            duplicate_fallback = dict(fallback)
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": rows + [duplicate_uri, fallback, duplicate_fallback]}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+            history_response = client.get("/api/users/jacob/imports")
+            spotify_event_count = self._spotify_event_count(database_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(spotify_event_count, 5)
+        self.assertEqual(history_response.json()[0]["summary"]["duplicate_rows"], 2)
+
+    def test_spotify_background_import_keeps_partial_session_out_of_album_listens(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows(tracks=["Track 1"])}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+            history_response = client.get("/api/users/jacob/imports")
+            state_response = client.get("/api/album-state")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(history_response.json()[0]["summary"]["derived_album_listens"], 0)
+        self.assertEqual(
+            state_response.json()["completed_albums"]["Existing Artist - Existing Album"][
+                "listen_history"
+            ],
+            ["2026-04-01T10:00:00.000Z"],
+        )
+
+    def test_spotify_import_creates_session_rows_not_per_play_import_rows(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            rows = []
+            for album_index in range(25):
+                rows.extend(
+                    self._spotify_rows(
+                        artist=f"Bulk Artist {album_index}",
+                        album=f"Bulk Album {album_index}",
+                        tracks=["Track 1", "Track 2", "Track 3", "Track 4"],
+                    )
+                )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=None,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                spotify_event_count = self._spotify_event_count(database_url)
+                imported_event_count = self._imported_event_count(database_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(spotify_event_count, 100)
+        self.assertEqual(imported_event_count, 25)
+
+    def test_spotify_import_can_create_multiple_album_listens_for_split_sessions(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            first_session = self._spotify_rows()
+            second_session = self._spotify_rows()
+            for index, row in enumerate(second_session):
+                row["ts"] = f"2026-02-05T02:{45 + index:02d}:00Z"
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": first_session + second_session}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+            state_response = client.get("/api/album-state")
+
+        listen_history = state_response.json()["completed_albums"][
+            "Existing Artist - Existing Album"
+        ]["listen_history"]
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("2026-02-02T02:48:00Z", listen_history)
+        self.assertIn("2026-02-05T02:48:00Z", listen_history)
+
+    def test_spotify_import_dedupes_musicbrainz_lookup_per_album(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            first_session = self._spotify_rows(
+                artist="Remote Spotify Artist",
+                album="Remote Spotify Album",
+                tracks=["Track 1", "Track 2", "Track 3"],
+            )
+            second_session = self._spotify_rows(
+                artist="Remote Spotify Artist",
+                album="Remote Spotify Album",
+                tracks=["Track 1", "Track 2", "Track 3"],
+            )
+            for index, row in enumerate(second_session):
+                row["ts"] = f"2026-02-05T02:{45 + index:02d}:00Z"
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": first_session + second_session}
+            )
+            metadata = {
+                "artist": "Remote Spotify Artist",
+                "name": "Remote Spotify Album",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 91},
+                "tracklist": [
+                    {"title": "Track 1"},
+                    {"title": "Track 2"},
+                    {"title": "Track 3"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ) as metadata_lookup:
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(metadata_lookup.call_count, 1)
+        self.assertEqual(history_response.json()[0]["summary"]["derived_album_listens"], 2)
+
+    def test_delete_spotify_import_removes_raw_events_and_imported_listens(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows()}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+            delete_response = client.delete(f"/api/users/jacob/imports/{import_session_id}")
+            state_response = client.get("/api/album-state")
+            spotify_event_count = self._spotify_event_count(database_url)
+
+        self.assertEqual(delete_response.status_code, 200)
+        self.assertEqual(delete_response.json()["deleted_events"], 1)
+        self.assertEqual(delete_response.json()["deleted_listens"], 1)
+        self.assertEqual(spotify_event_count, 0)
+        self.assertEqual(
+            state_response.json()["completed_albums"]["Existing Artist - Existing Album"][
+                "listen_history"
+            ],
+            ["2026-04-01T10:00:00.000Z"],
+        )
+
+    def test_spotify_import_delete_is_user_scoped(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            client.post("/api/users", json={"slug": "test-user", "display_name": "Test User"})
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows()}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                response = client.post(
+                    "/api/users/test-user/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+            delete_response = client.delete(f"/api/users/jacob/imports/{import_session_id}")
+            test_history_response = client.get("/api/users/test-user/imports")
+            spotify_event_count = self._spotify_event_count(database_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(delete_response.status_code, 404)
+        self.assertEqual(test_history_response.json()[0]["id"], import_session_id)
+        self.assertEqual(spotify_event_count, 4)
 
     def test_lastfm_background_import_persists_three_thousand_scrobbles(self):
         with tempfile.TemporaryDirectory() as temp_dir:

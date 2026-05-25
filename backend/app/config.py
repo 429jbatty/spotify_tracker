@@ -16,6 +16,9 @@ class Settings:
     frontend_origin: str = "http://localhost:5173"
     media_dir: str = str(DEFAULT_DATA_DIR / "media")
     lastfm_api_key: str | None = None
+    spotify_import_max_zip_bytes: int = 250 * 1024 * 1024
+    spotify_import_max_uncompressed_bytes: int = 2 * 1024 * 1024 * 1024
+    spotify_import_max_zip_entries: int = 200
 
 
 def get_settings() -> Settings:
@@ -37,4 +40,22 @@ def get_settings() -> Settings:
         ),
         media_dir=media_dir,
         lastfm_api_key=os.environ.get("LASTFM_API_KEY"),
+        spotify_import_max_zip_bytes=int(
+            os.environ.get(
+                "SPOTIFY_IMPORT_MAX_ZIP_BYTES",
+                Settings.spotify_import_max_zip_bytes,
+            )
+        ),
+        spotify_import_max_uncompressed_bytes=int(
+            os.environ.get(
+                "SPOTIFY_IMPORT_MAX_UNCOMPRESSED_BYTES",
+                Settings.spotify_import_max_uncompressed_bytes,
+            )
+        ),
+        spotify_import_max_zip_entries=int(
+            os.environ.get(
+                "SPOTIFY_IMPORT_MAX_ZIP_ENTRIES",
+                Settings.spotify_import_max_zip_entries,
+            )
+        ),
     )

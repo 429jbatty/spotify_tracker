@@ -2,6 +2,9 @@ export const IMPORT_STATUS_LABELS = {
   queued: "Queued",
   fetching_lastfm: "Fetching Last.fm scrobbles",
   storing_scrobbles: "Storing new scrobbles",
+  validating_zip: "Validating Spotify ZIP",
+  parsing_spotify_history: "Parsing Spotify history",
+  storing_streaming_events: "Storing Spotify plays",
   grouping_album_sessions: "Grouping album sessions",
   matching_cached_albums: "Matching cached albums",
   fetching_metadata: "Fetching MusicBrainz metadata",
@@ -22,10 +25,29 @@ export const IMPORT_GUIDES = {
     exampleLabel: "Example",
     example: "Username: your-lastfm-name",
   },
+  spotify_import: {
+    title: "Spotify ZIP import",
+    intro: "Upload the Extended Streaming History ZIP from Spotify. Albumary stores plays first, then only adds completed album listens.",
+    points: [
+      "Upload the ZIP without extracting it.",
+      "Imports continue in the background.",
+      "Partial plays are stored but not added as albums.",
+    ],
+    exampleLabel: "Expected file",
+    example: "my_spotify_data.zip",
+  },
 };
 
 export function summaryCards(source, summary) {
   if (!summary) return [];
+  if (source === "spotify_import") {
+    return [
+      { label: "Spotify Plays Found", value: summary.total_rows },
+      { label: "New Plays Stored", value: summary.new_event_rows },
+      { label: "Album Sessions", value: summary.distinct_album_candidates },
+      { label: "Already Imported", value: summary.duplicate_rows },
+    ];
+  }
   return [
     { label: "Last.fm Scrobbles Found", value: summary.total_rows },
     { label: "New in Preview Sample", value: summary.new_event_rows },
@@ -58,7 +80,7 @@ export function previewSummaryNote(summary) {
 export function importSummaryText(summary, status) {
   if (!summary) return "";
 
-  const scrobbles = Number(summary.new_event_rows || 0).toLocaleString();
+  const events = Number(summary.new_event_rows || 0).toLocaleString();
   const listens = Number(summary.derived_album_listens || 0).toLocaleString();
   const review = Number(summary.review_candidates || 0).toLocaleString();
   const pending = Number(summary.pending_metadata_candidates || 0).toLocaleString();
@@ -67,13 +89,13 @@ export function importSummaryText(summary, status) {
     const reviewText = summary.review_candidates
       ? ` ${review} unresolved album sessions need review.`
       : "";
-    return `${scrobbles} scrobbles stored. ${listens} album listens created.${reviewText}`;
+    return `${events} import rows stored. ${listens} album listens created.${reviewText}`;
   }
 
   const pendingText = summary.pending_metadata_candidates
     ? ` ${pending} album sessions still need tracklists.`
     : "";
-  return `${scrobbles} scrobbles stored so far. ${listens} album listens created so far.${pendingText}`;
+  return `${events} import rows stored so far. ${listens} album listens created so far.${pendingText}`;
 }
 
 export function progressPercent(summary) {
@@ -97,6 +119,12 @@ export function progressText(summary, status) {
 
   if (lowerLabel.includes("last.fm")) {
     return `Fetched ${currentText} of ${totalText} Last.fm scrobbles`;
+  }
+  if (lowerLabel.includes("spotify") && lowerLabel.includes("parsing")) {
+    return `Parsed ${currentText} of ${totalText} Spotify history files`;
+  }
+  if (lowerLabel.includes("spotify") && lowerLabel.includes("storing")) {
+    return `Stored ${currentText} of ${totalText} Spotify plays`;
   }
   if (lowerLabel.includes("storing")) {
     return `Stored ${currentText} of ${totalText} scrobbles`;

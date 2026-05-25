@@ -40,6 +40,38 @@ async function requestJson(path, options = {}) {
   return response.json();
 }
 
+async function requestForm(path, formData, options = {}) {
+  const response = await fetch(joinUrl(API_BASE_URL, path), {
+    ...options,
+    body: formData,
+  });
+
+  if (!response.ok) {
+    let message = `Request failed with status ${response.status}`;
+    let detail = null;
+    try {
+      const payload = await response.json();
+      detail = payload.detail;
+      message =
+        typeof payload.detail === "string"
+          ? payload.detail
+          : payload.detail?.message || message;
+    } catch {
+      // Keep the generic status message when the API does not return JSON.
+    }
+    const error = new Error(message);
+    error.status = response.status;
+    error.detail = detail;
+    throw error;
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return response.json();
+}
+
 export async function fetchAlbumState() {
   const userSlug = getSelectedUserSlug();
   if (userSlug) return requestJson(`/users/${userSlug}/album-state`);
@@ -166,6 +198,15 @@ export async function commitImport(payload, userSlug = getSelectedUserSlug()) {
   return requestJson(`/users/${userSlug}/imports/commit`, {
     method: "POST",
     body: JSON.stringify(payload),
+  });
+}
+
+export async function uploadSpotifyImportZip(file, userSlug = getSelectedUserSlug()) {
+  if (!userSlug) throw new Error("Select a user before importing history.");
+  const formData = new FormData();
+  formData.append("file", file);
+  return requestForm(`/users/${userSlug}/imports/spotify/upload`, formData, {
+    method: "POST",
   });
 }
 

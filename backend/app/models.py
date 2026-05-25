@@ -81,6 +81,10 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    spotify_streaming_events: Mapped[list["SpotifyStreamingEvent"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
 
 
 class UserAlbum(Base):
@@ -194,10 +198,15 @@ class ImportSession(Base):
     session_name: Mapped[str | None] = mapped_column(String, nullable=True)
     started_at: Mapped[str] = mapped_column(String, index=True)
     completed_at: Mapped[str | None] = mapped_column(String, nullable=True)
+    artifact_path: Mapped[str | None] = mapped_column(Text, nullable=True)
     summary_json: Mapped[dict] = mapped_column(JSON, default=dict)
 
     user: Mapped[User] = relationship(back_populates="import_sessions")
     events: Mapped[list["ImportedListeningEvent"]] = relationship(
+        back_populates="import_session",
+        cascade="all, delete-orphan",
+    )
+    spotify_streaming_events: Mapped[list["SpotifyStreamingEvent"]] = relationship(
         back_populates="import_session",
         cascade="all, delete-orphan",
     )
@@ -241,3 +250,41 @@ class ImportedListeningEvent(Base):
     user: Mapped[User] = relationship(back_populates="imported_events")
     import_session: Mapped[ImportSession | None] = relationship(back_populates="events")
     album_ref: Mapped[Album | None] = relationship()
+
+
+class SpotifyStreamingEvent(Base):
+    __tablename__ = "spotify_streaming_events"
+    __table_args__ = (
+        UniqueConstraint(
+            "user_id",
+            "event_fingerprint",
+            name="uq_spotify_streaming_event_fingerprint",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    import_session_id: Mapped[int | None] = mapped_column(
+        ForeignKey("import_sessions.id"),
+        nullable=True,
+        index=True,
+    )
+    event_fingerprint: Mapped[str] = mapped_column(String, index=True)
+    played_at: Mapped[str] = mapped_column(String, index=True)
+    ms_played: Mapped[int] = mapped_column(Integer, default=0)
+    spotify_track_uri: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    track_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    artist_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    album_name: Mapped[str | None] = mapped_column(String, nullable=True)
+    platform: Mapped[str | None] = mapped_column(String, nullable=True)
+    country: Mapped[str | None] = mapped_column(String, nullable=True)
+    reason_start: Mapped[str | None] = mapped_column(String, nullable=True)
+    reason_end: Mapped[str | None] = mapped_column(String, nullable=True)
+    skipped: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    offline: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    raw_payload: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    user: Mapped[User] = relationship(back_populates="spotify_streaming_events")
+    import_session: Mapped[ImportSession | None] = relationship(
+        back_populates="spotify_streaming_events"
+    )

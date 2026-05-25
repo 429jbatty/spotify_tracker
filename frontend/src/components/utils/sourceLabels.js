@@ -3,6 +3,7 @@ const SOURCE_LABELS = {
   spotify_sync: "Spotify Sync",
   csv_upload: "CSV Upload",
   lastfm_import: "Last.fm Import",
+  spotify_import: "Spotify Import",
   spotify_export_upload: "Spotify Export Upload",
   unknown: "Unknown",
   musicbrainz: "MusicBrainz",

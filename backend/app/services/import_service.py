@@ -1,4 +1,5 @@
 import hashlib
+import os
 import re
 from collections import defaultdict
 from dataclasses import dataclass
@@ -7,6 +8,7 @@ from typing import Any
 
 from rapidfuzz import fuzz
 from sqlalchemy import delete, func, select
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
 
 import album_metadata_service
@@ -19,6 +21,7 @@ from backend.app.models import (
     AlbumMetadataCache,
     ImportSession,
     ImportedListeningEvent,
+    SpotifyStreamingEvent,
     UserAlbum,
 )
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
@@ -38,12 +41,19 @@ from backend.app.services.import_parsers import (
     clean_text,
 )
 from backend.app.services.lastfm_import_client import fetch_lastfm_recent_tracks
+from backend.app.services.spotify_import_parser import (
+    iter_spotify_history_events,
+    spotify_history_entries_from_zip,
+    spotify_streaming_fingerprint,
+)
 
 
 LASTFM_ALBUM_LISTEN_WINDOW_HOURS = 48
 LASTFM_PREVIEW_MAX_PAGES = 5
 LASTFM_PREVIEW_MAX_SCROBBLES = 1000
 LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 3
+SPOTIFY_IMPORT_SOURCE = "spotify_import"
+SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 2_000
 
 
 _ALBUM_METADATA_CACHE_MISS = object()
@@ -123,6 +133,8 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
     try:
         if import_session.source == "lastfm":
             _run_lastfm_import_session(session, repository, import_session)
+        elif import_session.source == SPOTIFY_IMPORT_SOURCE:
+            _run_spotify_import_session(session, repository, import_session)
         else:
             raise ValueError(f"Unsupported import source: {import_session.source}")
     except Exception:
@@ -222,6 +234,13 @@ def delete_import_session(
             ImportedListeningEvent.user_id == repository.user.id,
         )
     )
+    if import_session.source == SPOTIFY_IMPORT_SOURCE:
+        session.execute(
+            delete(SpotifyStreamingEvent).where(
+                SpotifyStreamingEvent.import_session_id == import_session.id,
+                SpotifyStreamingEvent.user_id == repository.user.id,
+            )
+        )
     session.delete(import_session)
     session.flush()
 
@@ -508,6 +527,39 @@ def _create_lastfm_import_session(
     )
 
 
+def create_spotify_import_session(
+    session: Session,
+    repository: SqliteStateRepository,
+    *,
+    artifact_path: str,
+    original_filename: str | None,
+    session_name: str | None = None,
+) -> ImportCommitResponse:
+    import_session = ImportSession(
+        user_id=repository.user.id,
+        source=SPOTIFY_IMPORT_SOURCE,
+        source_user_id=None,
+        status="queued",
+        session_name=session_name
+        or _default_spotify_session_name(original_filename),
+        started_at=_utc_now(),
+        completed_at=None,
+        artifact_path=artifact_path,
+        summary_json=_empty_summary().model_dump(),
+    )
+    session.add(import_session)
+    session.commit()
+
+    return ImportCommitResponse(
+        import_session_id=import_session.id,
+        source=SPOTIFY_IMPORT_SOURCE,
+        status=import_session.status,
+        session_name=import_session.session_name,
+        source_user_id=None,
+        summary=_session_summary(import_session),
+    )
+
+
 def _run_lastfm_import_session(
     session: Session,
     repository: SqliteStateRepository,
@@ -720,6 +772,220 @@ def _run_lastfm_import_session(
     session.commit()
 
 
+def _run_spotify_import_session(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> None:
+    artifact_path = import_session.artifact_path
+    if not artifact_path:
+        raise ValueError("Spotify import ZIP is missing.")
+
+    summary = _empty_summary()
+    try:
+        import_session.status = "validating_zip"
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Validating Spotify ZIP",
+            current=0,
+            total=0,
+        )
+        session.commit()
+
+        settings = get_settings()
+        history_entries = spotify_history_entries_from_zip(
+            artifact_path,
+            max_entries=settings.spotify_import_max_zip_entries,
+            max_uncompressed_bytes=settings.spotify_import_max_uncompressed_bytes,
+        )
+        summary.total_rows = len(history_entries)
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Parsing Spotify history",
+            current=0,
+            total=len(history_entries),
+        )
+        import_session.status = "parsing_spotify_history"
+        session.commit()
+
+        for index, entry in enumerate(history_entries, start=1):
+            _set_import_progress(
+                import_session,
+                summary,
+                label="Parsing Spotify history",
+                current=index,
+                total=len(history_entries),
+            )
+            session.commit()
+
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Storing Spotify plays",
+            current=0,
+            total=0,
+        )
+        import_session.status = "storing_streaming_events"
+        session.commit()
+
+        def update_store_progress(summary_update: ImportPreviewSummary) -> None:
+            if (
+                summary_update.total_rows != summary_update.progress_current
+                and summary_update.progress_current % 1000 != 0
+            ):
+                return
+            _set_import_progress(
+                import_session,
+                summary_update,
+                label="Storing Spotify plays",
+                current=summary_update.progress_current,
+                total=summary_update.progress_total,
+            )
+            session.commit()
+
+        summary = _stream_persist_spotify_streaming_events(
+            session=session,
+            repository=repository,
+            import_session=import_session,
+            artifact_path=artifact_path,
+            history_entries=history_entries,
+            progress_callback=update_store_progress,
+        )
+
+        import_session.status = "grouping_album_sessions"
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Grouping album sessions",
+            current=0,
+            total=0,
+        )
+        session.commit()
+
+        import_session.status = "matching_cached_albums"
+
+        def update_cached_match_progress(
+            current: int,
+            total: int,
+            partial_candidates: list[LastfmCandidate],
+        ) -> None:
+            _apply_lastfm_candidate_summary(summary, partial_candidates)
+            _set_import_progress(
+                import_session,
+                summary,
+                label="Matching cached albums",
+                current=current,
+                total=total,
+            )
+            session.commit()
+
+        cached_candidates = _build_spotify_candidates_from_streaming_events(
+            session=session,
+            repository=repository,
+            import_session=import_session,
+            allow_remote_metadata=False,
+            progress_callback=update_cached_match_progress,
+        )
+        _apply_lastfm_candidate_summary(summary, cached_candidates)
+        session.flush()
+        _process_lastfm_candidates(
+            session=session,
+            repository=repository,
+            candidates=cached_candidates,
+        )
+        session.commit()
+
+        pending_rows = session.scalars(
+            select(ImportedListeningEvent).where(
+                ImportedListeningEvent.import_session_id == import_session.id,
+                ImportedListeningEvent.user_id == repository.user.id,
+                ImportedListeningEvent.match_status == "pending_metadata",
+            )
+        ).all()
+
+        if pending_rows:
+            import_session.status = "fetching_metadata"
+            _set_import_progress(
+                import_session,
+                summary,
+                label="Fetching MusicBrainz metadata",
+                current=0,
+                total=len({row.candidate_key for row in pending_rows if row.candidate_key}),
+            )
+            session.commit()
+
+            def update_remote_match_progress(
+                current: int,
+                total: int,
+                remote_candidates: list[LastfmCandidate],
+            ) -> None:
+                combined_candidates = [
+                    candidate
+                    for candidate in cached_candidates
+                    if candidate.status not in {"no_tracklist", "pending_metadata"}
+                ] + remote_candidates
+                _apply_lastfm_candidate_summary(summary, combined_candidates)
+                _set_import_progress(
+                    import_session,
+                    summary,
+                    label="Fetching MusicBrainz metadata",
+                    current=current,
+                    total=total,
+                )
+                session.commit()
+
+            remote_candidates = _build_spotify_candidates_from_imported_events(
+                repository=repository,
+                imported_rows=pending_rows,
+                allow_remote_metadata=True,
+                progress_callback=update_remote_match_progress,
+            )
+            final_candidates = [
+                candidate
+                for candidate in cached_candidates
+                if candidate.status not in {"no_tracklist", "pending_metadata"}
+            ] + remote_candidates
+            _apply_lastfm_candidate_summary(summary, final_candidates)
+            session.flush()
+            _process_lastfm_candidates(
+                session=session,
+                repository=repository,
+                candidates=remote_candidates,
+            )
+            session.commit()
+        else:
+            final_candidates = cached_candidates
+
+        import_session.status = "finalizing"
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Finalizing",
+            current=summary.progress_total or len(final_candidates),
+            total=summary.progress_total or len(final_candidates),
+        )
+        session.commit()
+
+        _apply_lastfm_candidate_summary(summary, final_candidates)
+        import_session.status = "completed"
+        import_session.completed_at = _utc_now()
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Completed",
+            current=summary.progress_total or len(final_candidates),
+            total=summary.progress_total or len(final_candidates),
+        )
+        import_session.summary_json = summary.model_dump()
+        session.commit()
+    finally:
+        _delete_file_quietly(artifact_path)
+        import_session.artifact_path = None
+        session.commit()
+
+
 def _parse_lastfm(
     session: Session,
     repository: SqliteStateRepository,
@@ -814,6 +1080,297 @@ def _persist_lastfm_raw_events(
 
     session.flush()
     return persisted
+
+
+def _stream_persist_spotify_streaming_events(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+    artifact_path: str,
+    history_entries: list[Any],
+    progress_callback: Any | None = None,
+) -> ImportPreviewSummary:
+    summary = _empty_summary()
+    batch: list[dict[str, Any]] = []
+    seen_fingerprints: set[str] = set()
+
+    def flush_batch() -> None:
+        if not batch:
+            return
+        statement = sqlite_insert(SpotifyStreamingEvent).values(batch)
+        result = session.execute(statement.on_conflict_do_nothing())
+        summary.new_event_rows += result.rowcount or 0
+        batch.clear()
+        session.flush()
+
+    for entry in history_entries:
+        for row in iter_spotify_history_events(artifact_path, entry.filename):
+            summary.total_rows += 1
+            summary.progress_current = summary.total_rows
+            summary.progress_total = summary.total_rows
+
+            if not row.played_at or not row.artist_name or not row.track_name:
+                summary.failed_rows += 1
+                if progress_callback:
+                    progress_callback(summary)
+                continue
+
+            fingerprint = spotify_streaming_fingerprint(row)
+            if fingerprint in seen_fingerprints:
+                summary.duplicate_rows += 1
+                if progress_callback:
+                    progress_callback(summary)
+                continue
+            seen_fingerprints.add(fingerprint)
+
+            batch.append(
+                {
+                    "user_id": repository.user.id,
+                    "import_session_id": import_session.id,
+                    "event_fingerprint": fingerprint,
+                    "played_at": row.played_at,
+                    "ms_played": row.ms_played,
+                    "spotify_track_uri": row.spotify_track_uri,
+                    "track_name": row.track_name,
+                    "artist_name": row.artist_name,
+                    "album_name": row.album_name,
+                    "platform": row.platform,
+                    "country": row.country,
+                    "reason_start": row.reason_start,
+                    "reason_end": row.reason_end,
+                    "skipped": row.skipped,
+                    "offline": row.offline,
+                    "raw_payload": row.raw_payload,
+                }
+            )
+            if not row.album_name:
+                summary.missing_album_rows += 1
+
+            if len(batch) >= SPOTIFY_IMPORT_INSERT_BATCH_SIZE:
+                before_inserted = summary.new_event_rows
+                flush_batch()
+                summary.duplicate_rows += max(
+                    0,
+                    SPOTIFY_IMPORT_INSERT_BATCH_SIZE
+                    - (summary.new_event_rows - before_inserted),
+                )
+                if progress_callback:
+                    progress_callback(summary)
+            elif progress_callback:
+                progress_callback(summary)
+
+    before_inserted = summary.new_event_rows
+    final_batch_size = len(batch)
+    flush_batch()
+    summary.duplicate_rows += max(
+        0,
+        final_batch_size - (summary.new_event_rows - before_inserted),
+    )
+    summary.progress_current = summary.total_rows
+    summary.progress_total = summary.total_rows
+    if progress_callback:
+        progress_callback(summary)
+    return summary
+
+
+def _build_spotify_candidates_from_streaming_events(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+    *,
+    allow_remote_metadata: bool,
+    progress_callback: Any | None = None,
+) -> list[LastfmCandidate]:
+    metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
+    existing_album_index = _existing_album_index(repository)
+    candidates: list[LastfmCandidate] = []
+    current_key: tuple[str, str] | None = None
+    current_events: list[NormalizedImportEvent] = []
+
+    rows = session.scalars(
+        select(SpotifyStreamingEvent)
+        .where(
+            SpotifyStreamingEvent.import_session_id == import_session.id,
+            SpotifyStreamingEvent.user_id == repository.user.id,
+            SpotifyStreamingEvent.artist_name.is_not(None),
+            SpotifyStreamingEvent.album_name.is_not(None),
+            SpotifyStreamingEvent.played_at.is_not(None),
+        )
+        .order_by(
+            func.lower(SpotifyStreamingEvent.artist_name),
+            func.lower(SpotifyStreamingEvent.album_name),
+            SpotifyStreamingEvent.played_at,
+            SpotifyStreamingEvent.id,
+        )
+    ).yield_per(1000)
+
+    def process_group(events: list[NormalizedImportEvent]) -> None:
+        if not events:
+            return
+        for chunk in _split_lastfm_sessions(events):
+            candidate = _build_lastfm_candidate(
+                repository=repository,
+                events=chunk,
+                source_user_id=None,
+                metadata_cache=metadata_cache,
+                existing_album_index=existing_album_index,
+                load_metadata=True,
+                allow_remote_metadata=allow_remote_metadata,
+            )
+            candidates.append(candidate)
+
+    for row in rows:
+        key = (
+            (row.artist_name or "").casefold(),
+            (row.album_name or "").casefold(),
+        )
+        if current_key is not None and key != current_key:
+            process_group(current_events)
+            current_events = []
+        current_key = key
+        current_events.append(_spotify_streaming_event_to_import_event(row))
+    process_group(current_events)
+
+    candidates.sort(key=lambda candidate: candidate.listened_at, reverse=True)
+    _persist_spotify_candidate_rows(
+        session=session,
+        repository=repository,
+        import_session=import_session,
+        candidates=candidates,
+    )
+
+    total_candidates = len(candidates)
+    if progress_callback:
+        for index in range(1, total_candidates + 1):
+            if index == 1 or index % 5 == 0 or index == total_candidates:
+                progress_callback(index, total_candidates, candidates[:index])
+    return candidates
+
+
+def _build_spotify_candidates_from_imported_events(
+    repository: SqliteStateRepository,
+    imported_rows: list[ImportedListeningEvent],
+    *,
+    allow_remote_metadata: bool,
+    progress_callback: Any | None = None,
+) -> list[LastfmCandidate]:
+    metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
+    existing_album_index = _existing_album_index(repository)
+    candidates: list[LastfmCandidate] = []
+    total = len(imported_rows)
+    for index, row in enumerate(imported_rows, start=1):
+        streaming_event_ids = row.raw_payload.get("_spotify_streaming_event_ids") or []
+        streaming_events = repository.session.scalars(
+            select(SpotifyStreamingEvent)
+            .where(
+                SpotifyStreamingEvent.user_id == repository.user.id,
+                SpotifyStreamingEvent.id.in_(streaming_event_ids),
+            )
+            .order_by(SpotifyStreamingEvent.played_at, SpotifyStreamingEvent.id)
+        ).all()
+        events = [
+            _spotify_streaming_event_to_import_event(streaming_event)
+            for streaming_event in streaming_events
+        ]
+        if not events:
+            continue
+        candidate = _build_lastfm_candidate(
+            repository=repository,
+            events=events,
+            source_user_id=None,
+            metadata_cache=metadata_cache,
+            existing_album_index=existing_album_index,
+            load_metadata=True,
+            allow_remote_metadata=allow_remote_metadata,
+        )
+        candidate.candidate_key = row.candidate_key or candidate.candidate_key
+        candidates.append(candidate)
+        if progress_callback and (index == 1 or index % 5 == 0 or index == total):
+            progress_callback(index, total, candidates)
+
+    candidates.sort(key=lambda candidate: candidate.listened_at, reverse=True)
+    return candidates
+
+
+def _persist_spotify_candidate_rows(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+    candidates: list[LastfmCandidate],
+) -> list[ImportedListeningEvent]:
+    persisted: list[ImportedListeningEvent] = []
+    for candidate in candidates:
+        representative = candidate.events[-1]
+        streaming_event_ids = [
+            event.raw_payload.get("_spotify_streaming_event_id")
+            for event in candidate.events
+            if event.raw_payload.get("_spotify_streaming_event_id") is not None
+        ]
+        event = ImportedListeningEvent(
+            user_id=repository.user.id,
+            import_session_id=import_session.id,
+            album_id=None,
+            source=SPOTIFY_IMPORT_SOURCE,
+            source_user_id=None,
+            source_event_id=candidate.candidate_key,
+            event_fingerprint=_spotify_candidate_fingerprint(candidate),
+            candidate_key=candidate.candidate_key,
+            listened_at=candidate.listened_at,
+            artist=candidate.artist,
+            album=candidate.album,
+            track=(
+                f"{candidate.unique_scrobbled_tracks} unique Spotify tracks"
+            ),
+            source_label=SPOTIFY_IMPORT_SOURCE,
+            rating=None,
+            notes=None,
+            match_status="raw_imported",
+            match_confidence=None,
+            error_message=None,
+            raw_payload={
+                "_spotify_streaming_event_ids": streaming_event_ids,
+                "_representative_track": representative.track,
+                "_track_count": len(streaming_event_ids),
+            },
+        )
+        session.add(event)
+        persisted.append(event)
+    session.flush()
+    return persisted
+
+
+def _spotify_streaming_event_to_import_event(
+    row: SpotifyStreamingEvent,
+) -> NormalizedImportEvent:
+    return NormalizedImportEvent(
+        listened_at=row.played_at,
+        artist=row.artist_name,
+        album=row.album_name,
+        track=row.track_name,
+        source=SPOTIFY_IMPORT_SOURCE,
+        source_user_id=None,
+        source_event_id=str(row.id),
+        source_label=SPOTIFY_IMPORT_SOURCE,
+        rating=None,
+        notes=None,
+        raw_payload={
+            **(row.raw_payload or {}),
+            "_spotify_streaming_event_id": row.id,
+            "_spotify_track_uri": row.spotify_track_uri,
+            "_spotify_track_name": row.track_name,
+        },
+    )
+
+
+def _spotify_candidate_fingerprint(candidate: LastfmCandidate) -> str:
+    return hashlib.sha256(
+        "|".join(
+            [
+                SPOTIFY_IMPORT_SOURCE,
+                candidate.candidate_key,
+            ]
+        ).encode("utf-8")
+    ).hexdigest()
 
 
 def _process_lastfm_candidates(
@@ -1125,14 +1682,19 @@ def _build_lastfm_candidate(
     listened_at = max(event.listened_at for event in events if event.listened_at)
     matched_album = existing_album_index.get(_album_match_key(artist, album))
     matched_album_id = matched_album.album_id if matched_album else None
-    unique_tracks = {
+    unique_track_names = {
         _normalize_track_name(event.track)
         for event in events
         if _normalize_track_name(event.track)
     }
+    unique_track_identities = {
+        _normalize_import_event_track_identity(event)
+        for event in events
+        if _normalize_import_event_track_identity(event)
+    }
     remote_metadata_allowed = (
         allow_remote_metadata
-        and len(unique_tracks) >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
+        and len(unique_track_identities) >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
     )
     metadata = (
         _lastfm_album_metadata(
@@ -1143,6 +1705,7 @@ def _build_lastfm_candidate(
             matched_album_id=matched_album_id,
             matched_album_record=matched_album.record if matched_album else None,
             allow_remote_metadata=remote_metadata_allowed,
+            entry_source=events[0].source,
         )
         if load_metadata
         else None
@@ -1153,7 +1716,7 @@ def _build_lastfm_candidate(
     confidence = 25
     status = "partial_listen"
     if not load_metadata:
-        matched_track_count = len(unique_tracks)
+        matched_track_count = len(unique_track_identities)
         confidence = min(80, max(25, matched_track_count * 10))
         status = "preview_candidate"
         detail = (
@@ -1167,7 +1730,7 @@ def _build_lastfm_candidate(
             if _normalize_track_name(track.get("title"))
         }
         total_track_count = len(metadata_tracks)
-        matched_track_count = len(unique_tracks & metadata_tracks)
+        matched_track_count = len(unique_track_names & metadata_tracks)
         if total_track_count > 0:
             confidence = round((matched_track_count / total_track_count) * 100)
         if matched_album_id is None and not _is_lastfm_importable_album_metadata(
@@ -1191,10 +1754,10 @@ def _build_lastfm_candidate(
                 f"Matched {matched_track_count} of {total_track_count or len(unique_tracks)} tracks. "
                 "This does not count as a completed album listen."
             )
-    elif len(unique_tracks) < LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS:
+    elif len(unique_track_identities) < LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS:
         status = "partial_listen"
         detail = (
-            f"Only {len(unique_tracks)} unique tracks were scrobbled; skipped remote metadata "
+            f"Only {len(unique_track_identities)} unique tracks were scrobbled; skipped remote metadata "
             "lookup because this is not enough evidence for a full album listen."
         )
     elif not allow_remote_metadata:
@@ -1207,7 +1770,7 @@ def _build_lastfm_candidate(
         status = "candidate_review"
         detail = "Could not load album tracklist, so this scrobble session needs review."
 
-    candidate_key = _lastfm_candidate_key(source_user_id, artist, album, events)
+    candidate_key = _import_candidate_key(events[0].source, source_user_id, artist, album, events)
     return LastfmCandidate(
         candidate_key=candidate_key,
         artist=artist,
@@ -1217,7 +1780,7 @@ def _build_lastfm_candidate(
         matched_album_id=matched_album_id,
         matched_track_count=matched_track_count,
         total_track_count=total_track_count,
-        unique_scrobbled_tracks=len(unique_tracks),
+        unique_scrobbled_tracks=len(unique_track_identities),
         status=status,
         status_detail=detail,
         confidence=confidence,
@@ -1279,6 +1842,7 @@ def _lastfm_album_metadata(
     matched_album_id: int | None,
     matched_album_record: dict[str, Any] | None,
     allow_remote_metadata: bool = True,
+    entry_source: str = "lastfm",
 ) -> dict[str, Any] | None:
     cache_key = (artist.casefold(), album.casefold())
     if cache_key in metadata_cache:
@@ -1300,7 +1864,7 @@ def _lastfm_album_metadata(
     try:
         metadata = album_metadata_service.get_album_metadata_for_import_matching(artist, album)
         if metadata:
-            metadata["entry_source"] = "lastfm"
+            metadata["entry_source"] = entry_source
             metadata.pop("_refresh_warnings", None)
     except Exception:
         metadata_cache[cache_key] = None
@@ -1381,7 +1945,8 @@ def _write_album_metadata_cache(
     session.flush()
 
 
-def _lastfm_candidate_key(
+def _import_candidate_key(
+    source: str,
     source_user_id: str | None,
     artist: str,
     album: str,
@@ -1389,7 +1954,7 @@ def _lastfm_candidate_key(
 ) -> str:
     payload = "|".join(
         [
-            "lastfm",
+            source,
             source_user_id or "",
             artist.casefold(),
             album.casefold(),
@@ -1398,6 +1963,15 @@ def _lastfm_candidate_key(
         ]
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _lastfm_candidate_key(
+    source_user_id: str | None,
+    artist: str,
+    album: str,
+    events: list[NormalizedImportEvent],
+) -> str:
+    return _import_candidate_key("lastfm", source_user_id, artist, album, events)
 
 
 def _empty_summary() -> ImportPreviewSummary:
@@ -1426,6 +2000,13 @@ def _default_session_name(request: ImportPreviewRequest, source_user_id: str | N
     if source_user_id:
         return f"Last.fm import for {source_user_id}"
     return "Last.fm import"
+
+
+def _default_spotify_session_name(original_filename: str | None) -> str:
+    filename = clean_text(original_filename)
+    if filename:
+        return f"Spotify import from {filename}"
+    return "Spotify import"
 
 
 def _build_album_record(event: NormalizedImportEvent) -> dict[str, Any]:
@@ -1508,6 +2089,13 @@ def _normalize_track_name(value: str | None) -> str:
     return re.sub(r"[^a-z0-9]+", " ", text.casefold()).strip()
 
 
+def _normalize_import_event_track_identity(event: NormalizedImportEvent) -> str:
+    spotify_track_uri = clean_text(event.raw_payload.get("_spotify_track_uri"))
+    if spotify_track_uri:
+        return spotify_track_uri.casefold()
+    return _normalize_track_name(event.track)
+
+
 def _fingerprint(event: NormalizedImportEvent) -> str:
     payload = "|".join(
         [
@@ -1518,6 +2106,15 @@ def _fingerprint(event: NormalizedImportEvent) -> str:
         ]
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _delete_file_quietly(path: str | None) -> None:
+    if not path:
+        return
+    try:
+        os.remove(path)
+    except FileNotFoundError:
+        return
 
 
 def _utc_now() -> str:

@@ -377,6 +377,86 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertIn("ix_album_metadata_cache_status", indexes)
         self.assertIn("ix_album_metadata_cache_updated_at", indexes)
 
+    def test_create_schema_adds_artifact_path_to_existing_import_sessions_table(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_engine(database_url)
+
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE import_sessions (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            user_id INTEGER NOT NULL,
+                            source VARCHAR NOT NULL,
+                            source_user_id VARCHAR,
+                            status VARCHAR NOT NULL,
+                            session_name VARCHAR,
+                            started_at VARCHAR NOT NULL,
+                            completed_at VARCHAR,
+                            summary_json JSON NOT NULL
+                        )
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = [
+                    row[1]
+                    for row in connection.execute(text("PRAGMA table_info(import_sessions)"))
+                ]
+
+        self.assertEqual(columns.count("artifact_path"), 1)
+
+    def test_create_schema_creates_spotify_streaming_events_idempotently(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA table_info(spotify_streaming_events)")
+                    )
+                }
+                indexes = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA index_list(spotify_streaming_events)")
+                    )
+                }
+
+        self.assertEqual(
+            columns,
+            {
+                "id",
+                "user_id",
+                "import_session_id",
+                "event_fingerprint",
+                "played_at",
+                "ms_played",
+                "spotify_track_uri",
+                "track_name",
+                "artist_name",
+                "album_name",
+                "platform",
+                "country",
+                "reason_start",
+                "reason_end",
+                "skipped",
+                "offline",
+                "raw_payload",
+            },
+        )
+        self.assertIn("ix_spotify_streaming_events_user_id", indexes)
+        self.assertIn("ix_spotify_streaming_events_import_session_id", indexes)
+        self.assertIn("ix_spotify_streaming_events_played_at", indexes)
+
 
 if __name__ == "__main__":
     unittest.main()
