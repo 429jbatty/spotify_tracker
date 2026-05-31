@@ -220,6 +220,17 @@ export async function fetchImportReview(userSlug = getSelectedUserSlug()) {
   return requestJson(`/users/${userSlug}/imports/review`);
 }
 
+export async function fetchImportLogs(
+  importSessionId,
+  userSlug = getSelectedUserSlug(),
+  { limit = 100, order = "asc" } = {}
+) {
+  if (!userSlug || !importSessionId) return [];
+  return requestJson(
+    `/users/${userSlug}/imports/${importSessionId}/logs?limit=${limit}&order=${order}`
+  );
+}
+
 export async function deleteImportSession(importSessionId, userSlug = getSelectedUserSlug()) {
   if (!userSlug) throw new Error("Select a user before deleting an import.");
   return requestJson(`/users/${userSlug}/imports/${importSessionId}`, {

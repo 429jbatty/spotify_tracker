@@ -1,6 +1,8 @@
 import hashlib
+import logging
 import os
 import re
+import time
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -20,6 +22,7 @@ from backend.app.models import (
     AlbumListen,
     AlbumMetadataCache,
     ImportSession,
+    ImportSessionLog,
     ImportedListeningEvent,
     SpotifyStreamingEvent,
     UserAlbum,
@@ -34,6 +37,8 @@ from backend.app.schemas import (
     ImportPreviewSummary,
     ImportResolveRequest,
     ImportReviewItem,
+    ImportProgressStep,
+    ImportSessionLogEntry,
     ImportSessionSummary,
 )
 from backend.app.services.import_parsers import (
@@ -54,9 +59,47 @@ LASTFM_PREVIEW_MAX_SCROBBLES = 1000
 LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 3
 SPOTIFY_IMPORT_SOURCE = "spotify_import"
 SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 2_000
+SPOTIFY_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 5
+SPOTIFY_REMOTE_METADATA_MIN_MS_PLAYED = 20 * 60 * 1000
+SPOTIFY_REMOTE_METADATA_ALWAYS_UNIQUE_TRACKS = 8
+TERMINAL_IMPORT_STATUSES = {"completed", "failed"}
+RESUMABLE_IMPORT_STATUSES = {
+    "queued",
+    "validating_zip",
+    "parsing_spotify_history",
+    "storing_streaming_events",
+    "fetching_lastfm",
+    "storing_scrobbles",
+    "grouping_album_sessions",
+    "matching_cached_albums",
+    "fetching_metadata",
+    "finalizing",
+}
+IMPORT_STEP_ORDER = [
+    ("store_source", "Store source data"),
+    ("find_sessions", "Find album sessions"),
+    ("check_saved", "Check saved metadata"),
+    ("lookup_missing", "Look up missing albums"),
+    ("finalize", "Finalize"),
+]
+STATUS_TO_STEP = {
+    "queued": "store_source",
+    "validating_zip": "store_source",
+    "parsing_spotify_history": "store_source",
+    "storing_streaming_events": "store_source",
+    "fetching_lastfm": "store_source",
+    "storing_scrobbles": "store_source",
+    "grouping_album_sessions": "find_sessions",
+    "matching_cached_albums": "check_saved",
+    "fetching_metadata": "lookup_missing",
+    "finalizing": "finalize",
+    "completed": "finalize",
+    "failed": "finalize",
+}
 
 
 _ALBUM_METADATA_CACHE_MISS = object()
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -82,6 +125,103 @@ class ExistingAlbumMatch:
     record: dict[str, Any]
 
 
+@dataclass
+class ImportMetadataStats:
+    cache_hits: int = 0
+    cache_misses: int = 0
+    lookup_seconds: list[float] = None
+
+    def __post_init__(self) -> None:
+        if self.lookup_seconds is None:
+            self.lookup_seconds = []
+
+    @property
+    def request_count(self) -> int:
+        return len(self.lookup_seconds)
+
+    @property
+    def average_seconds(self) -> float | None:
+        if not self.lookup_seconds:
+            return None
+        return sum(self.lookup_seconds) / len(self.lookup_seconds)
+
+    @property
+    def p95_seconds(self) -> float | None:
+        if not self.lookup_seconds:
+            return None
+        ordered = sorted(self.lookup_seconds)
+        index = max(0, min(len(ordered) - 1, int(len(ordered) * 0.95) - 1))
+        return ordered[index]
+
+
+@dataclass
+class ImportStageTimer:
+    import_session_id: int
+    summary: ImportPreviewSummary
+    active_stage: str | None = None
+    active_started_at: float | None = None
+
+    def start(self, stage: str) -> None:
+        self.finish()
+        self.active_stage = stage
+        self.active_started_at = time.perf_counter()
+        logger.info("import_session=%s stage=%s started", self.import_session_id, stage)
+
+    def finish(self) -> None:
+        if self.active_stage is None or self.active_started_at is None:
+            return
+        elapsed = time.perf_counter() - self.active_started_at
+        timings = dict(self.summary.stage_timings or {})
+        timings[self.active_stage] = round(timings.get(self.active_stage, 0.0) + elapsed, 3)
+        self.summary.stage_timings = timings
+        logger.info(
+            "import_session=%s stage=%s completed elapsed_s=%.3f",
+            self.import_session_id,
+            self.active_stage,
+            elapsed,
+        )
+        self.active_stage = None
+        self.active_started_at = None
+
+
+def _append_import_log(
+    session: Session,
+    import_session: ImportSession,
+    *,
+    message: str,
+    level: str = "info",
+    stage: str | None = None,
+    artist: str | None = None,
+    album: str | None = None,
+    current: int | None = None,
+    total: int | None = None,
+    elapsed_seconds: float | None = None,
+    metadata: dict[str, Any] | None = None,
+) -> None:
+    session.add(
+        ImportSessionLog(
+            import_session_id=import_session.id,
+            created_at=_utc_now(),
+            level=level,
+            stage=stage,
+            message=message,
+            artist=artist,
+            album=album,
+            current=current,
+            total=total,
+            elapsed_seconds=elapsed_seconds,
+            metadata_json=metadata or {},
+        )
+    )
+    logger.info(
+        "import_session=%s stage=%s level=%s message=%s",
+        import_session.id,
+        stage,
+        level,
+        message,
+    )
+
+
 def _set_import_progress(
     import_session: ImportSession,
     summary: ImportPreviewSummary,
@@ -96,9 +236,146 @@ def _set_import_progress(
     import_session.summary_json = summary.model_dump()
 
 
+def _apply_metadata_stats(
+    summary: ImportPreviewSummary,
+    stats: ImportMetadataStats,
+    *,
+    current: int | None = None,
+    total: int | None = None,
+) -> None:
+    if current is not None:
+        summary.metadata_lookup_current = current
+    if total is not None:
+        summary.metadata_lookup_total = total
+    summary.metadata_cache_hits = stats.cache_hits
+    summary.metadata_cache_misses = stats.cache_misses
+    summary.musicbrainz_requests = stats.request_count
+    summary.musicbrainz_lookup_seconds_avg = (
+        round(stats.average_seconds, 3) if stats.average_seconds is not None else None
+    )
+    summary.musicbrainz_lookup_seconds_p95 = (
+        round(stats.p95_seconds, 3) if stats.p95_seconds is not None else None
+    )
+    if (
+        current is not None
+        and total is not None
+        and current > 0
+        and total > current
+        and stats.average_seconds is not None
+    ):
+        summary.estimated_seconds_remaining = round((total - current) * stats.average_seconds, 3)
+    elif current is not None and total is not None and current >= total:
+        summary.estimated_seconds_remaining = 0
+
+
 def _session_summary(import_session: ImportSession) -> ImportPreviewSummary:
     return ImportPreviewSummary.model_validate(
         import_session.summary_json or _empty_summary().model_dump()
+    )
+
+
+def _build_progress_steps(
+    import_session: ImportSession,
+    summary: ImportPreviewSummary,
+) -> list[ImportProgressStep]:
+    current_key = STATUS_TO_STEP.get(import_session.status)
+    current_index = next(
+        (index for index, (key, _) in enumerate(IMPORT_STEP_ORDER) if key == current_key),
+        len(IMPORT_STEP_ORDER) - 1,
+    )
+    steps: list[ImportProgressStep] = []
+    for index, (key, label) in enumerate(IMPORT_STEP_ORDER):
+        if import_session.status == "failed" and key == current_key:
+            status = "failed"
+        elif import_session.status == "completed" or index < current_index:
+            status = "completed"
+        elif index == current_index and import_session.status not in TERMINAL_IMPORT_STATUSES:
+            status = "current"
+        else:
+            status = "pending"
+
+        current = 0
+        total = 0
+        detail = None
+        if key == current_key:
+            current = summary.progress_current
+            total = summary.progress_total
+            detail = _current_step_detail(import_session, summary)
+        elif key == "store_source":
+            current = summary.new_event_rows
+            total = summary.total_rows
+        elif key == "find_sessions":
+            current = summary.distinct_album_candidates
+            total = summary.distinct_album_candidates
+        elif key == "lookup_missing":
+            current = summary.metadata_lookup_current
+            total = summary.metadata_lookup_total
+
+        steps.append(
+            ImportProgressStep(
+                key=key,
+                label=label,
+                status=status,
+                current=current,
+                total=total,
+                detail=detail,
+            )
+        )
+    return steps
+
+
+def _current_step_detail(
+    import_session: ImportSession,
+    summary: ImportPreviewSummary,
+) -> str | None:
+    if import_session.status == "completed":
+        return "Import complete."
+    if import_session.status == "failed":
+        return summary.progress_label or "Import failed."
+    if import_session.status in {"validating_zip", "queued"}:
+        return "Preparing the import."
+    if import_session.status in {"parsing_spotify_history", "storing_streaming_events"}:
+        return f"{summary.progress_current:,} of {summary.progress_total:,} Spotify plays stored."
+    if import_session.status in {"fetching_lastfm", "storing_scrobbles"}:
+        return f"{summary.progress_current:,} of {summary.progress_total:,} Last.fm scrobbles stored."
+    if import_session.status == "matching_cached_albums":
+        return f"{summary.progress_current:,} of {summary.progress_total:,} album sessions checked locally."
+    if import_session.status == "fetching_metadata":
+        total = summary.metadata_lookup_total or summary.progress_total
+        current = summary.metadata_lookup_current or summary.progress_current
+        return f"{current:,} of {total:,} unique albums checked with MusicBrainz."
+    if import_session.status == "finalizing":
+        return "Writing final import results."
+    return summary.progress_label
+
+
+def _build_import_session_summary(import_session: ImportSession) -> ImportSessionSummary:
+    summary = _session_summary(import_session)
+    steps = _build_progress_steps(import_session, summary)
+    current_key = STATUS_TO_STEP.get(import_session.status)
+    current_step = next((step for step in steps if step.key == current_key), None)
+    elapsed_seconds = None
+    try:
+        started = _parse_timestamp(import_session.started_at)
+        ended = _parse_timestamp(import_session.completed_at) if import_session.completed_at else datetime.now(timezone.utc)
+        elapsed_seconds = round((ended - started).total_seconds(), 3)
+    except Exception:
+        elapsed_seconds = None
+    return ImportSessionSummary(
+        id=import_session.id,
+        source=import_session.source,
+        source_user_id=import_session.source_user_id,
+        status=import_session.status,
+        session_name=import_session.session_name,
+        started_at=import_session.started_at,
+        completed_at=import_session.completed_at,
+        summary=summary,
+        steps=steps,
+        current_step_key=current_step.key if current_step else None,
+        current_step_label=current_step.label if current_step else None,
+        current_step_detail=current_step.detail if current_step else None,
+        elapsed_seconds=elapsed_seconds,
+        estimated_seconds_remaining=summary.estimated_seconds_remaining,
     )
 
 
@@ -141,6 +418,13 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
         summary = _session_summary(import_session)
         import_session.status = "failed"
         import_session.completed_at = _utc_now()
+        _append_import_log(
+            session,
+            import_session,
+            level="error",
+            stage=summary.progress_label,
+            message="Import failed. Check server logs for traceback.",
+        )
         _set_import_progress(
             import_session,
             summary,
@@ -151,16 +435,7 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
         session.commit()
         raise
 
-    return ImportSessionSummary(
-        id=import_session.id,
-        source=import_session.source,
-        source_user_id=import_session.source_user_id,
-        status=import_session.status,
-        session_name=import_session.session_name,
-        started_at=import_session.started_at,
-        completed_at=import_session.completed_at,
-        summary=_session_summary(import_session),
-    )
+    return _build_import_session_summary(import_session)
 
 
 def import_history(
@@ -172,21 +447,62 @@ def import_history(
         .where(ImportSession.user_id == repository.user.id)
         .order_by(ImportSession.started_at.desc(), ImportSession.id.desc())
     ).all()
+    return [_build_import_session_summary(row) for row in rows]
+
+
+def import_session_logs(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session_id: int,
+    *,
+    limit: int = 100,
+    order: str = "asc",
+) -> list[ImportSessionLogEntry]:
+    import_session = session.scalars(
+        select(ImportSession).where(
+            ImportSession.id == import_session_id,
+            ImportSession.user_id == repository.user.id,
+        )
+    ).first()
+    if import_session is None:
+        raise KeyError(f"Import session not found: {import_session_id}")
+
+    safe_limit = max(1, min(limit, 500))
+    query = select(ImportSessionLog).where(
+        ImportSessionLog.import_session_id == import_session.id
+    )
+    if order == "desc":
+        query = query.order_by(ImportSessionLog.created_at.desc(), ImportSessionLog.id.desc())
+    else:
+        query = query.order_by(ImportSessionLog.created_at.asc(), ImportSessionLog.id.asc())
+    rows = session.scalars(query.limit(safe_limit)).all()
     return [
-        ImportSessionSummary(
+        ImportSessionLogEntry(
             id=row.id,
-            source=row.source,
-            source_user_id=row.source_user_id,
-            status=row.status,
-            session_name=row.session_name,
-            started_at=row.started_at,
-            completed_at=row.completed_at,
-            summary=ImportPreviewSummary.model_validate(
-                row.summary_json or _empty_summary().model_dump()
-            ),
+            import_session_id=row.import_session_id,
+            created_at=row.created_at,
+            level=row.level,
+            stage=row.stage,
+            message=row.message,
+            artist=row.artist,
+            album=row.album,
+            current=row.current,
+            total=row.total,
+            elapsed_seconds=row.elapsed_seconds,
+            metadata=row.metadata_json or {},
         )
         for row in rows
     ]
+
+
+def resumable_import_session_ids(session: Session) -> list[int]:
+    return list(
+        session.scalars(
+            select(ImportSession.id)
+            .where(ImportSession.status.in_(RESUMABLE_IMPORT_STATUSES))
+            .order_by(ImportSession.started_at.asc(), ImportSession.id.asc())
+        ).all()
+    )
 
 
 def delete_import_session(
@@ -514,6 +830,13 @@ def _create_lastfm_import_session(
         summary_json=_empty_summary().model_dump(),
     )
     session.add(import_session)
+    session.flush()
+    _append_import_log(
+        session,
+        import_session,
+        stage="queued",
+        message="Last.fm import queued.",
+    )
     session.commit()
 
     summary = _session_summary(import_session)
@@ -548,6 +871,13 @@ def create_spotify_import_session(
         summary_json=_empty_summary().model_dump(),
     )
     session.add(import_session)
+    session.flush()
+    _append_import_log(
+        session,
+        import_session,
+        stage="queued",
+        message="Spotify import queued.",
+    )
     session.commit()
 
     return ImportCommitResponse(
@@ -569,11 +899,25 @@ def _run_lastfm_import_session(
     settings = get_settings()
     if not settings.lastfm_api_key:
         raise ValueError("LASTFM_API_KEY is not configured.")
+    if import_session.status in {"fetching_metadata", "finalizing"}:
+        pending_rows = _pending_metadata_rows(session, repository, import_session)
+        if pending_rows:
+            _resume_lastfm_metadata_import(session, repository, import_session, pending_rows)
+            return
 
     import_session.status = "fetching_lastfm"
+    _append_import_log(
+        session,
+        import_session,
+        stage="fetching_lastfm",
+        message="Fetching Last.fm scrobbles.",
+    )
     session.commit()
 
     fetch_summary = _empty_summary()
+    timer = ImportStageTimer(import_session.id, fetch_summary)
+    timer.start("fetching_lastfm")
+    metadata_stats = ImportMetadataStats()
 
     def update_fetch_progress(
         *,
@@ -608,7 +952,9 @@ def _run_lastfm_import_session(
     )
 
     rows = fetch_result.rows
+    timer.finish()
     summary = _lastfm_raw_import_summary(rows, [])
+    timer.summary = summary
     if fetch_result.total_available is not None:
         summary.total_rows = fetch_result.total_available
     _set_import_progress(
@@ -619,6 +965,15 @@ def _run_lastfm_import_session(
         total=len(rows),
     )
     import_session.status = "storing_scrobbles"
+    timer.start("storing_scrobbles")
+    _append_import_log(
+        session,
+        import_session,
+        stage="storing_scrobbles",
+        message="Storing Last.fm scrobbles.",
+        current=0,
+        total=len(rows),
+    )
     session.commit()
 
     def update_store_progress(processed: int, total: int, persisted: int) -> None:
@@ -642,7 +997,11 @@ def _run_lastfm_import_session(
         source_user_id=source_user_id,
         progress_callback=update_store_progress,
     )
+    previous_timings = dict(summary.stage_timings or {})
     summary = _lastfm_raw_import_summary(rows, raw_rows)
+    summary.stage_timings = previous_timings
+    timer.summary = summary
+    timer.finish()
     import_session.status = "grouping_album_sessions"
     _set_import_progress(
         import_session,
@@ -651,11 +1010,26 @@ def _run_lastfm_import_session(
         current=0,
         total=0,
     )
+    timer.start("grouping_album_sessions")
+    _append_import_log(
+        session,
+        import_session,
+        stage="grouping_album_sessions",
+        message="Grouping Last.fm scrobbles into album sessions.",
+    )
     session.commit()
 
     candidate_rows = [row for row in raw_rows if row.match_status == "raw_imported"]
 
+    timer.finish()
     import_session.status = "matching_cached_albums"
+    timer.start("matching_cached_albums")
+    _append_import_log(
+        session,
+        import_session,
+        stage="matching_cached_albums",
+        message="Checking saved album metadata.",
+    )
 
     def update_cached_match_progress(
         current: int,
@@ -676,9 +1050,12 @@ def _run_lastfm_import_session(
         repository=repository,
         imported_rows=candidate_rows,
         allow_remote_metadata=False,
+        metadata_stats=metadata_stats,
         progress_callback=update_cached_match_progress,
     )
+    timer.finish()
     _apply_lastfm_candidate_summary(summary, cached_candidates)
+    _apply_metadata_stats(summary, metadata_stats)
     session.flush()
     _process_lastfm_candidates(
         session=session,
@@ -697,58 +1074,55 @@ def _run_lastfm_import_session(
 
     if pending_rows:
         import_session.status = "fetching_metadata"
+        unique_pending_total = len({row.candidate_key for row in pending_rows if row.candidate_key})
+        _apply_metadata_stats(summary, metadata_stats, current=0, total=unique_pending_total)
         _set_import_progress(
             import_session,
             summary,
             label="Fetching MusicBrainz metadata",
             current=0,
-            total=len({row.candidate_key for row in pending_rows if row.candidate_key}),
+            total=unique_pending_total,
+        )
+        timer.start("fetching_metadata")
+        _append_import_log(
+            session,
+            import_session,
+            stage="fetching_metadata",
+            message="Looking up missing album metadata.",
+            current=0,
+            total=unique_pending_total,
         )
         session.commit()
 
-        def update_remote_match_progress(
-            current: int,
-            total: int,
-            remote_candidates: list[LastfmCandidate],
-        ) -> None:
-            combined_candidates = [
-                candidate
-                for candidate in cached_candidates
-                if candidate.status not in {"no_tracklist", "pending_metadata"}
-            ] + remote_candidates
-            _apply_lastfm_candidate_summary(summary, combined_candidates)
-            _set_import_progress(
-                import_session,
-                summary,
-                label="Fetching MusicBrainz metadata",
-                current=current,
-                total=total,
-            )
-            session.commit()
-
-        remote_candidates = _build_lastfm_candidates_from_imported_events(
+        remote_candidates = _process_pending_metadata_incrementally(
+            session=session,
             repository=repository,
-            imported_rows=pending_rows,
-            allow_remote_metadata=True,
-            progress_callback=update_remote_match_progress,
+            import_session=import_session,
+            pending_rows=pending_rows,
+            cached_candidates=cached_candidates,
+            summary=summary,
+            metadata_stats=metadata_stats,
         )
+        timer.finish()
         final_candidates = [
             candidate
             for candidate in cached_candidates
             if candidate.status not in {"no_tracklist", "pending_metadata"}
         ] + remote_candidates
         _apply_lastfm_candidate_summary(summary, final_candidates)
-        session.flush()
-        _process_lastfm_candidates(
-            session=session,
-            repository=repository,
-            candidates=remote_candidates,
-        )
+        _apply_metadata_stats(summary, metadata_stats)
         session.commit()
     else:
         final_candidates = cached_candidates
 
     import_session.status = "finalizing"
+    timer.start("finalizing")
+    _append_import_log(
+        session,
+        import_session,
+        stage="finalizing",
+        message="Finalizing Last.fm import.",
+    )
     _set_import_progress(
         import_session,
         summary,
@@ -758,7 +1132,9 @@ def _run_lastfm_import_session(
     )
     session.commit()
 
+    timer.finish()
     _apply_lastfm_candidate_summary(summary, final_candidates)
+    _apply_metadata_stats(summary, metadata_stats)
     import_session.status = "completed"
     import_session.completed_at = _utc_now()
     _set_import_progress(
@@ -769,6 +1145,12 @@ def _run_lastfm_import_session(
         total=summary.progress_total or len(final_candidates),
     )
     import_session.summary_json = summary.model_dump()
+    _append_import_log(
+        session,
+        import_session,
+        stage="completed",
+        message="Last.fm import completed.",
+    )
     session.commit()
 
 
@@ -778,18 +1160,36 @@ def _run_spotify_import_session(
     import_session: ImportSession,
 ) -> None:
     artifact_path = import_session.artifact_path
+    existing_raw_events = _spotify_streaming_event_count(session, repository, import_session)
+    existing_import_rows = _imported_event_count_for_session(session, repository, import_session)
+    if existing_raw_events and (
+        not artifact_path
+        or import_session.status in {"fetching_metadata", "finalizing"}
+        or existing_import_rows
+    ):
+        _resume_spotify_import_session(session, repository, import_session)
+        return
     if not artifact_path:
-        raise ValueError("Spotify import ZIP is missing.")
+        raise ValueError("Spotify import ZIP is missing; re-upload is required.")
 
     summary = _empty_summary()
+    timer = ImportStageTimer(import_session.id, summary)
+    metadata_stats = ImportMetadataStats()
     try:
         import_session.status = "validating_zip"
+        timer.start("validating_zip")
         _set_import_progress(
             import_session,
             summary,
             label="Validating Spotify ZIP",
             current=0,
             total=0,
+        )
+        _append_import_log(
+            session,
+            import_session,
+            stage="validating_zip",
+            message="Validating Spotify ZIP.",
         )
         session.commit()
 
@@ -799,6 +1199,7 @@ def _run_spotify_import_session(
             max_entries=settings.spotify_import_max_zip_entries,
             max_uncompressed_bytes=settings.spotify_import_max_uncompressed_bytes,
         )
+        timer.finish()
         summary.total_rows = len(history_entries)
         _set_import_progress(
             import_session,
@@ -808,6 +1209,15 @@ def _run_spotify_import_session(
             total=len(history_entries),
         )
         import_session.status = "parsing_spotify_history"
+        timer.start("parsing_spotify_history")
+        _append_import_log(
+            session,
+            import_session,
+            stage="parsing_spotify_history",
+            message="Parsing Spotify history files.",
+            current=0,
+            total=len(history_entries),
+        )
         session.commit()
 
         for index, entry in enumerate(history_entries, start=1):
@@ -820,6 +1230,7 @@ def _run_spotify_import_session(
             )
             session.commit()
 
+        timer.finish()
         _set_import_progress(
             import_session,
             summary,
@@ -828,6 +1239,13 @@ def _run_spotify_import_session(
             total=0,
         )
         import_session.status = "storing_streaming_events"
+        timer.start("storing_streaming_events")
+        _append_import_log(
+            session,
+            import_session,
+            stage="storing_streaming_events",
+            message="Storing Spotify plays.",
+        )
         session.commit()
 
         def update_store_progress(summary_update: ImportPreviewSummary) -> None:
@@ -853,6 +1271,9 @@ def _run_spotify_import_session(
             history_entries=history_entries,
             progress_callback=update_store_progress,
         )
+        summary.stage_timings = dict(timer.summary.stage_timings or {})
+        timer.summary = summary
+        timer.finish()
 
         import_session.status = "grouping_album_sessions"
         _set_import_progress(
@@ -862,9 +1283,24 @@ def _run_spotify_import_session(
             current=0,
             total=0,
         )
+        timer.start("grouping_album_sessions")
+        _append_import_log(
+            session,
+            import_session,
+            stage="grouping_album_sessions",
+            message="Grouping Spotify plays into album sessions.",
+        )
         session.commit()
 
+        timer.finish()
         import_session.status = "matching_cached_albums"
+        timer.start("matching_cached_albums")
+        _append_import_log(
+            session,
+            import_session,
+            stage="matching_cached_albums",
+            message="Checking saved album metadata.",
+        )
 
         def update_cached_match_progress(
             current: int,
@@ -886,9 +1322,12 @@ def _run_spotify_import_session(
             repository=repository,
             import_session=import_session,
             allow_remote_metadata=False,
+            metadata_stats=metadata_stats,
             progress_callback=update_cached_match_progress,
         )
+        timer.finish()
         _apply_lastfm_candidate_summary(summary, cached_candidates)
+        _apply_metadata_stats(summary, metadata_stats)
         session.flush()
         _process_lastfm_candidates(
             session=session,
@@ -907,58 +1346,57 @@ def _run_spotify_import_session(
 
         if pending_rows:
             import_session.status = "fetching_metadata"
+            unique_pending_total = len(
+                {_album_match_key(row.artist, row.album) for row in pending_rows}
+            )
+            _apply_metadata_stats(summary, metadata_stats, current=0, total=unique_pending_total)
             _set_import_progress(
                 import_session,
                 summary,
                 label="Fetching MusicBrainz metadata",
                 current=0,
-                total=len({row.candidate_key for row in pending_rows if row.candidate_key}),
+                total=unique_pending_total,
+            )
+            timer.start("fetching_metadata")
+            _append_import_log(
+                session,
+                import_session,
+                stage="fetching_metadata",
+                message="Looking up missing album metadata.",
+                current=0,
+                total=unique_pending_total,
             )
             session.commit()
 
-            def update_remote_match_progress(
-                current: int,
-                total: int,
-                remote_candidates: list[LastfmCandidate],
-            ) -> None:
-                combined_candidates = [
-                    candidate
-                    for candidate in cached_candidates
-                    if candidate.status not in {"no_tracklist", "pending_metadata"}
-                ] + remote_candidates
-                _apply_lastfm_candidate_summary(summary, combined_candidates)
-                _set_import_progress(
-                    import_session,
-                    summary,
-                    label="Fetching MusicBrainz metadata",
-                    current=current,
-                    total=total,
-                )
-                session.commit()
-
-            remote_candidates = _build_spotify_candidates_from_imported_events(
+            remote_candidates = _process_pending_metadata_incrementally(
+                session=session,
                 repository=repository,
-                imported_rows=pending_rows,
-                allow_remote_metadata=True,
-                progress_callback=update_remote_match_progress,
+                import_session=import_session,
+                pending_rows=pending_rows,
+                cached_candidates=cached_candidates,
+                summary=summary,
+                metadata_stats=metadata_stats,
             )
+            timer.finish()
             final_candidates = [
                 candidate
                 for candidate in cached_candidates
                 if candidate.status not in {"no_tracklist", "pending_metadata"}
             ] + remote_candidates
             _apply_lastfm_candidate_summary(summary, final_candidates)
-            session.flush()
-            _process_lastfm_candidates(
-                session=session,
-                repository=repository,
-                candidates=remote_candidates,
-            )
+            _apply_metadata_stats(summary, metadata_stats)
             session.commit()
         else:
             final_candidates = cached_candidates
 
         import_session.status = "finalizing"
+        timer.start("finalizing")
+        _append_import_log(
+            session,
+            import_session,
+            stage="finalizing",
+            message="Finalizing Spotify import.",
+        )
         _set_import_progress(
             import_session,
             summary,
@@ -968,7 +1406,9 @@ def _run_spotify_import_session(
         )
         session.commit()
 
+        timer.finish()
         _apply_lastfm_candidate_summary(summary, final_candidates)
+        _apply_metadata_stats(summary, metadata_stats)
         import_session.status = "completed"
         import_session.completed_at = _utc_now()
         _set_import_progress(
@@ -979,11 +1419,174 @@ def _run_spotify_import_session(
             total=summary.progress_total or len(final_candidates),
         )
         import_session.summary_json = summary.model_dump()
+        _append_import_log(
+            session,
+            import_session,
+            stage="completed",
+            message="Spotify import completed.",
+        )
         session.commit()
     finally:
-        _delete_file_quietly(artifact_path)
-        import_session.artifact_path = None
+        if import_session.status in TERMINAL_IMPORT_STATUSES:
+            _delete_file_quietly(artifact_path)
+            import_session.artifact_path = None
         session.commit()
+
+
+def _resume_lastfm_metadata_import(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+    pending_rows: list[ImportedListeningEvent],
+) -> None:
+    summary = _session_summary(import_session)
+    timer = ImportStageTimer(import_session.id, summary)
+    metadata_stats = ImportMetadataStats()
+    _append_import_log(
+        session,
+        import_session,
+        stage="fetching_metadata",
+        message="Resuming Last.fm import from pending metadata candidates.",
+    )
+    import_session.status = "fetching_metadata"
+    timer.start("fetching_metadata")
+    remote_candidates = _process_pending_metadata_incrementally(
+        session=session,
+        repository=repository,
+        import_session=import_session,
+        pending_rows=pending_rows,
+        cached_candidates=[],
+        summary=summary,
+        metadata_stats=metadata_stats,
+    )
+    timer.finish()
+    _apply_lastfm_candidate_summary(summary, remote_candidates)
+    _apply_metadata_stats(summary, metadata_stats)
+    import_session.status = "finalizing"
+    _set_import_progress(
+        import_session,
+        summary,
+        label="Finalizing",
+        current=summary.progress_total or len(remote_candidates),
+        total=summary.progress_total or len(remote_candidates),
+    )
+    session.commit()
+    import_session.status = "completed"
+    import_session.completed_at = _utc_now()
+    _set_import_progress(
+        import_session,
+        summary,
+        label="Completed",
+        current=summary.progress_total or len(remote_candidates),
+        total=summary.progress_total or len(remote_candidates),
+    )
+    import_session.summary_json = summary.model_dump()
+    _append_import_log(
+        session,
+        import_session,
+        stage="completed",
+        message="Last.fm import completed after resume.",
+    )
+    session.commit()
+
+
+def _resume_spotify_import_session(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> None:
+    summary = _session_summary(import_session)
+    timer = ImportStageTimer(import_session.id, summary)
+    metadata_stats = ImportMetadataStats()
+    _append_import_log(
+        session,
+        import_session,
+        stage=import_session.status,
+        message="Resuming Spotify import from persisted progress.",
+    )
+
+    if _imported_event_count_for_session(session, repository, import_session) == 0:
+        import_session.status = "matching_cached_albums"
+        timer.start("matching_cached_albums")
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Matching cached albums",
+            current=0,
+            total=0,
+        )
+        session.commit()
+        cached_candidates = _build_spotify_candidates_from_streaming_events(
+            session=session,
+            repository=repository,
+            import_session=import_session,
+            allow_remote_metadata=False,
+            metadata_stats=metadata_stats,
+        )
+        timer.finish()
+        _apply_lastfm_candidate_summary(summary, cached_candidates)
+        _apply_metadata_stats(summary, metadata_stats)
+        _process_lastfm_candidates(
+            session=session,
+            repository=repository,
+            candidates=cached_candidates,
+        )
+        session.commit()
+    else:
+        cached_candidates = []
+
+    pending_rows = _pending_metadata_rows(session, repository, import_session)
+    if pending_rows:
+        import_session.status = "fetching_metadata"
+        timer.start("fetching_metadata")
+        remote_candidates = _process_pending_metadata_incrementally(
+            session=session,
+            repository=repository,
+            import_session=import_session,
+            pending_rows=pending_rows,
+            cached_candidates=cached_candidates,
+            summary=summary,
+            metadata_stats=metadata_stats,
+        )
+        timer.finish()
+        final_candidates = cached_candidates + remote_candidates
+        _apply_lastfm_candidate_summary(summary, final_candidates)
+        _apply_metadata_stats(summary, metadata_stats)
+    else:
+        final_candidates = cached_candidates
+
+    import_session.status = "finalizing"
+    timer.start("finalizing")
+    _set_import_progress(
+        import_session,
+        summary,
+        label="Finalizing",
+        current=summary.progress_total or len(final_candidates),
+        total=summary.progress_total or len(final_candidates),
+    )
+    session.commit()
+
+    timer.finish()
+    import_session.status = "completed"
+    import_session.completed_at = _utc_now()
+    _set_import_progress(
+        import_session,
+        summary,
+        label="Completed",
+        current=summary.progress_total or len(final_candidates),
+        total=summary.progress_total or len(final_candidates),
+    )
+    import_session.summary_json = summary.model_dump()
+    _append_import_log(
+        session,
+        import_session,
+        stage="completed",
+        message="Spotify import completed after resume.",
+    )
+    if import_session.artifact_path:
+        _delete_file_quietly(import_session.artifact_path)
+        import_session.artifact_path = None
+    session.commit()
 
 
 def _parse_lastfm(
@@ -1173,12 +1776,57 @@ def _stream_persist_spotify_streaming_events(
     return summary
 
 
+def _spotify_streaming_event_count(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> int:
+    return session.scalar(
+        select(func.count())
+        .select_from(SpotifyStreamingEvent)
+        .where(
+            SpotifyStreamingEvent.import_session_id == import_session.id,
+            SpotifyStreamingEvent.user_id == repository.user.id,
+        )
+    ) or 0
+
+
+def _imported_event_count_for_session(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> int:
+    return session.scalar(
+        select(func.count())
+        .select_from(ImportedListeningEvent)
+        .where(
+            ImportedListeningEvent.import_session_id == import_session.id,
+            ImportedListeningEvent.user_id == repository.user.id,
+        )
+    ) or 0
+
+
+def _pending_metadata_rows(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> list[ImportedListeningEvent]:
+    return session.scalars(
+        select(ImportedListeningEvent).where(
+            ImportedListeningEvent.import_session_id == import_session.id,
+            ImportedListeningEvent.user_id == repository.user.id,
+            ImportedListeningEvent.match_status == "pending_metadata",
+        )
+    ).all()
+
+
 def _build_spotify_candidates_from_streaming_events(
     session: Session,
     repository: SqliteStateRepository,
     import_session: ImportSession,
     *,
     allow_remote_metadata: bool,
+    metadata_stats: ImportMetadataStats | None = None,
     progress_callback: Any | None = None,
 ) -> list[LastfmCandidate]:
     metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
@@ -1216,6 +1864,7 @@ def _build_spotify_candidates_from_streaming_events(
                 existing_album_index=existing_album_index,
                 load_metadata=True,
                 allow_remote_metadata=allow_remote_metadata,
+                metadata_stats=metadata_stats,
             )
             candidates.append(candidate)
 
@@ -1252,44 +1901,150 @@ def _build_spotify_candidates_from_imported_events(
     imported_rows: list[ImportedListeningEvent],
     *,
     allow_remote_metadata: bool,
+    metadata_stats: ImportMetadataStats | None = None,
     progress_callback: Any | None = None,
 ) -> list[LastfmCandidate]:
     metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
     existing_album_index = _existing_album_index(repository)
     candidates: list[LastfmCandidate] = []
-    total = len(imported_rows)
-    for index, row in enumerate(imported_rows, start=1):
-        streaming_event_ids = row.raw_payload.get("_spotify_streaming_event_ids") or []
-        streaming_events = repository.session.scalars(
-            select(SpotifyStreamingEvent)
-            .where(
-                SpotifyStreamingEvent.user_id == repository.user.id,
-                SpotifyStreamingEvent.id.in_(streaming_event_ids),
+    grouped_rows: dict[tuple[str, str], list[ImportedListeningEvent]] = defaultdict(list)
+    for row in imported_rows:
+        grouped_rows[_album_match_key(row.artist, row.album)].append(row)
+
+    total = len(grouped_rows)
+    for index, rows_for_album in enumerate(grouped_rows.values(), start=1):
+        for row in rows_for_album:
+            streaming_event_ids = row.raw_payload.get("_spotify_streaming_event_ids") or []
+            streaming_events = repository.session.scalars(
+                select(SpotifyStreamingEvent)
+                .where(
+                    SpotifyStreamingEvent.user_id == repository.user.id,
+                    SpotifyStreamingEvent.id.in_(streaming_event_ids),
+                )
+                .order_by(SpotifyStreamingEvent.played_at, SpotifyStreamingEvent.id)
+            ).all()
+            events = [
+                _spotify_streaming_event_to_import_event(streaming_event)
+                for streaming_event in streaming_events
+            ]
+            if not events:
+                continue
+            candidate = _build_lastfm_candidate(
+                repository=repository,
+                events=events,
+                source_user_id=None,
+                metadata_cache=metadata_cache,
+                existing_album_index=existing_album_index,
+                load_metadata=True,
+                allow_remote_metadata=allow_remote_metadata,
+                metadata_stats=metadata_stats,
             )
-            .order_by(SpotifyStreamingEvent.played_at, SpotifyStreamingEvent.id)
-        ).all()
-        events = [
-            _spotify_streaming_event_to_import_event(streaming_event)
-            for streaming_event in streaming_events
-        ]
-        if not events:
-            continue
-        candidate = _build_lastfm_candidate(
-            repository=repository,
-            events=events,
-            source_user_id=None,
-            metadata_cache=metadata_cache,
-            existing_album_index=existing_album_index,
-            load_metadata=True,
-            allow_remote_metadata=allow_remote_metadata,
-        )
-        candidate.candidate_key = row.candidate_key or candidate.candidate_key
-        candidates.append(candidate)
+            candidate.candidate_key = row.candidate_key or candidate.candidate_key
+            candidates.append(candidate)
         if progress_callback and (index == 1 or index % 5 == 0 or index == total):
             progress_callback(index, total, candidates)
 
     candidates.sort(key=lambda candidate: candidate.listened_at, reverse=True)
     return candidates
+
+
+def _build_remote_candidates_for_imported_rows(
+    repository: SqliteStateRepository,
+    imported_rows: list[ImportedListeningEvent],
+    *,
+    metadata_stats: ImportMetadataStats,
+) -> list[LastfmCandidate]:
+    if imported_rows and imported_rows[0].source == SPOTIFY_IMPORT_SOURCE:
+        return _build_spotify_candidates_from_imported_events(
+            repository=repository,
+            imported_rows=imported_rows,
+            allow_remote_metadata=True,
+            metadata_stats=metadata_stats,
+        )
+    return _build_lastfm_candidates_from_imported_events(
+        repository=repository,
+        imported_rows=imported_rows,
+        allow_remote_metadata=True,
+        metadata_stats=metadata_stats,
+    )
+
+
+def _process_pending_metadata_incrementally(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+    pending_rows: list[ImportedListeningEvent],
+    cached_candidates: list[LastfmCandidate],
+    summary: ImportPreviewSummary,
+    metadata_stats: ImportMetadataStats,
+) -> list[LastfmCandidate]:
+    grouped_rows: dict[tuple[str, str], list[ImportedListeningEvent]] = defaultdict(list)
+    for row in pending_rows:
+        grouped_rows[_album_match_key(row.artist, row.album)].append(row)
+
+    remote_candidates: list[LastfmCandidate] = []
+    total = len(grouped_rows)
+    base_candidates = [
+        candidate
+        for candidate in cached_candidates
+        if candidate.status not in {"no_tracklist", "pending_metadata"}
+    ]
+    _apply_metadata_stats(summary, metadata_stats, current=0, total=total)
+    _set_import_progress(
+        import_session,
+        summary,
+        label="Fetching MusicBrainz metadata",
+        current=0,
+        total=total,
+    )
+
+    for index, rows_for_album in enumerate(grouped_rows.values(), start=1):
+        artist = rows_for_album[0].artist
+        album = rows_for_album[0].album
+        started_at = time.perf_counter()
+        candidates = _build_remote_candidates_for_imported_rows(
+            repository,
+            rows_for_album,
+            metadata_stats=metadata_stats,
+        )
+        _process_lastfm_candidates(
+            session=session,
+            repository=repository,
+            candidates=candidates,
+        )
+        remote_candidates.extend(candidates)
+        elapsed = time.perf_counter() - started_at
+        combined_candidates = base_candidates + remote_candidates
+        _apply_lastfm_candidate_summary(summary, combined_candidates)
+        _apply_metadata_stats(summary, metadata_stats, current=index, total=total)
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Fetching MusicBrainz metadata",
+            current=index,
+            total=total,
+        )
+        statuses = sorted({candidate.status for candidate in candidates}) or ["skipped"]
+        _append_import_log(
+            session,
+            import_session,
+            stage="fetching_metadata",
+            message=f"Checked {artist} - {album}: {', '.join(statuses)}",
+            artist=artist,
+            album=album,
+            current=index,
+            total=total,
+            elapsed_seconds=round(elapsed, 3),
+            metadata={
+                "statuses": statuses,
+                "cache_hits": summary.metadata_cache_hits,
+                "cache_misses": summary.metadata_cache_misses,
+                "musicbrainz_requests": summary.musicbrainz_requests,
+            },
+        )
+        import_session.summary_json = summary.model_dump()
+        session.commit()
+    return remote_candidates
 
 
 def _persist_spotify_candidate_rows(
@@ -1300,6 +2055,8 @@ def _persist_spotify_candidate_rows(
 ) -> list[ImportedListeningEvent]:
     persisted: list[ImportedListeningEvent] = []
     for candidate in candidates:
+        if candidate.status == "partial_listen":
+            continue
         representative = candidate.events[-1]
         streaming_event_ids = [
             event.raw_payload.get("_spotify_streaming_event_id")
@@ -1358,6 +2115,7 @@ def _spotify_streaming_event_to_import_event(
             "_spotify_streaming_event_id": row.id,
             "_spotify_track_uri": row.spotify_track_uri,
             "_spotify_track_name": row.track_name,
+            "_spotify_ms_played": row.ms_played,
         },
     )
 
@@ -1588,6 +2346,7 @@ def _build_lastfm_candidates_from_imported_events(
     imported_rows: list[ImportedListeningEvent],
     *,
     allow_remote_metadata: bool = True,
+    metadata_stats: ImportMetadataStats | None = None,
     progress_callback: Any | None = None,
 ) -> list[LastfmCandidate]:
     events = [
@@ -1612,6 +2371,7 @@ def _build_lastfm_candidates_from_imported_events(
         source_user_id=imported_rows[0].source_user_id if imported_rows else None,
         load_metadata=True,
         allow_remote_metadata=allow_remote_metadata,
+        metadata_stats=metadata_stats,
         progress_callback=progress_callback,
     )
     imported_lookup = {
@@ -1633,6 +2393,7 @@ def _build_lastfm_candidates_from_events(
     *,
     load_metadata: bool = True,
     allow_remote_metadata: bool = True,
+    metadata_stats: ImportMetadataStats | None = None,
     progress_callback: Any | None = None,
 ) -> list[LastfmCandidate]:
     grouped: dict[tuple[str, str], list[NormalizedImportEvent]] = defaultdict(list)
@@ -1659,6 +2420,7 @@ def _build_lastfm_candidates_from_events(
             existing_album_index=existing_album_index,
             load_metadata=load_metadata,
             allow_remote_metadata=allow_remote_metadata,
+            metadata_stats=metadata_stats,
         )
         candidates.append(candidate)
         if progress_callback and (index == 1 or index % 5 == 0 or index == total_candidates):
@@ -1676,6 +2438,7 @@ def _build_lastfm_candidate(
     *,
     load_metadata: bool = True,
     allow_remote_metadata: bool = True,
+    metadata_stats: ImportMetadataStats | None = None,
 ) -> LastfmCandidate:
     artist = events[0].artist or "Unknown Artist"
     album = events[0].album or "Unknown Album"
@@ -1694,7 +2457,7 @@ def _build_lastfm_candidate(
     }
     remote_metadata_allowed = (
         allow_remote_metadata
-        and len(unique_track_identities) >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
+        and _candidate_has_remote_metadata_evidence(events, unique_track_identities)
     )
     metadata = (
         _lastfm_album_metadata(
@@ -1706,6 +2469,7 @@ def _build_lastfm_candidate(
             matched_album_record=matched_album.record if matched_album else None,
             allow_remote_metadata=remote_metadata_allowed,
             entry_source=events[0].source,
+            metadata_stats=metadata_stats,
         )
         if load_metadata
         else None
@@ -1751,13 +2515,13 @@ def _build_lastfm_candidate(
         else:
             status = "partial_listen"
             detail = (
-                f"Matched {matched_track_count} of {total_track_count or len(unique_tracks)} tracks. "
+                f"Matched {matched_track_count} of {total_track_count or len(unique_track_names)} tracks. "
                 "This does not count as a completed album listen."
             )
-    elif len(unique_track_identities) < LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS:
+    elif not _candidate_has_remote_metadata_evidence(events, unique_track_identities):
         status = "partial_listen"
         detail = (
-            f"Only {len(unique_track_identities)} unique tracks were scrobbled; skipped remote metadata "
+            f"Only {len(unique_track_identities)} unique tracks were available; skipped remote metadata "
             "lookup because this is not enough evidence for a full album listen."
         )
     elif not allow_remote_metadata:
@@ -1786,6 +2550,23 @@ def _build_lastfm_candidate(
         confidence=confidence,
         metadata=metadata,
     )
+
+
+def _candidate_has_remote_metadata_evidence(
+    events: list[NormalizedImportEvent],
+    unique_track_identities: set[str],
+) -> bool:
+    if events and events[0].source == SPOTIFY_IMPORT_SOURCE:
+        total_ms_played = sum(
+            int(event.raw_payload.get("_spotify_ms_played") or event.raw_payload.get("ms_played") or 0)
+            for event in events
+        )
+        unique_tracks = len(unique_track_identities)
+        return unique_tracks >= SPOTIFY_REMOTE_METADATA_ALWAYS_UNIQUE_TRACKS or (
+            unique_tracks >= SPOTIFY_REMOTE_METADATA_MIN_UNIQUE_TRACKS
+            and total_ms_played >= SPOTIFY_REMOTE_METADATA_MIN_MS_PLAYED
+        )
+    return len(unique_track_identities) >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
 
 
 def _is_lastfm_importable_album_metadata(
@@ -1843,32 +2624,46 @@ def _lastfm_album_metadata(
     matched_album_record: dict[str, Any] | None,
     allow_remote_metadata: bool = True,
     entry_source: str = "lastfm",
+    metadata_stats: ImportMetadataStats | None = None,
 ) -> dict[str, Any] | None:
     cache_key = (artist.casefold(), album.casefold())
     if cache_key in metadata_cache:
+        if metadata_stats is not None:
+            metadata_stats.cache_hits += 1
         return metadata_cache[cache_key]
 
     if matched_album_id is not None and matched_album_record and matched_album_record.get("tracklist"):
         metadata_cache[cache_key] = matched_album_record
+        if metadata_stats is not None:
+            metadata_stats.cache_hits += 1
         return matched_album_record
 
     cached = _read_album_metadata_cache(session, artist, album)
     if cached is not _ALBUM_METADATA_CACHE_MISS:
         metadata_cache[cache_key] = cached if isinstance(cached, dict) else None
+        if metadata_stats is not None:
+            metadata_stats.cache_hits += 1
         return metadata_cache[cache_key]
 
     if not allow_remote_metadata:
         metadata_cache[cache_key] = None
         return None
 
+    started_at = time.perf_counter()
+    if metadata_stats is not None:
+        metadata_stats.cache_misses += 1
     try:
         metadata = album_metadata_service.get_album_metadata_for_import_matching(artist, album)
         if metadata:
             metadata["entry_source"] = entry_source
             metadata.pop("_refresh_warnings", None)
     except Exception:
+        if metadata_stats is not None:
+            metadata_stats.lookup_seconds.append(time.perf_counter() - started_at)
         metadata_cache[cache_key] = None
         return None
+    if metadata_stats is not None:
+        metadata_stats.lookup_seconds.append(time.perf_counter() - started_at)
 
     _write_album_metadata_cache(session, artist, album, metadata)
     metadata_cache[cache_key] = metadata
@@ -1993,6 +2788,15 @@ def _empty_summary() -> ImportPreviewSummary:
         progress_current=0,
         progress_total=0,
         progress_label=None,
+        stage_timings={},
+        metadata_lookup_current=0,
+        metadata_lookup_total=0,
+        metadata_cache_hits=0,
+        metadata_cache_misses=0,
+        musicbrainz_requests=0,
+        musicbrainz_lookup_seconds_avg=None,
+        musicbrainz_lookup_seconds_p95=None,
+        estimated_seconds_remaining=None,
     )
 
 

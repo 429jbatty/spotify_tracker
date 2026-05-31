@@ -12,7 +12,15 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema, get_engine
-from backend.app.models import AlbumMetadataCache, ImportedListeningEvent, SpotifyStreamingEvent
+from backend.app.models import (
+    Album,
+    AlbumMetadataCache,
+    AlbumListen,
+    ImportSession,
+    ImportSessionLog,
+    ImportedListeningEvent,
+    SpotifyStreamingEvent,
+)
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import import_service
 
@@ -135,6 +143,27 @@ class ApiImportTests(unittest.TestCase):
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         with session_factory() as session:
             return session.query(SpotifyStreamingEvent).count()
+
+    def _album_listen_count(self, database_url, artist, album):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            return (
+                session.query(AlbumListen)
+                .join(Album)
+                .filter(Album.artist == artist, Album.name == album)
+                .count()
+            )
+
+    def _import_log_count(self, database_url, import_session_id):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            return (
+                session.query(ImportSessionLog)
+                .filter(ImportSessionLog.import_session_id == import_session_id)
+                .count()
+            )
 
     def _spotify_zip(self, files):
         buffer = io.BytesIO()
@@ -361,6 +390,8 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(history_response.json()[0]["status"], "completed")
         self.assertEqual(summary["new_event_rows"], 4)
         self.assertEqual(summary["derived_album_listens"], 1)
+        self.assertIn("storing_streaming_events", summary["stage_timings"])
+        self.assertIn("finalizing", summary["stage_timings"])
         self.assertIn(
             "2026-02-02T02:48:00Z",
             state_response.json()["completed_albums"]["Existing Artist - Existing Album"][
@@ -411,9 +442,11 @@ class ApiImportTests(unittest.TestCase):
                 self._run_import_session(database_url, response.json()["import_session_id"])
             history_response = client.get("/api/users/jacob/imports")
             state_response = client.get("/api/album-state")
+            imported_event_count = self._imported_event_count(database_url)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(history_response.json()[0]["summary"]["derived_album_listens"], 0)
+        self.assertEqual(imported_event_count, 0)
         self.assertEqual(
             state_response.json()["completed_albums"]["Existing Artist - Existing Album"][
                 "listen_history"
@@ -430,7 +463,16 @@ class ApiImportTests(unittest.TestCase):
                     self._spotify_rows(
                         artist=f"Bulk Artist {album_index}",
                         album=f"Bulk Album {album_index}",
-                        tracks=["Track 1", "Track 2", "Track 3", "Track 4"],
+                        tracks=[
+                            "Track 1",
+                            "Track 2",
+                            "Track 3",
+                            "Track 4",
+                            "Track 5",
+                            "Track 6",
+                            "Track 7",
+                            "Track 8",
+                        ],
                     )
                 )
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
@@ -448,7 +490,7 @@ class ApiImportTests(unittest.TestCase):
                 imported_event_count = self._imported_event_count(database_url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(spotify_event_count, 100)
+        self.assertEqual(spotify_event_count, 200)
         self.assertEqual(imported_event_count, 25)
 
     def test_spotify_import_can_create_multiple_album_listens_for_split_sessions(self):
@@ -486,12 +528,30 @@ class ApiImportTests(unittest.TestCase):
             first_session = self._spotify_rows(
                 artist="Remote Spotify Artist",
                 album="Remote Spotify Album",
-                tracks=["Track 1", "Track 2", "Track 3"],
+                tracks=[
+                    "Track 1",
+                    "Track 2",
+                    "Track 3",
+                    "Track 4",
+                    "Track 5",
+                    "Track 6",
+                    "Track 7",
+                    "Track 8",
+                ],
             )
             second_session = self._spotify_rows(
                 artist="Remote Spotify Artist",
                 album="Remote Spotify Album",
-                tracks=["Track 1", "Track 2", "Track 3"],
+                tracks=[
+                    "Track 1",
+                    "Track 2",
+                    "Track 3",
+                    "Track 4",
+                    "Track 5",
+                    "Track 6",
+                    "Track 7",
+                    "Track 8",
+                ],
             )
             for index, row in enumerate(second_session):
                 row["ts"] = f"2026-02-05T02:{45 + index:02d}:00Z"
@@ -507,6 +567,11 @@ class ApiImportTests(unittest.TestCase):
                     {"title": "Track 1"},
                     {"title": "Track 2"},
                     {"title": "Track 3"},
+                    {"title": "Track 4"},
+                    {"title": "Track 5"},
+                    {"title": "Track 6"},
+                    {"title": "Track 7"},
+                    {"title": "Track 8"},
                 ],
             }
 
@@ -523,7 +588,261 @@ class ApiImportTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(metadata_lookup.call_count, 1)
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(summary["metadata_lookup_total"], 1)
+        self.assertEqual(summary["metadata_lookup_current"], 1)
         self.assertEqual(history_response.json()[0]["summary"]["derived_album_listens"], 2)
+
+    def test_spotify_import_creates_review_for_strong_evidence_when_musicbrainz_missing(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Review Spotify Artist",
+                album="Review Spotify Album",
+                tracks=[
+                    "Track 1",
+                    "Track 2",
+                    "Track 3",
+                    "Track 4",
+                    "Track 5",
+                    "Track 6",
+                    "Track 7",
+                    "Track 8",
+                ],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=None,
+            ) as metadata_lookup:
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+                review_count = self._imported_event_count(database_url, "candidate_review")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(metadata_lookup.call_count, 1)
+        self.assertEqual(review_count, 1)
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(summary["review_candidates"], 1)
+        self.assertEqual(summary["metadata_lookup_total"], 1)
+
+    def test_import_history_includes_step_progress_and_live_logs(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Logged Spotify Artist",
+                album="Logged Spotify Album",
+                tracks=[
+                    "Track 1",
+                    "Track 2",
+                    "Track 3",
+                    "Track 4",
+                    "Track 5",
+                    "Track 6",
+                    "Track 7",
+                    "Track 8",
+                ],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=None,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+            history_response = client.get("/api/users/jacob/imports")
+            logs_response = client.get(
+                f"/api/users/jacob/imports/{import_session_id}/logs?order=asc"
+            )
+            log_count = self._import_log_count(database_url, import_session_id)
+
+        self.assertEqual(history_response.status_code, 200)
+        history_item = history_response.json()[0]
+        self.assertEqual(history_item["current_step_key"], "finalize")
+        self.assertEqual(
+            [step["key"] for step in history_item["steps"]],
+            [
+                "store_source",
+                "find_sessions",
+                "check_saved",
+                "lookup_missing",
+                "finalize",
+            ],
+        )
+        self.assertGreater(log_count, 0)
+        self.assertEqual(logs_response.status_code, 200)
+        log_messages = [entry["message"] for entry in logs_response.json()]
+        self.assertIn("Spotify import queued.", log_messages)
+        self.assertTrue(
+            any("Checked Logged Spotify Artist - Logged Spotify Album" in message for message in log_messages)
+        )
+
+    def test_spotify_metadata_commits_each_unique_album_before_queue_finishes(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            first_rows = self._spotify_rows(
+                artist="First Remote Artist",
+                album="First Remote Album",
+                tracks=[
+                    "Track 1",
+                    "Track 2",
+                    "Track 3",
+                    "Track 4",
+                    "Track 5",
+                    "Track 6",
+                    "Track 7",
+                    "Track 8",
+                ],
+            )
+            second_rows = self._spotify_rows(
+                artist="Second Remote Artist",
+                album="Second Remote Album",
+                tracks=[
+                    "Track 1",
+                    "Track 2",
+                    "Track 3",
+                    "Track 4",
+                    "Track 5",
+                    "Track 6",
+                    "Track 7",
+                    "Track 8",
+                ],
+            )
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": first_rows + second_rows}
+            )
+
+            def metadata_lookup(artist, album):
+                if artist == "Second Remote Artist":
+                    self.assertEqual(
+                        self._album_listen_count(
+                            database_url,
+                            "First Remote Artist",
+                            "First Remote Album",
+                        ),
+                        1,
+                    )
+                return {
+                    "artist": artist,
+                    "name": album,
+                    "primary_type": "Album",
+                    "_musicbrainz_match": {"confidence": 91},
+                    "tracklist": [{"title": f"Track {index}"} for index in range(1, 9)],
+                }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=metadata_lookup,
+            ) as metadata_lookup_mock:
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+            first_listen_count = self._album_listen_count(
+                database_url,
+                "First Remote Artist",
+                "First Remote Album",
+            )
+            second_listen_count = self._album_listen_count(
+                database_url,
+                "Second Remote Artist",
+                "Second Remote Album",
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(metadata_lookup_mock.call_count, 2)
+        self.assertEqual(first_listen_count, 1)
+        self.assertEqual(second_listen_count, 1)
+
+    def test_spotify_resume_without_zip_after_raw_events_are_stored(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            _, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            engine = get_engine(database_url)
+            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                import_session = ImportSession(
+                    user_id=repository.user.id,
+                    source="spotify_import",
+                    source_user_id=None,
+                    status="storing_streaming_events",
+                    session_name="Resume stored Spotify rows",
+                    started_at=import_service._utc_now(),
+                    completed_at=None,
+                    artifact_path=None,
+                    summary_json=import_service._empty_summary().model_dump(),
+                )
+                session.add(import_session)
+                session.flush()
+                for row in self._spotify_rows():
+                    session.add(
+                        SpotifyStreamingEvent(
+                            user_id=repository.user.id,
+                            import_session_id=import_session.id,
+                            event_fingerprint=hashlib.sha256(
+                                json.dumps(row, sort_keys=True).encode("utf-8")
+                            ).hexdigest(),
+                            played_at=row["ts"],
+                            ms_played=row["ms_played"],
+                            spotify_track_uri=row["spotify_track_uri"],
+                            track_name=row["master_metadata_track_name"],
+                            artist_name=row["master_metadata_album_artist_name"],
+                            album_name=row["master_metadata_album_album_name"],
+                            platform=row["platform"],
+                            country=row["conn_country"],
+                            raw_payload=row,
+                        )
+                    )
+                import_session_id = import_session.id
+                session.commit()
+
+                import_service.run_import_session(session, import_session_id)
+
+            with session_factory() as session:
+                finished = session.get(ImportSession, import_session_id)
+                listen_count = session.query(AlbumListen).count()
+
+        self.assertEqual(finished.status, "completed")
+        self.assertEqual(listen_count, 2)
+
+    def test_spotify_resume_without_zip_before_raw_storage_fails_clearly(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            _, database_url = self._client(temp_dir)
+            engine = get_engine(database_url)
+            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                import_session = ImportSession(
+                    user_id=repository.user.id,
+                    source="spotify_import",
+                    source_user_id=None,
+                    status="queued",
+                    session_name="Missing ZIP",
+                    started_at=import_service._utc_now(),
+                    completed_at=None,
+                    artifact_path=None,
+                    summary_json=import_service._empty_summary().model_dump(),
+                )
+                session.add(import_session)
+                session.commit()
+                import_session_id = import_session.id
+
+                with self.assertRaisesRegex(ValueError, "re-upload is required"):
+                    import_service.run_import_session(session, import_session_id)
+                failed = session.get(ImportSession, import_session_id)
+
+        self.assertEqual(failed.status, "failed")
 
     def test_delete_spotify_import_removes_raw_events_and_imported_listens(self):
         with tempfile.TemporaryDirectory() as temp_dir:

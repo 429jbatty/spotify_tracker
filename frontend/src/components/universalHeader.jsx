@@ -117,9 +117,9 @@ function UniversalHeader({
           <Tabs
             value={view}
             onValueChange={setView}
-            className="min-w-0 w-full xl:flex-1 xl:items-center"
+            className="w-full min-w-0 xl:flex-1 xl:items-center"
           >
-            <TabsList className="!h-auto w-full flex-wrap items-stretch justify-center gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm">
+            <TabsList className="grid !h-auto w-full grid-cols-4 items-stretch gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
 
@@ -127,12 +127,12 @@ function UniversalHeader({
                   <TabsTrigger
                     key={item.value}
                     value={item.value}
-                    className={`h-auto min-w-[11.25rem] flex-none self-stretch justify-start gap-3 rounded-md px-4 py-3.5 hover:bg-muted/70 after:hidden ${item.accent}`}
+                    className={`h-auto min-w-0 self-stretch justify-start gap-2 rounded-md px-2.5 py-3.5 hover:bg-muted/70 after:hidden ${item.accent}`}
                   >
                     <Icon className={`size-4 ${item.iconAccent}`} />
-                    <span className="flex flex-col items-start leading-snug">
-                      <span className="text-sm font-medium">{item.label}</span>
-                      <span className="text-[11px] font-normal text-muted-foreground">
+                    <span className="flex min-w-0 flex-col items-start leading-snug">
+                      <span className="w-full truncate text-sm font-medium">{item.label}</span>
+                      <span className="w-full truncate text-[11px] font-normal text-muted-foreground">
                         {item.description}
                       </span>
                     </span>

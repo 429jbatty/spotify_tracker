@@ -1,5 +1,15 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FileArchive, Upload, History, RefreshCcw, Trash2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Circle,
+  Clock3,
+  FileArchive,
+  History,
+  RefreshCcw,
+  Trash2,
+  Upload,
+  XCircle,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,16 +23,17 @@ import {
   commitImport,
   deleteImportSession,
   fetchImportHistory,
+  fetchImportLogs,
   fetchImportReview,
   previewImport,
   resolveImportReview,
   uploadSpotifyImportZip,
 } from "../services/albumApi";
 import {
-  IMPORT_STATUS_LABELS,
+  currentStepPercent,
+  formatDuration,
+  importDiagnostics,
   importSummaryText,
-  progressPercent,
-  progressText,
   previewSummaryNote,
   summaryCards,
 } from "./importHistory/importDialogConfig";
@@ -30,6 +41,77 @@ import {
   SourceGuide,
   SummaryStat,
 } from "./importHistory/ImportDialogFields";
+
+function stepIcon(status) {
+  if (status === "completed") return <CheckCircle2 className="size-4 text-emerald-600" />;
+  if (status === "current") return <Clock3 className="size-4 text-foreground" />;
+  if (status === "failed") return <XCircle className="size-4 text-destructive" />;
+  return <Circle className="size-4 text-muted-foreground/60" />;
+}
+
+function ImportProgressStepper({ item }) {
+  const percent = currentStepPercent(item);
+  const activeStep = item.steps?.find((step) => step.key === item.current_step_key);
+  return (
+    <div className="mt-3 space-y-3">
+      <div className="space-y-2">
+        {(item.steps || []).map((step) => (
+          <div key={step.key} className="flex items-start gap-2 text-xs">
+            <div className="mt-0.5">{stepIcon(step.status)}</div>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center justify-between gap-2">
+                <span className={step.status === "current" ? "font-medium text-foreground" : "text-muted-foreground"}>
+                  {step.label}
+                </span>
+                {step.total > 0 && (
+                  <span className="shrink-0 tabular-nums text-muted-foreground">
+                    {Number(step.current || 0).toLocaleString()} / {Number(step.total).toLocaleString()}
+                  </span>
+                )}
+              </div>
+              {step.detail && (
+                <p className="mt-0.5 text-muted-foreground">{step.detail}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+      {percent !== null && activeStep ? (
+        <div className="space-y-1.5">
+          <div className="h-2 overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-foreground transition-all"
+              style={{ width: `${percent}%` }}
+            />
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {activeStep.label} • {percent}%
+          </p>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function ImportLogPanel({ logs = [] }) {
+  if (!logs.length) {
+    return <p className="mt-2 text-xs text-muted-foreground">No log entries yet.</p>;
+  }
+  return (
+    <div className="mt-2 max-h-56 overflow-auto rounded-md border border-border/70 bg-muted/20">
+      {logs.slice(-80).map((entry) => (
+        <div key={entry.id} className="border-b border-border/60 px-3 py-2 last:border-b-0">
+          <p className="text-xs font-medium text-foreground">
+            {new Date(entry.created_at).toLocaleTimeString()}{" "}
+            {entry.current && entry.total ? `${entry.current}/${entry.total}` : ""}
+            {entry.artist || entry.album ? ` • ${entry.artist || "Unknown"} - ${entry.album || "Unknown"}` : ""}
+          </p>
+          <p className="text-xs text-muted-foreground">{entry.message}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function ImportHistoryDialog({
   selectedUser,
@@ -47,6 +129,8 @@ function ImportHistoryDialog({
   const [preview, setPreview] = useState(null);
   const [history, setHistory] = useState([]);
   const [reviewItems, setReviewItems] = useState([]);
+  const [importLogsById, setImportLogsById] = useState({});
+  const [expandedLogIds, setExpandedLogIds] = useState({});
   const [pendingPreview, setPendingPreview] = useState(false);
   const [pendingCommit, setPendingCommit] = useState(false);
   const [pendingResolveId, setPendingResolveId] = useState(null);
@@ -66,6 +150,13 @@ function ImportHistoryDialog({
   const activeImportId = activeImport?.id;
   const activeImportStatus = activeImport?.status;
   const showImportStatus = pendingCommit || Boolean(activeImport);
+  const expandedImportIds = useMemo(
+    () =>
+      Object.entries(expandedLogIds)
+        .filter(([, expanded]) => expanded)
+        .map(([id]) => Number(id)),
+    [expandedLogIds]
+  );
   const normalizedAlbums = useMemo(
     () =>
       [...albums].sort((a, b) =>
@@ -97,6 +188,26 @@ function ImportHistoryDialog({
     return { historyPayload, reviewPayload };
   }, [selectedUserSlug]);
 
+  const loadImportLogs = useCallback(
+    async (importIds) => {
+      if (!selectedUserSlug || !importIds.length) return;
+      const uniqueIds = [...new Set(importIds.filter(Boolean))];
+      const entries = await Promise.all(
+        uniqueIds.map(async (importId) => [
+          importId,
+          (
+            await fetchImportLogs(importId, selectedUserSlug, { limit: 80, order: "desc" })
+          ).reverse(),
+        ])
+      );
+      setImportLogsById((current) => ({
+        ...current,
+        ...Object.fromEntries(entries),
+      }));
+    },
+    [selectedUserSlug]
+  );
+
   useEffect(() => {
     if (!open || !selectedUserSlug) return;
 
@@ -116,6 +227,16 @@ function ImportHistoryDialog({
           const nextActiveImport = historyPayload.find(
             (item) => !["completed", "failed"].includes(item.status)
           );
+          const logIds = [
+            ...(nextActiveImport ? [nextActiveImport.id] : []),
+            ...expandedImportIds,
+          ];
+          if (logIds.length) {
+            loadImportLogs(logIds).catch((err) => setError(err.message));
+          }
+          if (nextActiveImport) {
+            onDataChanged?.();
+          }
           if (activeImportId && !nextActiveImport) {
             return Promise.all([
               fetchImportReview(selectedUserSlug).then((reviewPayload) =>
@@ -131,7 +252,16 @@ function ImportHistoryDialog({
     refresh();
     const intervalId = window.setInterval(refresh, 2000);
     return () => window.clearInterval(intervalId);
-  }, [activeImportId, activeImportStatus, onDataChanged, open, pendingCommit, selectedUserSlug]);
+  }, [
+    activeImportId,
+    activeImportStatus,
+    expandedImportIds,
+    loadImportLogs,
+    onDataChanged,
+    open,
+    pendingCommit,
+    selectedUserSlug,
+  ]);
 
   const resetState = () => {
     setActiveSource("lastfm");
@@ -140,6 +270,8 @@ function ImportHistoryDialog({
     setPreview(null);
     setHistory([]);
     setReviewItems([]);
+    setImportLogsById({});
+    setExpandedLogIds({});
     setError(null);
   };
 
@@ -242,6 +374,18 @@ function ImportHistoryDialog({
       setError(err.message);
     } finally {
       setPendingDeleteImportId(null);
+    }
+  };
+
+  const toggleImportLogs = async (itemId) => {
+    const nextExpanded = !expandedLogIds[itemId];
+    setExpandedLogIds((current) => ({ ...current, [itemId]: nextExpanded }));
+    if (nextExpanded) {
+      try {
+        await loadImportLogs([itemId]);
+      } catch (err) {
+        setError(err.message);
+      }
     }
   };
 
@@ -401,13 +545,12 @@ function ImportHistoryDialog({
                 <div className="rounded-xl border border-border/70 bg-muted/30 p-3 text-sm">
                   <p className="font-medium text-foreground">
                     {activeImport
-                      ? IMPORT_STATUS_LABELS[activeImport.status] || activeImport.status
+                      ? activeImport.current_step_label || activeImport.status
                       : "Starting import..."}
                   </p>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    You can leave this dialog open while Albumary updates the import history below.
-                    Large imports store source events first, then match albums from local or
-                    cached tracklists before fetching MusicBrainz metadata in the background.
+                    {activeImport?.current_step_detail ||
+                      "Albumary is preparing the import. Progress and logs appear below."}
                   </p>
                 </div>
               )}
@@ -488,62 +631,88 @@ function ImportHistoryDialog({
                   {history.map((item) => (
                     <div key={item.id} className="rounded-xl border border-border/70 bg-background/70 p-3">
                       {(() => {
-                        const percent = progressPercent(item.summary);
-                        const label = progressText(item.summary, item.status);
                         const isActive = !["completed", "failed"].includes(item.status);
+                        const diagnostics = importDiagnostics(item);
+                        const logsExpanded = Boolean(expandedLogIds[item.id]);
+                        const logs = importLogsById[item.id] || [];
                         return (
                           <>
-                      <div className="flex items-start justify-between gap-3">
-                        <div>
-                          <p className="text-sm font-medium text-foreground">
-                            {item.session_name || item.source}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {item.source}
-                            {item.source_user_id ? ` • ${item.source_user_id}` : ""}
-                          </p>
-                          <p className="mt-1 text-xs font-medium text-foreground">
-                            {IMPORT_STATUS_LABELS[item.status] || item.status}
-                          </p>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground">
-                            <History className="size-3.5" />
-                            {item.started_at}
-                          </div>
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="size-8 text-muted-foreground hover:text-destructive"
-                            disabled={pendingDeleteImportId === item.id}
-                            onClick={() => handleDeleteImport(item)}
-                            aria-label={`Delete import ${item.session_name || item.source}`}
-                          >
-                            <Trash2 className="size-4" />
-                          </Button>
-                        </div>
-                      </div>
-                      <p className="mt-2 text-xs text-muted-foreground">
-                        {importSummaryText(item.summary, item.status)}
-                      </p>
-                      {isActive && percent !== null ? (
-                        <div className="mt-3 space-y-1.5">
-                          <div className="h-2 overflow-hidden rounded-full bg-muted">
-                            <div
-                              className="h-full rounded-full bg-foreground transition-all"
-                              style={{ width: `${percent}%` }}
-                            />
-                          </div>
-                          <p className="text-xs text-muted-foreground">
-                            {label} • {percent}%
-                          </p>
-                        </div>
-                      ) : label ? (
-                        <p className="mt-3 rounded-md bg-muted/50 px-2.5 py-1.5 text-xs text-muted-foreground">
-                          {label}
-                        </p>
-                      ) : null}
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="min-w-0">
+                                <p className="truncate text-sm font-medium text-foreground">
+                                  {item.session_name || item.source}
+                                </p>
+                                <p className="text-xs text-muted-foreground">
+                                  {item.source}
+                                  {item.source_user_id ? ` • ${item.source_user_id}` : ""}
+                                </p>
+                              </div>
+                              <div className="flex items-start gap-2">
+                                <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground">
+                                  <History className="size-3.5" />
+                                  {item.started_at}
+                                </div>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  className="size-8 text-muted-foreground hover:text-destructive"
+                                  disabled={pendingDeleteImportId === item.id}
+                                  onClick={() => handleDeleteImport(item)}
+                                  aria-label={`Delete import ${item.session_name || item.source}`}
+                                >
+                                  <Trash2 className="size-4" />
+                                </Button>
+                              </div>
+                            </div>
+
+                            <div className="mt-2 rounded-md bg-muted/35 px-2.5 py-2">
+                              <p className="text-xs font-medium text-foreground">
+                                {item.current_step_label || (item.status === "completed" ? "Import complete" : item.status)}
+                              </p>
+                              <p className="mt-0.5 text-xs text-muted-foreground">
+                                {item.current_step_detail || importSummaryText(item.summary, item.status)}
+                              </p>
+                              <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted-foreground">
+                                {item.elapsed_seconds ? (
+                                  <span>Elapsed {formatDuration(item.elapsed_seconds)}</span>
+                                ) : null}
+                                {item.estimated_seconds_remaining ? (
+                                  <span>ETA {formatDuration(item.estimated_seconds_remaining)}</span>
+                                ) : null}
+                              </div>
+                            </div>
+
+                            <ImportProgressStepper item={item} />
+
+                            {diagnostics.length > 0 && (
+                              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                                {diagnostics.map((stat) => (
+                                  <div key={stat.label} className="rounded-md border border-border/60 px-2.5 py-2">
+                                    <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                                      {stat.label}
+                                    </p>
+                                    <p className="mt-0.5 text-xs font-medium text-foreground">
+                                      {stat.value}
+                                    </p>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+
+                            {(isActive || logs.length > 0) && (
+                              <div className="mt-3">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => toggleImportLogs(item.id)}
+                                >
+                                  {logsExpanded ? "Hide live log" : "Show live log"}
+                                </Button>
+                                {logsExpanded && <ImportLogPanel logs={logs} />}
+                              </div>
+                            )}
                           </>
                         );
                       })()}

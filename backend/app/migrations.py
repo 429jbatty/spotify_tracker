@@ -509,6 +509,52 @@ def migrate_spotify_streaming_events(engine: Engine) -> None:
         )
 
 
+def migrate_import_session_logs(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS import_session_logs (
+                    id INTEGER NOT NULL PRIMARY KEY,
+                    import_session_id INTEGER NOT NULL,
+                    created_at VARCHAR NOT NULL,
+                    level VARCHAR NOT NULL,
+                    stage VARCHAR,
+                    message TEXT NOT NULL,
+                    artist VARCHAR,
+                    album VARCHAR,
+                    current INTEGER,
+                    total INTEGER,
+                    elapsed_seconds FLOAT,
+                    metadata_json JSON NOT NULL,
+                    FOREIGN KEY(import_session_id) REFERENCES import_sessions (id)
+                )
+                """
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_import_session_logs_import_session_id "
+                "ON import_session_logs (import_session_id)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_import_session_logs_created_at "
+                "ON import_session_logs (created_at)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_import_session_logs_stage "
+                "ON import_session_logs (stage)"
+            )
+        )
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
@@ -523,3 +569,4 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_album_metadata_cache(engine)
     migrate_import_sessions_artifact_path(engine)
     migrate_spotify_streaming_events(engine)
+    migrate_import_session_logs(engine)

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Float, ForeignKey, Integer, String, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
@@ -210,6 +210,32 @@ class ImportSession(Base):
         back_populates="import_session",
         cascade="all, delete-orphan",
     )
+    logs: Mapped[list["ImportSessionLog"]] = relationship(
+        back_populates="import_session",
+        cascade="all, delete-orphan",
+    )
+
+
+class ImportSessionLog(Base):
+    __tablename__ = "import_session_logs"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    import_session_id: Mapped[int] = mapped_column(
+        ForeignKey("import_sessions.id"),
+        index=True,
+    )
+    created_at: Mapped[str] = mapped_column(String, index=True)
+    level: Mapped[str] = mapped_column(String, default="info", index=True)
+    stage: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    message: Mapped[str] = mapped_column(Text)
+    artist: Mapped[str | None] = mapped_column(String, nullable=True)
+    album: Mapped[str | None] = mapped_column(String, nullable=True)
+    current: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    total: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    elapsed_seconds: Mapped[float | None] = mapped_column(Float, nullable=True)
+    metadata_json: Mapped[dict] = mapped_column(JSON, default=dict)
+
+    import_session: Mapped[ImportSession] = relationship(back_populates="logs")
 
 
 class ImportedListeningEvent(Base):

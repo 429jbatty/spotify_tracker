@@ -1,18 +1,3 @@
-export const IMPORT_STATUS_LABELS = {
-  queued: "Queued",
-  fetching_lastfm: "Fetching Last.fm scrobbles",
-  storing_scrobbles: "Storing new scrobbles",
-  validating_zip: "Validating Spotify ZIP",
-  parsing_spotify_history: "Parsing Spotify history",
-  storing_streaming_events: "Storing Spotify plays",
-  grouping_album_sessions: "Grouping album sessions",
-  matching_cached_albums: "Matching cached albums",
-  fetching_metadata: "Fetching MusicBrainz metadata",
-  finalizing: "Finalizing import",
-  completed: "Completed",
-  failed: "Failed",
-};
-
 export const IMPORT_GUIDES = {
   lastfm: {
     title: "Last.fm import",
@@ -98,46 +83,45 @@ export function importSummaryText(summary, status) {
   return `${events} import rows stored so far. ${listens} album listens created so far.${pendingText}`;
 }
 
-export function progressPercent(summary) {
-  const total = Number(summary?.progress_total || 0);
-  const current = Number(summary?.progress_current || 0);
+export function formatDuration(seconds) {
+  const total = Number(seconds || 0);
+  if (!total || total < 1) return "0s";
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = Math.floor(total % 60);
+  if (hours > 0) return `${hours}h ${minutes}m`;
+  if (minutes > 0) return `${minutes}m ${secs}s`;
+  return `${secs}s`;
+}
+
+export function currentStepPercent(item) {
+  const step = item?.steps?.find((entry) => entry.key === item.current_step_key);
+  const total = Number(step?.total || item?.summary?.progress_total || 0);
+  const current = Number(step?.current || item?.summary?.progress_current || 0);
   if (!total || total <= 0) return null;
   return Math.max(0, Math.min(100, Math.round((current / total) * 100)));
 }
 
-export function progressText(summary, status) {
-  const total = Number(summary?.progress_total || 0);
-  const current = Number(summary?.progress_current || 0);
-  const label = summary?.progress_label;
-  if (status === "completed") return "Import complete";
-  if (status === "failed") return "Import failed";
-  if (!label || !total) return null;
-
-  const currentText = current.toLocaleString();
-  const totalText = total.toLocaleString();
-  const lowerLabel = label.toLowerCase();
-
-  if (lowerLabel.includes("last.fm")) {
-    return `Fetched ${currentText} of ${totalText} Last.fm scrobbles`;
-  }
-  if (lowerLabel.includes("spotify") && lowerLabel.includes("parsing")) {
-    return `Parsed ${currentText} of ${totalText} Spotify history files`;
-  }
-  if (lowerLabel.includes("spotify") && lowerLabel.includes("storing")) {
-    return `Stored ${currentText} of ${totalText} Spotify plays`;
-  }
-  if (lowerLabel.includes("storing")) {
-    return `Stored ${currentText} of ${totalText} scrobbles`;
-  }
-  if (lowerLabel.includes("cached")) {
-    return `Checked ${currentText} of ${totalText} possible album sessions against saved tracklists`;
-  }
-  if (lowerLabel.includes("musicbrainz")) {
-    return `Checked ${currentText} of ${totalText} unresolved album sessions with MusicBrainz`;
-  }
-  if (lowerLabel.includes("finalizing") || lowerLabel.includes("completed")) {
-    return label;
-  }
-
-  return `${label}: ${currentText} of ${totalText}`;
+export function importDiagnostics(item) {
+  const summary = item?.summary || {};
+  return [
+    { label: "Rows stored", value: summary.new_event_rows },
+    { label: "Album sessions", value: summary.distinct_album_candidates },
+    { label: "Album listens", value: summary.derived_album_listens },
+    { label: "Review", value: summary.review_candidates },
+    { label: "MB lookups", value: summary.musicbrainz_requests },
+    { label: "Cache hits", value: summary.metadata_cache_hits },
+    {
+      label: "Avg lookup",
+      value: summary.musicbrainz_lookup_seconds_avg
+        ? `${Number(summary.musicbrainz_lookup_seconds_avg).toFixed(1)}s`
+        : null,
+    },
+    {
+      label: "ETA",
+      value: item?.estimated_seconds_remaining
+        ? formatDuration(item.estimated_seconds_remaining)
+        : null,
+    },
+  ].filter((entry) => entry.value !== null && entry.value !== undefined);
 }

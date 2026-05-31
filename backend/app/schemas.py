@@ -174,6 +174,24 @@ class ImportPreviewSummary(BaseModel):
     progress_current: int = 0
     progress_total: int = 0
     progress_label: str | None = None
+    stage_timings: dict[str, float] = Field(default_factory=dict)
+    metadata_lookup_current: int = 0
+    metadata_lookup_total: int = 0
+    metadata_cache_hits: int = 0
+    metadata_cache_misses: int = 0
+    musicbrainz_requests: int = 0
+    musicbrainz_lookup_seconds_avg: float | None = None
+    musicbrainz_lookup_seconds_p95: float | None = None
+    estimated_seconds_remaining: float | None = None
+
+
+class ImportProgressStep(BaseModel):
+    key: str
+    label: str
+    status: str
+    current: int = 0
+    total: int = 0
+    detail: str | None = None
 
 
 class ImportPreviewResponse(BaseModel):
@@ -211,6 +229,27 @@ class ImportSessionSummary(BaseModel):
     started_at: str
     completed_at: str | None = None
     summary: ImportPreviewSummary
+    steps: list[ImportProgressStep] = Field(default_factory=list)
+    current_step_key: str | None = None
+    current_step_label: str | None = None
+    current_step_detail: str | None = None
+    elapsed_seconds: float | None = None
+    estimated_seconds_remaining: float | None = None
+
+
+class ImportSessionLogEntry(BaseModel):
+    id: int
+    import_session_id: int
+    created_at: str
+    level: str
+    stage: str | None = None
+    message: str
+    artist: str | None = None
+    album: str | None = None
+    current: int | None = None
+    total: int | None = None
+    elapsed_seconds: float | None = None
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 class ImportReviewItem(BaseModel):

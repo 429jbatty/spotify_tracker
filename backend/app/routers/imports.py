@@ -17,6 +17,7 @@ from backend.app.schemas import (
     ImportPreviewResponse,
     ImportResolveRequest,
     ImportReviewItem,
+    ImportSessionLogEntry,
     ImportSessionSummary,
 )
 from backend.app.services import import_service
@@ -53,6 +54,15 @@ def _start_import_background_worker(import_session_id: int) -> None:
         daemon=True,
     )
     thread.start()
+
+
+def resume_interrupted_imports() -> None:
+    session_factory = _session_factory()
+    with session_factory() as session:
+        import_session_ids = import_service.resumable_import_session_ids(session)
+    for import_session_id in import_session_ids:
+        logger.info("Auto-resuming import session %s.", import_session_id)
+        _start_import_background_worker(import_session_id)
 
 
 @router.post("/preview", response_model=ImportPreviewResponse)
@@ -125,6 +135,28 @@ def list_user_imports(user_slug: str) -> list[ImportSessionSummary]:
         try:
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.import_history(session, repository)
+        except KeyError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+
+
+@router.get("/{import_session_id}/logs", response_model=list[ImportSessionLogEntry])
+def list_user_import_logs(
+    user_slug: str,
+    import_session_id: int,
+    limit: int = 100,
+    order: str = "asc",
+) -> list[ImportSessionLogEntry]:
+    session_factory = _session_factory()
+    with session_factory() as session:
+        try:
+            repository = SqliteStateRepository(session, user_slug=user_slug)
+            return import_service.import_session_logs(
+                session,
+                repository,
+                import_session_id,
+                limit=limit,
+                order=order,
+            )
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
