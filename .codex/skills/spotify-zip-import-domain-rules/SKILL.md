@@ -22,7 +22,13 @@ Use this skill when modifying the Spotify historical import path.
 - Keep Spotify import user-scoped. Upload, status, raw events, derived session
   rows, review rows, album listens, and delete behavior must not affect another
   user.
-- Do not call the live Spotify API during ZIP import.
+- Store source traceability. Import sessions should retain original filename,
+  byte size, SHA-256, ZIP member count, and duplicate-session information when
+  available. Raw rows should retain ZIP member path and JSON array index.
+- Do not call user-scoped/private Spotify APIs during ZIP import. App-scoped
+  Spotify catalog lookup is allowed for track/album metadata when credentials
+  exist, but it must dedupe IDs, batch requests, cache results, log fallback
+  behavior, and be mocked in tests.
 
 ## ZIP Safety
 
@@ -58,27 +64,39 @@ Deduplicate raw rows with:
 - fallback fingerprint: `user_id + played_at + ms_played + normalized artist +
   normalized album + normalized track`
 
+Persist provenance with each raw row:
+
+- `source_file`: ZIP member path
+- `source_index`: zero-based JSON array index within that member
+
 ## Album Derivation
 
 1. Stream JSON with `ijson` and batch insert raw `spotify_streaming_events`
    using `INSERT OR IGNORE` semantics.
-2. Query deduped raw events for the import session ordered by normalized
-   artist, album, and `played_at`.
-3. Group by normalized `artist_name + album_name`.
-4. Split each album group into 48-hour sessions.
-5. Count unique tracks per session by Spotify URI when present, otherwise by
-   normalized track name.
-6. Create session-level `imported_listening_events` rows only for candidates
+2. Resolve unique Spotify track IDs through the app-scoped Spotify catalog
+   service when credentials are configured. Batch in chunks of 50 and never
+   call per raw row.
+3. When Spotify catalog data is available, group by Spotify album ID and use
+   Spotify album `total_tracks` as the completion denominator.
+4. Fall back to normalized artist/album grouping and cached/local MusicBrainz
+   tracklists only when catalog lookup is unavailable or rows are unresolved.
+5. Split each album group into 48-hour sessions.
+6. Count unique tracks per session by Spotify track ID when available, then by
+   disc/track number or normalized track name as appropriate.
+7. Create session-level `imported_listening_events` rows only for candidates
    that need review/delete bookkeeping; never create one imported row per raw
    Spotify play.
-7. Match against existing user albums and cached/local metadata first.
-8. Call MusicBrainz only once per unique uncached album candidate with enough
+8. Match against existing user albums and cached/local metadata first.
+9. Call MusicBrainz only once per unique uncached album candidate with enough
    evidence to justify lookup.
-9. Create `album_listens` only when completion threshold and album-type rules
+10. Create `album_listens` only when completion threshold and album-type rules
    pass. Mark created listens with `source="spotify_import"` and
    `entry_source="spotify_import"`.
-10. Keep partials terminal/non-actionable unless there is a plausible user
+11. Keep partials terminal/non-actionable unless there is a plausible user
     review path.
+
+Keep MusicBrainz as enrichment/canonical metadata for completed Spotify listens,
+not as the Spotify completion denominator when Spotify catalog data is present.
 
 ## Progress States
 
@@ -87,6 +105,7 @@ Keep progress labels honest about the unit being counted:
 - `validating_zip`: ZIP file/entry validation
 - `parsing_spotify_history`: JSON files or rows parsed
 - `storing_streaming_events`: raw Spotify plays processed
+- `resolving_spotify_catalog`: unique Spotify track IDs resolved
 - `grouping_album_sessions`: unique album groups/session candidates
 - `matching_cached_albums`: local/cache candidate checks
 - `fetching_metadata`: unique uncached MusicBrainz lookups
@@ -100,12 +119,22 @@ When changing this path, cover:
 - upload returns a queued job without request-time parsing
 - non-ZIP, oversized, traversal, zip-bomb, invalid JSON, and missing-user cases
 - incremental parsing and batch raw storage
+- raw insert fixtures larger than one batch, especially after adding columns,
+  to catch SQLite bind-parameter limit regressions
+- import-session source metadata, duplicate hash surfacing, and raw row
+  provenance (`source_file`, `source_index`)
 - URI and fallback-name dedupe
+- Spotify catalog lookup batching, dedupe, caching/fallback behavior, and no
+  live external calls in tests
+- Spotify-authoritative completion using album ID and `total_tracks`
 - session-level imported rows rather than per-play imported rows
 - complete album sessions, multiple sessions for the same album, and partials
+- diagnostics that report row locations, session candidates, matched/missing
+  tracks, final statuses, and created listen IDs
 - MusicBrainz lookup deduped per unique album
 - user-scoped delete of raw events, imported rows, and derived album listens
-- schema idempotence for `artifact_path` and `spotify_streaming_events`
+- schema idempotence for `artifact_path`, import-session source metadata, and
+  `spotify_streaming_events`
 
 Run:
 

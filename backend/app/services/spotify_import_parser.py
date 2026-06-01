@@ -27,6 +27,13 @@ class SpotifyZipHistoryEntry:
     file_size: int
 
 
+@dataclass
+class SpotifyHistoryEventWithProvenance:
+    event: NormalizedSpotifyStreamingEvent
+    source_file: str
+    source_index: int
+
+
 def spotify_history_entries_from_zip(
     artifact_path: str,
     *,
@@ -60,16 +67,36 @@ def spotify_history_entries_from_zip(
         raise ValueError("Uploaded file is not a valid ZIP archive.") from exc
 
 
+def spotify_zip_member_count(artifact_path: str) -> int:
+    try:
+        with zipfile.ZipFile(artifact_path) as archive:
+            return len(archive.infolist())
+    except zipfile.BadZipFile as exc:
+        raise ValueError("Uploaded file is not a valid ZIP archive.") from exc
+
+
 def iter_spotify_history_events(
     artifact_path: str,
     filename: str,
 ) -> Iterable[NormalizedSpotifyStreamingEvent]:
+    for item in iter_spotify_history_events_with_provenance(artifact_path, filename):
+        yield item.event
+
+
+def iter_spotify_history_events_with_provenance(
+    artifact_path: str,
+    filename: str,
+) -> Iterable[SpotifyHistoryEventWithProvenance]:
     try:
         with zipfile.ZipFile(artifact_path) as archive:
             with archive.open(filename) as file_obj:
-                for item in ijson.items(file_obj, "item"):
+                for index, item in enumerate(ijson.items(file_obj, "item"), start=1):
                     if isinstance(item, dict):
-                        yield normalize_spotify_streaming_event(item)
+                        yield SpotifyHistoryEventWithProvenance(
+                            event=normalize_spotify_streaming_event(item),
+                            source_file=filename,
+                            source_index=index,
+                        )
     except zipfile.BadZipFile as exc:
         raise ValueError("Uploaded file is not a valid ZIP archive.") from exc
     except (ijson.JSONError, ValueError) as exc:

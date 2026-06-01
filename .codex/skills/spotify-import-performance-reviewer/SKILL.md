@@ -42,13 +42,22 @@ hit rate, disk speed, and SQLite transaction size.
 11. Confirm progress counters switch units when the workflow switches from
     rows to sessions to unique metadata lookups.
 12. Confirm delete uses import-session scoped bulk deletes.
+13. Confirm the batch size accounts for SQLite bind-parameter limits:
+    `rows per batch * inserted columns per row` must stay below the runtime
+    SQLite limit with margin.
+14. Confirm app-scoped Spotify catalog lookup dedupes track IDs and batches in
+    API-sized chunks; it must not call Spotify once per raw row.
 
 ## Red Flags
 
 - `imported_listening_events` row count roughly equals Spotify play count.
 - The worker commits once per Spotify play.
 - The parser builds a list of all normalized events before storing them.
+- A new persisted column is added without recalculating raw insert batch size.
+- A large import fails immediately in `storing_streaming_events` with
+  `too many SQL variables`.
 - MusicBrainz is called for every session of the same album.
+- Spotify catalog metadata is requested per event instead of per unique track ID.
 - Partial sessions enter noisy review queues.
 - Progress appears stuck because the label says rows while the worker is doing
   unique album metadata lookups.
@@ -61,9 +70,11 @@ For implementation changes, add generated large-fixture tests rather than
 committing large data files. Tests should prove:
 
 - raw Spotify rows are stored and deduped correctly
+- large fixtures cross at least one raw insert batch boundary
 - no per-play imported rows are created
 - multiple sessions for one album can produce multiple listens
 - partial sessions are terminal and quiet
+- Spotify catalog lookup dedupes and batches unique track IDs
 - MusicBrainz lookup is deduped by unique album key
 
 Run the import tests and migration tests:

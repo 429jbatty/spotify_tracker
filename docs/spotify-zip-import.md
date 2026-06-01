@@ -110,23 +110,71 @@ user_id + played_at + ms_played + normalized artist + normalized album + normali
 Raw dedupe happens before album-session derivation, so duplicate upload rows do
 not inflate completion evidence.
 
+## Source Traceability
+
+Spotify ZIP imports store source metadata on the import session:
+
+- original uploaded filename
+- uploaded byte size
+- SHA-256 of the uploaded ZIP bytes
+- ZIP member count after validation
+- duplicate import session ID when the same user previously completed an import
+  with the same SHA-256
+
+Each persisted raw play also stores the ZIP member path and JSON array index.
+The diagnostics endpoint can use those fields to report literal source
+locations for a specific artist/album without retaining the uploaded ZIP.
+
+Use these fields first when reconciling an import discrepancy. The filename is
+only a label; the SHA-256 proves whether the app processed the same ZIP being
+inspected later. Row provenance proves which ZIP member and array index
+contributed to a candidate listen.
+
+## Diagnostics
+
+Use the import diagnostics endpoint for album-specific investigations:
+
+```text
+GET /api/users/{user_slug}/imports/{import_session_id}/diagnostics?artist={artist}&album={album}
+```
+
+The response is intended to answer "what did this import actually read and why
+did it create or skip listens?" without re-parsing the source ZIP. It should
+include:
+
+- raw row count and timestamp range for the requested artist/album
+- grouped album-session candidates
+- matched, missing, and expected tracks for each candidate
+- source row locations using `source_file` and `source_index`
+- imported listening-event IDs, final statuses, and created listen IDs
+
+If the diagnostic data disagrees with a local CSV, compare the session
+SHA-256 before investigating completion logic. A source mismatch can otherwise
+look like a matching bug.
+
 ## Album Matching
 
-Spotify provides album and artist names, but the importer still proves album
-completion before writing listen history:
+Spotify provides album and artist names in the export. When app-level Spotify
+catalog credentials are configured, the importer also resolves unique Spotify
+track URIs in batches and uses Spotify's own album identity for completion:
 
-- group raw plays by normalized artist and album
-- split each group into 48-hour sessions
-- count unique played tracks in the session by Spotify URI when available,
-  otherwise normalized track name
-- compare the session to existing user albums or cached/local tracklists
+- resolve unique Spotify track URIs through Spotify catalog metadata, not per row
+- group resolved raw plays by Spotify album ID
+- split each Spotify album group into 48-hour sessions
+- count unique Spotify tracks in the session against Spotify album
+  `total_tracks`
 - require the app's album completion threshold
+- use MusicBrainz for album metadata/artwork enrichment after Spotify proves
+  completion
+- fall back to normalized artist/album names and cached/local MusicBrainz
+  tracklists when Spotify catalog lookup is unavailable or a track is unresolved
 - preserve MusicBrainz album-type guardrails so singles, EPs, and low-confidence
   matches do not silently become album listens
 - send uncertain but plausible sessions to review
 
-Spotify URI is evidence for dedupe and unique-track identity. It is not a live
-Spotify lookup during import.
+Spotify URI is still the raw dedupe key when present. For completion, resolved
+Spotify catalog data is authoritative for Spotify-sourced listens; MusicBrainz is
+the enrichment source rather than the source of the Spotify album track count.
 
 ## Progress States
 
@@ -136,6 +184,7 @@ Spotify lookup during import.
 | `validating_zip` | ZIP structure and safety limits are being checked. |
 | `parsing_spotify_history` | Spotify JSON files/rows are being streamed. |
 | `storing_streaming_events` | Raw plays are being batch inserted. |
+| `resolving_spotify_catalog` | Unique Spotify track URIs are being resolved to source album metadata. |
 | `grouping_album_sessions` | Raw plays are becoming album-session candidates. |
 | `matching_cached_albums` | Existing albums and metadata cache are being checked. |
 | `fetching_metadata` | Unique uncached album candidates are using MusicBrainz. |
@@ -160,6 +209,35 @@ The optimized import avoids mirroring every Spotify play into
 
 The main runtime drivers are unique album count, metadata cache hit rate,
 MusicBrainz rate limiting, disk speed, and transaction size.
+
+Raw insert batch size must stay below SQLite's bind-parameter limit. When new
+columns are added to `spotify_streaming_events`, recalculate:
+
+```text
+rows per batch * inserted columns per row
+```
+
+and keep it under the runtime SQLite limit with margin. A failure immediately
+after `storing_streaming_events` starts, with zero raw rows persisted, can be a
+`too many SQL variables` insert failure rather than a bad ZIP.
+
+## Failed Import Triage
+
+For a failed Spotify ZIP import, inspect in this order:
+
+1. `import_sessions`: status, `error_message`, source filename, byte size,
+   SHA-256, member count, duplicate session, and `artifact_path` if retained.
+2. `import_session_logs`: last successful stage and full traceback when stored.
+3. Raw counts for `spotify_streaming_events` by `import_session_id`.
+4. Parser output from the uploaded ZIP: member count, audio JSON member count,
+   parsed row count, skipped missing-track rows, and timestamp range.
+5. If raw storage failed, check insert batch size against SQLite variable
+   limits before assuming the data is malformed.
+6. If completion looks wrong, use the diagnostics endpoint and source row
+   locations before making claims about missing or ghost listens.
+
+Do not mutate the runtime database during investigation unless the user has
+explicitly asked to repair or delete the failed session.
 
 ## Validation
 

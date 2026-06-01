@@ -1,6 +1,34 @@
 # Import Testing
 
-Use this guide before deploying changes to Last.fm import behavior.
+Use this guide before deploying changes to import behavior.
+
+## Spotify ZIP Regression Tests
+
+Purpose: validate source traceability, raw event storage, Spotify catalog
+completion, diagnostics, and cleanup without live Spotify or MusicBrainz calls.
+
+Expected coverage:
+
+- Uploaded ZIP metadata is stored: original filename, byte size, SHA-256, ZIP
+  member count, and duplicate-session marker when applicable.
+- Raw `spotify_streaming_events` rows store `source_file` and `source_index`.
+- Re-uploading the same ZIP surfaces the duplicate hash without corrupting
+  existing completed imports.
+- Similar filenames with different hashes are treated as distinct sources.
+- Spotify catalog lookup dedupes track IDs and batches requests, normally in
+  chunks of 50.
+- Album completion for Spotify-sourced rows uses Spotify album ID and
+  `total_tracks` when catalog metadata is available.
+- Missing/deleted/unresolved Spotify tracks fall back safely and are logged.
+- Diagnostics report raw rows, timestamp range, candidate sessions,
+  matched/missing tracks, source row locations, final statuses, and listen IDs.
+- Large raw insert fixtures cover more than one insert batch and guard against
+  SQLite `too many SQL variables` failures after persisted columns change.
+- Import deletion removes raw rows, imported listening events, and album
+  listens for the selected session.
+
+Tests must mock Spotify and MusicBrainz at the project wrapper boundary. Unit
+and integration tests should not make live external API requests.
 
 ## Mock 500-Scrobble Test
 

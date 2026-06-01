@@ -155,6 +155,28 @@ class ApiImportTests(unittest.TestCase):
                 .count()
             )
 
+    def _imported_events_for_album(self, database_url, artist, album):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            return [
+                {
+                    "listened_at": row.listened_at,
+                    "match_status": row.match_status,
+                    "match_confidence": row.match_confidence,
+                    "error_message": row.error_message,
+                }
+                for row in (
+                    session.query(ImportedListeningEvent)
+                    .filter(
+                        ImportedListeningEvent.artist == artist,
+                        ImportedListeningEvent.album == album,
+                    )
+                    .order_by(ImportedListeningEvent.listened_at)
+                    .all()
+                )
+            ]
+
     def _import_log_count(self, database_url, import_session_id):
         engine = get_engine(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
@@ -164,6 +186,37 @@ class ApiImportTests(unittest.TestCase):
                 .filter(ImportSessionLog.import_session_id == import_session_id)
                 .count()
             )
+
+    def _import_session_record(self, database_url, import_session_id):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            row = session.get(ImportSession, import_session_id)
+            return {
+                "original_filename": row.original_filename,
+                "file_size_bytes": row.file_size_bytes,
+                "file_sha256": row.file_sha256,
+                "zip_member_count": row.zip_member_count,
+                "duplicate_of_import_session_id": row.duplicate_of_import_session_id,
+            }
+
+    def _spotify_events_for_import(self, database_url, import_session_id):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            return [
+                {
+                    "track_name": row.track_name,
+                    "source_file": row.source_file,
+                    "source_index": row.source_index,
+                }
+                for row in (
+                    session.query(SpotifyStreamingEvent)
+                    .filter(SpotifyStreamingEvent.import_session_id == import_session_id)
+                    .order_by(SpotifyStreamingEvent.played_at, SpotifyStreamingEvent.id)
+                    .all()
+                )
+            ]
 
     def _spotify_zip(self, files):
         buffer = io.BytesIO()
@@ -188,6 +241,35 @@ class ApiImportTests(unittest.TestCase):
             }
             for index, track in enumerate(tracks)
         ]
+
+    def _spotify_catalog_tracks(
+        self,
+        rows,
+        *,
+        album_id="spotify-album-id",
+        album_total_tracks=None,
+        album_name=None,
+        album_artist_name=None,
+    ):
+        resolved = {}
+        for index, row in enumerate(rows, start=1):
+            uri = row["spotify_track_uri"]
+            resolved[uri] = import_service.spotify_catalog_service.SpotifyCatalogTrack(
+                track_uri=uri,
+                track_id=uri.removeprefix("spotify:track:"),
+                track_name=row["master_metadata_track_name"],
+                album_id=album_id,
+                album_name=album_name or row["master_metadata_album_album_name"],
+                album_artist_name=album_artist_name
+                or row["master_metadata_album_artist_name"],
+                album_total_tracks=album_total_tracks or len(rows),
+                disc_number=1,
+                track_number=index,
+                album_images=[],
+                album_release_date=None,
+                raw_payload={},
+            )
+        return resolved
 
     def _lastfm_payload(self, artist, album, tracks, start_uts=1770000000):
         return {
@@ -398,6 +480,154 @@ class ApiImportTests(unittest.TestCase):
                 "listen_history"
             ],
         )
+
+    def test_spotify_import_stores_file_fingerprint_and_row_provenance(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            rows = self._spotify_rows()
+            zip_file = self._spotify_zip({"nested/Streaming_History_Audio_0.json": rows})
+            zip_bytes = zip_file.getvalue()
+            expected_sha = hashlib.sha256(zip_bytes).hexdigest()
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("traceable.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+            history_response = client.get("/api/users/jacob/imports")
+            session_record = self._import_session_record(database_url, import_session_id)
+            spotify_events = self._spotify_events_for_import(database_url, import_session_id)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["original_filename"], "traceable.zip")
+        self.assertEqual(response.json()["file_size_bytes"], len(zip_bytes))
+        self.assertEqual(response.json()["file_sha256"], expected_sha)
+        self.assertEqual(session_record["original_filename"], "traceable.zip")
+        self.assertEqual(session_record["file_size_bytes"], len(zip_bytes))
+        self.assertEqual(session_record["file_sha256"], expected_sha)
+        self.assertEqual(session_record["zip_member_count"], 1)
+        history_item = history_response.json()[0]
+        self.assertEqual(history_item["original_filename"], "traceable.zip")
+        self.assertEqual(history_item["file_sha256"], expected_sha)
+        self.assertEqual(history_item["summary"]["spotify_import_sha256"], expected_sha)
+        self.assertEqual(history_item["summary"]["spotify_import_zip_member_count"], 1)
+        self.assertEqual(
+            [(row["source_file"], row["source_index"]) for row in spotify_events],
+            [
+                ("nested/Streaming_History_Audio_0.json", 1),
+                ("nested/Streaming_History_Audio_0.json", 2),
+                ("nested/Streaming_History_Audio_0.json", 3),
+                ("nested/Streaming_History_Audio_0.json", 4),
+            ],
+        )
+
+    def test_spotify_import_batches_large_raw_insert_under_sqlite_variable_limit(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = [
+                {
+                    "ts": f"2026-02-{1 + index // 1000:02d}T02:{index % 60:02d}:00Z",
+                    "ms_played": 180000,
+                    "master_metadata_track_name": "Track 1",
+                    "master_metadata_album_artist_name": "Batch Artist",
+                    "master_metadata_album_album_name": "Batch Album",
+                    "spotify_track_uri": f"spotify:track:batch:{index}",
+                    "platform": "ios",
+                    "conn_country": "US",
+                }
+                for index in range(2_100)
+            ]
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=None,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("large.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+            history_response = client.get("/api/users/jacob/imports")
+            spotify_event_count = self._spotify_event_count(database_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(history_response.json()[0]["status"], "completed")
+        self.assertEqual(history_response.json()[0]["summary"]["new_event_rows"], 2_100)
+        self.assertEqual(spotify_event_count, 2_100)
+
+    def test_spotify_import_detects_duplicate_file_sha(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            rows = self._spotify_rows()
+            first_zip = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            first_bytes = first_zip.getvalue()
+            second_zip = io.BytesIO(first_bytes)
+            first_sha = hashlib.sha256(first_bytes).hexdigest()
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                first_response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("first.zip", first_zip, "application/zip")},
+                )
+                first_id = first_response.json()["import_session_id"]
+                self._run_import_session(database_url, first_id)
+                second_response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("second.zip", second_zip, "application/zip")},
+                )
+            second_id = second_response.json()["import_session_id"]
+            second_record = self._import_session_record(database_url, second_id)
+            logs_response = client.get(
+                f"/api/users/jacob/imports/{second_id}/logs?order=asc"
+            )
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(second_response.status_code, 200)
+        self.assertEqual(second_response.json()["file_sha256"], first_sha)
+        self.assertEqual(second_response.json()["duplicate_of_import_session_id"], first_id)
+        self.assertEqual(second_record["duplicate_of_import_session_id"], first_id)
+        self.assertTrue(
+            any(entry["level"] == "warning" for entry in logs_response.json())
+        )
+
+    def test_spotify_import_similar_filename_with_different_hash_is_distinct(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            first_zip = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows(tracks=["Track 1"])}
+            )
+            second_zip = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows(tracks=["Track 2"])}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=None,
+            ):
+                first_response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("my_spotify_data.zip", first_zip, "application/zip")},
+                )
+                self._run_import_session(database_url, first_response.json()["import_session_id"])
+                second_response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("my_spotify_data (1).zip", second_zip, "application/zip")},
+                )
+
+        self.assertEqual(first_response.status_code, 200)
+        self.assertEqual(second_response.status_code, 200)
+        self.assertNotEqual(first_response.json()["file_sha256"], second_response.json()["file_sha256"])
+        self.assertIsNone(second_response.json()["duplicate_of_import_session_id"])
 
     def test_spotify_background_import_deduplicates_uri_and_name_fallback_rows(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -630,6 +860,510 @@ class ApiImportTests(unittest.TestCase):
         summary = history_response.json()[0]["summary"]
         self.assertEqual(summary["review_candidates"], 1)
         self.assertEqual(summary["metadata_lookup_total"], 1)
+
+    def test_spotify_import_rejects_partial_combined_musicbrainz_track(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Green Day",
+                album="Dookie",
+                tracks=[
+                    "Burnout",
+                    "Having a Blast",
+                    "Chump",
+                    "Longview",
+                    "Welcome to Paradise",
+                    "Pulling Teeth",
+                    "Basket Case",
+                    "She",
+                    "Sassafras Roots",
+                    "When I Come Around",
+                    "Coming Clean",
+                    "Emenius Sleepus",
+                    "In the End",
+                    "F.O.D.",
+                ],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            metadata = {
+                "artist": "Green Day",
+                "name": "Dookie",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [
+                    {"title": "Burnout"},
+                    {"title": "Having a Blast"},
+                    {"title": "Chump"},
+                    {"title": "Longview"},
+                    {"title": "Welcome to Paradise"},
+                    {"title": "Pulling Teeth"},
+                    {"title": "Basket Case"},
+                    {"title": "She"},
+                    {"title": "Sassafras Roots"},
+                    {"title": "When I Come Around"},
+                    {"title": "Coming Clean"},
+                    {"title": "Emenius Sleepus"},
+                    {"title": "In the End"},
+                    {"title": "F.O.D. / All by Myself"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+            imported_events = self._imported_events_for_album(
+                database_url,
+                "Green Day",
+                "Dookie",
+            )
+            listen_count = self._album_listen_count(database_url, "Green Day", "Dookie")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["derived_album_listens"], 0)
+        self.assertEqual(listen_count, 0)
+        self.assertEqual(imported_events[0]["match_status"], "partial_listen")
+        self.assertIn("F.O.D. / All by Myself", imported_events[0]["error_message"])
+
+    def test_spotify_catalog_total_prevents_partial_dookie_listen(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Green Day",
+                album="Dookie",
+                tracks=[
+                    "Burnout",
+                    "Having a Blast",
+                    "Chump",
+                    "Longview",
+                    "Welcome to Paradise",
+                    "Pulling Teeth",
+                    "Basket Case",
+                    "She",
+                    "Sassafras Roots",
+                    "When I Come Around",
+                    "Coming Clean",
+                    "Emenius Sleepus",
+                    "In the End",
+                    "F.O.D.",
+                ],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            metadata = {
+                "artist": "Green Day",
+                "name": "Dookie",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [
+                    {"title": "Burnout"},
+                    {"title": "Having a Blast"},
+                    {"title": "Chump"},
+                    {"title": "Longview"},
+                    {"title": "Welcome to Paradise"},
+                    {"title": "Pulling Teeth"},
+                    {"title": "Basket Case"},
+                    {"title": "She"},
+                    {"title": "Sassafras Roots"},
+                    {"title": "When I Come Around"},
+                    {"title": "Coming Clean"},
+                    {"title": "Emenius Sleepus"},
+                    {"title": "In the End"},
+                    {"title": "F.O.D. / All by Myself"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                return_value=self._spotify_catalog_tracks(
+                    rows,
+                    album_id="spotify-dookie",
+                    album_total_tracks=15,
+                ),
+            ) as catalog_lookup, patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ) as metadata_lookup:
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+            listen_count = self._album_listen_count(database_url, "Green Day", "Dookie")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(catalog_lookup.call_count, 1)
+        self.assertEqual(metadata_lookup.call_count, 1)
+        self.assertEqual(summary["spotify_catalog_resolved_tracks"], 14)
+        self.assertEqual(summary["derived_album_listens"], 0)
+        self.assertEqual(listen_count, 0)
+
+    def test_spotify_import_accepts_complete_combined_musicbrainz_track_parts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Green Day",
+                album="Dookie",
+                tracks=[
+                    "Burnout",
+                    "Having a Blast",
+                    "Chump",
+                    "Longview",
+                    "Welcome to Paradise",
+                    "Pulling Teeth",
+                    "Basket Case",
+                    "She",
+                    "Sassafras Roots",
+                    "When I Come Around",
+                    "Coming Clean",
+                    "Emenius Sleepus",
+                    "In the End",
+                    "F.O.D.",
+                    "All by Myself",
+                ],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            metadata = {
+                "artist": "Green Day",
+                "name": "Dookie",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [
+                    {"title": "Burnout"},
+                    {"title": "Having a Blast"},
+                    {"title": "Chump"},
+                    {"title": "Longview"},
+                    {"title": "Welcome to Paradise"},
+                    {"title": "Pulling Teeth"},
+                    {"title": "Basket Case"},
+                    {"title": "She"},
+                    {"title": "Sassafras Roots"},
+                    {"title": "When I Come Around"},
+                    {"title": "Coming Clean"},
+                    {"title": "Emenius Sleepus"},
+                    {"title": "In the End"},
+                    {"title": "F.O.D. / All by Myself"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+            listen_count = self._album_listen_count(database_url, "Green Day", "Dookie")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["derived_album_listens"], 1)
+        self.assertEqual(listen_count, 1)
+
+    def test_spotify_catalog_total_creates_complete_dookie_listen_with_ambiguous_musicbrainz_release(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Green Day",
+                album="Dookie",
+                tracks=[
+                    "Burnout",
+                    "Having a Blast",
+                    "Chump",
+                    "Longview",
+                    "Welcome to Paradise",
+                    "Pulling Teeth",
+                    "Basket Case",
+                    "She",
+                    "Sassafras Roots",
+                    "When I Come Around",
+                    "Coming Clean",
+                    "Emenius Sleepus",
+                    "In the End",
+                    "F.O.D.",
+                    "All by Myself",
+                ],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            metadata = {
+                "artist": "Green Day",
+                "name": "Dookie",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [
+                    {"title": "Burnout"},
+                    {"title": "Having a Blast"},
+                    {"title": "Chump"},
+                    {"title": "Longview"},
+                    {"title": "Welcome to Paradise"},
+                    {"title": "Pulling Teeth"},
+                    {"title": "Basket Case"},
+                    {"title": "She"},
+                    {"title": "Sassafras Roots"},
+                    {"title": "When I Come Around"},
+                    {"title": "Coming Clean"},
+                    {"title": "Emenius Sleepus"},
+                    {"title": "In the End"},
+                    {"title": "F.O.D. / All by Myself"},
+                ],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                return_value=self._spotify_catalog_tracks(
+                    rows,
+                    album_id="spotify-dookie",
+                    album_total_tracks=15,
+                ),
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ) as metadata_lookup:
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+            listen_count = self._album_listen_count(database_url, "Green Day", "Dookie")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(metadata_lookup.call_count, 1)
+        self.assertEqual(summary["spotify_catalog_resolved_tracks"], 15)
+        self.assertEqual(summary["derived_album_listens"], 1)
+        self.assertEqual(listen_count, 1)
+
+    def test_spotify_import_keeps_threshold_for_ordinary_album_tracks(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Threshold Artist",
+                album="Threshold Album",
+                tracks=[f"Track {index}" for index in range(1, 10)],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            metadata = {
+                "artist": "Threshold Artist",
+                "name": "Threshold Album",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [{"title": f"Track {index}"} for index in range(1, 11)],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+            listen_count = self._album_listen_count(
+                database_url,
+                "Threshold Artist",
+                "Threshold Album",
+            )
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["derived_album_listens"], 1)
+        self.assertEqual(listen_count, 1)
+
+    def test_spotify_catalog_groups_same_named_albums_by_spotify_album_id(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            first_rows = self._spotify_rows(
+                artist="Same Artist",
+                album="Same Album",
+                tracks=["Track 1", "Track 2"],
+            )
+            second_rows = self._spotify_rows(
+                artist="Same Artist",
+                album="Same Album",
+                tracks=["Other 1", "Other 2"],
+            )
+            for row in second_rows:
+                row["spotify_track_uri"] = row["spotify_track_uri"].replace(
+                    "Same Album",
+                    "Same Album Other",
+                )
+            for index, row in enumerate(second_rows):
+                row["ts"] = f"2026-02-02T03:{45 + index:02d}:00Z"
+            rows = first_rows + second_rows
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            first_catalog = self._spotify_catalog_tracks(
+                first_rows,
+                album_id="spotify-same-album-1",
+                album_total_tracks=2,
+            )
+            second_catalog = self._spotify_catalog_tracks(
+                second_rows,
+                album_id="spotify-same-album-2",
+                album_total_tracks=2,
+            )
+            metadata = {
+                "artist": "Same Artist",
+                "name": "Same Album",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [{"title": "Track 1"}, {"title": "Track 2"}],
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                return_value={**first_catalog, **second_catalog},
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["distinct_album_candidates"], 2)
+        self.assertEqual(summary["derived_album_listens"], 2)
+
+    def test_spotify_catalog_lookup_dedupes_repeated_track_uris(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Repeated Artist",
+                album="Repeated Album",
+                tracks=["Track 1", "Track 1", "Track 2"],
+            )
+            rows[1]["spotify_track_uri"] = rows[0]["spotify_track_uri"]
+            rows[1]["ts"] = "2026-02-02T02:46:30Z"
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            catalog = self._spotify_catalog_tracks(
+                [rows[0], rows[2]],
+                album_id="spotify-repeated-album",
+                album_total_tracks=2,
+            )
+            metadata = {
+                "artist": "Repeated Artist",
+                "name": "Repeated Album",
+                "primary_type": "Album",
+                "_musicbrainz_match": {"confidence": 93},
+                "tracklist": [{"title": "Track 1"}, {"title": "Track 2"}],
+            }
+            seen_uris = []
+
+            def resolve(track_uris):
+                seen_uris.extend(track_uris)
+                return catalog
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                side_effect=resolve,
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                return_value=metadata,
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(seen_uris), 2)
+        self.assertEqual(summary["spotify_catalog_resolved_tracks"], 2)
+        self.assertEqual(summary["derived_album_listens"], 1)
+
+    def test_spotify_import_diagnostics_reports_source_rows_and_missing_tracks(self):
+        dookie_tracks = [
+            "Burnout",
+            "Having a Blast",
+            "Chump",
+            "Longview",
+            "Welcome to Paradise",
+            "Pulling Teeth",
+            "Basket Case",
+            "She",
+            "Sassafras Roots",
+            "When I Come Around",
+            "Coming Clean",
+            "Emenius Sleepus",
+            "In the End",
+            "F.O.D.",
+            "All by Myself",
+        ]
+        state = sample_album_state()
+        state["completed_albums"]["Green Day - Dookie"] = {
+            "artist": "Green Day",
+            "name": "Dookie",
+            "source": "musicbrainz",
+            "entry_source": "manual",
+            "listen_history": [],
+            "tracklist": [{"title": track} for track in dookie_tracks],
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir, state=state)
+            full_rows = self._spotify_rows(
+                artist="Green Day",
+                album="Dookie",
+                tracks=dookie_tracks,
+            )
+            partial_rows = self._spotify_rows(
+                artist="Green Day",
+                album="Dookie",
+                tracks=dookie_tracks[:-2],
+            )
+            for index, row in enumerate(partial_rows):
+                row["ts"] = f"2026-03-05T02:{45 + index:02d}:00Z"
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": full_rows + partial_rows})
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Existing album tracklist should be reused."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("dookie.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+            diagnostics_response = client.get(
+                f"/api/users/jacob/imports/{import_session_id}/diagnostics",
+                params={"artist": "Green Day", "album": "Dookie"},
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(diagnostics_response.status_code, 200)
+        diagnostics = diagnostics_response.json()
+        self.assertEqual(diagnostics["original_filename"], "dookie.zip")
+        self.assertEqual(diagnostics["raw_row_count"], 28)
+        self.assertEqual(diagnostics["expected_tracks"], dookie_tracks)
+        self.assertEqual(len(diagnostics["sessions"]), 2)
+        full_session, partial_session = diagnostics["sessions"]
+        self.assertTrue(full_session["listen_created"])
+        self.assertEqual(full_session["missing_tracks"], [])
+        self.assertEqual(full_session["rows"][0]["source_file"], "Streaming_History_Audio_0.json")
+        self.assertEqual(full_session["rows"][0]["source_index"], 1)
+        self.assertEqual(partial_session["missing_tracks"], ["F.O.D.", "All by Myself"])
+        self.assertFalse(partial_session["listen_created"])
+        self.assertEqual(partial_session["rows"][0]["source_index"], 16)
 
     def test_import_history_includes_step_progress_and_live_logs(self):
         with tempfile.TemporaryDirectory() as temp_dir:

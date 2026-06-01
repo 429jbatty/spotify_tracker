@@ -183,6 +183,14 @@ class ImportPreviewSummary(BaseModel):
     musicbrainz_lookup_seconds_avg: float | None = None
     musicbrainz_lookup_seconds_p95: float | None = None
     estimated_seconds_remaining: float | None = None
+    spotify_catalog_resolved_tracks: int = 0
+    spotify_catalog_unresolved_tracks: int = 0
+    spotify_catalog_fallback_rows: int = 0
+    spotify_import_original_filename: str | None = None
+    spotify_import_file_size_bytes: int | None = None
+    spotify_import_sha256: str | None = None
+    spotify_import_zip_member_count: int | None = None
+    spotify_import_duplicate_of_session_id: int | None = None
 
 
 class ImportProgressStep(BaseModel):
@@ -209,6 +217,11 @@ class ImportCommitResponse(BaseModel):
     status: str = "queued"
     session_name: str | None = None
     source_user_id: str | None = None
+    original_filename: str | None = None
+    file_size_bytes: int | None = None
+    file_sha256: str | None = None
+    zip_member_count: int | None = None
+    duplicate_of_import_session_id: int | None = None
     summary: ImportPreviewSummary
 
 
@@ -228,6 +241,11 @@ class ImportSessionSummary(BaseModel):
     session_name: str | None = None
     started_at: str
     completed_at: str | None = None
+    original_filename: str | None = None
+    file_size_bytes: int | None = None
+    file_sha256: str | None = None
+    zip_member_count: int | None = None
+    duplicate_of_import_session_id: int | None = None
     summary: ImportPreviewSummary
     steps: list[ImportProgressStep] = Field(default_factory=list)
     current_step_key: str | None = None
@@ -250,6 +268,46 @@ class ImportSessionLogEntry(BaseModel):
     total: int | None = None
     elapsed_seconds: float | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
+
+
+class SpotifyImportDiagnosticRawRow(BaseModel):
+    id: int
+    played_at: str
+    track_name: str | None = None
+    spotify_track_uri: str | None = None
+    source_file: str | None = None
+    source_index: int | None = None
+
+
+class SpotifyImportDiagnosticSession(BaseModel):
+    start: str | None = None
+    end: str | None = None
+    row_count: int
+    unique_track_count: int
+    matched_tracks: list[str] = Field(default_factory=list)
+    missing_tracks: list[str] = Field(default_factory=list)
+    rows: list[SpotifyImportDiagnosticRawRow] = Field(default_factory=list)
+    imported_event_ids: list[int] = Field(default_factory=list)
+    final_statuses: list[str] = Field(default_factory=list)
+    listen_created: bool = False
+
+
+class SpotifyImportDiagnosticsResponse(BaseModel):
+    import_session_id: int
+    source: str
+    session_name: str | None = None
+    original_filename: str | None = None
+    file_size_bytes: int | None = None
+    file_sha256: str | None = None
+    zip_member_count: int | None = None
+    duplicate_of_import_session_id: int | None = None
+    artist: str
+    album: str
+    raw_row_count: int
+    timestamp_min: str | None = None
+    timestamp_max: str | None = None
+    expected_tracks: list[str] = Field(default_factory=list)
+    sessions: list[SpotifyImportDiagnosticSession] = Field(default_factory=list)
 
 
 class ImportReviewItem(BaseModel):

@@ -377,7 +377,7 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertIn("ix_album_metadata_cache_status", indexes)
         self.assertIn("ix_album_metadata_cache_updated_at", indexes)
 
-    def test_create_schema_adds_artifact_path_to_existing_import_sessions_table(self):
+    def test_create_schema_adds_source_metadata_to_existing_import_sessions_table(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
             engine = create_engine(database_url)
@@ -410,6 +410,11 @@ class SqliteMigrationTests(unittest.TestCase):
                 ]
 
         self.assertEqual(columns.count("artifact_path"), 1)
+        self.assertEqual(columns.count("original_filename"), 1)
+        self.assertEqual(columns.count("file_size_bytes"), 1)
+        self.assertEqual(columns.count("file_sha256"), 1)
+        self.assertEqual(columns.count("zip_member_count"), 1)
+        self.assertEqual(columns.count("duplicate_of_import_session_id"), 1)
 
     def test_create_schema_creates_spotify_streaming_events_idempotently(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -438,9 +443,19 @@ class SqliteMigrationTests(unittest.TestCase):
                 "user_id",
                 "import_session_id",
                 "event_fingerprint",
+                "source_file",
+                "source_index",
                 "played_at",
                 "ms_played",
                 "spotify_track_uri",
+                "spotify_track_id",
+                "spotify_album_id",
+                "spotify_album_name",
+                "spotify_album_artist_name",
+                "spotify_album_total_tracks",
+                "spotify_disc_number",
+                "spotify_track_number",
+                "spotify_catalog_status",
                 "track_name",
                 "artist_name",
                 "album_name",
@@ -456,6 +471,56 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertIn("ix_spotify_streaming_events_user_id", indexes)
         self.assertIn("ix_spotify_streaming_events_import_session_id", indexes)
         self.assertIn("ix_spotify_streaming_events_played_at", indexes)
+        self.assertIn("ix_spotify_streaming_events_spotify_album_id", indexes)
+
+    def test_create_schema_adds_spotify_catalog_columns_to_existing_events_table(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_engine(database_url)
+
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE spotify_streaming_events (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            user_id INTEGER NOT NULL,
+                            import_session_id INTEGER,
+                            event_fingerprint VARCHAR NOT NULL,
+                            played_at VARCHAR NOT NULL,
+                            ms_played INTEGER NOT NULL,
+                            spotify_track_uri VARCHAR,
+                            track_name VARCHAR,
+                            artist_name VARCHAR,
+                            album_name VARCHAR,
+                            platform VARCHAR,
+                            country VARCHAR,
+                            reason_start VARCHAR,
+                            reason_end VARCHAR,
+                            skipped BOOLEAN,
+                            offline BOOLEAN,
+                            raw_payload JSON NOT NULL
+                        )
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA table_info(spotify_streaming_events)")
+                    )
+                }
+
+        self.assertIn("spotify_track_id", columns)
+        self.assertIn("spotify_album_id", columns)
+        self.assertIn("spotify_album_total_tracks", columns)
+        self.assertIn("spotify_catalog_status", columns)
+        self.assertIn("source_file", columns)
+        self.assertIn("source_index", columns)
 
 
 if __name__ == "__main__":

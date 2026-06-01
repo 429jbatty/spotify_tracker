@@ -17,6 +17,7 @@ from backend.app.schemas import (
     ImportPreviewResponse,
     ImportResolveRequest,
     ImportReviewItem,
+    SpotifyImportDiagnosticsResponse,
     ImportSessionLogEntry,
     ImportSessionSummary,
 )
@@ -159,6 +160,30 @@ def list_user_import_logs(
             )
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+
+
+@router.get("/{import_session_id}/diagnostics", response_model=SpotifyImportDiagnosticsResponse)
+def get_spotify_import_diagnostics(
+    user_slug: str,
+    import_session_id: int,
+    artist: str,
+    album: str,
+) -> SpotifyImportDiagnosticsResponse:
+    session_factory = _session_factory()
+    with session_factory() as session:
+        try:
+            repository = SqliteStateRepository(session, user_slug=user_slug)
+            return import_service.spotify_import_diagnostics(
+                session,
+                repository,
+                import_session_id,
+                artist=artist,
+                album=album,
+            )
+        except KeyError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
 
 async def _store_spotify_zip_upload(file: UploadFile) -> Path:

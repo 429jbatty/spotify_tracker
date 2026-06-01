@@ -443,6 +443,39 @@ def migrate_import_sessions_artifact_path(engine: Engine) -> None:
         connection.execute(text("ALTER TABLE import_sessions ADD COLUMN artifact_path TEXT"))
 
 
+def migrate_import_session_source_metadata(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    if not _table_exists(engine, "import_sessions"):
+        return
+
+    columns = _table_columns(engine, "import_sessions")
+    source_columns = {
+        "original_filename": "VARCHAR",
+        "file_size_bytes": "INTEGER",
+        "file_sha256": "VARCHAR",
+        "zip_member_count": "INTEGER",
+        "duplicate_of_import_session_id": "INTEGER",
+    }
+    with engine.begin() as connection:
+        for column, column_type in source_columns.items():
+            if column not in columns:
+                connection.execute(
+                    text(
+                        f"ALTER TABLE import_sessions "
+                        f"ADD COLUMN {column} {column_type}"
+                    )
+                )
+                columns.add(column)
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_import_sessions_file_sha256 "
+                "ON import_sessions (file_sha256)"
+            )
+        )
+
+
 def migrate_spotify_streaming_events(engine: Engine) -> None:
     if not _is_sqlite_engine(engine):
         return
@@ -456,9 +489,19 @@ def migrate_spotify_streaming_events(engine: Engine) -> None:
                     user_id INTEGER NOT NULL,
                     import_session_id INTEGER,
                     event_fingerprint VARCHAR NOT NULL,
+                    source_file VARCHAR,
+                    source_index INTEGER,
                     played_at VARCHAR NOT NULL,
                     ms_played INTEGER NOT NULL,
                     spotify_track_uri VARCHAR,
+                    spotify_track_id VARCHAR,
+                    spotify_album_id VARCHAR,
+                    spotify_album_name VARCHAR,
+                    spotify_album_artist_name VARCHAR,
+                    spotify_album_total_tracks INTEGER,
+                    spotify_disc_number INTEGER,
+                    spotify_track_number INTEGER,
+                    spotify_catalog_status VARCHAR,
                     track_name VARCHAR,
                     artist_name VARCHAR,
                     album_name VARCHAR,
@@ -505,6 +548,46 @@ def migrate_spotify_streaming_events(engine: Engine) -> None:
             text(
                 "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_track_uri "
                 "ON spotify_streaming_events (spotify_track_uri)"
+            )
+        )
+        columns = _table_columns(engine, "spotify_streaming_events")
+        spotify_event_columns = {
+            "source_file": "VARCHAR",
+            "source_index": "INTEGER",
+            "spotify_track_id": "VARCHAR",
+            "spotify_album_id": "VARCHAR",
+            "spotify_album_name": "VARCHAR",
+            "spotify_album_artist_name": "VARCHAR",
+            "spotify_album_total_tracks": "INTEGER",
+            "spotify_disc_number": "INTEGER",
+            "spotify_track_number": "INTEGER",
+            "spotify_catalog_status": "VARCHAR",
+        }
+        for column, column_type in spotify_event_columns.items():
+            if column not in columns:
+                connection.execute(
+                    text(
+                        f"ALTER TABLE spotify_streaming_events "
+                        f"ADD COLUMN {column} {column_type}"
+                    )
+                )
+                columns.add(column)
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_track_id "
+                "ON spotify_streaming_events (spotify_track_id)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_album_id "
+                "ON spotify_streaming_events (spotify_album_id)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_catalog_status "
+                "ON spotify_streaming_events (spotify_catalog_status)"
             )
         )
 
@@ -568,5 +651,6 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_imported_event_candidate_key(engine)
     migrate_album_metadata_cache(engine)
     migrate_import_sessions_artifact_path(engine)
+    migrate_import_session_source_metadata(engine)
     migrate_spotify_streaming_events(engine)
     migrate_import_session_logs(engine)

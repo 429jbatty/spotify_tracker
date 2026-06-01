@@ -40,16 +40,22 @@ from backend.app.schemas import (
     ImportProgressStep,
     ImportSessionLogEntry,
     ImportSessionSummary,
+    SpotifyImportDiagnosticRawRow,
+    SpotifyImportDiagnosticsResponse,
+    SpotifyImportDiagnosticSession,
 )
 from backend.app.services.import_parsers import (
     NormalizedImportEvent,
     clean_text,
 )
 from backend.app.services.lastfm_import_client import fetch_lastfm_recent_tracks
+from backend.app.services import spotify_catalog_service
 from backend.app.services.spotify_import_parser import (
     iter_spotify_history_events,
+    iter_spotify_history_events_with_provenance,
     spotify_history_entries_from_zip,
     spotify_streaming_fingerprint,
+    spotify_zip_member_count,
 )
 
 
@@ -58,7 +64,7 @@ LASTFM_PREVIEW_MAX_PAGES = 5
 LASTFM_PREVIEW_MAX_SCROBBLES = 1000
 LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 3
 SPOTIFY_IMPORT_SOURCE = "spotify_import"
-SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 2_000
+SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 1_000
 SPOTIFY_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 5
 SPOTIFY_REMOTE_METADATA_MIN_MS_PLAYED = 20 * 60 * 1000
 SPOTIFY_REMOTE_METADATA_ALWAYS_UNIQUE_TRACKS = 8
@@ -68,6 +74,7 @@ RESUMABLE_IMPORT_STATUSES = {
     "validating_zip",
     "parsing_spotify_history",
     "storing_streaming_events",
+    "resolving_spotify_catalog",
     "fetching_lastfm",
     "storing_scrobbles",
     "grouping_album_sessions",
@@ -87,6 +94,7 @@ STATUS_TO_STEP = {
     "validating_zip": "store_source",
     "parsing_spotify_history": "store_source",
     "storing_streaming_events": "store_source",
+    "resolving_spotify_catalog": "store_source",
     "fetching_lastfm": "store_source",
     "storing_scrobbles": "store_source",
     "grouping_album_sessions": "find_sessions",
@@ -123,6 +131,24 @@ class LastfmCandidate:
 class ExistingAlbumMatch:
     album_id: int
     record: dict[str, Any]
+
+
+@dataclass
+class SpotifyCompletionResult:
+    album_id: str
+    total_tracks: int
+    played_tracks: set[str]
+    complete: bool
+
+    @property
+    def matched_track_count(self) -> int:
+        return len(self.played_tracks)
+
+    @property
+    def confidence(self) -> int:
+        if self.total_tracks <= 0:
+            return 0
+        return round((self.matched_track_count / self.total_tracks) * 100)
 
 
 @dataclass
@@ -269,9 +295,18 @@ def _apply_metadata_stats(
 
 
 def _session_summary(import_session: ImportSession) -> ImportPreviewSummary:
-    return ImportPreviewSummary.model_validate(
+    summary = ImportPreviewSummary.model_validate(
         import_session.summary_json or _empty_summary().model_dump()
     )
+    if import_session.source == SPOTIFY_IMPORT_SOURCE:
+        summary.spotify_import_original_filename = import_session.original_filename
+        summary.spotify_import_file_size_bytes = import_session.file_size_bytes
+        summary.spotify_import_sha256 = import_session.file_sha256
+        summary.spotify_import_zip_member_count = import_session.zip_member_count
+        summary.spotify_import_duplicate_of_session_id = (
+            import_session.duplicate_of_import_session_id
+        )
+    return summary
 
 
 def _build_progress_steps(
@@ -334,8 +369,16 @@ def _current_step_detail(
         return summary.progress_label or "Import failed."
     if import_session.status in {"validating_zip", "queued"}:
         return "Preparing the import."
-    if import_session.status in {"parsing_spotify_history", "storing_streaming_events"}:
+    if import_session.status in {
+        "parsing_spotify_history",
+        "storing_streaming_events",
+    }:
         return f"{summary.progress_current:,} of {summary.progress_total:,} Spotify plays stored."
+    if import_session.status == "resolving_spotify_catalog":
+        return (
+            f"{summary.spotify_catalog_resolved_tracks:,} Spotify tracks resolved; "
+            f"{summary.spotify_catalog_unresolved_tracks:,} unresolved."
+        )
     if import_session.status in {"fetching_lastfm", "storing_scrobbles"}:
         return f"{summary.progress_current:,} of {summary.progress_total:,} Last.fm scrobbles stored."
     if import_session.status == "matching_cached_albums":
@@ -369,6 +412,11 @@ def _build_import_session_summary(import_session: ImportSession) -> ImportSessio
         session_name=import_session.session_name,
         started_at=import_session.started_at,
         completed_at=import_session.completed_at,
+        original_filename=import_session.original_filename,
+        file_size_bytes=import_session.file_size_bytes,
+        file_sha256=import_session.file_sha256,
+        zip_member_count=import_session.zip_member_count,
+        duplicate_of_import_session_id=import_session.duplicate_of_import_session_id,
         summary=summary,
         steps=steps,
         current_step_key=current_step.key if current_step else None,
@@ -493,6 +541,77 @@ def import_session_logs(
         )
         for row in rows
     ]
+
+
+def spotify_import_diagnostics(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session_id: int,
+    *,
+    artist: str,
+    album: str,
+) -> SpotifyImportDiagnosticsResponse:
+    import_session = session.scalars(
+        select(ImportSession).where(
+            ImportSession.id == import_session_id,
+            ImportSession.user_id == repository.user.id,
+        )
+    ).first()
+    if import_session is None:
+        raise KeyError(f"Import session not found: {import_session_id}")
+    if import_session.source != SPOTIFY_IMPORT_SOURCE:
+        raise ValueError("Diagnostics are only available for Spotify ZIP imports.")
+
+    target_artist = artist.strip().casefold()
+    target_album = album.strip().casefold()
+    raw_rows = session.scalars(
+        select(SpotifyStreamingEvent)
+        .where(
+            SpotifyStreamingEvent.import_session_id == import_session.id,
+            SpotifyStreamingEvent.user_id == repository.user.id,
+            func.lower(func.coalesce(SpotifyStreamingEvent.artist_name, "")) == target_artist,
+            func.lower(func.coalesce(SpotifyStreamingEvent.album_name, "")) == target_album,
+        )
+        .order_by(SpotifyStreamingEvent.played_at, SpotifyStreamingEvent.id)
+    ).all()
+    imported_rows = session.scalars(
+        select(ImportedListeningEvent).where(
+            ImportedListeningEvent.import_session_id == import_session.id,
+            ImportedListeningEvent.user_id == repository.user.id,
+            func.lower(ImportedListeningEvent.artist) == target_artist,
+            func.lower(func.coalesce(ImportedListeningEvent.album, "")) == target_album,
+        )
+    ).all()
+    imported_by_raw_id: dict[int, list[ImportedListeningEvent]] = defaultdict(list)
+    for imported in imported_rows:
+        for raw_id in imported.raw_payload.get("_spotify_streaming_event_ids") or []:
+            if raw_id is not None:
+                imported_by_raw_id[int(raw_id)].append(imported)
+
+    expected_tracks = _diagnostic_expected_tracks(session, repository, artist, album)
+    sessions = _spotify_diagnostic_sessions(
+        raw_rows,
+        expected_tracks=expected_tracks,
+        imported_by_raw_id=imported_by_raw_id,
+    )
+    timestamps = [row.played_at for row in raw_rows if row.played_at]
+    return SpotifyImportDiagnosticsResponse(
+        import_session_id=import_session.id,
+        source=import_session.source,
+        session_name=import_session.session_name,
+        original_filename=import_session.original_filename,
+        file_size_bytes=import_session.file_size_bytes,
+        file_sha256=import_session.file_sha256,
+        zip_member_count=import_session.zip_member_count,
+        duplicate_of_import_session_id=import_session.duplicate_of_import_session_id,
+        artist=artist,
+        album=album,
+        raw_row_count=len(raw_rows),
+        timestamp_min=min(timestamps) if timestamps else None,
+        timestamp_max=max(timestamps) if timestamps else None,
+        expected_tracks=expected_tracks,
+        sessions=sessions,
+    )
 
 
 def resumable_import_session_ids(session: Session) -> list[int]:
@@ -858,6 +977,13 @@ def create_spotify_import_session(
     original_filename: str | None,
     session_name: str | None = None,
 ) -> ImportCommitResponse:
+    file_size_bytes = os.path.getsize(artifact_path)
+    file_sha256 = _file_sha256(artifact_path)
+    duplicate_session_id = _duplicate_spotify_import_session_id(
+        session,
+        repository,
+        file_sha256,
+    )
     import_session = ImportSession(
         user_id=repository.user.id,
         source=SPOTIFY_IMPORT_SOURCE,
@@ -868,6 +994,10 @@ def create_spotify_import_session(
         started_at=_utc_now(),
         completed_at=None,
         artifact_path=artifact_path,
+        original_filename=original_filename,
+        file_size_bytes=file_size_bytes,
+        file_sha256=file_sha256,
+        duplicate_of_import_session_id=duplicate_session_id,
         summary_json=_empty_summary().model_dump(),
     )
     session.add(import_session)
@@ -877,7 +1007,28 @@ def create_spotify_import_session(
         import_session,
         stage="queued",
         message="Spotify import queued.",
+        metadata={
+            "original_filename": original_filename,
+            "file_size_bytes": file_size_bytes,
+            "file_sha256": file_sha256,
+            "duplicate_of_import_session_id": duplicate_session_id,
+        },
     )
+    if duplicate_session_id is not None:
+        _append_import_log(
+            session,
+            import_session,
+            stage="queued",
+            level="warning",
+            message=(
+                "This Spotify ZIP has the same SHA-256 fingerprint as "
+                f"import session {duplicate_session_id}."
+            ),
+            metadata={
+                "duplicate_of_import_session_id": duplicate_session_id,
+                "file_sha256": file_sha256,
+            },
+        )
     session.commit()
 
     return ImportCommitResponse(
@@ -886,6 +1037,11 @@ def create_spotify_import_session(
         status=import_session.status,
         session_name=import_session.session_name,
         source_user_id=None,
+        original_filename=import_session.original_filename,
+        file_size_bytes=import_session.file_size_bytes,
+        file_sha256=import_session.file_sha256,
+        zip_member_count=import_session.zip_member_count,
+        duplicate_of_import_session_id=import_session.duplicate_of_import_session_id,
         summary=_session_summary(import_session),
     )
 
@@ -1199,8 +1355,16 @@ def _run_spotify_import_session(
             max_entries=settings.spotify_import_max_zip_entries,
             max_uncompressed_bytes=settings.spotify_import_max_uncompressed_bytes,
         )
+        import_session.zip_member_count = spotify_zip_member_count(artifact_path)
         timer.finish()
         summary.total_rows = len(history_entries)
+        summary.spotify_import_original_filename = import_session.original_filename
+        summary.spotify_import_file_size_bytes = import_session.file_size_bytes
+        summary.spotify_import_sha256 = import_session.file_sha256
+        summary.spotify_import_zip_member_count = import_session.zip_member_count
+        summary.spotify_import_duplicate_of_session_id = (
+            import_session.duplicate_of_import_session_id
+        )
         _set_import_progress(
             import_session,
             summary,
@@ -1274,6 +1438,32 @@ def _run_spotify_import_session(
         summary.stage_timings = dict(timer.summary.stage_timings or {})
         timer.summary = summary
         timer.finish()
+
+        import_session.status = "resolving_spotify_catalog"
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Resolving Spotify catalog tracks",
+            current=0,
+            total=0,
+        )
+        timer.start("resolving_spotify_catalog")
+        _append_import_log(
+            session,
+            import_session,
+            stage="resolving_spotify_catalog",
+            message="Resolving Spotify track and album metadata.",
+        )
+        session.commit()
+        _resolve_spotify_catalog_for_import(
+            session=session,
+            repository=repository,
+            import_session=import_session,
+            summary=summary,
+        )
+        timer.finish()
+        import_session.summary_json = summary.model_dump()
+        session.commit()
 
         import_session.status = "grouping_album_sessions"
         _set_import_progress(
@@ -1506,6 +1696,27 @@ def _resume_spotify_import_session(
     )
 
     if _imported_event_count_for_session(session, repository, import_session) == 0:
+        import_session.status = "resolving_spotify_catalog"
+        timer.start("resolving_spotify_catalog")
+        _set_import_progress(
+            import_session,
+            summary,
+            label="Resolving Spotify catalog tracks",
+            current=summary.spotify_catalog_resolved_tracks,
+            total=summary.spotify_catalog_resolved_tracks
+            + summary.spotify_catalog_unresolved_tracks,
+        )
+        session.commit()
+        _resolve_spotify_catalog_for_import(
+            session=session,
+            repository=repository,
+            import_session=import_session,
+            summary=summary,
+        )
+        timer.finish()
+        import_session.summary_json = summary.model_dump()
+        session.commit()
+
         import_session.status = "matching_cached_albums"
         timer.start("matching_cached_albums")
         _set_import_progress(
@@ -1707,7 +1918,11 @@ def _stream_persist_spotify_streaming_events(
         session.flush()
 
     for entry in history_entries:
-        for row in iter_spotify_history_events(artifact_path, entry.filename):
+        for sourced_row in iter_spotify_history_events_with_provenance(
+            artifact_path,
+            entry.filename,
+        ):
+            row = sourced_row.event
             summary.total_rows += 1
             summary.progress_current = summary.total_rows
             summary.progress_total = summary.total_rows
@@ -1731,9 +1946,14 @@ def _stream_persist_spotify_streaming_events(
                     "user_id": repository.user.id,
                     "import_session_id": import_session.id,
                     "event_fingerprint": fingerprint,
+                    "source_file": sourced_row.source_file,
+                    "source_index": sourced_row.source_index,
                     "played_at": row.played_at,
                     "ms_played": row.ms_played,
                     "spotify_track_uri": row.spotify_track_uri,
+                    "spotify_track_id": spotify_catalog_service.spotify_track_id_from_uri(
+                        row.spotify_track_uri
+                    ),
                     "track_name": row.track_name,
                     "artist_name": row.artist_name,
                     "album_name": row.album_name,
@@ -1774,6 +1994,120 @@ def _stream_persist_spotify_streaming_events(
     if progress_callback:
         progress_callback(summary)
     return summary
+
+
+def _resolve_spotify_catalog_for_import(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+    summary: ImportPreviewSummary,
+) -> None:
+    rows = session.scalars(
+        select(SpotifyStreamingEvent).where(
+            SpotifyStreamingEvent.import_session_id == import_session.id,
+            SpotifyStreamingEvent.user_id == repository.user.id,
+            SpotifyStreamingEvent.spotify_track_uri.is_not(None),
+            SpotifyStreamingEvent.spotify_catalog_status.is_(None),
+        )
+    ).all()
+    track_uris = sorted({row.spotify_track_uri for row in rows if row.spotify_track_uri})
+    if not track_uris:
+        summary.spotify_catalog_fallback_rows = _spotify_catalog_fallback_row_count(
+            session,
+            repository,
+            import_session,
+        )
+        return
+
+    try:
+        resolved = spotify_catalog_service.resolve_tracks_by_uri(track_uris)
+    except spotify_catalog_service.SpotifyCatalogUnavailable as exc:
+        summary.spotify_catalog_fallback_rows = _spotify_catalog_fallback_row_count(
+            session,
+            repository,
+            import_session,
+        )
+        _append_import_log(
+            session,
+            import_session,
+            stage="resolving_spotify_catalog",
+            level="warning",
+            message=f"Spotify catalog lookup unavailable; falling back to local metadata matching: {exc}",
+            current=0,
+            total=len(track_uris),
+        )
+        return
+
+    for row in rows:
+        uri = spotify_catalog_service.spotify_track_uri(
+            spotify_catalog_service.spotify_track_id_from_uri(row.spotify_track_uri)
+        )
+        catalog_track = resolved.get(uri or "")
+        raw_payload = dict(row.raw_payload or {})
+        if catalog_track is None:
+            row.spotify_catalog_status = "not_found"
+            raw_payload["_spotify_catalog_status"] = "not_found"
+            row.raw_payload = raw_payload
+            continue
+
+        row.spotify_track_id = catalog_track.track_id
+        row.spotify_album_id = catalog_track.album_id
+        row.spotify_album_name = catalog_track.album_name
+        row.spotify_album_artist_name = catalog_track.album_artist_name
+        row.spotify_album_total_tracks = catalog_track.album_total_tracks
+        row.spotify_disc_number = catalog_track.disc_number
+        row.spotify_track_number = catalog_track.track_number
+        row.spotify_catalog_status = "resolved"
+        raw_payload.update(
+            {
+                "_spotify_catalog_status": "resolved",
+                "_spotify_album_id": catalog_track.album_id,
+                "_spotify_album_name": catalog_track.album_name,
+                "_spotify_album_artist_name": catalog_track.album_artist_name,
+                "_spotify_album_total_tracks": catalog_track.album_total_tracks,
+                "_spotify_disc_number": catalog_track.disc_number,
+                "_spotify_track_number": catalog_track.track_number,
+                "_spotify_album_images": catalog_track.album_images,
+                "_spotify_album_release_date": catalog_track.album_release_date,
+            }
+        )
+        row.raw_payload = raw_payload
+
+    session.flush()
+    summary.spotify_catalog_resolved_tracks = len(resolved)
+    summary.spotify_catalog_unresolved_tracks = max(0, len(track_uris) - len(resolved))
+    summary.spotify_catalog_fallback_rows = _spotify_catalog_fallback_row_count(
+        session,
+        repository,
+        import_session,
+    )
+    _append_import_log(
+        session,
+        import_session,
+        stage="resolving_spotify_catalog",
+        message=(
+            f"Resolved {summary.spotify_catalog_resolved_tracks} Spotify catalog tracks; "
+            f"{summary.spotify_catalog_unresolved_tracks} unresolved."
+        ),
+        current=summary.spotify_catalog_resolved_tracks,
+        total=len(track_uris),
+    )
+
+
+def _spotify_catalog_fallback_row_count(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> int:
+    return session.scalar(
+        select(func.count())
+        .select_from(SpotifyStreamingEvent)
+        .where(
+            SpotifyStreamingEvent.import_session_id == import_session.id,
+            SpotifyStreamingEvent.user_id == repository.user.id,
+            SpotifyStreamingEvent.spotify_album_id.is_(None),
+        )
+    ) or 0
 
 
 def _spotify_streaming_event_count(
@@ -1832,7 +2166,7 @@ def _build_spotify_candidates_from_streaming_events(
     metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
     existing_album_index = _existing_album_index(repository)
     candidates: list[LastfmCandidate] = []
-    current_key: tuple[str, str] | None = None
+    current_key: tuple[str, str, str] | None = None
     current_events: list[NormalizedImportEvent] = []
 
     rows = session.scalars(
@@ -1844,13 +2178,8 @@ def _build_spotify_candidates_from_streaming_events(
             SpotifyStreamingEvent.album_name.is_not(None),
             SpotifyStreamingEvent.played_at.is_not(None),
         )
-        .order_by(
-            func.lower(SpotifyStreamingEvent.artist_name),
-            func.lower(SpotifyStreamingEvent.album_name),
-            SpotifyStreamingEvent.played_at,
-            SpotifyStreamingEvent.id,
-        )
-    ).yield_per(1000)
+        .order_by(SpotifyStreamingEvent.played_at, SpotifyStreamingEvent.id)
+    ).all()
 
     def process_group(events: list[NormalizedImportEvent]) -> None:
         if not events:
@@ -1868,11 +2197,16 @@ def _build_spotify_candidates_from_streaming_events(
             )
             candidates.append(candidate)
 
-    for row in rows:
-        key = (
-            (row.artist_name or "").casefold(),
-            (row.album_name or "").casefold(),
-        )
+    sorted_rows = sorted(
+        rows,
+        key=lambda row: (
+            _spotify_streaming_event_group_key(row),
+            row.played_at,
+            row.id,
+        ),
+    )
+    for row in sorted_rows:
+        key = _spotify_streaming_event_group_key(row)
         if current_key is not None and key != current_key:
             process_group(current_events)
             current_events = []
@@ -1946,6 +2280,16 @@ def _build_spotify_candidates_from_imported_events(
 
     candidates.sort(key=lambda candidate: candidate.listened_at, reverse=True)
     return candidates
+
+
+def _spotify_streaming_event_group_key(row: SpotifyStreamingEvent) -> tuple[str, str, str]:
+    if row.spotify_album_id and row.spotify_album_total_tracks:
+        return ("spotify_album", row.spotify_album_id.casefold(), "")
+    return (
+        "name",
+        (row.artist_name or "").casefold(),
+        (row.album_name or "").casefold(),
+    )
 
 
 def _build_remote_candidates_for_imported_rows(
@@ -2088,6 +2432,15 @@ def _persist_spotify_candidate_rows(
                 "_spotify_streaming_event_ids": streaming_event_ids,
                 "_representative_track": representative.track,
                 "_track_count": len(streaming_event_ids),
+                "_spotify_album_id": representative.raw_payload.get("_spotify_album_id"),
+                "_spotify_album_total_tracks": representative.raw_payload.get(
+                    "_spotify_album_total_tracks"
+                ),
+                "_spotify_completion_authority": (
+                    "spotify_catalog"
+                    if representative.raw_payload.get("_spotify_album_total_tracks")
+                    else "metadata_tracklist"
+                ),
             },
         )
         session.add(event)
@@ -2101,8 +2454,8 @@ def _spotify_streaming_event_to_import_event(
 ) -> NormalizedImportEvent:
     return NormalizedImportEvent(
         listened_at=row.played_at,
-        artist=row.artist_name,
-        album=row.album_name,
+        artist=row.spotify_album_artist_name or row.artist_name,
+        album=row.spotify_album_name or row.album_name,
         track=row.track_name,
         source=SPOTIFY_IMPORT_SOURCE,
         source_user_id=None,
@@ -2113,7 +2466,17 @@ def _spotify_streaming_event_to_import_event(
         raw_payload={
             **(row.raw_payload or {}),
             "_spotify_streaming_event_id": row.id,
+            "_spotify_source_file": row.source_file,
+            "_spotify_source_index": row.source_index,
             "_spotify_track_uri": row.spotify_track_uri,
+            "_spotify_track_id": row.spotify_track_id,
+            "_spotify_album_id": row.spotify_album_id,
+            "_spotify_album_name": row.spotify_album_name,
+            "_spotify_album_artist_name": row.spotify_album_artist_name,
+            "_spotify_album_total_tracks": row.spotify_album_total_tracks,
+            "_spotify_disc_number": row.spotify_disc_number,
+            "_spotify_track_number": row.spotify_track_number,
+            "_spotify_catalog_status": row.spotify_catalog_status,
             "_spotify_track_name": row.track_name,
             "_spotify_ms_played": row.ms_played,
         },
@@ -2455,9 +2818,16 @@ def _build_lastfm_candidate(
         for event in events
         if _normalize_import_event_track_identity(event)
     }
+    spotify_completion = _spotify_completion_result(events)
     remote_metadata_allowed = (
         allow_remote_metadata
-        and _candidate_has_remote_metadata_evidence(events, unique_track_identities)
+        and (
+            (
+                spotify_completion is not None
+                and spotify_completion.complete
+            )
+            or _candidate_has_remote_metadata_evidence(events, unique_track_identities)
+        )
     )
     metadata = (
         _lastfm_album_metadata(
@@ -2487,14 +2857,89 @@ def _build_lastfm_candidate(
             f"Fast preview candidate with {matched_track_count} unique scrobbled tracks. "
             "Commit import to store scrobbles and run full album-completion matching."
         )
-    elif metadata and metadata.get("tracklist"):
-        metadata_tracks = {
-            _normalize_track_name(track.get("title"))
+    elif spotify_completion is not None and not spotify_completion.complete:
+        matched_track_count = spotify_completion.matched_track_count
+        total_track_count = spotify_completion.total_tracks
+        confidence = spotify_completion.confidence
+        status = "partial_listen"
+        detail = (
+            f"Spotify matched {matched_track_count} of {total_track_count} album tracks. "
+            "This does not count as a completed album listen."
+        )
+    elif spotify_completion is not None and metadata and metadata.get("tracklist"):
+        matched_track_count = spotify_completion.matched_track_count
+        total_track_count = spotify_completion.total_tracks
+        confidence = spotify_completion.confidence
+        metadata_track_titles = [
+            track.get("title")
             for track in metadata.get("tracklist") or []
             if _normalize_track_name(track.get("title"))
+        ]
+        partially_matched_split_tracks = _partially_matched_spotify_split_tracks(
+            metadata_track_titles,
+            unique_track_names,
+        )
+        if matched_album_id is None and not _is_lastfm_importable_album_metadata(
+            metadata,
+            total_track_count,
+        ):
+            status = "partial_listen"
+            detail = (
+                "MusicBrainz matched this to a single or short non-album release, "
+                "so it does not count as a completed album listen."
+            )
+        elif partially_matched_split_tracks:
+            status = "partial_listen"
+            detail = (
+                "Spotify matched only part of a combined MusicBrainz track "
+                f"({', '.join(partially_matched_split_tracks)}), so this does not "
+                "count as a completed album listen."
+            )
+        else:
+            status = "matched_existing" if matched_album_id is not None else "new_album"
+            detail = (
+                f"Spotify matched {matched_track_count} of {total_track_count} album tracks. "
+                "This will count as a completed album listen."
+            )
+    elif spotify_completion is not None:
+        matched_track_count = spotify_completion.matched_track_count
+        total_track_count = spotify_completion.total_tracks
+        confidence = spotify_completion.confidence
+        if not allow_remote_metadata:
+            status = "pending_metadata"
+            detail = (
+                f"Spotify matched {matched_track_count} of {total_track_count} album tracks. "
+                "MusicBrainz metadata is still needed before creating the album listen."
+            )
+        else:
+            status = "candidate_review"
+            detail = (
+                "Spotify indicates this is a completed album listen, but MusicBrainz "
+                "metadata could not be loaded automatically."
+            )
+    elif metadata and metadata.get("tracklist"):
+        metadata_track_titles = [
+            track.get("title")
+            for track in metadata.get("tracklist") or []
+            if _normalize_track_name(track.get("title"))
+        ]
+        metadata_tracks = {
+            _normalize_track_name(title)
+            for title in metadata_track_titles
         }
+        partially_matched_split_tracks = (
+            _partially_matched_spotify_split_tracks(
+                metadata_track_titles,
+                unique_track_names,
+            )
+            if events and events[0].source == SPOTIFY_IMPORT_SOURCE
+            else []
+        )
         total_track_count = len(metadata_tracks)
-        matched_track_count = len(unique_track_names & metadata_tracks)
+        matched_track_count = _matched_import_track_count(
+            metadata_track_titles,
+            unique_track_names,
+        )
         if total_track_count > 0:
             confidence = round((matched_track_count / total_track_count) * 100)
         if matched_album_id is None and not _is_lastfm_importable_album_metadata(
@@ -2505,6 +2950,13 @@ def _build_lastfm_candidate(
             detail = (
                 "MusicBrainz matched this to a single or short non-album release, "
                 "so it does not count as a completed album listen."
+            )
+        elif partially_matched_split_tracks:
+            status = "partial_listen"
+            detail = (
+                "Spotify matched only part of a combined MusicBrainz track "
+                f"({', '.join(partially_matched_split_tracks)}), so this does not "
+                "count as a completed album listen."
             )
         elif total_track_count > 0 and (matched_track_count / total_track_count) >= ALBUM_COMPLETION_THRESHOLD:
             status = "matched_existing" if matched_album_id is not None else "new_album"
@@ -2569,6 +3021,69 @@ def _candidate_has_remote_metadata_evidence(
     return len(unique_track_identities) >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
 
 
+def _spotify_completion_result(
+    events: list[NormalizedImportEvent],
+) -> SpotifyCompletionResult | None:
+    if not events or events[0].source != SPOTIFY_IMPORT_SOURCE:
+        return None
+
+    album_ids = {
+        clean_text(event.raw_payload.get("_spotify_album_id"))
+        for event in events
+        if clean_text(event.raw_payload.get("_spotify_album_id"))
+    }
+    total_tracks_values = {
+        parsed_total
+        for parsed_total in (
+            _parse_int_value(event.raw_payload.get("_spotify_album_total_tracks"))
+            for event in events
+        )
+        if parsed_total is not None
+    }
+    if len(album_ids) != 1 or len(total_tracks_values) != 1:
+        return None
+
+    total_tracks = next(iter(total_tracks_values))
+    if total_tracks <= 0:
+        return None
+
+    played_tracks: set[str] = set()
+    for event in events:
+        track_id = clean_text(event.raw_payload.get("_spotify_track_id"))
+        if track_id:
+            played_tracks.add(f"id:{track_id.casefold()}")
+            continue
+
+        disc_number = event.raw_payload.get("_spotify_disc_number")
+        track_number = event.raw_payload.get("_spotify_track_number")
+        if disc_number is not None and track_number is not None:
+            played_tracks.add(f"pos:{disc_number}:{track_number}")
+            continue
+
+        identity = _normalize_import_event_track_identity(event)
+        if identity:
+            played_tracks.add(f"name:{identity}")
+
+    if not played_tracks:
+        return None
+
+    return SpotifyCompletionResult(
+        album_id=next(iter(album_ids)),
+        total_tracks=total_tracks,
+        played_tracks=played_tracks,
+        complete=(len(played_tracks) / total_tracks) >= ALBUM_COMPLETION_THRESHOLD,
+    )
+
+
+def _parse_int_value(value: Any) -> int | None:
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
 def _is_lastfm_importable_album_metadata(
     metadata: dict[str, Any],
     total_track_count: int,
@@ -2582,6 +3097,54 @@ def _is_lastfm_importable_album_metadata(
         return primary_type == "album"
 
     return total_track_count >= LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS
+
+
+def _matched_import_track_count(
+    metadata_track_titles: list[str | None],
+    unique_track_names: set[str],
+) -> int:
+    matched = 0
+    for title in metadata_track_titles:
+        normalized = _normalize_track_name(title)
+        if normalized in unique_track_names:
+            matched += 1
+            continue
+
+        split_parts = _split_combined_track_title(title)
+        if split_parts and all(part in unique_track_names for part in split_parts):
+            matched += 1
+    return matched
+
+
+def _partially_matched_spotify_split_tracks(
+    metadata_track_titles: list[str | None],
+    unique_track_names: set[str],
+) -> list[str]:
+    partial_titles: list[str] = []
+    for title in metadata_track_titles:
+        normalized = _normalize_track_name(title)
+        if normalized in unique_track_names:
+            continue
+
+        split_parts = _split_combined_track_title(title)
+        if not split_parts:
+            continue
+        matched_parts = [part for part in split_parts if part in unique_track_names]
+        if matched_parts and len(matched_parts) < len(split_parts):
+            partial_titles.append(str(title).strip())
+    return partial_titles
+
+
+def _split_combined_track_title(value: str | None) -> list[str]:
+    text = clean_text(value)
+    if not text or " / " not in text:
+        return []
+    parts = [
+        _normalize_track_name(part)
+        for part in text.split(" / ")
+        if _normalize_track_name(part)
+    ]
+    return parts if len(parts) > 1 else []
 
 
 def _split_lastfm_sessions(
@@ -2612,6 +3175,138 @@ def _split_lastfm_sessions(
     if current:
         sessions.append(current)
     return sessions
+
+
+def _spotify_diagnostic_sessions(
+    rows: list[SpotifyStreamingEvent],
+    *,
+    expected_tracks: list[str],
+    imported_by_raw_id: dict[int, list[ImportedListeningEvent]],
+) -> list[SpotifyImportDiagnosticSession]:
+    if not rows:
+        return []
+
+    grouped_rows: list[list[SpotifyStreamingEvent]] = []
+    current: list[SpotifyStreamingEvent] = []
+    session_start_dt: datetime | None = None
+    listen_window = timedelta(hours=LASTFM_ALBUM_LISTEN_WINDOW_HOURS)
+    for row in rows:
+        current_dt = _parse_timestamp(row.played_at)
+        if not current or session_start_dt is None:
+            current = [row]
+            session_start_dt = current_dt
+            continue
+        if current_dt - session_start_dt > listen_window:
+            grouped_rows.append(current)
+            current = [row]
+            session_start_dt = current_dt
+        else:
+            current.append(row)
+    if current:
+        grouped_rows.append(current)
+
+    expected_by_normalized = {
+        _normalize_track_name(track): track
+        for track in expected_tracks
+        if _normalize_track_name(track)
+    }
+    sessions: list[SpotifyImportDiagnosticSession] = []
+    for group in grouped_rows:
+        seen_names = {
+            _normalize_track_name(row.track_name)
+            for row in group
+            if _normalize_track_name(row.track_name)
+        }
+        matched_tracks = [
+            title
+            for normalized, title in expected_by_normalized.items()
+            if normalized in seen_names
+        ]
+        missing_tracks = [
+            title
+            for normalized, title in expected_by_normalized.items()
+            if normalized not in seen_names
+        ]
+        imported_events: dict[int, ImportedListeningEvent] = {}
+        for row in group:
+            for imported in imported_by_raw_id.get(row.id, []):
+                imported_events[imported.id] = imported
+        statuses = sorted(
+            {
+                imported.match_status
+                for imported in imported_events.values()
+                if imported.match_status
+            }
+        )
+        sessions.append(
+            SpotifyImportDiagnosticSession(
+                start=group[0].played_at,
+                end=group[-1].played_at,
+                row_count=len(group),
+                unique_track_count=len(seen_names),
+                matched_tracks=matched_tracks or sorted(
+                    {row.track_name for row in group if row.track_name}
+                ),
+                missing_tracks=missing_tracks,
+                rows=[
+                    SpotifyImportDiagnosticRawRow(
+                        id=row.id,
+                        played_at=row.played_at,
+                        track_name=row.track_name,
+                        spotify_track_uri=row.spotify_track_uri,
+                        source_file=row.source_file,
+                        source_index=row.source_index,
+                    )
+                    for row in group
+                ],
+                imported_event_ids=sorted(imported_events),
+                final_statuses=statuses,
+                listen_created=any(
+                    imported.album_id is not None
+                    or imported.match_status == "processed_album_listen"
+                    for imported in imported_events.values()
+                ),
+            )
+        )
+    return sessions
+
+
+def _diagnostic_expected_tracks(
+    session: Session,
+    repository: SqliteStateRepository,
+    artist: str,
+    album: str,
+) -> list[str]:
+    album_row = session.scalars(
+        select(Album)
+        .join(UserAlbum)
+        .where(
+            UserAlbum.user_id == repository.user.id,
+            func.lower(Album.artist) == artist.strip().casefold(),
+            func.lower(Album.name) == album.strip().casefold(),
+        )
+    ).first()
+    if album_row is not None:
+        tracks = _track_titles_from_metadata(album_row.metadata_json)
+        if tracks:
+            return tracks
+
+    cached = _read_album_metadata_cache(session, artist, album)
+    if isinstance(cached, dict):
+        return _track_titles_from_metadata(cached)
+    return []
+
+
+def _track_titles_from_metadata(metadata: dict[str, Any] | None) -> list[str]:
+    return [
+        title
+        for title in (
+            clean_text(track.get("title"))
+            for track in (metadata or {}).get("tracklist") or []
+            if isinstance(track, dict)
+        )
+        if title
+    ]
 
 
 def _lastfm_album_metadata(
@@ -2797,6 +3492,14 @@ def _empty_summary() -> ImportPreviewSummary:
         musicbrainz_lookup_seconds_avg=None,
         musicbrainz_lookup_seconds_p95=None,
         estimated_seconds_remaining=None,
+        spotify_catalog_resolved_tracks=0,
+        spotify_catalog_unresolved_tracks=0,
+        spotify_catalog_fallback_rows=0,
+        spotify_import_original_filename=None,
+        spotify_import_file_size_bytes=None,
+        spotify_import_sha256=None,
+        spotify_import_zip_member_count=None,
+        spotify_import_duplicate_of_session_id=None,
     )
 
 
@@ -2811,6 +3514,32 @@ def _default_spotify_session_name(original_filename: str | None) -> str:
     if filename:
         return f"Spotify import from {filename}"
     return "Spotify import"
+
+
+def _file_sha256(path: str) -> str:
+    digest = hashlib.sha256()
+    with open(path, "rb") as file_obj:
+        for chunk in iter(lambda: file_obj.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _duplicate_spotify_import_session_id(
+    session: Session,
+    repository: SqliteStateRepository,
+    file_sha256: str,
+) -> int | None:
+    return session.scalar(
+        select(ImportSession.id)
+        .where(
+            ImportSession.user_id == repository.user.id,
+            ImportSession.source == SPOTIFY_IMPORT_SOURCE,
+            ImportSession.file_sha256 == file_sha256,
+            ImportSession.status == "completed",
+        )
+        .order_by(ImportSession.started_at.desc(), ImportSession.id.desc())
+        .limit(1)
+    )
 
 
 def _build_album_record(event: NormalizedImportEvent) -> dict[str, Any]:
