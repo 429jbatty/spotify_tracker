@@ -237,6 +237,250 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertEqual(row.listened_at, "2026-04-18T10:00:00.000Z")
         self.assertEqual(row.value, "2026-04-18T10:02:00.000Z")
 
+    def test_create_schema_backfills_legacy_albums_to_default_user(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_engine(database_url)
+
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE albums (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            album_key VARCHAR NOT NULL,
+                            artist VARCHAR NOT NULL,
+                            name VARCHAR NOT NULL,
+                            image_url TEXT,
+                            source VARCHAR NOT NULL,
+                            metadata_json JSON NOT NULL
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE album_listens (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            album_id INTEGER NOT NULL,
+                            listened_at VARCHAR NOT NULL,
+                            source VARCHAR NOT NULL,
+                            CONSTRAINT uq_album_listen_once
+                                UNIQUE (album_id, listened_at)
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO albums (
+                            id, album_key, artist, name, image_url, source, metadata_json
+                        )
+                        VALUES
+                            (1, 'Artist - Listened Album', 'Artist', 'Listened Album', NULL, 'unknown', '{}'),
+                            (2, 'Artist - Empty Album', 'Artist', 'Empty Album', NULL, 'manual', '{}')
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO album_listens (id, album_id, listened_at, source)
+                        VALUES (1, 1, '2026-04-18T10:00:00.000Z', 'spotify')
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                rows = connection.execute(
+                    text(
+                        """
+                        SELECT albums.album_key
+                        FROM user_albums
+                        JOIN users ON users.id = user_albums.user_id
+                        JOIN albums ON albums.id = user_albums.album_id
+                        WHERE users.slug = 'jacob'
+                        ORDER BY albums.id
+                        """
+                    )
+                ).all()
+
+        self.assertEqual(
+            [row.album_key for row in rows],
+            ["Artist - Listened Album", "Artist - Empty Album"],
+        )
+
+    def test_create_schema_does_not_backfill_modern_albums_to_default_user(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+
+            engine = create_schema(database_url)
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO users (slug, display_name, is_active)
+                        VALUES ('emily', 'Emily', 1)
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO albums (
+                            id,
+                            album_key,
+                            artist,
+                            name,
+                            source,
+                            entry_source,
+                            metadata_json
+                        )
+                        VALUES (
+                            1,
+                            'Other Artist - Other Album',
+                            'Other Artist',
+                            'Other Album',
+                            'musicbrainz',
+                            'spotify_import',
+                            '{}'
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO user_albums (user_id, album_id, your_tags)
+                        SELECT users.id, 1, '[]'
+                        FROM users
+                        WHERE users.slug = 'emily'
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                jacob_membership = connection.execute(
+                    text(
+                        """
+                        SELECT user_albums.id
+                        FROM user_albums
+                        JOIN users ON users.id = user_albums.user_id
+                        WHERE users.slug = 'jacob'
+                          AND user_albums.album_id = 1
+                        """
+                    )
+                ).first()
+
+        self.assertIsNone(jacob_membership)
+
+    def test_create_schema_cleans_cross_user_default_membership_pollution(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+
+            engine = create_schema(database_url)
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO users (slug, display_name, is_active)
+                        VALUES ('emily', 'Emily', 1)
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO albums (
+                            id,
+                            album_key,
+                            artist,
+                            name,
+                            source,
+                            entry_source,
+                            metadata_json
+                        )
+                        VALUES
+                            (1, 'Other Artist - Other Album', 'Other Artist', 'Other Album', 'musicbrainz', 'spotify_import', '{}'),
+                            (2, 'Jacob Artist - Manual Empty', 'Jacob Artist', 'Manual Empty', 'manual', 'manual', '{}'),
+                            (3, 'Tagged Artist - Tagged Album', 'Tagged Artist', 'Tagged Album', 'musicbrainz', 'spotify_import', '{}'),
+                            (4, 'Shared Manual Artist - Shared Manual', 'Shared Manual Artist', 'Shared Manual', 'manual', 'manual', '{}')
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO user_albums (user_id, album_id, your_tags, rating, notes)
+                        SELECT users.id, 1, '[]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'jacob'
+                        UNION ALL
+                        SELECT users.id, 1, '[]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'emily'
+                        UNION ALL
+                        SELECT users.id, 2, '[]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'jacob'
+                        UNION ALL
+                        SELECT users.id, 3, '["keep"]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'jacob'
+                        UNION ALL
+                        SELECT users.id, 3, '[]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'emily'
+                        UNION ALL
+                        SELECT users.id, 4, '[]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'jacob'
+                        UNION ALL
+                        SELECT users.id, 4, '[]', NULL, NULL
+                        FROM users
+                        WHERE users.slug = 'emily'
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO album_listens (user_id, album_id, listened_at, source)
+                        SELECT users.id, 1, '2026-06-01T10:00:00.000Z', 'spotify_import'
+                        FROM users
+                        WHERE users.slug = 'emily'
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                rows = connection.execute(
+                    text(
+                        """
+                        SELECT albums.album_key
+                        FROM user_albums
+                        JOIN users ON users.id = user_albums.user_id
+                        JOIN albums ON albums.id = user_albums.album_id
+                        WHERE users.slug = 'jacob'
+                        ORDER BY albums.id
+                        """
+                    )
+                ).all()
+
+        self.assertEqual(
+            [row.album_key for row in rows],
+            [
+                "Jacob Artist - Manual Empty",
+                "Tagged Artist - Tagged Album",
+                "Shared Manual Artist - Shared Manual",
+            ],
+        )
+
     def test_create_schema_backfills_album_entry_source_from_legacy_source(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

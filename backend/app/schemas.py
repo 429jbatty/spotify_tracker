@@ -169,6 +169,7 @@ class ImportPreviewSummary(BaseModel):
     distinct_album_candidates: int
     estimated_new_unique_albums: int
     derived_album_listens: int
+    final_album_count: int = 0
     review_candidates: int
     pending_metadata_candidates: int = 0
     progress_current: int = 0

@@ -113,17 +113,113 @@ def migrate_user_albums(engine: Engine) -> None:
     if not _table_exists(engine, "users") or not _table_exists(engine, "user_albums"):
         return
 
-    if not _table_exists(engine, "albums"):
+    if not _table_exists(engine, "albums") or not _table_exists(engine, "album_listens"):
         return
+
+    listen_columns = _table_columns(engine, "album_listens")
+    if "user_id" in listen_columns:
+        return
+
+    user_album_columns = _table_columns(engine, "user_albums")
+    with engine.begin() as connection:
+        if "your_tags" in user_album_columns:
+            connection.execute(
+                text(
+                    """
+                    INSERT OR IGNORE INTO user_albums (user_id, album_id, your_tags)
+                    SELECT users.id, albums.id, '[]'
+                    FROM albums
+                    JOIN users ON users.slug = :slug
+                    """
+                ),
+                {"slug": DEFAULT_USER_SLUG},
+            )
+        else:
+            connection.execute(
+                text(
+                    """
+                    INSERT OR IGNORE INTO user_albums (user_id, album_id)
+                    SELECT users.id, albums.id
+                    FROM albums
+                    JOIN users ON users.slug = :slug
+                    """
+                ),
+                {"slug": DEFAULT_USER_SLUG},
+            )
+
+
+def cleanup_default_user_cross_user_album_memberships(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    required_tables = {"users", "user_albums", "album_listens", "albums"}
+    if any(not _table_exists(engine, table_name) for table_name in required_tables):
+        return
+
+    user_album_columns = _table_columns(engine, "user_albums")
+    if not {"your_tags", "rating", "notes"}.issubset(user_album_columns):
+        return
+
+    other_user_import_clause = ""
+    if _table_exists(engine, "imported_listening_events"):
+        imported_event_columns = _table_columns(engine, "imported_listening_events")
+        if {"user_id", "album_id"}.issubset(imported_event_columns):
+            other_user_import_clause = """
+                OR EXISTS (
+                    SELECT 1
+                    FROM imported_listening_events imported
+                    WHERE imported.album_id = user_albums.album_id
+                      AND imported.user_id != user_albums.user_id
+                )
+            """
 
     with engine.begin() as connection:
         connection.execute(
             text(
-                """
-                INSERT OR IGNORE INTO user_albums (user_id, album_id)
-                SELECT users.id, albums.id
-                FROM albums
-                JOIN users ON users.slug = :slug
+                f"""
+                DELETE FROM user_albums
+                WHERE user_id = (
+                    SELECT id
+                    FROM users
+                    WHERE slug = :slug
+                )
+                  AND NOT EXISTS (
+                    SELECT 1
+                    FROM album_listens own_listens
+                    WHERE own_listens.user_id = user_albums.user_id
+                      AND own_listens.album_id = user_albums.album_id
+                  )
+                  AND (
+                    your_tags IS NULL
+                    OR your_tags = ''
+                    OR your_tags = '[]'
+                  )
+                  AND rating IS NULL
+                  AND (
+                    notes IS NULL
+                    OR trim(notes) = ''
+                  )
+                  AND EXISTS (
+                    SELECT 1
+                    FROM albums
+                    WHERE albums.id = user_albums.album_id
+                      AND COALESCE(albums.entry_source, albums.source, '') != 'manual'
+                  )
+                  AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM user_albums other_membership
+                        WHERE other_membership.album_id = user_albums.album_id
+                          AND other_membership.user_id != user_albums.user_id
+                    )
+                    OR EXISTS (
+                        SELECT 1
+                        FROM album_listens other_listens
+                        WHERE other_listens.album_id = user_albums.album_id
+                          AND other_listens.user_id != user_albums.user_id
+                    )
+                    {other_user_import_clause}
+                  )
                 """
             ),
             {"slug": DEFAULT_USER_SLUG},
@@ -648,6 +744,7 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_user_album_tags(engine)
     migrate_user_album_feedback(engine)
     migrate_album_entry_source(engine)
+    cleanup_default_user_cross_user_album_memberships(engine)
     migrate_imported_event_candidate_key(engine)
     migrate_album_metadata_cache(engine)
     migrate_import_sessions_artifact_path(engine)

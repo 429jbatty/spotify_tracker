@@ -7,6 +7,14 @@ Use this guide before deploying changes to import behavior.
 Purpose: validate source traceability, raw event storage, Spotify catalog
 completion, diagnostics, and cleanup without live Spotify or MusicBrainz calls.
 
+`tests.test_api_imports.ApiImportTests.test_spotify_zip_regression_slice_from_personal_export`
+builds a temporary reduced ZIP from a local Spotify Extended Streaming History
+export and asserts a known 2015 album-session target. It runs automatically when
+`/Users/jacobbattenberg/Downloads/my_spotify_data.zip` exists, or when
+`SPOTIFY_IMPORT_REGRESSION_ZIP` points at an equivalent export. Override the
+local benchmark guard with `SPOTIFY_IMPORT_REGRESSION_MAX_SECONDS` if the
+machine is slower than the default threshold.
+
 Expected coverage:
 
 - Uploaded ZIP metadata is stored: original filename, byte size, SHA-256, ZIP

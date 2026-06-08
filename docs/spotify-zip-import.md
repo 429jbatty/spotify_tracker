@@ -210,6 +210,13 @@ The optimized import avoids mirroring every Spotify play into
 The main runtime drivers are unique album count, metadata cache hit rate,
 MusicBrainz rate limiting, disk speed, and transaction size.
 
+Keep the SQLite path optimized before considering a database migration. The
+importer should short-circuit Spotify catalog sessions that are clearly below
+the completion threshold, update candidate progress at coarse intervals, and
+bulk-persist actionable album-session rows. Revisit Postgres only if a
+75k-100k row Spotify ZIP still spends more than 2-3 minutes in local import
+processing after excluding Spotify catalog and MusicBrainz network time.
+
 Raw insert batch size must stay below SQLite's bind-parameter limit. When new
 columns are added to `spotify_streaming_events`, recalculate:
 

@@ -1,25 +1,11 @@
 export const IMPORT_GUIDES = {
   lastfm: {
     title: "Last.fm import",
-    intro: "Use a public Last.fm username. Albumary stores scrobbles, then only adds completed album listens.",
-    points: [
-      "Preview is a fast sample.",
-      "Imports continue in the background.",
-      "Singles and partial listens are not added as albums.",
-    ],
-    exampleLabel: "Example",
-    example: "Username: your-lastfm-name",
+    intro: "Enter a public Last.fm username. Completed album listens are added after matching.",
   },
   spotify_import: {
     title: "Spotify ZIP import",
-    intro: "Upload the Extended Streaming History ZIP from Spotify. Albumary stores plays first, then only adds completed album listens.",
-    points: [
-      "Upload the ZIP without extracting it.",
-      "Imports continue in the background.",
-      "Partial plays are stored but not added as albums.",
-    ],
-    exampleLabel: "Expected file",
-    example: "my_spotify_data.zip",
+    intro: "Upload Spotify's Extended Streaming History ZIP without extracting it.",
   },
 };
 
@@ -27,17 +13,13 @@ export function summaryCards(source, summary) {
   if (!summary) return [];
   if (source === "spotify_import") {
     return [
-      { label: "Spotify Plays Found", value: summary.total_rows },
-      { label: "New Plays Stored", value: summary.new_event_rows },
-      { label: "Album Sessions", value: summary.distinct_album_candidates },
-      { label: "Already Imported", value: summary.duplicate_rows },
+      { label: "Plays found", value: summary.total_rows },
+      { label: "Album sessions", value: summary.distinct_album_candidates },
     ];
   }
   return [
-    { label: "Last.fm Scrobbles Found", value: summary.total_rows },
-    { label: "New in Preview Sample", value: summary.new_event_rows },
-    { label: "Album Sessions in Sample", value: summary.distinct_album_candidates },
-    { label: "Already Imported in Sample", value: summary.duplicate_rows },
+    { label: "Scrobbles found", value: summary.total_rows },
+    { label: "Album sessions", value: summary.distinct_album_candidates },
   ];
 }
 
@@ -46,20 +28,20 @@ export function previewSummaryNote(summary) {
 
   const details = [];
   if (summary.missing_album_rows > 0) {
-    details.push(`${summary.missing_album_rows.toLocaleString()} scrobbles in the preview sample are missing album names`);
+    details.push(`${summary.missing_album_rows.toLocaleString()} scrobbles are missing album names`);
   }
   if (summary.review_candidates > 0) {
-    details.push(`${summary.review_candidates.toLocaleString()} possible album sessions may need review after import`);
+    details.push(`${summary.review_candidates.toLocaleString()} album sessions may need review`);
   }
   if ((summary.pending_metadata_candidates || 0) > 0) {
-    details.push(`${summary.pending_metadata_candidates.toLocaleString()} possible album sessions need tracklists before they can be judged`);
+    details.push(`${summary.pending_metadata_candidates.toLocaleString()} album sessions need metadata before matching`);
   }
 
   if (!details.length) {
-    return "Preview is a fast sample. Album listens are finalized after the background import stores scrobbles and checks album tracklists.";
+    return "Ready to import. Album listens will be finalized in the background.";
   }
 
-  return `Preview is a fast sample. ${details.join(". ")}. Album listens are finalized after background matching.`;
+  return `Ready to import. ${details.join(". ")}.`;
 }
 
 export function importSummaryText(summary, status) {
@@ -72,15 +54,15 @@ export function importSummaryText(summary, status) {
 
   if (["completed", "failed"].includes(status)) {
     const reviewText = summary.review_candidates
-      ? ` ${review} unresolved album sessions need review.`
+      ? ` ${review} need review.`
       : "";
-    return `${events} import rows stored. ${listens} album listens created.${reviewText}`;
+    return `${events} rows stored. ${listens} album listens created.${reviewText}`;
   }
 
   const pendingText = summary.pending_metadata_candidates
     ? ` ${pending} album sessions still need tracklists.`
     : "";
-  return `${events} import rows stored so far. ${listens} album listens created so far.${pendingText}`;
+  return `${events} rows stored. ${listens} album listens created.${pendingText}`;
 }
 
 export function formatDuration(seconds) {
@@ -102,26 +84,46 @@ export function currentStepPercent(item) {
   return Math.max(0, Math.min(100, Math.round((current / total) * 100)));
 }
 
-export function importDiagnostics(item) {
-  const summary = item?.summary || {};
+export function advancedImportStats(item) {
+  const summary = item?.summary;
+  if (!summary || item?.status !== "completed") return [];
+
   return [
-    { label: "Rows stored", value: summary.new_event_rows },
-    { label: "Album sessions", value: summary.distinct_album_candidates },
-    { label: "Album listens", value: summary.derived_album_listens },
-    { label: "Review", value: summary.review_candidates },
-    { label: "MB lookups", value: summary.musicbrainz_requests },
-    { label: "Cache hits", value: summary.metadata_cache_hits },
+    { label: "Total listens", value: Number(summary.derived_album_listens || 0).toLocaleString() },
+    { label: "Total albums", value: Number(summary.final_album_count || 0).toLocaleString() },
     {
-      label: "Avg lookup",
+      label: "Average metadata lookup per album",
       value: summary.musicbrainz_lookup_seconds_avg
         ? `${Number(summary.musicbrainz_lookup_seconds_avg).toFixed(1)}s`
-        : null,
+        : "N/A",
     },
-    {
-      label: "ETA",
-      value: item?.estimated_seconds_remaining
-        ? formatDuration(item.estimated_seconds_remaining)
-        : null,
-    },
-  ].filter((entry) => entry.value !== null && entry.value !== undefined);
+    { label: "Found cached results", value: Number(summary.metadata_cache_hits || 0).toLocaleString() },
+  ];
+}
+
+export function visibleImportStats(summary) {
+  if (!summary) return [];
+  return [
+    { label: "Rows stored", value: summary.new_event_rows },
+    { label: "Album listens", value: summary.derived_album_listens },
+    { label: "Needs review", value: summary.review_candidates },
+  ].filter((entry) => Number(entry.value || 0) > 0 || entry.label !== "Needs review");
+}
+
+export function formatImportDate(value) {
+  if (!value) return "";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString([], {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  });
+}
+
+export function sourceLabel(source) {
+  if (source === "lastfm" || source === "lastfm_import") return "Last.fm";
+  if (source === "spotify_import" || source === "spotify_export_upload") return "Spotify ZIP";
+  return source || "Import";
 }
