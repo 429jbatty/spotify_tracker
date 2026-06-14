@@ -2229,6 +2229,27 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(test_history_response.json()[0]["id"], import_session_id)
         self.assertEqual(spotify_event_count, 4)
 
+    def test_delete_spotify_import_rejects_active_session(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            zip_file = self._spotify_zip(
+                {"Streaming_History_Audio_0.json": self._spotify_rows()}
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+            import_session_id = response.json()["import_session_id"]
+            delete_response = client.delete(f"/api/users/jacob/imports/{import_session_id}")
+            history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(delete_response.status_code, 422)
+        self.assertIn("still running", delete_response.json()["detail"])
+        self.assertEqual(history_response.json()[0]["status"], "queued")
+
     def test_lastfm_background_import_persists_three_thousand_scrobbles(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
@@ -2528,6 +2549,26 @@ class ApiImportTests(unittest.TestCase):
             state["Existing Artist - Existing Album"]["listen_history"],
             ["2026-04-01T10:00:00.000Z"],
         )
+
+    def test_delete_lastfm_import_rejects_active_session(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir, state=sample_album_state_with_tracklist())
+            request_body = {
+                "source": "lastfm",
+                "lastfm_username": "jacobfm",
+                "session_name": "Still running",
+            }
+
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                commit_response = client.post("/api/users/jacob/imports/commit", json=request_body)
+            import_session_id = commit_response.json()["import_session_id"]
+            delete_response = client.delete(f"/api/users/jacob/imports/{import_session_id}")
+            history_response = client.get("/api/users/jacob/imports")
+
+        self.assertEqual(commit_response.status_code, 200)
+        self.assertEqual(delete_response.status_code, 422)
+        self.assertIn("still running", delete_response.json()["detail"])
+        self.assertEqual(history_response.json()[0]["status"], "queued")
 
     def test_lastfm_uncached_sessions_enter_pending_metadata_before_remote_lookup(self):
         with tempfile.TemporaryDirectory() as temp_dir:

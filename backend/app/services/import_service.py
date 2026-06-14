@@ -709,6 +709,8 @@ def delete_import_session(
     ).first()
     if import_session is None:
         raise KeyError(f"Import session not found: {import_session_id}")
+    if import_session.status not in TERMINAL_IMPORT_STATUSES:
+        raise ValueError("Cannot delete an import while it is still running.")
 
     imported_rows = session.scalars(
         select(ImportedListeningEvent).where(

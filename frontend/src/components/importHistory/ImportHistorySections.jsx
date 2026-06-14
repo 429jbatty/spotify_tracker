@@ -302,9 +302,14 @@ function ImportHistoryRow({
             variant="ghost"
             size="icon"
             className="size-8 text-muted-foreground hover:text-destructive"
-            disabled={pendingDeleteImportId === item.id}
+            disabled={isActive || pendingDeleteImportId === item.id}
             onClick={() => onDelete(item)}
-            aria-label={`Delete import ${item.session_name || item.source}`}
+            aria-label={
+              isActive
+                ? `Import ${item.session_name || item.source} is still running`
+                : `Delete import ${item.session_name || item.source}`
+            }
+            title={isActive ? "Wait for this import to finish before deleting it." : "Delete import"}
           >
             <Trash2 className="size-4" />
           </Button>

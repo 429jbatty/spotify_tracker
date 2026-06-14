@@ -6,6 +6,7 @@ import { fileURLToPath } from "url"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const basePath = process.env.VITE_BASE_PATH || "/"
+const apiProxyTarget = process.env.VITE_API_PROXY_TARGET || "http://127.0.0.1:8000"
 
 export default defineConfig({
   plugins: [react()],
@@ -13,11 +14,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:8000",
+        target: apiProxyTarget,
         changeOrigin: true,
       },
       "/media": {
-        target: "http://localhost:8000",
+        target: apiProxyTarget,
         changeOrigin: true,
       },
     },

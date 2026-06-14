@@ -4,6 +4,8 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from sqlalchemy import text
+
 import utils
 from backend.app.config import get_settings
 from backend.app.database import create_schema
@@ -58,6 +60,20 @@ class SqliteStateUtilsTests(unittest.TestCase):
                     f"sqlite:///{data_dir / 'spotify_tracker.sqlite'}",
                 )
                 self.assertTrue((data_dir / "spotify_tracker.sqlite").exists())
+
+    def test_sqlite_engine_uses_wal_and_busy_timeout(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+
+            with engine.connect() as connection:
+                journal_mode = connection.execute(text("PRAGMA journal_mode")).scalar_one()
+                busy_timeout = connection.execute(text("PRAGMA busy_timeout")).scalar_one()
+                synchronous = connection.execute(text("PRAGMA synchronous")).scalar_one()
+
+        self.assertEqual(journal_mode.casefold(), "wal")
+        self.assertEqual(busy_timeout, 60000)
+        self.assertEqual(synchronous, 1)
 
 
 if __name__ == "__main__":

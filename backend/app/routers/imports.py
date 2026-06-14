@@ -7,7 +7,7 @@ from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import (
     CompletedAlbum,
@@ -35,7 +35,7 @@ SPOTIFY_ZIP_CONTENT_TYPES = {
 
 def _session_factory():
     settings = get_settings()
-    engine = create_schema(settings.database_url)
+    engine = get_engine(settings.database_url)
     return sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
@@ -272,3 +272,5 @@ def delete_user_import(
             )
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
