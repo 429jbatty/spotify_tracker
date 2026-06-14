@@ -79,6 +79,17 @@ class AlbumState(BaseModel):
     most_recently_listened: list[str]
 
 
+class PublicRecentListenAlbum(BaseModel):
+    listen_id: int
+    listener_display_name: str
+    listened_at: str
+    album_id: int
+    album_key: str
+    artist: str
+    name: str
+    image_url: str | None = None
+
+
 class ManualAlbumCreate(BaseModel):
     artist: str
     name: str

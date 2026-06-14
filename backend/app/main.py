@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 
 from backend.app.config import get_settings
 from backend.app.database import create_schema
-from backend.app.routers import album_state, albums, health, imports, spotify
+from backend.app.routers import album_state, albums, health, imports, public, spotify
 from backend.app.routers import users
 
 
@@ -25,6 +25,7 @@ def create_app() -> FastAPI:
     app.include_router(album_state.router, prefix=settings.api_prefix)
     app.include_router(albums.router, prefix=settings.api_prefix)
     app.include_router(imports.router, prefix=settings.api_prefix)
+    app.include_router(public.router, prefix=settings.api_prefix)
     app.include_router(users.router, prefix=settings.api_prefix)
     app.include_router(spotify.router, prefix=settings.api_prefix)
 

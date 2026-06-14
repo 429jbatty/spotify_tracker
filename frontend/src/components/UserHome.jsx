@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import PublicRecentListens from "./PublicRecentListens";
 
 function slugFromName(value) {
   return value.trim().toLowerCase().replace(/\s+/g, "-");
@@ -29,12 +30,12 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
   };
 
   return (
-    <main className="min-h-screen bg-background px-6 py-10 text-foreground">
-      <div className="mx-auto flex max-w-6xl flex-col gap-10 lg:grid lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
-        <section className="relative overflow-hidden rounded-3xl border border-border/70 bg-[linear-gradient(135deg,rgba(236,201,75,0.16),rgba(255,255,255,0.02)_42%,rgba(114,160,193,0.14))] p-8 shadow-sm lg:min-h-[32rem]">
+    <main className="min-h-screen bg-background px-6 py-8 text-foreground">
+      <div className="mx-auto flex max-w-7xl flex-col gap-6">
+        <section className="relative overflow-hidden rounded-lg border border-border/70 bg-[linear-gradient(135deg,rgba(236,201,75,0.16),rgba(255,255,255,0.02)_42%,rgba(114,160,193,0.14))] p-7 shadow-sm">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.08),transparent_30%)]" />
-          <div className="relative flex h-full flex-col justify-between gap-10">
-            <div className="space-y-5">
+          <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="space-y-4">
               <div className="inline-flex items-center rounded-full border border-border/70 bg-background/70 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur">
                 Personal album listening history
               </div>
@@ -49,38 +50,21 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
                 </p>
               </div>
             </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-2xl border border-border/70 bg-background/75 p-4 backdrop-blur">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                  Multi-user
-                </p>
-                <p className="mt-2 text-sm text-foreground">
-                  Separate listening history and Spotify sync for each listener.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-background/75 p-4 backdrop-blur">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                  Metadata-rich
-                </p>
-                <p className="mt-2 text-sm text-foreground">
-                  MusicBrainz artwork, credits, release data, and cleanup tools.
-                </p>
-              </div>
-              <div className="rounded-2xl border border-border/70 bg-background/75 p-4 backdrop-blur">
-                <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                  Personal taste
-                </p>
-                <p className="mt-2 text-sm text-foreground">
-                  Ratings, notes, and curated tags for how albums actually land.
-                </p>
-              </div>
+            <div className="max-w-sm rounded-lg border border-border/70 bg-background/75 p-4 backdrop-blur">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Shared activity
+              </p>
+              <p className="mt-2 text-sm leading-6 text-foreground">
+                See the albums people are finishing before opening your own profile.
+              </p>
             </div>
           </div>
         </section>
 
-        <section className="space-y-6">
-          <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm">
+        <PublicRecentListens />
+
+        <section className="grid gap-4 lg:grid-cols-2">
+          <div className="rounded-lg border border-border/70 bg-card p-5 shadow-sm">
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">
                 Create a listener
@@ -107,7 +91,7 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
             </form>
           </div>
 
-          <div className="rounded-3xl border border-border/70 bg-card p-6 shadow-sm">
+          <div className="rounded-lg border border-border/70 bg-card p-5 shadow-sm">
             <div className="space-y-2">
               <p className="text-sm font-medium text-muted-foreground">
                 Continue as
@@ -127,7 +111,7 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
                     key={user.slug}
                     type="button"
                     onClick={() => onSelectUser(user)}
-                    className="rounded-2xl border border-border/70 bg-background px-4 py-4 text-left transition-colors hover:bg-muted/40"
+                    className="rounded-lg border border-border/70 bg-background px-4 py-3 text-left transition-colors hover:bg-muted/40"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <div>
@@ -146,7 +130,7 @@ function UserHome({ users, onSelectUser, onCreateUser }) {
                 ))}
               </div>
             ) : (
-              <div className="mt-5 rounded-2xl border border-dashed border-border/70 bg-background/60 p-5 text-sm text-muted-foreground">
+              <div className="mt-5 rounded-lg border border-dashed border-border/70 bg-background/60 p-5 text-sm text-muted-foreground">
                 No listener profiles yet. Create the first one above to get started.
               </div>
             )}

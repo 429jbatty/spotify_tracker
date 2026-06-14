@@ -89,6 +89,10 @@ export async function createUser(payload) {
   });
 }
 
+export async function fetchPublicRecentListens(limit = 5) {
+  return requestJson(`/public/recent-listens?limit=${limit}`);
+}
+
 export async function fetchSpotifyStatus(userSlug = getSelectedUserSlug()) {
   if (!userSlug) return { connected: false };
   return requestJson(`/users/${userSlug}/spotify/status`);
