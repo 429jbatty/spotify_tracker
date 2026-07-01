@@ -1,8 +1,13 @@
 import { useMemo, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import AlbumCardVertical from "./AlbumCardVertical";
 import AlbumPanelSheet from "./AlbumPanelSheet";
-import DiscoveryLineChart from "./DiscoveryChart";
+import DiscoveryMetricRail from "./discovery/DiscoveryMetricRail";
+import DiscoveryQualityCard from "./discovery/DiscoveryQualityCard";
+import NewVsReplayTrend from "./discovery/NewVsReplayTrend";
+import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { aggregateDiscoveryInsights } from "./utils/discoveryInsights";
 
 const TIME_RANGES = {
   "7d": 7,
@@ -11,32 +16,89 @@ const TIME_RANGES = {
   all: Infinity,
 };
 
-function SupportingMetric({ label, value }) {
-  return (
-    <div>
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
-      <p className="mt-1 text-xl font-semibold text-foreground">{value}</p>
-    </div>
-  );
+function getFirstListen(album) {
+  return (album.listen_history || [])
+    .map((dateValue) => new Date(dateValue))
+    .filter((date) => !Number.isNaN(date.getTime()))
+    .sort((left, right) => left.getTime() - right.getTime())[0] || null;
 }
 
-function RotationList({ title, items }) {
-  if (items.length === 0) return null;
+function getRangeStart(timeRange, now) {
+  if (timeRange === "all") return new Date(0);
 
-  return (
-    <div>
-      <p className="text-xs font-medium text-muted-foreground">{title}</p>
-      <div className="mt-2 flex flex-wrap gap-2">
-        {items.slice(0, 3).map(([label, count]) => (
-          <span
-            key={label}
-            className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground"
-          >
-            {label} - {count}
-          </span>
-        ))}
-      </div>
-    </div>
+  const start = new Date(now);
+  start.setHours(0, 0, 0, 0);
+  start.setDate(start.getDate() - (TIME_RANGES[timeRange] - 1));
+  return start;
+}
+
+function getDiscoveryRate(summary) {
+  return summary.totalListens === 0
+    ? 0
+    : (summary.newAlbums / summary.totalListens) * 100;
+}
+
+function getReplayRate(summary) {
+  return summary.totalListens === 0
+    ? 0
+    : (summary.relistens / summary.totalListens) * 100;
+}
+
+function getDelta(current, previous, kind) {
+  if (current == null || previous == null) return null;
+  return { kind, value: current - previous };
+}
+
+function getComparisonLabel(timeRange) {
+  if (timeRange === "7d") return "previous 7 days";
+  if (timeRange === "30d") return "previous 30 days";
+  if (timeRange === "1y") return "previous 365 days";
+  return null;
+}
+
+function getRecentDiscoveries(albums, allAlbums, timeRange, now) {
+  const rangeStart = getRangeStart(timeRange, now);
+  const artistFirstListen = new Map();
+
+  allAlbums.forEach((album) => {
+    const firstListen = getFirstListen(album);
+    if (!firstListen) return;
+
+    const artistKey = String(album.artist || "").trim().toLocaleLowerCase();
+    const currentFirst = artistFirstListen.get(artistKey);
+    if (!currentFirst || firstListen.getTime() < currentFirst.getTime()) {
+      artistFirstListen.set(artistKey, firstListen);
+    }
+  });
+
+  return albums
+    .map((album) => {
+      const firstListen = getFirstListen(album);
+      const artistKey = String(album.artist || "").trim().toLocaleLowerCase();
+      return {
+        ...album,
+        firstListenDate: firstListen?.toISOString() || null,
+        firstListenTime: firstListen?.getTime() || null,
+        isNewArtist:
+          firstListen != null &&
+          firstListen.getTime() === artistFirstListen.get(artistKey)?.getTime(),
+      };
+    })
+    .filter(
+      (album) =>
+        album.firstListenTime != null &&
+        album.firstListenTime >= rangeStart.getTime() &&
+        album.firstListenTime <= now.getTime()
+    )
+    .sort((left, right) => right.firstListenTime - left.firstListenTime);
+}
+
+function buildDiscoveryListenRecords(albums) {
+  return albums.flatMap((album) =>
+    (album.listen_history || []).map((listenDate) => ({
+      album,
+      listenDate,
+    }))
   );
 }
 
@@ -46,88 +108,71 @@ export default function Discovery({
   onFilterSelect,
   onDataChanged,
 }) {
-  const [timeRange, setTimeRange] = useState("7d");
+  const [timeRange, setTimeRange] = useState("1y");
+  const [showAllDiscoveries, setShowAllDiscoveries] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
-
-  // Convert albums object to array
+  const analysisNow = useMemo(() => new Date(), []);
   const albumsArray = useMemo(() => Object.values(albums), [albums]);
   const allAlbumsArray = useMemo(() => Object.values(allAlbums), [allAlbums]);
-
-  // Filter albums by selected time range
-  const filteredAlbums = useMemo(() => {
-    if (timeRange === "all") return albumsArray;
-
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - TIME_RANGES[timeRange]);
-
-    return albumsArray.filter((album) =>
-      album.listen_history?.some(
-        (dateStr) => new Date(dateStr) >= cutoff
-      )
-    );
-  }, [albumsArray, timeRange]);
-
-  // Recent discoveries (sorted by first listen in filtered set)
-  const recentDiscoveries = useMemo(() => {
-    return filteredAlbums
-      .map((album) => ({
-        ...album,
-        firstListenDate: album.listen_history?.[0] || null,
-        isNewArtist:
-          allAlbumsArray.filter((a) => a.artist === album.artist).length === 1,
-      }))
-      .sort(
-        (a, b) =>
-          new Date(b.firstListenDate).getTime() -
-          new Date(a.firstListenDate).getTime()
-      );
-  }, [filteredAlbums, allAlbumsArray]);
-
-  const discoveryStats = useMemo(() => {
-    const artistCounts = new Map();
-    const labelCounts = new Map();
-    const relistens = filteredAlbums.filter(
-      (album) => (album.listen_history || []).length > 1
-    );
-
-    filteredAlbums.forEach((album) => {
-      artistCounts.set(album.artist, (artistCounts.get(album.artist) || 0) + 1);
-      if (album.label) {
-        labelCounts.set(album.label, (labelCounts.get(album.label) || 0) + 1);
-      }
-    });
-
-    const newArtists = filteredAlbums.filter(
-      (album) =>
-        allAlbumsArray.filter((item) => item.artist === album.artist).length === 1
-    );
-    const newLabels = filteredAlbums.filter(
-      (album) =>
-        album.label &&
-        allAlbumsArray.filter((item) => item.label === album.label).length === 1
-    );
-    const topArtists = [...artistCounts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
-    const topLabels = [...labelCounts.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
-    const totalArtists = new Set(filteredAlbums.map((album) => album.artist)).size;
-    const avgAlbumsPerArtist =
-      totalArtists === 0 ? "0.00" : (filteredAlbums.length / totalArtists).toFixed(2);
-
-    return {
-      totalAlbums: filteredAlbums.length,
-      totalArtists,
-      avgAlbumsPerArtist,
-      newArtists: newArtists.length,
-      newLabels: newLabels.length,
-      relistens: relistens.length,
-      topArtists,
-      topLabels,
-    };
-  }, [filteredAlbums, allAlbumsArray]);
+  const listenRecords = useMemo(
+    () => buildDiscoveryListenRecords(allAlbumsArray),
+    [allAlbumsArray]
+  );
+  const discoveryInsights = useMemo(
+    () => aggregateDiscoveryInsights(allAlbums, timeRange, { now: analysisNow }),
+    [allAlbums, analysisNow, timeRange]
+  );
+  const recentDiscoveries = useMemo(
+    () => getRecentDiscoveries(albumsArray, allAlbumsArray, timeRange, analysisNow),
+    [albumsArray, allAlbumsArray, analysisNow, timeRange]
+  );
+  const visibleDiscoveries = showAllDiscoveries
+    ? recentDiscoveries
+    : recentDiscoveries.slice(0, 8);
+  const discoveryRate = getDiscoveryRate(discoveryInsights.summary);
+  const previousDiscoveryRate = discoveryInsights.previousPeriod
+    ? getDiscoveryRate(discoveryInsights.previousPeriod.summary)
+    : null;
+  const replayRate = getReplayRate(discoveryInsights.summary);
+  const comparisonLabel = getComparisonLabel(timeRange);
+  const metricRail = [
+    {
+      comparisonLabel,
+      delta: getDelta(
+        discoveryInsights.summary.totalListens,
+        discoveryInsights.previousPeriod?.summary.totalListens,
+        "count"
+      ),
+      label: "Total listens",
+      tooltip:
+        "Total completed album listens in the selected range. The comparison uses the immediately preceding range of the same length.",
+      value: discoveryInsights.summary.totalListens.toLocaleString(),
+    },
+    {
+      comparisonLabel,
+      delta: getDelta(discoveryRate, previousDiscoveryRate, "points"),
+      discoveryRate,
+      label: "Discovery mix",
+      replayRate,
+      tooltip:
+        "First-time album listens versus relistens in the selected range. These two percentages are the two sides of the same listen mix.",
+      type: "mix",
+      value: `${discoveryRate.toFixed(0)}% new`,
+    },
+    {
+      comparisonLabel,
+      delta: getDelta(
+        discoveryInsights.concentration.overallShare,
+        discoveryInsights.previousPeriod?.concentration.overallShare,
+        "points"
+      ),
+      label: "Artist concentration",
+      tooltip:
+        "The share of listens in the selected range that came from your five most-played artists. Higher means listening was clustered around fewer artists.",
+      value: `${discoveryInsights.concentration.overallShare.toFixed(0)}%`,
+    },
+  ];
 
   const handleAlbumClick = (album) => {
     setSelectedAlbum(album);
@@ -145,119 +190,89 @@ export default function Discovery({
 
   return (
     <>
-      <div className="p-6 space-y-6">
-        <section className="space-y-4">
+      <div className="space-y-7 p-6">
+        <section className="space-y-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
               <h1 className="text-3xl font-semibold tracking-tight text-foreground">
                 Discovery
               </h1>
               <p className="mt-2 text-sm text-muted-foreground">
-                New listens, returns, and patterns in the selected window.
+                How new music enters your rotation and what stays.
               </p>
             </div>
 
             <Tabs value={timeRange} onValueChange={setTimeRange}>
-              <TabsList className="bg-background/20 backdrop-blur-sm rounded-lg p-1">
+              <TabsList aria-label="Discovery activity range">
                 {Object.keys(TIME_RANGES).map((rangeKey) => (
-                  <TabsTrigger
-                    key={rangeKey}
-                    value={rangeKey}
-                    className="px-3 py-1 text-sm font-medium rounded-md transition-all
-                      text-muted-foreground
-                      data-[state=active]:bg-background/70
-                      data-[state=active]:text-primary
-                      hover:text-primary"
-                  >
+                  <TabsTrigger key={rangeKey} value={rangeKey}>
                     {rangeKey === "7d"
                       ? "7D"
                       : rangeKey === "30d"
-                      ? "30D"
-                      : rangeKey === "1y"
-                      ? "1Y"
-                      : "All"}
+                        ? "30D"
+                        : rangeKey === "1y"
+                          ? "1Y"
+                          : "All"}
                   </TabsTrigger>
                 ))}
               </TabsList>
             </Tabs>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[1.15fr_2fr]">
-            <div className="rounded-lg border border-border/70 bg-background/80 p-5 shadow-sm">
-              <p className="text-xs font-medium text-muted-foreground">
-                Albums in this window
-              </p>
-              <div className="mt-3 flex items-end gap-3">
-                <span className="text-6xl font-semibold leading-none text-foreground">
-                  {discoveryStats.totalAlbums}
-                </span>
-                <span className="pb-2 text-sm text-muted-foreground">
-                  across {discoveryStats.totalArtists} artists
-                </span>
-              </div>
-              <p className="mt-4 text-sm text-muted-foreground">
-                {discoveryStats.avgAlbumsPerArtist} albums per artist
-              </p>
-            </div>
-
-            <div className="rounded-lg border border-border/70 bg-background/80 p-5 shadow-sm">
-              <div className="grid grid-cols-3 gap-4">
-                <SupportingMetric
-                  label="New artists"
-                  value={discoveryStats.newArtists}
-                />
-                <SupportingMetric
-                  label="New labels"
-                  value={discoveryStats.newLabels}
-                />
-                <SupportingMetric label="Relistens" value={discoveryStats.relistens} />
-              </div>
-
-              <div className="mt-5 grid gap-4 border-t border-border pt-4 md:grid-cols-2">
-                <RotationList
-                  title="Artists in rotation"
-                  items={discoveryStats.topArtists}
-                />
-                <RotationList
-                  title="Labels in rotation"
-                  items={discoveryStats.topLabels}
-                />
-              </div>
-            </div>
-          </div>
+          <DiscoveryMetricRail metrics={metricRail} />
         </section>
 
-      <DiscoveryLineChart albums={filteredAlbums} timeRange={timeRange} />
+        <NewVsReplayTrend series={discoveryInsights.trendSeries} />
 
-      {/* --- Recent Discovery Feed --- */}
-      <section className="space-y-4">
-        <h2 className="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-foreground via-foreground/50 to-foreground drop-shadow-md mb-6">
-          Recent Discoveries
-        </h2>        
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {recentDiscoveries.map((album) => (
-            <AlbumCardVertical
-              key={album.id || album.release_group_mbid}
-              album={album}
-              onClick={() => handleAlbumClick(album)}
-              showNewArtistBadge={album.isNewArtist}
-              showFirstListenDate
-              expandableTracks
-              className="hover:scale-105 transition-transform"
-            />
-          ))}
-        </div>
-      </section>
-    </div>
+        <DiscoveryQualityCard listens={listenRecords} selectedRange={timeRange} />
+
+        <section className="space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="text-2xl font-semibold tracking-tight text-foreground">
+              Recent discoveries
+            </h2>
+            {recentDiscoveries.length > 8 ? (
+              <Button
+                className="text-primary"
+                onClick={() => setShowAllDiscoveries((current) => !current)}
+                variant="ghost"
+              >
+                {showAllDiscoveries ? "Show fewer" : "View all discoveries"}
+                <ArrowRight />
+              </Button>
+            ) : null}
+          </div>
+
+          {visibleDiscoveries.length === 0 ? (
+            <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
+              No first-time album listens in this range.
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {visibleDiscoveries.map((album) => (
+                <AlbumCardVertical
+                  key={album.id || album.release_group_mbid}
+                  album={album}
+                  className="transition-shadow hover:shadow-md"
+                  expandableTracks
+                  onClick={() => handleAlbumClick(album)}
+                  showFirstListenDate
+                  showNewArtistBadge={album.isNewArtist}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
 
       <AlbumPanelSheet
-        open={panelOpen}
-        onOpenChange={setPanelOpen}
         album={selectedAlbum}
-        onFilterSelect={onFilterSelect}
-        onAlbumUpdated={updateSelectedAlbum}
         onAlbumDeleted={handleAlbumDeleted}
+        onAlbumUpdated={updateSelectedAlbum}
         onDataChanged={onDataChanged}
+        onFilterSelect={onFilterSelect}
+        onOpenChange={setPanelOpen}
+        open={panelOpen}
       />
     </>
   );
