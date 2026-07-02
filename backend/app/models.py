@@ -311,6 +311,7 @@ class SpotifyStreamingEvent(Base):
     spotify_album_name: Mapped[str | None] = mapped_column(String, nullable=True)
     spotify_album_artist_name: Mapped[str | None] = mapped_column(String, nullable=True)
     spotify_album_total_tracks: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    spotify_album_type: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     spotify_disc_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
     spotify_track_number: Mapped[int | None] = mapped_column(Integer, nullable=True)
     spotify_catalog_status: Mapped[str | None] = mapped_column(String, nullable=True, index=True)

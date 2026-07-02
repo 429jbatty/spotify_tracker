@@ -24,6 +24,7 @@ class SpotifyCatalogTrack:
     album_name: str | None
     album_artist_name: str | None
     album_total_tracks: int | None
+    album_type: str | None
     disc_number: int | None
     track_number: int | None
     album_images: list[dict]
@@ -97,6 +98,7 @@ def resolve_tracks_by_uri(track_uris: Iterable[str | None]) -> dict[str, Spotify
                 )
                 or None,
                 album_total_tracks=album.get("total_tracks"),
+                album_type=album.get("album_type"),
                 disc_number=item.get("disc_number"),
                 track_number=item.get("track_number"),
                 album_images=album.get("images") or [],

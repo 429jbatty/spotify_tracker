@@ -140,8 +140,13 @@ class ExistingAlbumMatch:
 class SpotifyCompletionResult:
     album_id: str
     total_tracks: int
+    album_type: str | None
     played_tracks: set[str]
     complete: bool
+
+    @property
+    def is_non_album(self) -> bool:
+        return bool(self.album_type and self.album_type.casefold() != "album")
 
     @property
     def matched_track_count(self) -> int:
@@ -2119,6 +2124,7 @@ def _resolve_spotify_catalog_for_import(
         row.spotify_album_name = catalog_track.album_name
         row.spotify_album_artist_name = catalog_track.album_artist_name
         row.spotify_album_total_tracks = catalog_track.album_total_tracks
+        row.spotify_album_type = catalog_track.album_type
         row.spotify_disc_number = catalog_track.disc_number
         row.spotify_track_number = catalog_track.track_number
         row.spotify_catalog_status = "resolved"
@@ -2129,6 +2135,7 @@ def _resolve_spotify_catalog_for_import(
                 "_spotify_album_name": catalog_track.album_name,
                 "_spotify_album_artist_name": catalog_track.album_artist_name,
                 "_spotify_album_total_tracks": catalog_track.album_total_tracks,
+                "_spotify_album_type": catalog_track.album_type,
                 "_spotify_disc_number": catalog_track.disc_number,
                 "_spotify_track_number": catalog_track.track_number,
                 "_spotify_album_images": catalog_track.album_images,
@@ -2708,6 +2715,7 @@ def _persist_spotify_candidate_rows(
                 "_spotify_album_total_tracks": representative.raw_payload.get(
                     "_spotify_album_total_tracks"
                 ),
+                "_spotify_album_type": representative.raw_payload.get("_spotify_album_type"),
                 "_spotify_completion_authority": (
                     "spotify_catalog"
                     if representative.raw_payload.get("_spotify_album_total_tracks")
@@ -2763,6 +2771,7 @@ def _spotify_streaming_event_to_import_event(
             "_spotify_album_name": row.spotify_album_name,
             "_spotify_album_artist_name": row.spotify_album_artist_name,
             "_spotify_album_total_tracks": row.spotify_album_total_tracks,
+            "_spotify_album_type": row.spotify_album_type,
             "_spotify_disc_number": row.spotify_disc_number,
             "_spotify_track_number": row.spotify_track_number,
             "_spotify_catalog_status": row.spotify_catalog_status,
@@ -3181,6 +3190,32 @@ def _build_lastfm_candidate(
         if _normalize_import_event_track_identity(event)
     }
     spotify_completion = _spotify_completion_result(events)
+    if spotify_completion is not None and spotify_completion.is_non_album:
+        album_type = spotify_completion.album_type or "non-album"
+        return LastfmCandidate(
+            candidate_key=_import_candidate_key(
+                events[0].source,
+                source_user_id,
+                artist,
+                album,
+                events,
+            ),
+            artist=artist,
+            album=album,
+            listened_at=listened_at,
+            events=events,
+            matched_album_id=None,
+            matched_track_count=spotify_completion.matched_track_count,
+            total_track_count=spotify_completion.total_tracks,
+            unique_scrobbled_tracks=len(unique_track_identities),
+            status="partial_listen",
+            status_detail=(
+                f"Spotify classifies this release as {album_type}, "
+                "so it does not count as an album listen."
+            ),
+            confidence=spotify_completion.confidence,
+            metadata=None,
+        )
     if spotify_completion is not None and not spotify_completion.complete:
         return LastfmCandidate(
             candidate_key=_import_candidate_key(
@@ -3428,6 +3463,12 @@ def _spotify_completion_result(
     total_tracks = next(iter(total_tracks_values))
     if total_tracks <= 0:
         return None
+    album_type_values = {
+        clean_text(event.raw_payload.get("_spotify_album_type")).casefold()
+        for event in events
+        if clean_text(event.raw_payload.get("_spotify_album_type"))
+    }
+    album_type = next(iter(album_type_values)) if len(album_type_values) == 1 else None
 
     played_tracks: set[str] = set()
     for event in events:
@@ -3452,8 +3493,12 @@ def _spotify_completion_result(
     return SpotifyCompletionResult(
         album_id=next(iter(album_ids)),
         total_tracks=total_tracks,
+        album_type=album_type,
         played_tracks=played_tracks,
-        complete=(len(played_tracks) / total_tracks) >= ALBUM_COMPLETION_THRESHOLD,
+        complete=(
+            album_type in {None, "album"}
+            and (len(played_tracks) / total_tracks) >= ALBUM_COMPLETION_THRESHOLD
+        ),
     )
 
 
