@@ -1,6 +1,7 @@
+import json
 from typing import Any
 
-from sqlalchemy import Select, delete, func, select
+from sqlalchemy import LargeBinary, Select, cast, delete, func, select
 from sqlalchemy.orm import Session
 
 from backend.app.models import (
@@ -57,6 +58,31 @@ def _album_metadata(record: dict[str, Any]) -> dict[str, Any]:
             "entry_source",
         }
     }
+
+
+def _safe_album_metadata(album: Album) -> dict[str, Any]:
+    metadata = getattr(album, "metadata_json", None)
+    if isinstance(metadata, dict):
+        return metadata
+
+    metadata_blob = getattr(album, "metadata_json_blob", None)
+    if metadata_blob is None:
+        return {}
+    if isinstance(metadata_blob, memoryview):
+        metadata_blob = metadata_blob.tobytes()
+    if isinstance(metadata_blob, bytes):
+        try:
+            metadata_text = metadata_blob.decode("utf-8")
+        except UnicodeDecodeError:
+            return {}
+    else:
+        metadata_text = str(metadata_blob)
+
+    try:
+        parsed = json.loads(metadata_text)
+    except (TypeError, json.JSONDecodeError, UnicodeDecodeError):
+        return {}
+    return parsed if isinstance(parsed, dict) else {}
 
 
 def _album_key(artist: str, album: str) -> str:
@@ -603,8 +629,26 @@ class SqliteStateRepository:
 
     def _load_completed_albums(self) -> dict[str, Any]:
         completed_albums = {}
-        albums = self.session.scalars(
-            select(Album)
+        albums = self.session.execute(
+            select(
+                Album.id,
+                Album.album_key,
+                Album.artist,
+                Album.name,
+                Album.artist_mbid,
+                Album.release_group_mbid,
+                Album.release_mbid,
+                Album.label,
+                Album.release_year,
+                Album.release_month,
+                Album.release_day,
+                Album.image_url,
+                Album.remote_image_url,
+                Album.local_image_path,
+                Album.source,
+                Album.entry_source,
+                cast(Album.metadata_json, LargeBinary).label("metadata_json_blob"),
+            )
             .join(UserAlbum)
             .where(UserAlbum.user_id == self.user.id)
             .group_by(Album.id)
@@ -631,7 +675,7 @@ class SqliteStateRepository:
             image_url = _artwork_url(album.local_image_path)
 
         return {
-            **(album.metadata_json or {}),
+            **_safe_album_metadata(album),
             "id": album.id,
             "album_key": album.album_key,
             "artist": album.artist,

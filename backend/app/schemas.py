@@ -90,6 +90,66 @@ class PublicRecentListenAlbum(BaseModel):
     image_url: str | None = None
 
 
+class SplashTopAlbum(BaseModel):
+    title: str
+    artist: str
+    listen_count: int
+
+
+class SplashEraMetric(BaseModel):
+    label: str
+    listen_count: int
+
+
+class SplashRecentReplay(BaseModel):
+    title: str
+    artist: str
+    replay_count: int
+    window_days: int
+
+
+class SplashFeaturedUser(BaseModel):
+    slug: str
+    display_name: str
+    public_display_name: str
+    profile_url: str
+    recent_album_covers: list[str] = Field(default_factory=list)
+    total_albums: int
+    total_listens: int
+    discovery_rate: float | None = None
+    replay_rate_30d: float | None = None
+    top_artist: str | None = None
+    top_artist_listen_count: int | None = None
+    top_album: SplashTopAlbum | None = None
+    most_listened_era: SplashEraMetric | None = None
+    most_replayed_recently: SplashRecentReplay | None = None
+    last_updated: str | None = None
+
+
+class SplashHeroStats(BaseModel):
+    discovery_rate: float | None = None
+    replay_rate_30d: float | None = None
+    top_era: str | None = None
+
+
+class SplashActivityItem(BaseModel):
+    type: str
+    user_display_name: str
+    public_user_display_name: str
+    album_title: str
+    artist_name: str
+    album_cover_url: str | None = None
+    text: str
+    timestamp: str
+    profile_url: str
+
+
+class SplashResponse(BaseModel):
+    featured_users: list[SplashFeaturedUser] = Field(default_factory=list)
+    hero_stats: SplashHeroStats
+    recent_activity: list[SplashActivityItem] = Field(default_factory=list)
+
+
 class ManualAlbumCreate(BaseModel):
     artist: str
     name: str

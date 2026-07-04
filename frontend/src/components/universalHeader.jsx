@@ -92,7 +92,12 @@ function UniversalHeader({
       <div className="px-6 py-4">
         <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onSwitchUser}
+              className="-mx-2 -my-1 flex items-center gap-3 rounded-md px-2 py-1 text-left transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-muted"
+              aria-label="Go to Albumary splash page"
+            >
               <div className="flex size-11 items-center justify-center rounded-md border border-primary/20 bg-primary/30 text-primary shadow-sm">
                 <Library className="size-5" />
               </div>
@@ -104,7 +109,7 @@ function UniversalHeader({
                   Album listening history
                 </p>
               </div>
-            </div>
+            </button>
 
             <AlbumCreateDialog
               albums={albums}
