@@ -4,6 +4,7 @@ import AlbumCreateDialog from "./AlbumCreateDialog";
 import { spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   BarChart3,
   CalendarDays,
@@ -11,10 +12,11 @@ import {
   ShieldCheck,
   Table2,
 } from "lucide-react";
+import { PROFILE_ROUTES, profilePath } from "@/routing";
 
 const NAV_ITEMS = [
   {
-    value: "discovery",
+    value: PROFILE_ROUTES.discovery,
     label: "Discovery",
     description: "Recent patterns",
     icon: BarChart3,
@@ -22,7 +24,7 @@ const NAV_ITEMS = [
     iconAccent: "text-chart-4",
   },
   {
-    value: "table",
+    value: PROFILE_ROUTES.library,
     label: "Library",
     description: "All albums",
     icon: Table2,
@@ -30,7 +32,7 @@ const NAV_ITEMS = [
     iconAccent: "text-chart-2",
   },
   {
-    value: "timeline",
+    value: PROFILE_ROUTES.releases,
     label: "Release Dates",
     description: "Years and decades",
     icon: CalendarDays,
@@ -38,7 +40,7 @@ const NAV_ITEMS = [
     iconAccent: "text-chart-3",
   },
   {
-    value: "quality",
+    value: PROFILE_ROUTES.quality,
     label: "Data Quality",
     description: "Metadata cleanup",
     icon: ShieldCheck,
@@ -49,7 +51,6 @@ const NAV_ITEMS = [
 
 function UniversalHeader({
   view,
-  setView,
   albums,
   onDataChanged,
   selectedUser,
@@ -60,6 +61,7 @@ function UniversalHeader({
   onImportDialogOpenChange,
 }) {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
   const handleConnectSpotify = () => {
     const url = spotifyConnectUrl(selectedUser?.slug);
@@ -121,7 +123,10 @@ function UniversalHeader({
 
           <Tabs
             value={view}
-            onValueChange={setView}
+            onValueChange={(nextView) => {
+              if (!selectedUser?.slug) return;
+              navigate(profilePath(selectedUser.slug, nextView));
+            }}
             className="w-full min-w-0 xl:flex-1 xl:items-center"
           >
             <TabsList className="grid !h-auto w-full grid-cols-4 items-stretch gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm">

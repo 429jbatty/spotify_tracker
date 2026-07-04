@@ -4,7 +4,7 @@ import AlbumTable from "./AlbumTable";
 import AlbumTimeline from "@/components/timeline/AlbumTimeline";
 import AlbumPanelSheet from "./AlbumPanelSheet";
 
-function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
+function AlbumTimeView({ albums, onFilterSelect, onDataChanged, onOpenAlbum }) {
   const [filter, setFilter] = useState({ decade: null, year: null });
   const [chartMode, setChartMode] = useState("decade"); // "decade" or "year"
   const [selectedAlbum, setSelectedAlbum] = useState(null);
@@ -23,6 +23,10 @@ function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
 
   const resetFilter = () => setFilter({ decade: null, year: null });
   const openAlbum = (album) => {
+    if (onOpenAlbum) {
+      onOpenAlbum(album);
+      return;
+    }
     setSelectedAlbum(album);
     setPanelOpen(true);
   };
@@ -56,19 +60,22 @@ function AlbumTimeView({ albums, onFilterSelect, onDataChanged }) {
             albums={filteredAlbums}
             onFilterSelect={onFilterSelect}
             onDataChanged={onDataChanged}
+            onOpenAlbum={onOpenAlbum}
           />
         </div>
       </div>
 
-      <AlbumPanelSheet
-        open={panelOpen}
-        onOpenChange={setPanelOpen}
-        album={selectedAlbum}
-        onFilterSelect={onFilterSelect}
-        onAlbumUpdated={updateSelectedAlbum}
-        onAlbumDeleted={handleAlbumDeleted}
-        onDataChanged={onDataChanged}
-      />
+      {!onOpenAlbum && (
+        <AlbumPanelSheet
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          album={selectedAlbum}
+          onFilterSelect={onFilterSelect}
+          onAlbumUpdated={updateSelectedAlbum}
+          onAlbumDeleted={handleAlbumDeleted}
+          onDataChanged={onDataChanged}
+        />
+      )}
     </>
   );
 }

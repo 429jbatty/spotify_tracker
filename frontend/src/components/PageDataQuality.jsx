@@ -69,7 +69,7 @@ function AlbumIssueRow({ album, issues, onClick }) {
   );
 }
 
-function PageDataQuality({ albums, onDataChanged, onFilterSelect }) {
+function PageDataQuality({ albums, onDataChanged, onFilterSelect, onOpenAlbum }) {
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState(null);
@@ -170,6 +170,10 @@ function PageDataQuality({ albums, onDataChanged, onFilterSelect }) {
   }, [albumArray, artworkFailedKeys, selectedIssue]);
 
   const openAlbum = (album) => {
+    if (onOpenAlbum) {
+      onOpenAlbum(album);
+      return;
+    }
     setSelectedAlbum(album);
     setPanelOpen(true);
   };
@@ -247,15 +251,17 @@ function PageDataQuality({ albums, onDataChanged, onFilterSelect }) {
         </section>
       </div>
 
-      <AlbumPanelSheet
-        open={panelOpen}
-        onOpenChange={setPanelOpen}
-        album={selectedAlbum}
-        onFilterSelect={onFilterSelect}
-        onAlbumUpdated={updateSelectedAlbum}
-        onAlbumDeleted={handleAlbumDeleted}
-        onDataChanged={onDataChanged}
-      />
+      {!onOpenAlbum && (
+        <AlbumPanelSheet
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          album={selectedAlbum}
+          onFilterSelect={onFilterSelect}
+          onAlbumUpdated={updateSelectedAlbum}
+          onAlbumDeleted={handleAlbumDeleted}
+          onDataChanged={onDataChanged}
+        />
+      )}
     </>
   );
 }
