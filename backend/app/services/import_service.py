@@ -1,3 +1,40 @@
+"""Import orchestration for historical listening sources.
+
+This module owns the service layer behind `backend/app/routers/imports.py`.
+Keep routers thin: source parsing, import-session state, raw event persistence,
+candidate derivation, metadata cache use, review rows, diagnostics, deletion,
+and resume/repair behavior belong here.
+
+High-level map:
+- Public entry points: `preview_import`, `commit_import`,
+  `create_spotify_import_session`, `run_import_session`,
+  `repair_spotify_import_session`, `import_history`, `import_session_logs`,
+  `spotify_import_diagnostics`, `unresolved_review_items`,
+  `resolve_review_item`, and `delete_import_session`.
+- Last.fm path: `_preview_lastfm_import`, `_create_lastfm_import_session`,
+  `_run_lastfm_import_session`, `_persist_lastfm_raw_events`,
+  `_build_lastfm_candidates_from_imported_events`, and
+  `_process_lastfm_candidates`.
+- Spotify ZIP path: `create_spotify_import_session`,
+  `_run_spotify_import_session`, `_stream_persist_spotify_streaming_events`,
+  `_resolve_spotify_catalog_for_import`,
+  `_build_spotify_candidates_from_streaming_events`, and
+  `_persist_spotify_candidate_rows`.
+- Shared matching path: `_process_pending_metadata_incrementally`,
+  `_lastfm_album_metadata`, `_read_album_metadata_cache`,
+  `_write_album_metadata_cache`, `_build_album_record`, and
+  `_metadata_matches_imported_album`.
+- Resume/repair path: `resumable_import_session_ids`,
+  `_resume_lastfm_metadata_import`, `_resume_spotify_import_session`,
+  `_process_existing_spotify_candidate_rows`, and
+  `_finalize_spotify_resume_or_repair`.
+
+Import changes are high risk because they affect raw source preservation,
+user-scoped listens, MusicBrainz rate-limited metadata, and the review queue.
+Preserve raw event storage first, create album listens only from confident
+candidate sessions, and send uncertain but plausible sessions to review.
+"""
+
 import hashlib
 import logging
 import os

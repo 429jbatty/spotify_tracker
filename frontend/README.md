@@ -2,11 +2,15 @@
 
 React/Vite frontend for the album tracker.
 
-The app reads album data from FastAPI through:
+The app reads user-scoped album data from FastAPI through:
 
 ```text
-/api/album-state
+/api/users/{user_slug}/album-state
 ```
+
+The older `/api/album-state` endpoint still exists for compatibility. New
+profile UI should use functions in `src/services/albumApi.js`, which choose the
+selected user route automatically.
 
 During local development, `frontend/vite.config.js` proxies `/api` to:
 

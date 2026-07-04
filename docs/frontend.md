@@ -12,6 +12,16 @@ Tailwind CSS, and focused components for album views and editing workflows.
 - `frontend/src/services/albumNormalizer.jsx`: normalizes backend album state
   before components consume it.
 - `frontend/src/components/`: page and feature components.
+- `frontend/src/components/discovery/`: discovery metrics, trends, and quality
+  cards used by the discovery page.
+- `frontend/src/components/dataQuality/`: album edit, listen edit, and
+  data-quality action forms.
+- `frontend/src/components/importHistory/`: import dialog fields, status
+  sections, and import-source UI configuration.
+- `frontend/src/components/search/`: search-result rendering and album match
+  surfaces.
+- `frontend/src/components/splash/`: public/profile landing experience.
+- `frontend/src/components/timeline/`: album timeline visualizations.
 - `frontend/src/components/ui/`: shared UI primitives.
 - `frontend/src/components/utils/`: album filters, chart helpers, user tag
   helpers, and other frontend utilities.
@@ -24,6 +34,10 @@ The app starts at the user picker. Once a user is selected, `App.jsx` loads the
 user-scoped album state through `albumApi.js`, normalizes it, computes display
 fields such as total listens and latest listen, then passes data into page
 components.
+
+Active profile views should prefer user-scoped API routes such as
+`/api/users/{user_slug}/album-state`. The default `/api/album-state` endpoint is
+kept for compatibility and should not be the main path for new profile UI.
 
 Mutation flows should call a function in `albumApi.js`, then refresh album
 state through the page-level `onDataChanged` callback. This keeps derived
