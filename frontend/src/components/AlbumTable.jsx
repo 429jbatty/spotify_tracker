@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import AlbumColumnFilter from "./AlbumColumnFilter";
 import AlbumRow from "./AlbumRow";
 import AlbumPanelSheet from "./AlbumPanelSheet";
 import { getSourceLabel } from "./utils/sourceLabels";
+import { formatLibrarySortParam, parseLibrarySortParam } from "@/routing";
 import {
   Table,
   TableBody,
@@ -48,9 +50,18 @@ function getColumnLabel(album, key) {
   return String(value);
 }
 
-function AlbumTable({ albums, searchTerm, onFilterSelect, onDataChanged }) {
-  const [sortBy, setSortBy] = useState("latestListen");
-  const [ascending, setAscending] = useState(false);
+function AlbumTable({
+  albums,
+  searchTerm,
+  onFilterSelect,
+  onDataChanged,
+  onOpenAlbum,
+  syncSortWithUrl = false,
+}) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const initialSort = parseLibrarySortParam(searchParams.get("sort"));
+  const [sortBy, setSortBy] = useState(initialSort.sortBy);
+  const [ascending, setAscending] = useState(initialSort.ascending);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
@@ -118,14 +129,23 @@ function AlbumTable({ albums, searchTerm, onFilterSelect, onDataChanged }) {
   });
 
   const handleSort = (key) => {
-    if (sortBy === key) setAscending(!ascending);
-    else {
-      setSortBy(key);
-      setAscending(true);
+    const nextAscending = sortBy === key ? !ascending : true;
+    setSortBy(key);
+    setAscending(nextAscending);
+    if (syncSortWithUrl) {
+      setSearchParams((current) => {
+        const next = new URLSearchParams(current);
+        next.set("sort", formatLibrarySortParam(key, nextAscending));
+        return next;
+      });
     }
   };
 
   const handleRowClick = (album) => {
+    if (onOpenAlbum) {
+      onOpenAlbum(album);
+      return;
+    }
     setSelectedAlbum(album);
     setPanelOpen(true);
   };
@@ -201,16 +221,18 @@ function AlbumTable({ albums, searchTerm, onFilterSelect, onDataChanged }) {
         </Table>
       </div>
 
-      <AlbumPanelSheet
-        open={panelOpen}
-        onOpenChange={setPanelOpen}
-        album={selectedAlbum}
-        searchTerm={searchTerm}
-        onFilterSelect={onFilterSelect}
-        onAlbumUpdated={updateSelectedAlbum}
-        onAlbumDeleted={handleAlbumDeleted}
-        onDataChanged={onDataChanged}
-      />
+      {!onOpenAlbum && (
+        <AlbumPanelSheet
+          open={panelOpen}
+          onOpenChange={setPanelOpen}
+          album={selectedAlbum}
+          searchTerm={searchTerm}
+          onFilterSelect={onFilterSelect}
+          onAlbumUpdated={updateSelectedAlbum}
+          onAlbumDeleted={handleAlbumDeleted}
+          onDataChanged={onDataChanged}
+        />
+      )}
 
     </>
   );

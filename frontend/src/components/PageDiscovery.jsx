@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { useSearchParams } from "react-router-dom";
 import AlbumCardVertical from "./AlbumCardVertical";
 import AlbumPanelSheet from "./AlbumPanelSheet";
 import DiscoveryMetricRail from "./discovery/DiscoveryMetricRail";
@@ -8,6 +9,7 @@ import NewVsReplayTrend from "./discovery/NewVsReplayTrend";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { aggregateDiscoveryInsights } from "./utils/discoveryInsights";
+import { normalizeDiscoveryRange } from "@/routing";
 
 const TIME_RANGES = {
   "7d": 7,
@@ -107,8 +109,13 @@ export default function Discovery({
   allAlbums = albums,
   onFilterSelect,
   onDataChanged,
+  onOpenAlbum,
 }) {
-  const [timeRange, setTimeRange] = useState("1y");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const timeRange = normalizeDiscoveryRange(
+    searchParams.get("range"),
+    Object.keys(TIME_RANGES)
+  );
   const [showAllDiscoveries, setShowAllDiscoveries] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
@@ -175,8 +182,20 @@ export default function Discovery({
   ];
 
   const handleAlbumClick = (album) => {
+    if (onOpenAlbum) {
+      onOpenAlbum(album);
+      return;
+    }
     setSelectedAlbum(album);
     setPanelOpen(true);
+  };
+
+  const handleRangeChange = (nextRange) => {
+    setSearchParams((current) => {
+      const next = new URLSearchParams(current);
+      next.set("range", nextRange);
+      return next;
+    });
   };
 
   const updateSelectedAlbum = (album) => {
@@ -202,7 +221,7 @@ export default function Discovery({
               </p>
             </div>
 
-            <Tabs value={timeRange} onValueChange={setTimeRange}>
+            <Tabs value={timeRange} onValueChange={handleRangeChange}>
               <TabsList aria-label="Discovery activity range">
                 {Object.keys(TIME_RANGES).map((rangeKey) => (
                   <TabsTrigger key={rangeKey} value={rangeKey}>
@@ -265,15 +284,17 @@ export default function Discovery({
         </section>
       </div>
 
-      <AlbumPanelSheet
-        album={selectedAlbum}
-        onAlbumDeleted={handleAlbumDeleted}
-        onAlbumUpdated={updateSelectedAlbum}
-        onDataChanged={onDataChanged}
-        onFilterSelect={onFilterSelect}
-        onOpenChange={setPanelOpen}
-        open={panelOpen}
-      />
+      {!onOpenAlbum && (
+        <AlbumPanelSheet
+          album={selectedAlbum}
+          onAlbumDeleted={handleAlbumDeleted}
+          onAlbumUpdated={updateSelectedAlbum}
+          onDataChanged={onDataChanged}
+          onFilterSelect={onFilterSelect}
+          onOpenChange={setPanelOpen}
+          open={panelOpen}
+        />
+      )}
     </>
   );
 }

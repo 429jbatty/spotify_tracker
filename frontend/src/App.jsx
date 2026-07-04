@@ -1,4 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Navigate,
+  Route,
+  Routes,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
@@ -16,91 +23,66 @@ import { filterAlbums } from "./components/utils/albumFilters";
 import SplashPage from "./components/splash/SplashPage";
 import { Toaster } from "./components/Toaster";
 import ImportHistoryDialog from "./components/ImportHistoryDialog";
+import AlbumPanelSheet from "./components/AlbumPanelSheet";
+import {
+  albumPath,
+  legacyRedirectPath,
+  PROFILE_ROUTES,
+  profilePath,
+} from "./routing";
 
-const PATH_VIEW_MAP = {
-  albums: "table",
-  discovery: "discovery",
-  timeline: "timeline",
-  quality: "quality",
-};
-
-const VIEW_PATH_MAP = {
-  table: "albums",
-  discovery: "discovery",
-  timeline: "timeline",
-  quality: "quality",
-};
-
-function parseRoute(pathname) {
-  const segments = pathname.split("/").filter(Boolean);
-  if (segments.length === 0) return { page: "splash", userSlug: null, view: "discovery" };
-
-  const [userSlug, section] = segments;
-  return {
-    page: "profile",
-    userSlug,
-    view: PATH_VIEW_MAP[section] || "discovery",
-  };
+function LoadingState() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
+      Loading...
+    </div>
+  );
 }
 
-function profilePath(userSlug, nextView = "discovery") {
-  if (nextView === "discovery") return `/${userSlug}/discovery`;
-  return `/${userSlug}/${VIEW_PATH_MAP[nextView] || "discovery"}`;
+function NotFound({ onBackHome }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
+      <div className="max-w-md rounded-lg border border-border/80 bg-card p-6 text-center shadow-sm">
+        <h1 className="text-2xl font-semibold tracking-tight">Page not found</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          This Albumary page does not exist or is no longer available.
+        </p>
+        <button
+          type="button"
+          onClick={onBackHome}
+          className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/85"
+        >
+          Back to profiles
+        </button>
+      </div>
+    </div>
+  );
 }
 
-function App() {
-  const [data, setData] = useState(null);
-  const [dataUserSlug, setDataUserSlug] = useState(null);
+function ProfileNotFound({ onBackHome }) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
+      <div className="max-w-md rounded-lg border border-border/80 bg-card p-6 text-center shadow-sm">
+        <h1 className="text-2xl font-semibold tracking-tight">Profile not found</h1>
+        <p className="mt-2 text-sm leading-6 text-muted-foreground">
+          This Albumary profile does not exist or is not active.
+        </p>
+        <button
+          type="button"
+          onClick={onBackHome}
+          className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/85"
+        >
+          Back to profiles
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function useUsers() {
   const [users, setUsers] = useState([]);
   const [usersLoaded, setUsersLoaded] = useState(false);
-  const [spotifyStatus, setSpotifyStatus] = useState({ connected: false });
-  const [spotifyStatusUserSlug, setSpotifyStatusUserSlug] = useState(null);
   const [error, setError] = useState(null);
-  const [route, setRoute] = useState(() => parseRoute(window.location.pathname));
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeFilters, setActiveFilters] = useState([]);
-  const [importDialogOpen, setImportDialogOpen] = useState(false);
-  const selectedUser = useMemo(() => {
-    if (route.page !== "profile") return null;
-    return users.find((user) => user.slug === route.userSlug) || null;
-  }, [route.page, route.userSlug, users]);
-  const view = route.page === "profile" ? route.view : "discovery";
-
-  const loadAlbumState = useCallback(async (options = {}) => {
-    if (!selectedUser) return null;
-    const json = await fetchAlbumState(selectedUser.slug, options);
-    const normalized = {
-      ...json,
-      completed_albums: normalizeAlbums(json.completed_albums)
-    };
-    setData(normalized);
-    setDataUserSlug(selectedUser.slug);
-    setError(null);
-    return normalized;
-  }, [selectedUser]);
-
-  const loadSpotifyStatus = useCallback(async (options = {}) => {
-    if (!selectedUser) return null;
-    const status = await fetchSpotifyStatus(selectedUser.slug, options);
-    setSpotifyStatus(status);
-    setSpotifyStatusUserSlug(selectedUser.slug);
-    return status;
-  }, [selectedUser]);
-
-  const navigateTo = useCallback((path) => {
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, "", path);
-    }
-    setRoute(parseRoute(path));
-  }, []);
-
-  useEffect(() => {
-    const handlePopState = () => {
-      setRoute(parseRoute(window.location.pathname));
-    };
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
 
   useEffect(() => {
     fetchUsers()
@@ -115,19 +97,79 @@ function App() {
       });
   }, []);
 
+  return { users, usersLoaded, error };
+}
+
+function RootRoute() {
+  const navigate = useNavigate();
+  return (
+    <SplashPage
+      onOpenProfile={(userSlug) => navigate(profilePath(userSlug, PROFILE_ROUTES.discovery))}
+    />
+  );
+}
+
+function LegacyRedirect({ legacySection }) {
+  const { userSlug } = useParams();
+  return <Navigate to={legacyRedirectPath(userSlug, legacySection) || "/"} replace />;
+}
+
+function ProfileIndexRedirect() {
+  const { userSlug } = useParams();
+  return <Navigate to={profilePath(userSlug, PROFILE_ROUTES.discovery)} replace />;
+}
+
+function UserRoute({ view }) {
+  const { users, usersLoaded, error } = useUsers();
+  const { userSlug, albumId } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
+  const [dataUserSlug, setDataUserSlug] = useState(null);
+  const [spotifyStatus, setSpotifyStatus] = useState({ connected: false });
+  const [spotifyStatusUserSlug, setSpotifyStatusUserSlug] = useState(null);
+  const [loadError, setLoadError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeFilters, setActiveFilters] = useState([]);
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const selectedUser = useMemo(
+    () => users.find((user) => user.slug === userSlug) || null,
+    [userSlug, users]
+  );
+
+  const loadAlbumState = useCallback(async (options = {}) => {
+    if (!selectedUser) return null;
+    const json = await fetchAlbumState(selectedUser.slug, options);
+    const normalized = {
+      ...json,
+      completed_albums: normalizeAlbums(json.completed_albums),
+    };
+    setData(normalized);
+    setDataUserSlug(selectedUser.slug);
+    setLoadError(null);
+    return normalized;
+  }, [selectedUser]);
+
+  const loadSpotifyStatus = useCallback(async (options = {}) => {
+    if (!selectedUser) return null;
+    const status = await fetchSpotifyStatus(selectedUser.slug, options);
+    setSpotifyStatus(status);
+    setSpotifyStatusUserSlug(selectedUser.slug);
+    return status;
+  }, [selectedUser]);
+
   useEffect(() => {
     if (selectedUser) {
       setSelectedUserSlug(selectedUser.slug);
       return;
     }
 
-    if (usersLoaded && route.page === "profile") {
+    if (usersLoaded) {
       setSelectedUserSlug(null);
     }
-  }, [route.page, selectedUser, usersLoaded]);
+  }, [selectedUser, usersLoaded]);
 
   useEffect(() => {
-    if (!selectedUser) return;
+    if (!selectedUser) return undefined;
     const controller = new AbortController();
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -136,13 +178,13 @@ function App() {
       if (err?.name !== "TypeError") {
         console.error(err);
       }
-      setError(err.message);
+      setLoadError(err.message);
     });
     return () => controller.abort();
   }, [loadAlbumState, selectedUser]);
 
   useEffect(() => {
-    if (!selectedUser) return;
+    if (!selectedUser) return undefined;
     const controller = new AbortController();
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -156,63 +198,28 @@ function App() {
     return () => controller.abort();
   }, [loadSpotifyStatus, selectedUser]);
 
-  const handleOpenProfile = (userSlug) => {
-    setSelectedUserSlug(userSlug);
-    navigateTo(`/${userSlug}`);
-  };
-
   const handleSwitchUser = () => {
     setSelectedUserSlug(null);
     setData(null);
     setDataUserSlug(null);
     setSpotifyStatus({ connected: false });
     setSpotifyStatusUserSlug(null);
-    navigateTo("/");
+    navigate("/");
   };
 
-  const handleViewChange = (nextView) => {
-    if (!selectedUser) return;
-    navigateTo(profilePath(selectedUser.slug, nextView));
-  };
+  if (error || loadError) return <div>Error: {error || loadError}</div>;
+  if (!usersLoaded) return <LoadingState />;
+  if (!selectedUser) return <ProfileNotFound onBackHome={handleSwitchUser} />;
+  if (!data || dataUserSlug !== selectedUser.slug) return <LoadingState />;
 
-  if (error) return <div>Error: {error}</div>;
-  if (route.page === "splash") {
-    return <SplashPage onOpenProfile={handleOpenProfile} />;
-  }
-  if (usersLoaded && !selectedUser) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
-        <div className="max-w-md rounded-lg border border-border/80 bg-card p-6 text-center shadow-sm">
-          <h1 className="text-2xl font-semibold tracking-tight">Profile not found</h1>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            This Albumary profile does not exist or is not active.
-          </p>
-          <button
-            type="button"
-            onClick={handleSwitchUser}
-            className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/85"
-          >
-            Back to profiles
-          </button>
-        </div>
-      </div>
-    );
-  }
-  if (!data || dataUserSlug !== selectedUser.slug) return <div>Loading...</div>;
-
-  // Pre-calculate total listens and latest listen for sorting purposes
-  const processedAlbums = Object.entries(data.completed_albums).map(([id, data]) => {
-    const history = data.listen_history || [];
+  const processedAlbums = Object.entries(data.completed_albums).map(([id, album]) => {
+    const history = album.listen_history || [];
     return {
       id,
-
-      // core safe fields (critical fix)
-      name: data.name ?? "Unknown Album",
-      artist: data.artist ?? "Unknown Artist",
-
-      ...data,
+      name: album.name ?? "Unknown Album",
+      artist: album.artist ?? "Unknown Artist",
+      ...album,
       totalListens: history.length,
-      // We keep latestListen as a sortable string/date object
       latestListen: history.length ? [...history].sort().reverse()[0] : null,
     };
   });
@@ -221,12 +228,17 @@ function App() {
   const filteredAlbums = Object.fromEntries(
     visibleAlbums.map((album) => [album.id, album])
   );
+  const routedAlbum = albumId
+    ? processedAlbums.find((album) => String(album.id) === String(albumId))
+    : null;
+  const routeAlbumMissing = Boolean(albumId && !routedAlbum);
+
   const handleFilterSelect = (filter) => {
     setActiveFilters((current) => {
       if (current.some((item) => item.id === filter.id)) return current;
       return [...current, filter];
     });
-    handleViewChange("table");
+    navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
   };
 
   const removeFilter = (filterId) => {
@@ -238,16 +250,33 @@ function App() {
     setActiveFilters([]);
   };
 
+  const handleOpenAlbum = (album) => {
+    if (!album?.id) return;
+    navigate(albumPath(selectedUser.slug, album.id));
+  };
+
+  const handleAlbumRouteOpenChange = (open) => {
+    if (!open) {
+      navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
+    }
+  };
+
+  const handleRoutedAlbumUpdated = (album) => {
+    if (!album?.id) return;
+    loadAlbumState();
+  };
+
+  const handleRoutedAlbumDeleted = () => {
+    navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
+    loadAlbumState();
+  };
+
   return (
     <>
       <div className="min-h-screen space-y-10 ">
-
-        {/* vertical stack header and search bar */}
         <div className="flex flex-col gap-4">
-          {/* Header with tabs */}
           <Header
             view={view}
-            setView={handleViewChange}
             albums={processedAlbums}
             onDataChanged={loadAlbumState}
             selectedUser={selectedUser}
@@ -262,8 +291,7 @@ function App() {
             onImportDialogOpenChange={setImportDialogOpen}
           />
 
-          {/* Search box (skip on dashboard) */}
-          {!(view === "dashboard" || view === "discovery") && (
+          {!(view === PROFILE_ROUTES.discovery) && (
             <div className="px-6">
               <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
@@ -297,34 +325,43 @@ function App() {
           )}
         </div>
 
-        {view === "discovery" && (
+        {routeAlbumMissing ? (
+          <NotFound onBackHome={handleSwitchUser} />
+        ) : null}
+
+        {!routeAlbumMissing && view === PROFILE_ROUTES.discovery && (
           <PageDiscovery
             albums={visibleAlbums}
             allAlbums={processedAlbums}
             onFilterSelect={handleFilterSelect}
             onDataChanged={loadAlbumState}
+            onOpenAlbum={handleOpenAlbum}
+            syncSortWithUrl
           />
         )}
-        {view === "table" && (
+        {!routeAlbumMissing && view === PROFILE_ROUTES.library && (
           <AlbumTable
             albums={filteredAlbums}
             searchTerm={searchTerm}
             onFilterSelect={handleFilterSelect}
             onDataChanged={loadAlbumState}
+            onOpenAlbum={handleOpenAlbum}
           />
         )}
-        {view === "timeline" && (
+        {!routeAlbumMissing && view === PROFILE_ROUTES.releases && (
           <AlbumTimeView
             albums={filteredAlbums}
             onFilterSelect={handleFilterSelect}
             onDataChanged={loadAlbumState}
+            onOpenAlbum={handleOpenAlbum}
           />
         )}
-        {view === "quality" && (
+        {!routeAlbumMissing && view === PROFILE_ROUTES.quality && (
           <PageDataQuality
             albums={visibleAlbums}
             onDataChanged={loadAlbumState}
             onFilterSelect={handleFilterSelect}
+            onOpenAlbum={handleOpenAlbum}
           />
         )}
       </div>
@@ -337,7 +374,42 @@ function App() {
         onOpenChange={setImportDialogOpen}
         hideTrigger
       />
+      <AlbumPanelSheet
+        open={Boolean(routedAlbum)}
+        onOpenChange={handleAlbumRouteOpenChange}
+        album={routedAlbum}
+        searchTerm={searchTerm}
+        onFilterSelect={handleFilterSelect}
+        onAlbumUpdated={handleRoutedAlbumUpdated}
+        onAlbumDeleted={handleRoutedAlbumDeleted}
+        onDataChanged={loadAlbumState}
+      />
     </>
+  );
+}
+
+function AppNotFound() {
+  const navigate = useNavigate();
+  return <NotFound onBackHome={() => navigate("/")} />;
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<RootRoute />} />
+      <Route path="/:userSlug" element={<ProfileIndexRedirect />} />
+      <Route path="/:userSlug/albums" element={<LegacyRedirect legacySection="albums" />} />
+      <Route path="/:userSlug/timeline" element={<LegacyRedirect legacySection="timeline" />} />
+      <Route path="/:userSlug/discovery" element={<UserRoute view={PROFILE_ROUTES.discovery} />} />
+      <Route path="/:userSlug/library" element={<UserRoute view={PROFILE_ROUTES.library} />} />
+      <Route path="/:userSlug/releases" element={<UserRoute view={PROFILE_ROUTES.releases} />} />
+      <Route path="/:userSlug/quality" element={<UserRoute view={PROFILE_ROUTES.quality} />} />
+      <Route
+        path="/:userSlug/albums/:albumId"
+        element={<UserRoute view={PROFILE_ROUTES.library} />}
+      />
+      <Route path="*" element={<AppNotFound />} />
+    </Routes>
   );
 }
 
