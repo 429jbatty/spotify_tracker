@@ -595,6 +595,7 @@ def migrate_spotify_streaming_events(engine: Engine) -> None:
                     spotify_album_name VARCHAR,
                     spotify_album_artist_name VARCHAR,
                     spotify_album_total_tracks INTEGER,
+                    spotify_album_type VARCHAR,
                     spotify_disc_number INTEGER,
                     spotify_track_number INTEGER,
                     spotify_catalog_status VARCHAR,
@@ -655,6 +656,7 @@ def migrate_spotify_streaming_events(engine: Engine) -> None:
             "spotify_album_name": "VARCHAR",
             "spotify_album_artist_name": "VARCHAR",
             "spotify_album_total_tracks": "INTEGER",
+            "spotify_album_type": "VARCHAR",
             "spotify_disc_number": "INTEGER",
             "spotify_track_number": "INTEGER",
             "spotify_catalog_status": "VARCHAR",
@@ -684,6 +686,12 @@ def migrate_spotify_streaming_events(engine: Engine) -> None:
             text(
                 "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_catalog_status "
                 "ON spotify_streaming_events (spotify_catalog_status)"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE INDEX IF NOT EXISTS ix_spotify_streaming_events_spotify_album_type "
+                "ON spotify_streaming_events (spotify_album_type)"
             )
         )
 

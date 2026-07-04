@@ -109,6 +109,7 @@ class ApiImportTests(unittest.TestCase):
 
         env = {
             "DATABASE_URL": database_url,
+            "DATA_DIR": temp_dir,
             "MEDIA_DIR": temp_dir,
             "LASTFM_API_KEY": "test-lastfm-key",
         }
@@ -256,6 +257,7 @@ class ApiImportTests(unittest.TestCase):
                     "track_name": row.track_name,
                     "source_file": row.source_file,
                     "source_index": row.source_index,
+                    "spotify_album_type": row.spotify_album_type,
                 }
                 for row in (
                     session.query(SpotifyStreamingEvent)
@@ -327,6 +329,7 @@ class ApiImportTests(unittest.TestCase):
         *,
         album_id="spotify-album-id",
         album_total_tracks=None,
+        album_type="album",
         album_name=None,
         album_artist_name=None,
     ):
@@ -342,6 +345,7 @@ class ApiImportTests(unittest.TestCase):
                 album_artist_name=album_artist_name
                 or row["master_metadata_album_artist_name"],
                 album_total_tracks=album_total_tracks or len(rows),
+                album_type=album_type,
                 disc_number=1,
                 track_number=index,
                 album_images=[],
@@ -1093,6 +1097,90 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(summary["review_candidates"], 1)
         self.assertEqual(summary["metadata_lookup_total"], 1)
 
+    def test_spotify_import_ignores_catalog_single_without_musicbrainz_or_review(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="White Noise Artist",
+                album="White Noise Single",
+                tracks=["White Noise"],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            catalog = self._spotify_catalog_tracks(
+                rows,
+                album_id="spotify-white-noise-single",
+                album_total_tracks=1,
+                album_type="single",
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                return_value=catalog,
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Spotify catalog singles should not call MusicBrainz."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                import_session_id = response.json()["import_session_id"]
+                self._run_import_session(database_url, import_session_id)
+                history_response = client.get("/api/users/jacob/imports")
+                state_response = client.get("/api/users/jacob/album-state")
+                spotify_events = self._spotify_events_for_import(database_url, import_session_id)
+                imported_event_count = self._imported_event_count(database_url)
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["distinct_album_candidates"], 1)
+        self.assertEqual(summary["derived_album_listens"], 0)
+        self.assertEqual(summary["review_candidates"], 0)
+        self.assertEqual(summary["metadata_lookup_total"], 0)
+        self.assertEqual(imported_event_count, 0)
+        self.assertEqual(spotify_events[0]["spotify_album_type"], "single")
+        self.assertNotIn(
+            "White Noise Artist - White Noise Single",
+            state_response.json()["completed_albums"],
+        )
+
+    def test_spotify_import_ignores_catalog_compilation_without_review(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            rows = self._spotify_rows(
+                artist="Signal Artist",
+                album="Signal Collection",
+                tracks=["Signal 1", "Signal 2"],
+            )
+            zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
+            catalog = self._spotify_catalog_tracks(
+                rows,
+                album_id="spotify-signal-compilation",
+                album_total_tracks=2,
+                album_type="compilation",
+            )
+
+            with patch("backend.app.routers.imports._start_import_background_worker"), patch(
+                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                return_value=catalog,
+            ), patch(
+                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=AssertionError("Spotify catalog compilations should not call MusicBrainz."),
+            ):
+                response = client.post(
+                    "/api/users/jacob/imports/spotify/upload",
+                    files={"file": ("spotify.zip", zip_file, "application/zip")},
+                )
+                self._run_import_session(database_url, response.json()["import_session_id"])
+                history_response = client.get("/api/users/jacob/imports")
+                imported_event_count = self._imported_event_count(database_url)
+
+        summary = history_response.json()[0]["summary"]
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(summary["derived_album_listens"], 0)
+        self.assertEqual(summary["review_candidates"], 0)
+        self.assertEqual(imported_event_count, 0)
+
     def test_spotify_import_rejects_partial_combined_musicbrainz_track(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, database_url = self._client(temp_dir)
@@ -1553,6 +1641,7 @@ class ApiImportTests(unittest.TestCase):
                     album_name=row["master_metadata_album_album_name"],
                     album_artist_name="Partial Artist",
                     album_total_tracks=10,
+                    album_type="album",
                     disc_number=1,
                     track_number=1,
                     album_images=[],

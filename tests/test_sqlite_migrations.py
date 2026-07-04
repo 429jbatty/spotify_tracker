@@ -697,6 +697,7 @@ class SqliteMigrationTests(unittest.TestCase):
                 "spotify_album_name",
                 "spotify_album_artist_name",
                 "spotify_album_total_tracks",
+                "spotify_album_type",
                 "spotify_disc_number",
                 "spotify_track_number",
                 "spotify_catalog_status",
@@ -762,6 +763,7 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertIn("spotify_track_id", columns)
         self.assertIn("spotify_album_id", columns)
         self.assertIn("spotify_album_total_tracks", columns)
+        self.assertIn("spotify_album_type", columns)
         self.assertIn("spotify_catalog_status", columns)
         self.assertIn("source_file", columns)
         self.assertIn("source_index", columns)

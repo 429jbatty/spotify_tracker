@@ -1,13 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
 import AlbumSearch from "./components/AlbumSearch";
 import {
-  createUser,
   fetchAlbumState,
   fetchSpotifyStatus,
   fetchUsers,
-  getSelectedUserSlug,
   setSelectedUserSlug,
 } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
@@ -15,112 +13,192 @@ import Header from "./components/universalHeader";
 import PageDiscovery from "./components/PageDiscovery";
 import PageDataQuality from "./components/PageDataQuality";
 import { filterAlbums } from "./components/utils/albumFilters";
-import UserHome from "./components/UserHome";
+import SplashPage from "./components/splash/SplashPage";
 import { Toaster } from "./components/Toaster";
 import ImportHistoryDialog from "./components/ImportHistoryDialog";
 
+const PATH_VIEW_MAP = {
+  albums: "table",
+  discovery: "discovery",
+  timeline: "timeline",
+  quality: "quality",
+};
+
+const VIEW_PATH_MAP = {
+  table: "albums",
+  discovery: "discovery",
+  timeline: "timeline",
+  quality: "quality",
+};
+
+function parseRoute(pathname) {
+  const segments = pathname.split("/").filter(Boolean);
+  if (segments.length === 0) return { page: "splash", userSlug: null, view: "discovery" };
+
+  const [userSlug, section] = segments;
+  return {
+    page: "profile",
+    userSlug,
+    view: PATH_VIEW_MAP[section] || "discovery",
+  };
+}
+
+function profilePath(userSlug, nextView = "discovery") {
+  if (nextView === "discovery") return `/${userSlug}/discovery`;
+  return `/${userSlug}/${VIEW_PATH_MAP[nextView] || "discovery"}`;
+}
+
 function App() {
   const [data, setData] = useState(null);
+  const [dataUserSlug, setDataUserSlug] = useState(null);
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [usersLoaded, setUsersLoaded] = useState(false);
   const [spotifyStatus, setSpotifyStatus] = useState({ connected: false });
+  const [spotifyStatusUserSlug, setSpotifyStatusUserSlug] = useState(null);
   const [error, setError] = useState(null);
-  const [view, setView] = useState("discovery");
+  const [route, setRoute] = useState(() => parseRoute(window.location.pathname));
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState([]);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const selectedUser = useMemo(() => {
+    if (route.page !== "profile") return null;
+    return users.find((user) => user.slug === route.userSlug) || null;
+  }, [route.page, route.userSlug, users]);
+  const view = route.page === "profile" ? route.view : "discovery";
 
-  const loadAlbumState = useCallback(async () => {
+  const loadAlbumState = useCallback(async (options = {}) => {
     if (!selectedUser) return null;
-    const json = await fetchAlbumState();
+    const json = await fetchAlbumState(selectedUser.slug, options);
     const normalized = {
       ...json,
       completed_albums: normalizeAlbums(json.completed_albums)
     };
     setData(normalized);
+    setDataUserSlug(selectedUser.slug);
     setError(null);
     return normalized;
   }, [selectedUser]);
 
-  const loadSpotifyStatus = useCallback(async () => {
+  const loadSpotifyStatus = useCallback(async (options = {}) => {
     if (!selectedUser) return null;
-    const status = await fetchSpotifyStatus(selectedUser.slug);
+    const status = await fetchSpotifyStatus(selectedUser.slug, options);
     setSpotifyStatus(status);
+    setSpotifyStatusUserSlug(selectedUser.slug);
     return status;
   }, [selectedUser]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const queryUserSlug = params.get("user");
+  const navigateTo = useCallback((path) => {
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, "", path);
+    }
+    setRoute(parseRoute(path));
+  }, []);
 
+  useEffect(() => {
+    const handlePopState = () => {
+      setRoute(parseRoute(window.location.pathname));
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  useEffect(() => {
     fetchUsers()
       .then((loadedUsers) => {
         setUsers(loadedUsers);
-        const storedSlug = queryUserSlug || getSelectedUserSlug();
-        const nextUser =
-          loadedUsers.find((user) => user.slug === storedSlug) || null;
-        if (nextUser) {
-          setSelectedUserSlug(nextUser.slug);
-          setSelectedUser(nextUser);
-        }
+        setUsersLoaded(true);
       })
       .catch((err) => {
         console.error(err);
         setError(err.message);
+        setUsersLoaded(true);
       });
   }, []);
 
   useEffect(() => {
+    if (selectedUser) {
+      setSelectedUserSlug(selectedUser.slug);
+      return;
+    }
+
+    if (usersLoaded && route.page === "profile") {
+      setSelectedUserSlug(null);
+    }
+  }, [route.page, selectedUser, usersLoaded]);
+
+  useEffect(() => {
     if (!selectedUser) return;
+    const controller = new AbortController();
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadAlbumState().catch((err) => {
-      console.error(err);
+    loadAlbumState({ signal: controller.signal }).catch((err) => {
+      if (controller.signal.aborted) return;
+      if (err?.name !== "TypeError") {
+        console.error(err);
+      }
       setError(err.message);
     });
+    return () => controller.abort();
   }, [loadAlbumState, selectedUser]);
 
   useEffect(() => {
     if (!selectedUser) return;
+    const controller = new AbortController();
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    loadSpotifyStatus().catch((err) => {
-      console.error(err);
+    loadSpotifyStatus({ signal: controller.signal }).catch((err) => {
+      if (controller.signal.aborted) return;
+      if (err?.name !== "TypeError") {
+        console.error(err);
+      }
       setSpotifyStatus({ connected: false, last_sync_error: err.message });
     });
+    return () => controller.abort();
   }, [loadSpotifyStatus, selectedUser]);
 
-  const handleSelectUser = (user) => {
-    setSelectedUserSlug(user.slug);
-    setSelectedUser(user);
-    setSearchTerm("");
-    setActiveFilters([]);
-  };
-
-  const handleCreateUser = async (payload) => {
-    const created = await createUser(payload);
-    setUsers((current) => [...current, created]);
-    return created;
+  const handleOpenProfile = (userSlug) => {
+    setSelectedUserSlug(userSlug);
+    navigateTo(`/${userSlug}`);
   };
 
   const handleSwitchUser = () => {
     setSelectedUserSlug(null);
-    setSelectedUser(null);
     setData(null);
+    setDataUserSlug(null);
     setSpotifyStatus({ connected: false });
+    setSpotifyStatusUserSlug(null);
+    navigateTo("/");
+  };
+
+  const handleViewChange = (nextView) => {
+    if (!selectedUser) return;
+    navigateTo(profilePath(selectedUser.slug, nextView));
   };
 
   if (error) return <div>Error: {error}</div>;
-  if (!selectedUser) {
+  if (route.page === "splash") {
+    return <SplashPage onOpenProfile={handleOpenProfile} />;
+  }
+  if (usersLoaded && !selectedUser) {
     return (
-      <UserHome
-        users={users}
-        onSelectUser={handleSelectUser}
-        onCreateUser={handleCreateUser}
-      />
+      <div className="flex min-h-screen items-center justify-center bg-background px-6 text-foreground">
+        <div className="max-w-md rounded-lg border border-border/80 bg-card p-6 text-center shadow-sm">
+          <h1 className="text-2xl font-semibold tracking-tight">Profile not found</h1>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            This Albumary profile does not exist or is not active.
+          </p>
+          <button
+            type="button"
+            onClick={handleSwitchUser}
+            className="mt-5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/85"
+          >
+            Back to profiles
+          </button>
+        </div>
+      </div>
     );
   }
-  if (!data) return <div>Loading...</div>;
+  if (!data || dataUserSlug !== selectedUser.slug) return <div>Loading...</div>;
 
   // Pre-calculate total listens and latest listen for sorting purposes
   const processedAlbums = Object.entries(data.completed_albums).map(([id, data]) => {
@@ -148,7 +226,7 @@ function App() {
       if (current.some((item) => item.id === filter.id)) return current;
       return [...current, filter];
     });
-    setView("table");
+    handleViewChange("table");
   };
 
   const removeFilter = (filterId) => {
@@ -169,11 +247,15 @@ function App() {
           {/* Header with tabs */}
           <Header
             view={view}
-            setView={setView}
+            setView={handleViewChange}
             albums={processedAlbums}
             onDataChanged={loadAlbumState}
             selectedUser={selectedUser}
-            spotifyStatus={spotifyStatus}
+            spotifyStatus={
+              spotifyStatusUserSlug === selectedUser.slug
+                ? spotifyStatus
+                : { connected: false }
+            }
             onSpotifyStatusChanged={loadSpotifyStatus}
             onSwitchUser={handleSwitchUser}
             importDialogOpen={importDialogOpen}

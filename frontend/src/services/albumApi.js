@@ -72,10 +72,9 @@ async function requestForm(path, formData, options = {}) {
   return response.json();
 }
 
-export async function fetchAlbumState() {
-  const userSlug = getSelectedUserSlug();
-  if (userSlug) return requestJson(`/users/${userSlug}/album-state`);
-  return requestJson("/album-state");
+export async function fetchAlbumState(userSlug = getSelectedUserSlug(), options = {}) {
+  if (userSlug) return requestJson(`/users/${userSlug}/album-state`, options);
+  return requestJson("/album-state", options);
 }
 
 export async function fetchUsers() {
@@ -93,9 +92,13 @@ export async function fetchPublicRecentListens(limit = 5) {
   return requestJson(`/public/recent-listens?limit=${limit}`);
 }
 
-export async function fetchSpotifyStatus(userSlug = getSelectedUserSlug()) {
+export async function fetchSplashData(options = {}) {
+  return requestJson("/public/splash", options);
+}
+
+export async function fetchSpotifyStatus(userSlug = getSelectedUserSlug(), options = {}) {
   if (!userSlug) return { connected: false };
-  return requestJson(`/users/${userSlug}/spotify/status`);
+  return requestJson(`/users/${userSlug}/spotify/status`, options);
 }
 
 export function spotifyConnectUrl(userSlug = getSelectedUserSlug()) {
