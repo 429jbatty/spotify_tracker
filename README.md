@@ -21,16 +21,14 @@ cd frontend
 npm install
 ```
 
-Run the backend and frontend in separate terminals:
+Run the local development environment:
 
 ```bash
-make api
+make dev
 ```
 
-```bash
-cd frontend
-npm run dev
-```
+This starts FastAPI on `http://127.0.0.1:8000` and Vite on
+`http://127.0.0.1:5173`. Both servers bind to localhost only.
 
 The frontend uses Vite 7 and needs Node `20.19+` or `22.12+`.
 
@@ -39,6 +37,8 @@ The frontend uses Vite 7 and needs Node `20.19+` or `22.12+`.
 ```bash
 make test              # run backend unittest suite
 make api               # start FastAPI on http://127.0.0.1:8000
+make dev               # start backend and frontend on localhost only
+make dev-home          # start frontend for same-Wi-Fi home network access
 make track             # run Spotify tracking for the default user
 make track-all         # run Spotify tracking for all connected users
 make refresh-metadata  # refresh configured album metadata
@@ -48,6 +48,36 @@ make deploy            # run the deploy script
 
 During local frontend development, `frontend/vite.config.js` proxies `/api` to
 FastAPI.
+
+## Home Network Development
+
+Use `make dev-home` when you want to open Albumary from another device on the
+same Wi-Fi network:
+
+```bash
+make dev-home
+```
+
+This keeps FastAPI bound to `127.0.0.1:8000`, starts Vite on
+`0.0.0.0:5173`, and routes browser API and media requests through Vite's
+development proxy. The command prints a local URL and a home-network URL, for
+example:
+
+```text
+Albumary is available locally:
+http://127.0.0.1:5173/jacob/connections
+
+Albumary is available on your home network:
+http://192.168.1.67:5173/jacob/connections
+```
+
+Open the printed home-network URL from the other device. The other device must
+be on the same Wi-Fi network, and the Mac running the dev servers must remain
+awake. macOS may also ask you to allow incoming connections for Node or Python;
+allow them for this LAN workflow if prompted.
+
+`make dev-home` does not expose Albumary to the public internet, configure
+router port forwarding, or start a tunneling service.
 
 ## Runtime Data
 

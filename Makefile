@@ -1,4 +1,4 @@
-.PHONY: test api backend frontend dev track track-all refresh-metadata cache-artwork deploy
+.PHONY: test api backend frontend dev dev-home track track-all refresh-metadata cache-artwork deploy
 
 PYTHON := ./.venv/bin/python
 NODE_BIN ?= $(HOME)/.nvm/versions/node/v22.22.0/bin
@@ -8,6 +8,8 @@ FRONTEND_PORT := 5173
 BACKEND_HOST := 127.0.0.1
 BACKEND_PORT := 8000
 BACKEND_URL := http://$(BACKEND_HOST):$(BACKEND_PORT)
+HOME_MODE ?= 0
+DEV_HOME_URLS := scripts/dev_home_urls.py
 
 test:
 	$(PYTHON) -m unittest discover -t . -s tests -p "test*.py" -v
@@ -22,7 +24,7 @@ frontend:
 
 dev:
 	@set -e; \
-	$(PYTHON) -c 'import socket, sys; ports = [("$(BACKEND_HOST)", $(BACKEND_PORT)), ("$(FRONTEND_HOST)", $(FRONTEND_PORT))]; busy = [f"{host}:{port}" for host, port in ports if socket.socket().connect_ex((host, port)) == 0]; sys.exit("Ports already in use: " + ", ".join(busy)) if busy else None'; \
+	$(PYTHON) -c 'exec("import socket, sys\nports = [(\"$(BACKEND_HOST)\", $(BACKEND_PORT)), (\"$(FRONTEND_HOST)\", $(FRONTEND_PORT))]\nbusy = []\nfor host, port in ports:\n    sock = socket.socket()\n    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)\n    try:\n        sock.bind((host, port))\n    except OSError:\n        busy.append(f\"{host}:{port}\")\n    finally:\n        sock.close()\nif busy:\n    sys.exit(\"Ports already in use: \" + \", \".join(busy))")'; \
 	$(MAKE) backend & backend_pid=$$!; \
 	until curl -fsS "$(BACKEND_URL)/api/health" >/dev/null 2>&1; do \
 		if ! kill -0 $$backend_pid 2>/dev/null; then \
@@ -31,9 +33,15 @@ dev:
 		fi; \
 		sleep 0.5; \
 	done; \
+	if [ "$(HOME_MODE)" = "1" ]; then \
+		$(PYTHON) $(DEV_HOME_URLS) --backend-url "$(BACKEND_URL)" --frontend-port "$(FRONTEND_PORT)"; \
+	fi; \
 	$(MAKE) frontend & frontend_pid=$$!; \
 	trap 'kill $$backend_pid $$frontend_pid 2>/dev/null || true' INT TERM EXIT; \
 	wait $$backend_pid $$frontend_pid
+
+dev-home:
+	$(MAKE) dev FRONTEND_HOST=0.0.0.0 HOME_MODE=1
 
 track:
 	$(PYTHON) main.py
