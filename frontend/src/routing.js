@@ -2,6 +2,7 @@ export const PROFILE_ROUTES = {
   discovery: "discovery",
   library: "library",
   releases: "releases",
+  connections: "connections",
   quality: "quality",
 };
 

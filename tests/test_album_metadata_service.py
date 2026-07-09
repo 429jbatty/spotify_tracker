@@ -133,7 +133,10 @@ def full_release():
                             "artist-relation-list": [
                                 {
                                     "type": "producer",
-                                    "artist": {"name": "Producer One"},
+                                    "artist": {
+                                        "id": "producer-artist-1",
+                                        "name": "Producer One",
+                                    },
                                     "attributes": [{"attribute": "co"}],
                                 }
                             ],
@@ -265,7 +268,18 @@ class AlbumMetadataServiceTests(unittest.TestCase):
                 {
                     "position": "1",
                     "title": "Opening Track",
-                    "credits": [("Producer One", "producer", "co")],
+                    "credits": [
+                        {
+                            "name": "Producer One",
+                            "artist_mbid": "producer-artist-1",
+                            "role": "producer",
+                            "raw_credit_type": "producer",
+                            "attributes": ["co"],
+                            "source_scope": "recording",
+                            "identity_resolution": "mbid",
+                            "ingestion_version": metadata.ENRICHED_CREDIT_INGESTION_VERSION,
+                        }
+                    ],
                     "recording_mbid": "recording-1",
                 },
                 {
@@ -879,7 +893,7 @@ class AlbumMetadataServiceTests(unittest.TestCase):
             "artist-relation-list": [
                 {
                     "type": "producer",
-                    "artist": {"name": "Producer One"},
+                    "artist": {"id": "producer-artist-1", "name": "Producer One"},
                     "attributes": [{"attribute": "co"}],
                 }
             ],
@@ -890,7 +904,7 @@ class AlbumMetadataServiceTests(unittest.TestCase):
                         "artist-relation-list": [
                             {
                                 "type": "composer",
-                                "artist": {"name": "Composer One"},
+                                "artist": {"id": "composer-artist-1", "name": "Composer One"},
                             }
                         ]
                     },
@@ -903,10 +917,45 @@ class AlbumMetadataServiceTests(unittest.TestCase):
         self.assertEqual(
             credits,
             [
-                ("Producer One", "producer", "co"),
-                ("Composer One", "work composer", ""),
+                {
+                    "name": "Producer One",
+                    "artist_mbid": "producer-artist-1",
+                    "role": "producer",
+                    "raw_credit_type": "producer",
+                    "attributes": ["co"],
+                    "source_scope": "recording",
+                    "identity_resolution": "mbid",
+                    "ingestion_version": metadata.ENRICHED_CREDIT_INGESTION_VERSION,
+                },
+                {
+                    "name": "Composer One",
+                    "artist_mbid": "composer-artist-1",
+                    "role": "work composer",
+                    "raw_credit_type": "composer",
+                    "attributes": [],
+                    "source_scope": "work",
+                    "identity_resolution": "mbid",
+                    "ingestion_version": metadata.ENRICHED_CREDIT_INGESTION_VERSION,
+                },
             ],
         )
+
+    def test_extract_recording_credits_marks_name_only_contributors(self):
+        recording = {
+            "id": "recording-1",
+            "artist-relation-list": [
+                {
+                    "type": "engineer",
+                    "artist": {"name": "Engineer One"},
+                }
+            ],
+        }
+
+        credits = metadata._extract_recording_credits(recording)
+
+        self.assertEqual(credits[0]["artist_mbid"], None)
+        self.assertEqual(credits[0]["identity_resolution"], "normalized_name")
+        self.assertEqual(credits[0]["source_scope"], "recording")
 
 
 @unittest.skipUnless(

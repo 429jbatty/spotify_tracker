@@ -9,6 +9,7 @@ import {
   BarChart3,
   CalendarDays,
   Library,
+  Network,
   ShieldCheck,
   Table2,
 } from "lucide-react";
@@ -38,6 +39,14 @@ const NAV_ITEMS = [
     icon: CalendarDays,
     accent: "data-active:bg-chart-3/20 data-active:text-foreground",
     iconAccent: "text-chart-3",
+  },
+  {
+    value: PROFILE_ROUTES.connections,
+    label: "Connections",
+    description: "Shared credits",
+    icon: Network,
+    accent: "data-active:bg-primary/15 data-active:text-foreground",
+    iconAccent: "text-primary",
   },
   {
     value: PROFILE_ROUTES.quality,
@@ -129,7 +138,7 @@ function UniversalHeader({
             }}
             className="w-full min-w-0 xl:flex-1 xl:items-center"
           >
-            <TabsList className="grid !h-auto w-full grid-cols-4 items-stretch gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm">
+            <TabsList className="grid !h-auto w-full grid-cols-2 items-stretch gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm sm:grid-cols-3 xl:grid-cols-5">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
 

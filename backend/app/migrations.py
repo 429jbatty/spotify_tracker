@@ -742,6 +742,67 @@ def migrate_import_session_logs(engine: Engine) -> None:
         )
 
 
+def migrate_album_credit_facts(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine):
+        return
+
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                """
+                CREATE TABLE IF NOT EXISTS album_credit_facts (
+                    id INTEGER NOT NULL PRIMARY KEY,
+                    album_id INTEGER NOT NULL,
+                    person_key VARCHAR NOT NULL,
+                    person_name VARCHAR NOT NULL,
+                    person_mbid VARCHAR,
+                    identity_resolution VARCHAR NOT NULL,
+                    ingestion_version VARCHAR NOT NULL,
+                    raw_role VARCHAR NOT NULL,
+                    role_bucket VARCHAR NOT NULL,
+                    source_scope VARCHAR NOT NULL,
+                    recording_mbid VARCHAR,
+                    track_count INTEGER NOT NULL,
+                    album_track_count INTEGER NOT NULL,
+                    track_share FLOAT NOT NULL,
+                    quality_flags_json JSON NOT NULL,
+                    created_at VARCHAR NOT NULL,
+                    updated_at VARCHAR NOT NULL,
+                    FOREIGN KEY(album_id) REFERENCES albums (id),
+                    CONSTRAINT uq_album_credit_fact_identity_role_scope
+                        UNIQUE (
+                            album_id,
+                            person_key,
+                            raw_role,
+                            source_scope,
+                            ingestion_version
+                        )
+                )
+                """
+            )
+        )
+        for name, column in {
+            "ix_album_credit_facts_album_id": "album_id",
+            "ix_album_credit_facts_person_key": "person_key",
+            "ix_album_credit_facts_person_name": "person_name",
+            "ix_album_credit_facts_person_mbid": "person_mbid",
+            "ix_album_credit_facts_identity_resolution": "identity_resolution",
+            "ix_album_credit_facts_ingestion_version": "ingestion_version",
+            "ix_album_credit_facts_raw_role": "raw_role",
+            "ix_album_credit_facts_role_bucket": "role_bucket",
+            "ix_album_credit_facts_source_scope": "source_scope",
+            "ix_album_credit_facts_recording_mbid": "recording_mbid",
+            "ix_album_credit_facts_created_at": "created_at",
+            "ix_album_credit_facts_updated_at": "updated_at",
+        }.items():
+            connection.execute(
+                text(
+                    f"CREATE INDEX IF NOT EXISTS {name} "
+                    f"ON album_credit_facts ({column})"
+                )
+            )
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
@@ -759,3 +820,4 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_import_session_source_metadata(engine)
     migrate_spotify_streaming_events(engine)
     migrate_import_session_logs(engine)
+    migrate_album_credit_facts(engine)

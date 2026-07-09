@@ -32,7 +32,7 @@ class AlbumTrack(BaseModel):
 
     position: str | int | None = None
     title: str | None = None
-    credits: list[list[str]] | dict[str, Any] | None = None
+    credits: list[list[str] | dict[str, Any]] | dict[str, Any] | None = None
     recording_mbid: str | None = None
 
 
@@ -148,6 +148,176 @@ class SplashResponse(BaseModel):
     featured_users: list[SplashFeaturedUser] = Field(default_factory=list)
     hero_stats: SplashHeroStats
     recent_activity: list[SplashActivityItem] = Field(default_factory=list)
+
+
+class CreditCoverage(BaseModel):
+    library_album_count: int
+    albums_with_facts: int
+    projected_fact_count: int
+    coverage_ratio: float
+
+
+class CreditAlbumFactSummary(BaseModel):
+    album_id: int
+    album_key: str
+    artist: str
+    name: str
+    role_buckets: dict[str, int] = Field(default_factory=dict)
+    raw_roles: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+
+
+class RecurringContributor(BaseModel):
+    person_key: str
+    person_name: str
+    person_mbid: str | None = None
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+    connected_album_count: int
+    distinct_primary_artist_count: int
+    role_buckets: dict[str, int] = Field(default_factory=dict)
+    raw_roles: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    representative_albums: list[CreditAlbumFactSummary] = Field(default_factory=list)
+    representative_artists: list[str] = Field(default_factory=list)
+
+
+class RecurringContributorsResponse(BaseModel):
+    user_slug: str
+    coverage: CreditCoverage
+    results: list[RecurringContributor] = Field(default_factory=list)
+    insufficient_data_reason: str | None = None
+
+
+class CreditPersonDetail(RecurringContributor):
+    albums: list[CreditAlbumFactSummary] = Field(default_factory=list)
+
+
+class AlbumCreditPairContributor(BaseModel):
+    person_key: str
+    person_name: str
+    person_mbid: str | None = None
+    role_bucket: str
+    raw_roles: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+
+
+class AlbumCreditPair(BaseModel):
+    pair_key: str
+    album_a: CreditAlbumFactSummary
+    album_b: CreditAlbumFactSummary
+    contributor: AlbumCreditPairContributor
+    cross_primary_artist: bool
+    evidence_track_count: int
+
+
+class AlbumCreditPairsResponse(BaseModel):
+    user_slug: str
+    coverage: CreditCoverage
+    results: list[AlbumCreditPair] = Field(default_factory=list)
+    insufficient_data_reason: str | None = None
+
+
+class ConnectionGraphNode(BaseModel):
+    id: str
+    type: str
+    label: str
+    album_id: int | None = None
+    album_key: str | None = None
+    artist: str | None = None
+    image_url: str | None = None
+    person_key: str | None = None
+    person_mbid: str | None = None
+    connected_album_count: int | None = None
+    distinct_primary_artist_count: int | None = None
+    connected_contributor_count: int | None = None
+    role_buckets: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+
+
+class ConnectionGraphEdge(BaseModel):
+    id: str
+    source: str
+    target: str
+    role_bucket: str
+    raw_roles: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+
+
+class ConnectionGraphResponse(BaseModel):
+    user_slug: str
+    coverage: CreditCoverage
+    nodes: list[ConnectionGraphNode] = Field(default_factory=list)
+    edges: list[ConnectionGraphEdge] = Field(default_factory=list)
+    insufficient_data_reason: str | None = None
+
+
+class AlbumConnectionContributor(BaseModel):
+    person_key: str
+    person_name: str
+    person_mbid: str | None = None
+    role_buckets: dict[str, int] = Field(default_factory=dict)
+    album_a_role_buckets: dict[str, int] = Field(default_factory=dict)
+    album_b_role_buckets: dict[str, int] = Field(default_factory=dict)
+    raw_roles: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+
+
+class AlbumConnectionPathContributor(BaseModel):
+    person_key: str
+    person_name: str
+    person_mbid: str | None = None
+    role_bucket: str
+    role_buckets: dict[str, int] = Field(default_factory=dict)
+    raw_roles: dict[str, int] = Field(default_factory=dict)
+    quality_flags: list[str] = Field(default_factory=list)
+    identity_resolution: list[str] = Field(default_factory=list)
+    ingestion_versions: list[str] = Field(default_factory=list)
+
+
+class AlbumConnectionPathStep(BaseModel):
+    step_number: int
+    from_album: CreditAlbumFactSummary
+    to_album: CreditAlbumFactSummary
+    contributor: AlbumConnectionPathContributor
+    from_album_role_buckets: dict[str, int] = Field(default_factory=dict)
+    to_album_role_buckets: dict[str, int] = Field(default_factory=dict)
+    explanation: str
+
+
+class AlbumConnectionPath(BaseModel):
+    path_id: str
+    hop_count: int
+    album_ids: list[int] = Field(default_factory=list)
+    contributor_keys: list[str] = Field(default_factory=list)
+    steps: list[AlbumConnectionPathStep] = Field(default_factory=list)
+    explanation: str
+
+
+class AlbumConnectionGraphResponse(BaseModel):
+    user_slug: str
+    coverage: CreditCoverage
+    album_a: CreditAlbumFactSummary
+    album_b: CreditAlbumFactSummary
+    nodes: list[ConnectionGraphNode] = Field(default_factory=list)
+    edges: list[ConnectionGraphEdge] = Field(default_factory=list)
+    shared_contributors: list[AlbumConnectionContributor] = Field(default_factory=list)
+    best_path: AlbumConnectionPath | None = None
+    alternate_paths: list[AlbumConnectionPath] = Field(default_factory=list)
+    no_direct_connection: bool = False
+    no_path: bool = False
+    max_contributor_hops: int = 1
+    insufficient_data_reason: str | None = None
 
 
 class ManualAlbumCreate(BaseModel):

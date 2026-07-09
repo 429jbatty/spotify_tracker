@@ -718,6 +718,35 @@ class SqliteMigrationTests(unittest.TestCase):
         self.assertIn("ix_spotify_streaming_events_played_at", indexes)
         self.assertIn("ix_spotify_streaming_events_spotify_album_id", indexes)
 
+    def test_create_schema_creates_album_credit_facts_idempotently(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                columns = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA table_info(album_credit_facts)")
+                    )
+                }
+                indexes = {
+                    row[1]
+                    for row in connection.execute(
+                        text("PRAGMA index_list(album_credit_facts)")
+                    )
+                }
+
+        self.assertIn("album_id", columns)
+        self.assertIn("person_key", columns)
+        self.assertIn("person_mbid", columns)
+        self.assertIn("identity_resolution", columns)
+        self.assertIn("ingestion_version", columns)
+        self.assertIn("quality_flags_json", columns)
+        self.assertIn("ix_album_credit_facts_person_key", indexes)
+        self.assertIn("ix_album_credit_facts_role_bucket", indexes)
+
     def test_create_schema_adds_spotify_catalog_columns_to_existing_events_table(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
