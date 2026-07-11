@@ -126,12 +126,6 @@ class SplashFeaturedUser(BaseModel):
     last_updated: str | None = None
 
 
-class SplashHeroStats(BaseModel):
-    discovery_rate: float | None = None
-    replay_rate_30d: float | None = None
-    top_era: str | None = None
-
-
 class SplashActivityItem(BaseModel):
     type: str
     user_display_name: str
@@ -146,7 +140,6 @@ class SplashActivityItem(BaseModel):
 
 class SplashResponse(BaseModel):
     featured_users: list[SplashFeaturedUser] = Field(default_factory=list)
-    hero_stats: SplashHeroStats
     recent_activity: list[SplashActivityItem] = Field(default_factory=list)
 
 

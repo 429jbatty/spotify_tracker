@@ -25,7 +25,6 @@ def splash_payload(
     users = _featured_users(session, limit=featured_limit)
     return {
         "featured_users": users,
-        "hero_stats": _hero_stats(session),
         "recent_activity": recent_activity(session, limit=activity_limit),
     }
 
@@ -403,29 +402,6 @@ def _most_replayed_recently(
     }
 
 
-def _hero_stats(session: Session) -> dict:
-    return {
-        "discovery_rate": _global_discovery_rate(session),
-        "replay_rate_30d": _global_replay_rate_30d(session),
-        "top_era": _global_top_era(session),
-    }
-
-
-def _global_discovery_rate(session: Session) -> float | None:
-    listen_rows = session.execute(
-        select(AlbumListen.user_id, AlbumListen.album_id, AlbumListen.listened_at)
-        .select_from(AlbumListen)
-        .join(User, User.id == AlbumListen.user_id)
-        .where(User.is_active.is_(True))
-    ).all()
-    return _discovery_rate_for_listens(
-        (
-            ((user_id, album_id), listened_at)
-            for user_id, album_id, listened_at in listen_rows
-        )
-    )
-
-
 def _discovery_rate_for_listens(listen_rows) -> float | None:
     discovered_album_keys = set()
     total_valid_listens = 0
@@ -440,60 +416,6 @@ def _discovery_rate_for_listens(listen_rows) -> float | None:
         return None
 
     return round(len(discovered_album_keys) / total_valid_listens, 2)
-
-
-def _global_replay_rate_30d(session: Session) -> float | None:
-    listen_rows = session.execute(
-        select(AlbumListen.user_id, AlbumListen.album_id, AlbumListen.listened_at)
-        .select_from(AlbumListen)
-        .join(User, User.id == AlbumListen.user_id)
-        .where(User.is_active.is_(True))
-        .order_by(
-            AlbumListen.user_id.asc(),
-            AlbumListen.album_id.asc(),
-            AlbumListen.listened_at.asc(),
-        )
-    ).all()
-    listens_by_album = {}
-    for user_id, album_id, listened_at in listen_rows:
-        listens_by_album.setdefault((user_id, album_id), []).append(listened_at)
-
-    if not listens_by_album:
-        return None
-
-    replayed_within_30d = 0
-    for listened_values in listens_by_album.values():
-        parsed_dates = [_parse_datetime(value) for value in listened_values]
-        parsed_dates = [value for value in parsed_dates if value is not None]
-        if len(parsed_dates) < 2:
-            continue
-        if any(
-            0 <= (current - previous).days <= 30
-            for previous, current in zip(parsed_dates, parsed_dates[1:])
-        ):
-            replayed_within_30d += 1
-
-    return round(replayed_within_30d / len(listens_by_album), 2)
-
-
-def _global_top_era(session: Session) -> str | None:
-    rows = session.execute(
-        select(Album.release_year, func.count(AlbumListen.id).label("listen_count"))
-        .select_from(AlbumListen)
-        .join(Album, Album.id == AlbumListen.album_id)
-        .join(User, User.id == AlbumListen.user_id)
-        .where(User.is_active.is_(True), Album.release_year.is_not(None))
-        .group_by(Album.release_year)
-    ).all()
-    if not rows:
-        return None
-
-    decade_counts = {}
-    for release_year, listen_count in rows:
-        decade = int(release_year) // 10 * 10
-        decade_counts[decade] = decade_counts.get(decade, 0) + int(listen_count)
-    top_decade = max(decade_counts.items(), key=lambda item: (item[1], item[0]))[0]
-    return f"{top_decade}s"
 
 
 def _activity_payload(

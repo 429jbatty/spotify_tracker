@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   BarChart3,
   CalendarClock,
@@ -56,8 +56,26 @@ const SAMPLE_COVERS = [
   "linear-gradient(135deg, oklch(0.68 0.07 290), oklch(0.35 0.08 315))",
 ];
 
+const HERO_SNAPSHOT = {
+  covers: [
+    "/splash-artwork/titanic-rising.jpg",
+    "/splash-artwork/bitches-brew.jpg",
+    "/splash-artwork/wish-you-were-here.jpg",
+    "/splash-artwork/madvillainy.jpg",
+    "/splash-artwork/homogenic.jpg",
+    "/splash-artwork/blonde.jpg",
+  ],
+  profileTitle: "Jacob’s Albumary",
+  profileSummary: "1,224 albums tracked",
+  returnMoment: {
+    title: "Returned to “Homogenic”",
+    subtitle: "Björk · a favorite worth revisiting",
+  },
+  discoveryRate: "33%",
+  mostListenedEra: "2010s",
+};
+
 const EMPTY_ARRAY = [];
-const EMPTY_OBJECT = {};
 
 function SplashPage({ onOpenProfile }) {
   const [payload, setPayload] = useState(null);
@@ -89,11 +107,6 @@ function SplashPage({ onOpenProfile }) {
 
   const featuredUsers = payload?.featured_users || EMPTY_ARRAY;
   const recentActivity = payload?.recent_activity || EMPTY_ARRAY;
-  const heroStats = payload?.hero_stats || EMPTY_OBJECT;
-  const previewCovers = useMemo(
-    () => collectPreviewCovers(featuredUsers, recentActivity),
-    [featuredUsers, recentActivity],
-  );
 
   const handleExplore = () => {
     const target = document.getElementById("profiles");
@@ -111,13 +124,7 @@ function SplashPage({ onOpenProfile }) {
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
         <section className="grid min-h-[450px] items-center gap-8 lg:min-h-[520px] lg:grid-cols-[minmax(0,0.95fr)_minmax(440px,1fr)]">
           <SplashHero onExplore={handleExplore} />
-          <HeroAlbumPreview
-            covers={previewCovers}
-            heroStats={heroStats}
-            featuredUsers={featuredUsers}
-            recentActivity={recentActivity}
-            status={status}
-          />
+          <HeroAlbumPreview />
         </section>
 
         <FeaturedProfiles
@@ -193,19 +200,7 @@ function SplashHero({ onExplore }) {
   );
 }
 
-function HeroAlbumPreview({ covers, heroStats, featuredUsers, recentActivity, status }) {
-  const displayCovers = covers.length ? covers : [];
-  const profileUser = heroProfileUser(featuredUsers);
-  const replayMoment = heroReplayMoment(featuredUsers, recentActivity);
-  const profileName = profileDisplayName(profileUser);
-  const profileTitle = profileName
-    ? `${formatPossessiveName(profileName)} Albumary`
-    : "Albumary profile";
-  const profileSummary = profileUser
-    ? formatAlbumListenSummary(profileUser)
-    : "Albums tracked over time";
-  const eraValue = profileUser?.most_listened_era?.label || heroStats.top_era || "Listening";
-
+function HeroAlbumPreview() {
   return (
     <div className="relative flex items-center justify-center overflow-hidden rounded-lg sm:overflow-visible lg:min-h-[460px]">
       <div className="absolute inset-0 rounded-lg bg-[linear-gradient(135deg,rgba(236,201,75,0.18),rgba(114,160,193,0.12)_46%,rgba(255,255,255,0))]" />
@@ -214,9 +209,8 @@ function HeroAlbumPreview({ covers, heroStats, featuredUsers, recentActivity, st
           {Array.from({ length: 6 }).map((_, index) => (
             <CoverTile
               key={index}
-              src={displayCovers[index]}
+              src={HERO_SNAPSHOT.covers[index]}
               index={index}
-              loading={status === "loading"}
               className={index % 3 === 0 ? "translate-y-5" : ""}
             />
           ))}
@@ -227,18 +221,18 @@ function HeroAlbumPreview({ covers, heroStats, featuredUsers, recentActivity, st
               Profile preview
             </p>
             <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-              {profileTitle}
+              {HERO_SNAPSHOT.profileTitle}
             </p>
             <p className="mt-1 text-sm leading-5 text-muted-foreground">
-              {profileSummary}
+              {HERO_SNAPSHOT.profileSummary}
             </p>
           </div>
-          <HeroReplayMoment moment={replayMoment} />
+          <HeroReplayMoment moment={HERO_SNAPSHOT.returnMoment} />
           <HeroStat
             label="Discovery Rate"
-            value={formatPercent(heroStats.discovery_rate) || "Fresh"}
+            value={HERO_SNAPSHOT.discoveryRate}
           />
-          <HeroStat label="Most-listened Era" value={eraValue} />
+          <HeroStat label="Most-listened Era" value={HERO_SNAPSHOT.mostListenedEra} />
         </div>
       </div>
     </div>
@@ -622,49 +616,6 @@ function CoverTile({ src, index, className = "", loading = false, small = false,
       {content}
     </div>
   );
-}
-
-function collectPreviewCovers(users, activity) {
-  const covers = [];
-  users.forEach((user) => {
-    user.recent_album_covers?.forEach((cover) => covers.push(cover));
-  });
-  activity.forEach((item) => {
-    if (item.album_cover_url) covers.push(item.album_cover_url);
-  });
-  return [...new Set(covers)].slice(0, 6);
-}
-
-function heroProfileUser(featuredUsers) {
-  return featuredUsers?.[0] || null;
-}
-
-function heroReplayMoment(featuredUsers, recentActivity) {
-  const primaryUserReplay = featuredUsers?.[0]?.most_replayed_recently;
-  if (primaryUserReplay) {
-    return {
-      type: "metric",
-      title: `Returned to “${primaryUserReplay.title}”`,
-      subtitle: `${primaryUserReplay.artist} · replayed in the last ${primaryUserReplay.window_days} days`,
-    };
-  }
-
-  const replayActivity = recentActivity?.find((item) => item.type === "replay");
-  if (replayActivity) {
-    return {
-      type: "activity",
-      title: replayActivity.text?.replace(/\.$/, "") || `Returned to “${replayActivity.album_title}”`,
-      subtitle: `${replayActivity.artist_name} · recent profile activity`,
-    };
-  }
-
-  return null;
-}
-
-function formatPossessiveName(name) {
-  const trimmed = String(name || "").trim();
-  if (!trimmed) return "";
-  return trimmed.endsWith("s") ? `${trimmed}’` : `${trimmed}’s`;
 }
 
 function formatPercent(value) {

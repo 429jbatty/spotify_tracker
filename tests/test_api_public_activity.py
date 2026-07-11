@@ -215,7 +215,7 @@ class PublicActivityApiTests(unittest.TestCase):
         self.assertNotIn("notes", payload[0])
         self.assertNotIn("your_tags", payload[0])
 
-    def test_splash_returns_public_profile_activity_and_stats(self):
+    def test_splash_returns_public_profile_activity(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
 
@@ -278,9 +278,6 @@ class PublicActivityApiTests(unittest.TestCase):
         self.assertNotIn("profile_badge", smoke_test)
         self.assertEqual(smoke_test["profile_url"], "/smoke-test")
 
-        self.assertEqual(payload["hero_stats"]["discovery_rate"], 0.83)
-        self.assertEqual(payload["hero_stats"]["replay_rate_30d"], 0.2)
-        self.assertEqual(payload["hero_stats"]["top_era"], "2010s")
         self.assertNotIn("inactive", [user["slug"] for user in payload["featured_users"]])
 
         activity = payload["recent_activity"]
@@ -357,14 +354,6 @@ class PublicActivityApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["featured_users"], [])
         self.assertEqual(response.json()["recent_activity"], [])
-        self.assertEqual(
-            response.json()["hero_stats"],
-            {
-                "discovery_rate": None,
-                "replay_rate_30d": None,
-                "top_era": None,
-            },
-        )
 
 
 def max_consecutive(values, target):
