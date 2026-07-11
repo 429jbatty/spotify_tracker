@@ -8,6 +8,7 @@ import DiscoveryQualityCard from "./discovery/DiscoveryQualityCard";
 import NewVsReplayTrend from "./discovery/NewVsReplayTrend";
 import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
+import { buildDiscoveryFeed } from "./utils/discoveryFeed";
 import { aggregateDiscoveryInsights } from "./utils/discoveryInsights";
 import { normalizeDiscoveryRange } from "@/routing";
 
@@ -17,22 +18,6 @@ const TIME_RANGES = {
   "1y": 365,
   all: Infinity,
 };
-
-function getFirstListen(album) {
-  return (album.listen_history || [])
-    .map((dateValue) => new Date(dateValue))
-    .filter((date) => !Number.isNaN(date.getTime()))
-    .sort((left, right) => left.getTime() - right.getTime())[0] || null;
-}
-
-function getRangeStart(timeRange, now) {
-  if (timeRange === "all") return new Date(0);
-
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  start.setDate(start.getDate() - (TIME_RANGES[timeRange] - 1));
-  return start;
-}
 
 function getDiscoveryRate(summary) {
   return summary.totalListens === 0
@@ -58,43 +43,6 @@ function getComparisonLabel(timeRange) {
   return null;
 }
 
-function getRecentDiscoveries(albums, allAlbums, timeRange, now) {
-  const rangeStart = getRangeStart(timeRange, now);
-  const artistFirstListen = new Map();
-
-  allAlbums.forEach((album) => {
-    const firstListen = getFirstListen(album);
-    if (!firstListen) return;
-
-    const artistKey = String(album.artist || "").trim().toLocaleLowerCase();
-    const currentFirst = artistFirstListen.get(artistKey);
-    if (!currentFirst || firstListen.getTime() < currentFirst.getTime()) {
-      artistFirstListen.set(artistKey, firstListen);
-    }
-  });
-
-  return albums
-    .map((album) => {
-      const firstListen = getFirstListen(album);
-      const artistKey = String(album.artist || "").trim().toLocaleLowerCase();
-      return {
-        ...album,
-        firstListenDate: firstListen?.toISOString() || null,
-        firstListenTime: firstListen?.getTime() || null,
-        isNewArtist:
-          firstListen != null &&
-          firstListen.getTime() === artistFirstListen.get(artistKey)?.getTime(),
-      };
-    })
-    .filter(
-      (album) =>
-        album.firstListenTime != null &&
-        album.firstListenTime >= rangeStart.getTime() &&
-        album.firstListenTime <= now.getTime()
-    )
-    .sort((left, right) => right.firstListenTime - left.firstListenTime);
-}
-
 function buildDiscoveryListenRecords(albums) {
   return albums.flatMap((album) =>
     (album.listen_history || []).map((listenDate) => ({
@@ -116,7 +64,7 @@ export default function Discovery({
     searchParams.get("range"),
     Object.keys(TIME_RANGES)
   );
-  const [showAllDiscoveries, setShowAllDiscoveries] = useState(false);
+  const [showAllListens, setShowAllListens] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const analysisNow = useMemo(() => new Date(), []);
@@ -130,13 +78,11 @@ export default function Discovery({
     () => aggregateDiscoveryInsights(allAlbums, timeRange, { now: analysisNow }),
     [allAlbums, analysisNow, timeRange]
   );
-  const recentDiscoveries = useMemo(
-    () => getRecentDiscoveries(albumsArray, allAlbumsArray, timeRange, analysisNow),
-    [albumsArray, allAlbumsArray, analysisNow, timeRange]
+  const recentListens = useMemo(
+    () => buildDiscoveryFeed(albumsArray, timeRange, { now: analysisNow }),
+    [albumsArray, analysisNow, timeRange]
   );
-  const visibleDiscoveries = showAllDiscoveries
-    ? recentDiscoveries
-    : recentDiscoveries.slice(0, 8);
+  const visibleListens = showAllListens ? recentListens : recentListens.slice(0, 8);
   const discoveryRate = getDiscoveryRate(discoveryInsights.summary);
   const previousDiscoveryRate = discoveryInsights.previousPeriod
     ? getDiscoveryRate(discoveryInsights.previousPeriod.summary)
@@ -248,35 +194,38 @@ export default function Discovery({
         <section className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-              Recent discoveries
+              Recent listens
             </h2>
-            {recentDiscoveries.length > 8 ? (
+            {recentListens.length > 8 ? (
               <Button
                 className="text-primary"
-                onClick={() => setShowAllDiscoveries((current) => !current)}
+                onClick={() => setShowAllListens((current) => !current)}
                 variant="ghost"
               >
-                {showAllDiscoveries ? "Show fewer" : "View all discoveries"}
+                {showAllListens ? "Show fewer" : "View all listens"}
                 <ArrowRight />
               </Button>
             ) : null}
           </div>
 
-          {visibleDiscoveries.length === 0 ? (
+          {visibleListens.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
-              No first-time album listens in this range.
+              No album listens in this range.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {visibleDiscoveries.map((album) => (
+              {visibleListens.map((album) => (
                 <AlbumCardVertical
                   key={album.id || album.release_group_mbid}
                   album={album}
                   className="transition-shadow hover:shadow-md"
                   expandableTracks
+                  discoveredInRange={album.discoveredInRange}
+                  discoveryLabel={album.discoveryLabel}
+                  highlightDiscovery={album.highlightDiscovery}
+                  latestInRangeListen={album.latestInRangeListen}
                   onClick={() => handleAlbumClick(album)}
-                  showFirstListenDate
-                  showNewArtistBadge={album.isNewArtist}
+                  rangeListenCount={album.inRangeListenCount}
                 />
               ))}
             </div>
