@@ -85,6 +85,7 @@ from backend.app.services.import_parsers import (
     NormalizedImportEvent,
     clean_text,
 )
+from backend.app.services.artwork_backfill_service import ArtworkBackfillService
 from backend.app.services.lastfm_import_client import fetch_lastfm_recent_tracks
 from backend.app.services import spotify_catalog_service
 from backend.app.services.spotify_import_parser import (
@@ -108,6 +109,7 @@ SPOTIFY_CANDIDATE_PROGRESS_SECONDS = 2.0
 SPOTIFY_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 5
 SPOTIFY_REMOTE_METADATA_MIN_MS_PLAYED = 20 * 60 * 1000
 SPOTIFY_REMOTE_METADATA_ALWAYS_UNIQUE_TRACKS = 8
+POST_IMPORT_ARTWORK_BACKFILL_LIMIT = 100
 TERMINAL_IMPORT_STATUSES = {"completed", "failed"}
 RESUMABLE_IMPORT_STATUSES = {
     "queued",
@@ -507,6 +509,7 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
             _run_spotify_import_session(session, repository, import_session)
         else:
             raise ValueError(f"Unsupported import source: {import_session.source}")
+        _run_post_import_artwork_backfill(session, repository, import_session)
     except Exception:
         summary = _session_summary(import_session)
         import_session.status = "failed"
@@ -529,6 +532,73 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
         raise
 
     return _build_import_session_summary(import_session)
+
+
+def _run_post_import_artwork_backfill(
+    session: Session,
+    repository: SqliteStateRepository,
+    import_session: ImportSession,
+) -> None:
+    if import_session.status != "completed":
+        return
+
+    try:
+        album_ids = repository.album_ids_for_import_session_artwork_backfill(
+            import_session.id,
+        )
+        if not album_ids:
+            return
+
+        _append_import_log(
+            session,
+            import_session,
+            stage="artwork_backfill",
+            message="Checking imported albums for missing artwork.",
+            metadata={
+                "album_count": len(album_ids),
+                "limit": POST_IMPORT_ARTWORK_BACKFILL_LIMIT,
+            },
+        )
+        session.commit()
+
+        service = ArtworkBackfillService(media_dir=get_settings().media_dir)
+        summary, _ = service.backfill_missing_artwork(
+            repository,
+            apply=True,
+            limit=POST_IMPORT_ARTWORK_BACKFILL_LIMIT,
+            album_ids=album_ids,
+        )
+        _append_import_log(
+            session,
+            import_session,
+            stage="artwork_backfill",
+            message="Artwork backfill completed.",
+            metadata=summary.__dict__,
+        )
+        session.commit()
+    except Exception as exc:
+        logger.warning(
+            "Post-import artwork backfill failed for import session %s: %s",
+            import_session.id,
+            exc,
+            exc_info=True,
+        )
+        try:
+            _append_import_log(
+                session,
+                import_session,
+                level="warning",
+                stage="artwork_backfill",
+                message="Artwork backfill failed; import remains completed.",
+                metadata={"error": str(exc)},
+            )
+            session.commit()
+        except Exception:
+            logger.warning(
+                "Failed to record artwork backfill warning for import session %s.",
+                import_session.id,
+                exc_info=True,
+            )
 
 
 def repair_spotify_import_session(

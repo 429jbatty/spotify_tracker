@@ -8,6 +8,7 @@ from backend.app.models import (
     Album,
     AlbumInProgress,
     AlbumListen,
+    ImportedListeningEvent,
     UserAlbum,
     UserAppState,
 )
@@ -182,6 +183,75 @@ class SqliteStateRepository:
             }
             for album in albums
         ]
+
+    def albums_for_artwork_backfill(
+        self,
+        *,
+        album_ids: list[int] | None = None,
+        limit: int | None = None,
+    ) -> list[dict[str, Any]]:
+        query = select(Album)
+        if album_ids:
+            query = query.where(Album.id.in_(album_ids))
+        else:
+            query = query.where(
+                (
+                    (Album.release_mbid.is_not(None))
+                    & (Album.release_mbid != "")
+                )
+                | (
+                    (Album.release_group_mbid.is_not(None))
+                    & (Album.release_group_mbid != "")
+                ),
+                (Album.image_url.is_(None)) | (Album.image_url == ""),
+                (Album.remote_image_url.is_(None)) | (Album.remote_image_url == ""),
+            )
+        query = query.order_by(Album.album_key)
+        if limit is not None:
+            query = query.limit(limit)
+
+        return [
+            {
+                "id": album.id,
+                "album_key": album.album_key,
+                "artist": album.artist,
+                "name": album.name,
+                "release_group_mbid": album.release_group_mbid,
+                "release_mbid": album.release_mbid,
+                "image_url": album.image_url,
+                "remote_image_url": album.remote_image_url,
+                "local_image_path": album.local_image_path,
+            }
+            for album in self.session.scalars(query).all()
+        ]
+
+    def album_ids_for_import_session_artwork_backfill(
+        self,
+        import_session_id: int,
+    ) -> list[int]:
+        rows = self.session.scalars(
+            select(ImportedListeningEvent.album_id)
+            .where(
+                ImportedListeningEvent.import_session_id == import_session_id,
+                ImportedListeningEvent.album_id.is_not(None),
+            )
+            .distinct()
+            .order_by(ImportedListeningEvent.album_id)
+        )
+        return [album_id for album_id in rows if album_id is not None]
+
+    def update_album_remote_artwork(
+        self,
+        album_id: int,
+        remote_image_url: str,
+    ) -> None:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+
+        album.image_url = remote_image_url
+        album.remote_image_url = remote_image_url
+        self.session.commit()
 
     def update_album_local_image_path(
         self,

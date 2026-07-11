@@ -1,4 +1,4 @@
-.PHONY: test api backend frontend dev dev-home track track-all refresh-metadata cache-artwork deploy
+.PHONY: test api backend frontend dev dev-home track track-all refresh-metadata cache-artwork backfill-artwork deploy
 
 PYTHON := ./.venv/bin/python
 NODE_BIN ?= $(HOME)/.nvm/versions/node/v22.22.0/bin
@@ -54,6 +54,9 @@ refresh-metadata:
 
 cache-artwork:
 	$(PYTHON) -m one_time_scripts._cache_artwork
+
+backfill-artwork:
+	$(PYTHON) -m one_time_scripts._backfill_artwork $(ARGS)
 
 deploy:
 	./deploy/deploy.sh

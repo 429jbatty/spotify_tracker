@@ -43,6 +43,7 @@ make track             # run Spotify tracking for the default user
 make track-all         # run Spotify tracking for all connected users
 make refresh-metadata  # refresh configured album metadata
 make cache-artwork     # cache remote artwork under DATA_DIR media storage
+make backfill-artwork  # find missing artwork from stored MusicBrainz IDs
 make deploy            # run the deploy script
 ```
 

@@ -120,6 +120,92 @@ class ApiImportTests(unittest.TestCase):
 
         return TestClient(create_app()), database_url
 
+    def test_post_import_artwork_backfill_failure_preserves_completed_status(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(
+                    {
+                        "last_checked": None,
+                        "albums_in_progress": {},
+                        "completed_albums": {
+                            "Artist - Album": {
+                                "artist": "Artist",
+                                "name": "Album",
+                                "release_mbid": "release-mbid",
+                                "source": "musicbrainz",
+                                "listen_history": ["2026-04-01T10:00:00.000Z"],
+                            }
+                        },
+                        "most_recently_listened": ["Artist - Album"],
+                    }
+                )
+                album = session.query(Album).filter_by(album_key="Artist - Album").one()
+                import_session = ImportSession(
+                    user_id=repository.user.id,
+                    source="lastfm",
+                    source_user_id="tester",
+                    status="completed",
+                    session_name="Test import",
+                    started_at="2026-04-01T10:00:00+00:00",
+                    completed_at="2026-04-01T10:01:00+00:00",
+                    summary_json={},
+                )
+                session.add(import_session)
+                session.flush()
+                session.add(
+                    ImportedListeningEvent(
+                        user_id=repository.user.id,
+                        import_session_id=import_session.id,
+                        album_id=album.id,
+                        source="lastfm",
+                        source_user_id="tester",
+                        source_event_id="event-1",
+                        event_fingerprint="event-1",
+                        listened_at="2026-04-01T10:00:00+00:00",
+                        artist="Artist",
+                        album="Album",
+                        track="Track",
+                        match_status="processed_album_listen",
+                        match_confidence=100,
+                        raw_payload={},
+                    )
+                )
+                session.commit()
+
+                class FailingArtworkBackfillService:
+                    def __init__(self, media_dir):
+                        self.media_dir = media_dir
+
+                    def backfill_missing_artwork(self, *args, **kwargs):
+                        raise RuntimeError("cover art service down")
+
+                with patch.object(
+                    import_service,
+                    "ArtworkBackfillService",
+                    FailingArtworkBackfillService,
+                ):
+                    import_service._run_post_import_artwork_backfill(
+                        session,
+                        repository,
+                        import_session,
+                    )
+
+                session.refresh(import_session)
+                warning_log = (
+                    session.query(ImportSessionLog)
+                    .filter_by(import_session_id=import_session.id, level="warning")
+                    .one()
+                )
+
+                self.assertEqual(import_session.status, "completed")
+                self.assertEqual(warning_log.stage, "artwork_backfill")
+                self.assertIn("failed", warning_log.message)
+
     def _mock_lastfm_client(self, payload):
         mock_response = Mock()
         mock_response.json.return_value = payload
