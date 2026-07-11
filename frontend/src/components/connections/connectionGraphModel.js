@@ -34,3 +34,17 @@ export function selectedLinks(selectedId, links) {
   if (!selectedId) return links;
   return links.filter((link) => link.source === selectedId || link.target === selectedId);
 }
+
+export function previewGraphState({ links, previewNodeId, selectedNodeId }) {
+  const previewIds = relatedIds(previewNodeId, links);
+  const selectedIds = relatedIds(selectedNodeId, links);
+  const previewLinks = previewNodeId ? selectedLinks(previewNodeId, links) : [];
+  const selectedLinksForNode = selectedNodeId ? selectedLinks(selectedNodeId, links) : [];
+
+  return {
+    emphasizedIds: new Set([...previewIds, ...selectedIds]),
+    emphasizedLinks: new Set([...previewLinks, ...selectedLinksForNode]),
+    previewIds,
+    previewLinks: new Set(previewLinks),
+  };
+}

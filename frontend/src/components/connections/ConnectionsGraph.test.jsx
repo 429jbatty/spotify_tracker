@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildConnectionGraphModel,
+  previewGraphState,
   relatedIds,
   selectedLinks,
 } from "./connectionGraphModel";
@@ -66,6 +67,29 @@ describe("ConnectionsGraph model", () => {
       "contributor:name:producer one",
     ]);
     expect(selectedLinks("album:1", model.links)).toHaveLength(1);
+  });
+
+  it("previews a node's immediate neighborhood without replacing the selected neighborhood", () => {
+    const links = [
+      { id: "edge:one", source: "album:1", target: "contributor:one" },
+      { id: "edge:two", source: "album:2", target: "contributor:two" },
+    ];
+
+    const state = previewGraphState({
+      links,
+      previewNodeId: "album:2",
+      selectedNodeId: "album:1",
+    });
+
+    expect(Array.from(state.previewIds)).toEqual(["album:2", "contributor:two"]);
+    expect(state.previewLinks.has(links[1])).toBe(true);
+    expect(state.emphasizedIds).toEqual(new Set([
+      "album:2",
+      "contributor:two",
+      "album:1",
+      "contributor:one",
+    ]));
+    expect(state.emphasizedLinks).toEqual(new Set(links));
   });
 
   it("prefers a present external focus over a stale internal selection", () => {

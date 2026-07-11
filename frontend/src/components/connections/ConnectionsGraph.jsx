@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import {
   ArrowRight,
   Disc3,
+  LoaderCircle,
   LocateFixed,
   Network,
   Sparkles,
@@ -16,10 +17,12 @@ import {
 } from "./connectionFormatters";
 import {
   buildConnectionGraphModel,
+  previewGraphState,
   relatedIds,
   selectedLinks,
 } from "./connectionGraphModel";
 import { connectionRoleLabels } from "./connectionRoles";
+import { connectionSearchResult } from "./connectionSearchStatus";
 import { resolveEffectiveSelectedId } from "./connectionSelection";
 
 const GRAPH_WIDTH = 980;
@@ -324,8 +327,11 @@ function GraphNode({
   dimmed,
   labeled,
   node,
+  onPreviewNode,
   onSelect,
   pathRole,
+  previewed,
+  previewRelated,
   selected,
   suggested,
 }) {
@@ -346,25 +352,49 @@ function GraphNode({
         : pathRole === "intermediate-contributor"
           ? "#0369a1"
           : roleStroke;
-  const albumSize = selected ? 66 : isEndpoint ? 64 : isPathNode ? 58 : active ? 54 : 48;
+  const baseAlbumSize = selected ? 66 : isEndpoint ? 64 : isPathNode ? 58 : active ? 54 : 48;
+  const albumSize = previewed && !selected
+    ? baseAlbumSize + 8
+    : previewRelated && !selected
+      ? baseAlbumSize + 3
+      : baseAlbumSize;
   const albumX = node.x - albumSize / 2;
   const albumY = node.y - albumSize / 2;
   const albumCornerRadius = 5;
   const strokeWidth = selected ? 4.5 : isEndpoint ? 4 : isPathNode ? 3.4 : suggested ? 3 : 2;
   const opacity = dimmed ? 0.16 : 1;
   const labelYOffset = node.y < GRAPH_HEIGHT / 2 ? -18 : 26;
+  const contributorRadius = selected
+    ? radius + 5
+    : previewed
+      ? radius + 5
+      : active
+        ? radius + 3
+        : suggested
+          ? radius + 2
+          : radius;
+  const displayContributorRadius = previewRelated && !previewed && !selected
+    ? contributorRadius + 1.5
+    : contributorRadius;
+  const displayStrokeWidth = previewed && !selected ? strokeWidth + 1 : strokeWidth;
 
   return (
     <g
       aria-label={nodeLabel(node)}
       className="cursor-pointer outline-none"
       onClick={() => onSelect(node.id)}
+      onFocus={() => onPreviewNode(node.id)}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           onSelect(node.id);
         }
       }}
+      onPointerEnter={(event) => {
+        if (event.pointerType !== "touch") onPreviewNode(node.id);
+      }}
+      onPointerLeave={() => onPreviewNode(null)}
+      onBlur={() => onPreviewNode(null)}
       role="button"
       tabIndex={0}
     >
@@ -383,6 +413,7 @@ function GraphNode({
           </defs>
           <image
             clipPath={`url(#${clipId(node.id)})`}
+            className="transition-all duration-200 ease-out motion-reduce:transition-none"
             height={albumSize}
             href={node.image_url}
             opacity={dimmed ? 0.18 : 1}
@@ -397,7 +428,8 @@ function GraphNode({
             opacity={dimmed ? 0.22 : 1}
             rx={albumCornerRadius}
             stroke={stroke}
-            strokeWidth={strokeWidth}
+                className="transition-all duration-200 ease-out motion-reduce:transition-none"
+                strokeWidth={displayStrokeWidth}
             width={albumSize}
             x={albumX}
             y={albumY}
@@ -410,7 +442,8 @@ function GraphNode({
           opacity={opacity}
           rx={albumCornerRadius}
           stroke={stroke}
-          strokeWidth={strokeWidth}
+            className="transition-all duration-200 ease-out motion-reduce:transition-none"
+            strokeWidth={displayStrokeWidth}
           width={albumSize}
           x={albumX}
           y={albumY}
@@ -421,9 +454,10 @@ function GraphNode({
           cy={node.y}
           fill={fill}
           opacity={opacity}
-          r={selected ? radius + 5 : active ? radius + 3 : suggested ? radius + 2 : radius}
+          className="transition-all duration-200 ease-out motion-reduce:transition-none"
+          r={displayContributorRadius}
           stroke={stroke}
-          strokeWidth={strokeWidth}
+          strokeWidth={displayStrokeWidth}
         />
       )}
       {labeled && isContributor && !dimmed && (
@@ -449,6 +483,43 @@ function GraphNode({
   );
 }
 
+function GraphPreview({ node }) {
+  if (!node) return null;
+
+  const width = 208;
+  const height = 58;
+  const x = node.x > GRAPH_WIDTH - width - 28 ? node.x - width - 24 : node.x + 24;
+  const y = Math.max(12, Math.min(GRAPH_HEIGHT - height - 12, node.y - height / 2));
+  const subtitle = node.type === "album"
+    ? node.artist
+    : formatRoleLabel(node.primaryRole);
+
+  return (
+    <g
+      aria-hidden="true"
+      className="pointer-events-none motion-reduce:transition-none"
+      data-testid="graph-node-preview"
+    >
+      <rect
+        className="transition-opacity duration-150 ease-out motion-reduce:transition-none"
+        fill="#0f172a"
+        height={height}
+        opacity="0.94"
+        rx="8"
+        width={width}
+        x={x}
+        y={y}
+      />
+      <text fill="#f8fafc" fontSize="14" fontWeight="600" x={x + 12} y={y + 24}>
+        {truncateGraphLabel(node.name, 27)}
+      </text>
+      <text fill="#cbd5e1" fontSize="12" x={x + 12} y={y + 43}>
+        {truncateGraphLabel(subtitle, 31)}
+      </text>
+    </g>
+  );
+}
+
 function SuggestedNodeButton({ node, onSelectNode }) {
   const roles = strongestRoleNames(node.role_buckets);
   const description = recommendationReason(node);
@@ -460,7 +531,7 @@ function SuggestedNodeButton({ node, onSelectNode }) {
 
   return (
     <button
-      className="w-full min-w-0 max-w-full overflow-hidden rounded-md border border-border bg-background px-3 py-2 text-left transition hover:bg-muted"
+      className="w-full min-w-0 max-w-full overflow-hidden rounded-md border border-transparent bg-transparent px-3 py-2 text-left transition hover:bg-background hover:shadow-xs"
       onClick={() => onSelectNode?.(node.id)}
       type="button"
     >
@@ -481,8 +552,22 @@ function SuggestedNodeButton({ node, onSelectNode }) {
 
 function DetailShell({ children }) {
   return (
-    <div className="min-w-0 overflow-hidden rounded-lg border border-border bg-background p-4">
+    <div className="min-w-0 overflow-hidden rounded-lg border border-border/80 bg-card/80 p-4 shadow-xs">
       <div className="grid w-full min-w-0 max-w-full gap-4 overflow-hidden">{children}</div>
+    </div>
+  );
+}
+
+function DetailList({ children, emphasis = false }) {
+  return (
+    <div
+      className={`grid gap-1 rounded-lg border p-1 ${
+        emphasis
+          ? "border-primary/20 bg-primary/5"
+          : "border-border/70 bg-muted/35"
+      }`}
+    >
+      {children}
     </div>
   );
 }
@@ -516,7 +601,7 @@ function DetailStat({ icon, label, value, tone = "text-primary" }) {
   const IconComponent = icon;
 
   return (
-    <div className="min-w-0 rounded-md bg-muted/70 p-2.5">
+    <div className="min-w-0 p-2.5">
       <IconComponent className={`mb-2 size-4 ${tone}`} />
       <p className="text-sm font-semibold text-foreground">{value}</p>
       <p className="text-[11px] text-muted-foreground">{label}</p>
@@ -531,7 +616,7 @@ function RelatedNodeButton({ meta: metaOverride, node, onSelectNode, roles = [] 
 
   return (
     <button
-      className="w-full min-w-0 max-w-full rounded-md border border-border bg-muted/30 px-3 py-2 text-left transition hover:bg-muted"
+      className="w-full min-w-0 max-w-full rounded-md border border-transparent bg-transparent px-3 py-2 text-left transition hover:bg-background hover:shadow-xs"
       onClick={() => onSelectNode?.(node.id)}
       type="button"
     >
@@ -559,6 +644,29 @@ function RelatedNodeButton({ meta: metaOverride, node, onSelectNode, roles = [] 
   );
 }
 
+function RelatedNodeGroup({ children, count, initialCount = 4 }) {
+  const [expanded, setExpanded] = useState(false);
+  const items = Array.isArray(children) ? children : [children];
+  const visibleItems = expanded ? items : items.slice(0, initialCount);
+
+  return (
+    <>
+      <DetailList>{visibleItems}</DetailList>
+      {count > initialCount && (
+        <Button
+          className="h-auto justify-start px-0 text-xs"
+          onClick={() => setExpanded((current) => !current)}
+          size="sm"
+          type="button"
+          variant="link"
+        >
+          {expanded ? "Show fewer" : `Show ${count - initialCount} more`}
+        </Button>
+      )}
+    </>
+  );
+}
+
 function GraphDetail({
   albumConnection,
   node,
@@ -568,7 +676,6 @@ function GraphDetail({
   onInspectContributor,
   onOpenAlbum,
   onSelectNode,
-  onUseAlbumAsPathStart,
   startingNodes,
 }) {
   if (albumConnection && !node) {
@@ -576,6 +683,7 @@ function GraphDetail({
     const bestPath = albumConnection.best_path;
     const alternatePaths = albumConnection.alternate_paths || [];
     const hasPath = Boolean(bestPath);
+    const searchResult = connectionSearchResult(albumConnection);
     const pathItems = compactPathItems(albumConnection);
     return (
       <DetailShell>
@@ -584,16 +692,12 @@ function GraphDetail({
             Album path
           </Badge>
           <h3 className="mt-3 w-full min-w-0 max-w-full break-words text-base font-semibold leading-snug text-foreground">
-            {hasPath
-              ? bestPath.hop_count === 1
-                ? "Direct shared credits"
-                : "Indirect credit path"
-              : "No reliable path found"}
+            {searchResult.title}
           </h3>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            {hasPath
+            {searchResult.detail || (hasPath
               ? `${formatCount(bestPath.hop_count, "credit step")} connects ${albumTitle(albumConnection.album_a)} to ${albumTitle(albumConnection.album_b)}.`
-              : `${albumTitle(albumConnection.album_a)} and ${albumTitle(albumConnection.album_b)} do not currently connect within ${formatCount(albumConnection.max_contributor_hops || 2, "contributor hop")} after the normal identity and primary-artist filters.`}
+              : `${albumTitle(albumConnection.album_a)} and ${albumTitle(albumConnection.album_b)} do not currently connect within ${formatCount(albumConnection.max_contributor_hops || 2, "contributor hop")} after the normal identity and primary-artist filters.`)}
           </p>
         </div>
 
@@ -649,12 +753,6 @@ function GraphDetail({
                     Follow {step.contributor.person_name}
                   </DetailActionButton>
                 ))}
-                <DetailActionButton
-                  onClick={() => onUseAlbumAsPathStart?.(albumConnection.album_a?.album_id)}
-                  variant="ghost"
-                >
-                  Use {albumConnection.album_a?.name || "this album"} as start
-                </DetailActionButton>
               </DetailActions>
             </div>
           </>
@@ -673,7 +771,7 @@ function GraphDetail({
         <p className="text-sm leading-6 text-muted-foreground">
           Strong entry points based on connected albums and artist breadth.
         </p>
-        <div className="grid gap-2">
+        <DetailList>
           {startingNodes.map((item) => (
             <SuggestedNodeButton
               key={item.id}
@@ -681,14 +779,14 @@ function GraphDetail({
               onSelectNode={onSelectNode}
             />
           ))}
-        </div>
+        </DetailList>
         <div className="rounded-md bg-muted/60 p-3">
           <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             How to explore
           </p>
           <ol className="mt-2 list-inside list-decimal space-y-1 text-sm text-muted-foreground">
             <li>Choose a recommended starting point.</li>
-            <li>Select any album or contributor to refocus the view.</li>
+            <li>Select any album or contributor, then explore from there to rebuild the graph around it.</li>
             <li>Follow another connection outward.</li>
           </ol>
         </div>
@@ -711,10 +809,10 @@ function GraphDetail({
             <p className="w-full min-w-0 max-w-full break-words text-sm leading-snug text-muted-foreground">{node.artist}</p>
           </div>
           <DetailActions>
-            <DetailActionButton icon={LocateFixed} onClick={() => onFocusNode?.(node.id)}>
-              Refocus
+            <DetailActionButton icon={LocateFixed} onClick={() => onFocusNode?.(node.id)} variant="default">
+              Explore from here
             </DetailActionButton>
-            <DetailActionButton onClick={() => onOpenAlbum?.(node.album_id)}>
+            <DetailActionButton onClick={() => onOpenAlbum?.(node.album_id)} variant="ghost">
               Open album
             </DetailActionButton>
           </DetailActions>
@@ -722,40 +820,21 @@ function GraphDetail({
 
         <div className="grid w-full min-w-0 max-w-full gap-2 overflow-hidden">
           <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Important contributors
+            Explore through these contributors
           </h4>
-          <div className="grid w-full min-w-0 max-w-full gap-2">
-            {connectedContributors.slice(0, 6).map((contributor) => (
+          <RelatedNodeGroup count={connectedContributors.length}>
+            {connectedContributors.map((contributor) => (
               <RelatedNodeButton
                 key={contributor.id}
                 node={contributor}
                 onSelectNode={onSelectNode}
               />
             ))}
-          </div>
+          </RelatedNodeGroup>
         </div>
-
-        {connectedContributors.length > 0 && (
-          <div className="grid w-full min-w-0 max-w-full gap-2">
-            <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Continue exploring
-            </h4>
-            <div className="grid w-full min-w-0 max-w-full gap-2">
-              {connectedContributors.slice(0, 3).map((contributor) => (
-                <SuggestedNodeButton
-                  key={contributor.id}
-                  node={contributor}
-                  onSelectNode={onSelectNode}
-                />
-              ))}
-              <DetailActionButton
-                onClick={() => onUseAlbumAsPathStart?.(node.album_id)}
-              >
-                Use this album as path start
-              </DetailActionButton>
-            </div>
-          </div>
-        )}
+        <p className="text-sm leading-6 text-muted-foreground">
+          Explore from here rebuilds the graph around this album and its credited contributors.
+        </p>
       </DetailShell>
     );
   }
@@ -784,37 +863,25 @@ function GraphDetail({
           </h3>
         </div>
         <DetailActions>
-          <DetailActionButton icon={LocateFixed} onClick={() => onFocusNode?.(node.id)}>
-            Refocus
+          <DetailActionButton icon={LocateFixed} onClick={() => onFocusNode?.(node.id)} variant="default">
+            Explore from here
           </DetailActionButton>
-          <DetailActionButton onClick={() => onInspectContributor?.(contributorPayload)}>
+          <DetailActionButton onClick={() => onInspectContributor?.(contributorPayload)} variant="ghost">
             Details
           </DetailActionButton>
         </DetailActions>
       </div>
 
-      <div className="grid w-full min-w-0 max-w-full grid-cols-3 gap-2">
-        <DetailStat icon={Disc3} label="albums" value={node.connected_album_count} />
-        <DetailStat
-          icon={UsersRound}
-          label="artists"
-          tone="text-chart-2"
-          value={node.distinct_primary_artist_count}
-        />
-        <DetailStat
-          icon={Network}
-          label="roles"
-          tone="text-chart-3"
-          value={Object.keys(node.role_buckets || {}).length}
-        />
-      </div>
+      <p className="text-sm leading-6 text-muted-foreground">
+        Explore from here rebuilds the graph around this contributor and their connected albums.
+      </p>
 
       <div className="grid w-full min-w-0 max-w-full gap-2 overflow-hidden">
         <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-          Connected albums
+          Explore these albums
         </h4>
-        <div className="grid w-full min-w-0 max-w-full gap-2">
-          {connectedAlbums.slice(0, 6).map((album) => (
+        <RelatedNodeGroup count={connectedAlbums.length}>
+          {connectedAlbums.map((album) => (
             <RelatedNodeButton
               key={album.id}
               meta={album.artist}
@@ -823,25 +890,19 @@ function GraphDetail({
               roles={connectionRoleLabels(node, album, links)}
             />
           ))}
-        </div>
+        </RelatedNodeGroup>
       </div>
 
-      {connectedAlbums.length > 0 && (
-        <div className="grid w-full min-w-0 max-w-full gap-2">
-          <h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-            Continue exploring
-          </h4>
-          <div className="grid w-full min-w-0 max-w-full gap-2">
-            {connectedAlbums.slice(0, 3).map((album) => (
-              <SuggestedNodeButton
-                key={album.id}
-                node={album}
-                onSelectNode={onSelectNode}
-              />
-            ))}
-          </div>
+      <details className="group rounded-md border border-border/70 bg-muted/30 p-3">
+        <summary className="cursor-pointer text-xs font-semibold text-muted-foreground">
+          About this contributor
+        </summary>
+        <div className="mt-3 grid grid-cols-3 divide-x divide-border/70 overflow-hidden rounded-lg border border-border/70 bg-background/60">
+          <DetailStat icon={Disc3} label="albums" value={node.connected_album_count} />
+          <DetailStat icon={UsersRound} label="artists" tone="text-chart-2" value={node.distinct_primary_artist_count} />
+          <DetailStat icon={Network} label="roles" tone="text-chart-3" value={Object.keys(node.role_buckets || {}).length} />
         </div>
-      )}
+      </details>
     </DetailShell>
   );
 }
@@ -876,10 +937,10 @@ export default function ConnectionsGraph({
   albumConnection,
   focusNodeId,
   graph,
+  isUpdating = false,
   onFocusNode,
   onInspectContributor,
   onOpenAlbum,
-  onUseAlbumAsPathStart,
 }) {
   const model = useMemo(
     () => withPositions(buildConnectionGraphModel(graph), albumConnection),
@@ -889,6 +950,7 @@ export default function ConnectionsGraph({
     id: null,
     selectionScope: null,
   });
+  const [previewNodeId, setPreviewNodeId] = useState(null);
   const nodeIds = useMemo(() => model.nodes.map((node) => node.id), [model.nodes]);
   const currentSelectionScope = albumConnection
     ? `connection:${albumConnection.album_a?.album_id || "a"}:${albumConnection.album_b?.album_id || "b"}`
@@ -910,6 +972,13 @@ export default function ConnectionsGraph({
 
   const activeIds = relatedIds(effectiveSelectedId, model.links);
   const activeLinks = selectedLinks(effectiveSelectedId, model.links);
+  const previewNode = model.nodes.find((node) => node.id === previewNodeId) || null;
+  const effectivePreviewNodeId = previewNode ? previewNodeId : null;
+  const previewState = previewGraphState({
+    links: model.links,
+    previewNodeId: effectivePreviewNodeId,
+    selectedNodeId: effectiveSelectedId,
+  });
   const selectedNode = model.nodes.find((node) => node.id === effectiveSelectedId) || null;
   const startingNodes = rankStartingNodes(model);
   const startingIds = new Set(startingNodes.map((node) => node.id));
@@ -934,14 +1003,19 @@ export default function ConnectionsGraph({
           <CardDescription className="max-w-3xl leading-6">
             {selectedNode || albumConnection ? (
               <span className="mt-1 block">
-                This is a curated slice of recurring contributors and representative albums, not every credit in your library. Select any node to rebuild the view around it.
+                This is a curated slice of recurring contributors and representative albums, not every credit in your library. Select any node and
+                <strong>Explore from here</strong>
+                &nbsp;to rebuild the view around it.
               </span>
             ) : null}
           </CardDescription>
         </div>
       </CardHeader>
       <CardContent className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
-        <div className="overflow-hidden rounded-lg border border-border bg-muted/30">
+        <div
+          aria-busy={isUpdating}
+          className="relative overflow-hidden rounded-lg border border-border bg-muted/30"
+        >
           <svg
             aria-label="Interactive album credit connections map"
             className="block h-[360px] w-full md:h-[520px]"
@@ -955,8 +1029,10 @@ export default function ConnectionsGraph({
               const source = model.nodes.find((node) => node.id === link.source);
               const target = model.nodes.find((node) => node.id === link.target);
               const isPathLink = pathRoles.has(link.source) && pathRoles.has(link.target);
-              const active = effectiveSelectedId
-                ? activeLinks.includes(link)
+              const active = effectivePreviewNodeId
+                ? previewState.emphasizedLinks.has(link)
+                : effectiveSelectedId
+                  ? activeLinks.includes(link)
                 : hasPathState
                   ? isPathLink
                   : startingIds.has(link.source) || startingIds.has(link.target);
@@ -964,7 +1040,8 @@ export default function ConnectionsGraph({
               return (
                 <line
                   key={link.id}
-                  opacity={isPathLink ? 0.96 : active ? 0.72 : 0.045}
+                  className="transition-all duration-200 ease-out motion-reduce:transition-none"
+                  opacity={isPathLink ? 0.96 : active ? 0.76 : effectivePreviewNodeId ? 0.025 : 0.045}
                   stroke={ROLE_COLORS[link.role] || ROLE_COLORS.other}
                   strokeLinecap="round"
                   strokeWidth={isPathLink ? 4.4 : active ? 2.4 : 1}
@@ -991,19 +1068,37 @@ export default function ConnectionsGraph({
               return (
                 <GraphNode
                   active={active}
-                  dimmed={effectiveSelectedId ? !active : hasPathState ? !pathRoles.has(node.id) : !suggested}
+                  dimmed={effectivePreviewNodeId
+                    ? !previewState.emphasizedIds.has(node.id)
+                    : effectiveSelectedId ? !active : hasPathState ? !pathRoles.has(node.id) : !suggested}
                   key={node.id}
                   labeled={labeled}
                   node={node}
+                  onPreviewNode={setPreviewNodeId}
                   onSelect={selectGraphNode}
                   pathRole={pathRole}
+                  previewed={node.id === effectivePreviewNodeId}
+                  previewRelated={previewState.previewIds.has(node.id)}
                   selected={selected}
                   suggested={suggested}
                 />
               );
             })}
+            <GraphPreview node={previewNode} />
           </svg>
           {roles.length > 0 && <RoleLegend roles={roles} />}
+          {isUpdating && (
+            <div
+              aria-live="polite"
+              className="absolute inset-0 z-10 flex cursor-wait items-start justify-end bg-background/20 p-3 backdrop-blur-[1px]"
+              role="status"
+            >
+              <span className="inline-flex items-center gap-2 rounded-full border border-border/80 bg-background/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-sm">
+                <LoaderCircle className="size-3.5 animate-spin text-primary" />
+                Updating graph…
+              </span>
+            </div>
+          )}
         </div>
         <GraphDetail
           albumConnection={albumConnection}
@@ -1014,7 +1109,6 @@ export default function ConnectionsGraph({
           onInspectContributor={onInspectContributor}
           onOpenAlbum={onOpenAlbum}
           onSelectNode={selectGraphNode}
-          onUseAlbumAsPathStart={onUseAlbumAsPathStart}
           startingNodes={startingNodes}
         />
       </CardContent>

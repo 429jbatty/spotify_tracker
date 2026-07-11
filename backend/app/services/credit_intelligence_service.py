@@ -1,6 +1,7 @@
 import re
+import time
 import unicodedata
-from collections import Counter
+from collections import Counter, deque
 from dataclasses import dataclass, field
 from itertools import combinations
 
@@ -37,7 +38,12 @@ GRAPH_ROLE_BUCKETS = ALBUM_PAIR_ROLE_BUCKETS
 ARTWORK_URL_PREFIX = "/media/artwork/"
 MAX_ALBUM_CONNECTION_CONTRIBUTOR_HOPS = 4
 MAX_ALBUM_CONNECTION_ALTERNATES = 3
-MAX_ALBUM_CONNECTION_PATH_CANDIDATES = 250
+MAX_ALBUM_CONNECTION_PATHS = 1 + MAX_ALBUM_CONNECTION_ALTERNATES
+MAX_ALBUM_CONNECTION_SEARCH_SECONDS = 5
+MAX_ALBUM_CONNECTION_SEARCH_STATES = 10_000
+MAX_ALBUM_CONNECTION_SEARCH_EDGES = 50_000
+MAX_ALBUM_CONNECTION_SEARCH_QUEUE_SIZE = 20_000
+MAX_ALBUM_CONNECTION_ALBUMS_PER_CONTRIBUTOR = 250
 
 
 @dataclass
@@ -132,6 +138,21 @@ class AlbumConnectionPath:
     @property
     def hop_count(self) -> int:
         return len(self.steps)
+
+
+@dataclass
+class AlbumConnectionPathSearch:
+    paths: list[AlbumConnectionPath]
+    limited: bool = False
+    limited_reason: str | None = None
+    states_examined: int = 0
+    edges_examined: int = 0
+    max_queue_size: int = 0
+
+
+@dataclass(frozen=True)
+class CreditConnectionGraph:
+    contributors_by_album: dict[int, tuple[ContributorSummary, ...]]
 
 
 def recurring_contributors(
@@ -240,6 +261,8 @@ def album_connection_graph(
     album_a_id: int,
     album_b_id: int,
 ) -> dict:
+    started_at = time.monotonic()
+    deadline = started_at + MAX_ALBUM_CONNECTION_SEARCH_SECONDS
     if album_a_id == album_b_id:
         raise ValueError("Choose two different albums.")
 
@@ -252,7 +275,39 @@ def album_connection_graph(
     for album_id, summary in _album_summaries_from_rows(rows).items():
         album_summaries[album_id] = summary
     contributors = _direct_album_connection_contributors(rows, album_a_id, album_b_id)
-    paths = _album_connection_paths(all_rows, album_a_id, album_b_id)
+    graph_build_ms = 0
+    if contributors:
+        direct_paths = [
+            AlbumConnectionPath(steps=[
+                AlbumConnectionStep(
+                    contributor=contributor,
+                    from_album_id=album_a_id,
+                    to_album_id=album_b_id,
+                    role_bucket=_connection_step_role(contributor, album_a_id, album_b_id),
+                )
+            ])
+            for contributor in contributors[:MAX_ALBUM_CONNECTION_PATHS]
+        ]
+        path_search = AlbumConnectionPathSearch(
+            paths=direct_paths,
+            limited=len(contributors) > MAX_ALBUM_CONNECTION_PATHS,
+            limited_reason=(
+                "result_limit" if len(contributors) > MAX_ALBUM_CONNECTION_PATHS else None
+            ),
+        )
+    elif time.monotonic() >= deadline:
+        path_search = AlbumConnectionPathSearch(paths=[], limited=True, limited_reason="time_limit")
+    else:
+        graph_build_started_at = time.monotonic()
+        connection_graph = _prepare_album_connection_graph(all_rows)
+        graph_build_ms = round((time.monotonic() - graph_build_started_at) * 1000)
+        path_search = _album_connection_paths(
+            connection_graph,
+            album_a_id,
+            album_b_id,
+            deadline=deadline,
+        )
+    paths = path_search.paths
     path_album_ids = {album_id for path in paths for album_id in path.album_ids}
     if path_album_ids:
         album_summaries.update(_album_summaries_from_rows([row for row in all_rows if row["fact"].album_id in path_album_ids]))
@@ -270,6 +325,7 @@ def album_connection_graph(
     album_b = album_summaries[album_b_id]
     shared = [_album_connection_contributor_payload(item, album_a_id, album_b_id) for item in contributors]
 
+    search_elapsed_ms = round((time.monotonic() - started_at) * 1000)
     return {
         "user_slug": user.slug,
         "coverage": coverage,
@@ -284,8 +340,16 @@ def album_connection_graph(
             for path in paths[1 : MAX_ALBUM_CONNECTION_ALTERNATES + 1]
         ],
         "no_direct_connection": len(shared) == 0,
-        "no_path": len(paths) == 0,
+        "no_path": not path_search.limited and len(paths) == 0,
         "max_contributor_hops": MAX_ALBUM_CONNECTION_CONTRIBUTOR_HOPS,
+        "search_status": "limited" if path_search.limited else "complete",
+        "search_limited_reason": path_search.limited_reason,
+        "search_elapsed_ms": search_elapsed_ms,
+        "search_time_limit_ms": MAX_ALBUM_CONNECTION_SEARCH_SECONDS * 1000,
+        "search_graph_build_ms": graph_build_ms,
+        "search_states_examined": path_search.states_examined,
+        "search_edges_examined": path_search.edges_examined,
+        "search_max_queue_size": path_search.max_queue_size,
         "insufficient_data_reason": _insufficient_data_reason(coverage, nodes),
     }
 
@@ -605,10 +669,21 @@ def _direct_album_connection_contributors(
 
 
 def _album_connection_paths(
-    rows: list[dict],
+    graph: CreditConnectionGraph,
     album_a_id: int,
     album_b_id: int,
-) -> list[AlbumConnectionPath]:
+    *,
+    deadline: float,
+) -> AlbumConnectionPathSearch:
+    return _search_album_connection_paths(
+        graph,
+        album_a_id,
+        album_b_id,
+        deadline=deadline,
+    )
+
+
+def _prepare_album_connection_graph(rows: list[dict]) -> CreditConnectionGraph:
     contributors = _reliable_graph_contributors(rows)
     contributors_by_album: dict[int, list[ContributorSummary]] = {}
     for contributor in contributors.values():
@@ -616,29 +691,71 @@ def _album_connection_paths(
             if any(role in GRAPH_ROLE_BUCKETS for role in album.role_buckets):
                 contributors_by_album.setdefault(album_id, []).append(contributor)
 
-    paths: list[AlbumConnectionPath] = []
-    seen: set[tuple[tuple[int, ...], tuple[str, ...]]] = set()
+    return CreditConnectionGraph(
+        contributors_by_album={
+            album_id: tuple(album_contributors)
+            for album_id, album_contributors in contributors_by_album.items()
+        }
+    )
 
-    queue: list[tuple[int, list[AlbumConnectionStep]]] = [(album_a_id, [])]
-    while queue and len(paths) < MAX_ALBUM_CONNECTION_PATH_CANDIDATES:
-        current_album_id, steps = queue.pop(0)
+
+def _search_album_connection_paths(
+    graph: CreditConnectionGraph,
+    album_a_id: int,
+    album_b_id: int,
+    *,
+    deadline: float,
+) -> AlbumConnectionPathSearch:
+    contributors_by_album = graph.contributors_by_album
+
+    paths: list[AlbumConnectionPath] = []
+    seen_paths: set[tuple[tuple[int, ...], tuple[str, ...]]] = set()
+    queue = deque([(album_a_id, [], frozenset({album_a_id}), frozenset())])
+    seen_states = {(album_a_id, frozenset({album_a_id}), frozenset())}
+    states_examined = 0
+    edges_examined = 0
+    max_queue_size = 1
+    expansion_limited = False
+
+    def result(*, limited: bool = False, reason: str | None = None):
+        return AlbumConnectionPathSearch(
+            paths=sorted(paths, key=_album_connection_path_sort_key),
+            limited=limited,
+            limited_reason=reason,
+            states_examined=states_examined,
+            edges_examined=edges_examined,
+            max_queue_size=max_queue_size,
+        )
+
+    while queue:
+        if time.monotonic() >= deadline:
+            return result(limited=True, reason="time_limit")
+
+        if states_examined >= MAX_ALBUM_CONNECTION_SEARCH_STATES:
+            return result(limited=True, reason="state_limit")
+
+        current_album_id, steps, used_albums, used_contributors = queue.popleft()
+        states_examined += 1
         if len(steps) >= MAX_ALBUM_CONNECTION_CONTRIBUTOR_HOPS:
             continue
-
-        used_albums = set()
-        if steps:
-            used_albums.add(steps[0].from_album_id)
-            used_albums.update(step.to_album_id for step in steps)
-        else:
-            used_albums.add(album_a_id)
-        used_contributors = {step.contributor.person_key for step in steps}
 
         for contributor in _rank_album_path_contributors(
             contributors_by_album.get(current_album_id, [])
         ):
+            if time.monotonic() >= deadline:
+                return result(limited=True, reason="time_limit")
             if contributor.person_key in used_contributors:
                 continue
-            for next_album_id in _rank_contributor_path_albums(contributor):
+            ranked_album_ids = _rank_contributor_path_albums(contributor)
+            if len(ranked_album_ids) > MAX_ALBUM_CONNECTION_ALBUMS_PER_CONTRIBUTOR:
+                expansion_limited = True
+                ranked_album_ids = ranked_album_ids[:MAX_ALBUM_CONNECTION_ALBUMS_PER_CONTRIBUTOR]
+            for next_album_id in ranked_album_ids:
+                if time.monotonic() >= deadline:
+                    return result(limited=True, reason="time_limit")
+                if edges_examined >= MAX_ALBUM_CONNECTION_SEARCH_EDGES:
+                    return result(limited=True, reason="edge_limit")
+                edges_examined += 1
                 if next_album_id == current_album_id:
                     continue
                 if next_album_id in used_albums and next_album_id != album_b_id:
@@ -657,13 +774,30 @@ def _album_connection_paths(
                     ),
                 ]
                 if next_album_id == album_b_id:
-                    _add_album_connection_path(paths, seen, next_steps)
+                    path = AlbumConnectionPath(steps=next_steps)
+                    path_key = (tuple(path.album_ids), tuple(path.contributor_keys))
+                    if path_key not in seen_paths:
+                        seen_paths.add(path_key)
+                        paths.append(path)
+                    if len(paths) >= MAX_ALBUM_CONNECTION_PATHS:
+                        return result(limited=True, reason="result_limit")
                     continue
                 if len(next_steps) < MAX_ALBUM_CONNECTION_CONTRIBUTOR_HOPS:
-                    queue.append((next_album_id, next_steps))
+                    next_used_albums = used_albums | {next_album_id}
+                    next_used_contributors = used_contributors | {contributor.person_key}
+                    state = (next_album_id, next_used_albums, next_used_contributors)
+                    if state in seen_states:
+                        continue
+                    if len(queue) >= MAX_ALBUM_CONNECTION_SEARCH_QUEUE_SIZE:
+                        return result(limited=True, reason="queue_limit")
+                    seen_states.add(state)
+                    queue.append((next_album_id, next_steps, next_used_albums, next_used_contributors))
+                    max_queue_size = max(max_queue_size, len(queue))
 
-    paths.sort(key=_album_connection_path_sort_key)
-    return paths
+    return result(
+        limited=expansion_limited,
+        reason="expansion_limit" if expansion_limited else None,
+    )
 
 
 def _rank_album_path_contributors(
@@ -707,19 +841,6 @@ def _reliable_graph_contributors(rows: list[dict]) -> dict[str, ContributorSumma
             continue
         filtered_rows.append(row)
     return _aggregate_contributors(filtered_rows, exclude_default_noise=False)
-
-
-def _add_album_connection_path(
-    paths: list[AlbumConnectionPath],
-    seen: set[tuple[tuple[int, ...], tuple[str, ...]]],
-    steps: list[AlbumConnectionStep],
-) -> None:
-    path = AlbumConnectionPath(steps=steps)
-    key = (tuple(path.album_ids), tuple(path.contributor_keys))
-    if key in seen:
-        return
-    seen.add(key)
-    paths.append(path)
 
 
 def _connection_step_role(

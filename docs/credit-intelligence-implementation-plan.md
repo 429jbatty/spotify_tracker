@@ -2875,7 +2875,173 @@ Phase 12N refocus label cleanup completed on 2026-07-08:
 - Rendered QA note:
   - Not rerun for this label-only change.
 
+Phase 12O exploration workflow clarity completed on 2026-07-11:
+
+- Outcome for the overall feature: graph exploration and album-to-album pathfinding now have separate, plainly named entry points.
+- What changed:
+  - Removed the selected-album and path-result `Use this album as path start` shortcuts and their frontend state wiring.
+  - Kept `Connect two albums` as the single, explicit workflow for finding a direct or indirect credit path between specific albums.
+  - Renamed graph-centering actions from `Refocus` to `Explore from here` across the explorer controls, graph detail panel, and recurring-contributor cards.
+  - Renamed `Start from an album` to `Explore an album`.
+  - Added concise helper copy explaining that exploring rebuilds the graph around the chosen album or contributor and its connected credits.
+- Independent review:
+  - Select an album and confirm `Explore from here` reloads the graph around that album.
+  - Open `Connect two albums` and confirm both albums are chosen only through its two searchable inputs.
+  - Confirm no path-start button appears in selected-album or path-result panels.
+
+Phase 12P graph interaction modernization completed on 2026-07-11:
+
+- Outcome for the overall feature: the credit graph now responds to curiosity before a user commits to selecting a node.
+- What changed:
+  - Added transient pointer-hover and keyboard-focus preview state without changing selected-node state or refetching graph data.
+  - Hovering or focusing a node gently enlarges it, reinforces its outline, brightens its immediate credit links and neighbors, and fades unrelated graph content.
+  - Added a compact in-graph preview showing album title/artist or contributor name/primary role.
+  - Kept click, Enter, and Space selection behavior unchanged; the side panel remains driven by the selected node.
+  - Added reduced-motion transition fallbacks and retained tap-only mobile behavior.
+- Validation:
+  - Added a frontend test confirming preview relationships are combined with, rather than replacing, selected-node relationships.
+  - Confirmed keyboard Enter selection opens the existing contributor detail panel in the rendered app.
+  - Confirmed desktop graph loading and mobile-width overflow checks remain clean.
+
+Phase 12Q graph detail hierarchy completed on 2026-07-11:
+
+- Outcome for the overall feature: selected-node details read as one calm, structured panel instead of a stack of equally weighted white boxes.
+- What changed:
+  - Promoted `Explore from here` to the primary action; kept album opening and contributor details as quieter secondary actions.
+  - Unified contributor metrics into a single muted, divided stats strip.
+  - Grouped connected items in soft-muted list surfaces and gave continuation suggestions a restrained primary tint.
+  - Kept the enclosing sidebar card, typography, spacing scale, and existing app color system intact.
+- Validation:
+  - Targeted frontend lint and tests passed.
+  - Production build passed with the existing font-file and bundle-size warnings.
+  - Rendered selected-contributor review passed; 390px mobile width has no horizontal overflow.
+
+Phase 12R bounded album-connection search completed on 2026-07-11:
+
+- Outcome for the overall feature: album-to-album discovery remains interactive, but no longer looks hung or incorrectly reports an unfinished search as no connection.
+- What changed:
+  - Replaced unbounded queue-front traversal with a deque-based search that tracks equivalent traversal state and returns the first credible indirect path.
+  - Added a 20-second server-side deadline and additive response metadata for completed versus limited searches, elapsed time, and limit reason.
+  - Preserved `no_path` exclusively for completed searches; deadline-limited searches now communicate uncertainty instead.
+  - Added elapsed foreground status, longer-than-usual guidance, a cancel control, stale-response protection, and distinct limited-path/limit-reached copy.
+- Validation:
+  - Credit-intelligence API tests passed, including direct, indirect, completed no-path, and time-limited states.
+  - Focused frontend tests, lint, and production build passed.
+  - Flower Boy to Hounds of Love returned a three-hop path in approximately 4.9 seconds on the local Jacob library, with a note that alternatives were not fully explored.
+
+Phase 12V bounded alternate-path restoration completed on 2026-07-11:
+
+- Outcome for the overall feature: album-to-album searches once again return a best path plus meaningful alternatives without removing the time safeguard.
+- What changed:
+  - Continued breadth-first traversal after the first match and capped results at four unique paths: one best path and three alternates.
+  - Restored path deduplication by album sequence and contributor sequence, with deterministic final ranking.
+  - Returned multiple shared contributors as distinct direct one-hop paths.
+  - Replaced the ambiguous `path_found` limited reason with `result_limit`; `time_limit` now preserves any paths confirmed before the deadline.
+  - Updated frontend copy for time-limited partial results and result-capped searches.
+- Validation:
+  - Credit-intelligence API suite passed: 17 tests.
+  - Full frontend suite passed: 9 files and 47 tests.
+  - Targeted Connections lint and Python compilation passed.
+- Representative output:
+  - The indirect-path fixture returned four unique paths, with one `best_path`, three `alternate_paths`, and `search_limited_reason=result_limit`.
+  - The direct-path fixture returned its second shared contributor as a one-hop alternate.
+- Independent testing:
+  - Connect two albums with several routes and confirm the path panel reports available alternates.
+  - Connect albums with multiple direct shared contributors and confirm the additional contributors are described as direct alternatives.
+- Suggested next step:
+  - Address production-readiness finding #2 by bounding server work independently of client cancellation and measuring representative large-library concurrency.
+
+Phase 12W bounded server-work hardening completed on 2026-07-11:
+
+- Outcome for the overall feature: album path requests now have deterministic CPU and memory work budgets in addition to a shorter wall-clock failsafe, so abandoned or adversarial searches cannot occupy a worker for the former 20-second window without bounds.
+- What changed:
+  - Reduced the wall-clock failsafe from 20 seconds to 5 seconds.
+  - Added caps for dequeued states, examined edges, queue size, and albums expanded per high-degree contributor.
+  - Added deadline and work-budget checks inside the contributor-to-album expansion loop.
+  - Extracted graph preparation from traversal and returned graph-build time, states, edges, and maximum queue size as diagnostics.
+  - Added precise `state_limit`, `edge_limit`, `queue_limit`, and `expansion_limit` response reasons while preserving confirmed partial paths.
+  - Added plain-language frontend explanations for incomplete bounded searches.
+- Validation:
+  - Credit-intelligence API suite passed: 18 tests, including a forced deterministic state-budget stop.
+  - Targeted frontend status tests and lint passed.
+  - Python compilation and diff checks passed.
+- Representative output:
+  - A local Jacob-library request for album IDs 1 and 2 returned two confirmed paths and stopped at `queue_limit` in about 2.0 seconds wall time.
+  - Diagnostics reported approximately 0.37 seconds of graph preparation, 196 dequeued states, 28,265 examined edges, and a maximum queue size of 20,000.
+- Unresolved issue:
+  - An in-process graph cache was intentionally deferred. Credit-fact changes, album presentation metadata, and user-library membership do not currently share a reliable revision token, so a cache could serve stale graph data. The deterministic budgets provide the production safety guarantee independently of client cancellation.
+- Independent testing:
+  - Run several simultaneous album-pair requests against a large library and confirm each completes or returns a limited partial result within five seconds without degrading health/API requests.
+- Suggested next step:
+  - Add a durable graph revision/invalidation mechanism before introducing cross-request caching, then benchmark whether the graph-build savings justify its complexity.
+
+Phase 12X Connections component integration coverage completed on 2026-07-11:
+
+- Outcome for the overall feature: the page's critical API and request-lifecycle behavior is now exercised through the real `PageConnections` component rather than only pure helpers and graph-model tests.
+- What changed:
+  - Added React Testing Library, user-event, jest-dom, and jsdom as development-only test dependencies.
+  - Added component integration coverage for initial loading, initial failure, album selection and request arguments, successful results, limited results, cancellation with late-response suppression, retry after failure, and selected-user changes.
+  - Added explicit cleanup that aborts an active album-connection request on unmount or user change.
+  - Gated recurring-contributor and graph payloads by `user_slug` so old-user data cannot remain visible while the next user's data loads.
+- Validation:
+  - Full frontend suite passed: 9 files and 52 tests.
+  - Targeted PageConnections lint and diff checks passed.
+- Unresolved issues:
+  - The component suite intentionally mocks the large SVG graph renderer; graph geometry and mobile overflow remain browser-smoke responsibilities.
+  - Contributor-detail request cancellation remains a separate lifecycle improvement because it is outside the album-connection production finding addressed here.
+- Independent testing:
+  - Open `/jacob/connections`, start and cancel an album search, switch profiles if available, and confirm no prior profile's graph flashes during the new load.
+- Suggested next step:
+  - Add the component integration suite to CI if frontend tests are not already a required check, and retain desktop plus 390px browser smoke coverage for SVG layout.
+
 ## Deferred Until Explicitly Approved
+
+Phase 12S progressive-disclosure exploration hierarchy completed on 2026-07-11:
+
+- Outcome for the overall feature: the graph and its stateful explanation panel now read as the primary discovery workspace, while contributor browsing remains available as a quieter restart path.
+- What changed:
+  - Replaced the always-visible full recurring-contributor card directory with four compact `More starting points` actions and an explicit `Browse all contributors` reveal.
+  - Kept directory ranking language tied to connected albums and artist breadth, explicitly excluding listen count.
+  - Merged duplicated selected-node description and continuation lists into one actionable list: albums expose `Explore through these contributors`, and contributors expose `Explore these albums`.
+  - Limited related-node lists to four entries initially with local `Show more` disclosure.
+  - Moved contributor metrics behind an `About this contributor` disclosure while preserving the primary `Explore from here` action and contributor detail sheet.
+- Validation:
+  - Targeted Connections lint passed.
+  - Full frontend suite passed: 9 files and 46 tests.
+  - Production build passed with the existing font-file and bundle-size warnings.
+- Independent testing:
+  - Open `/jacob/connections`, confirm the first view ends with four compact starting points, expand and collapse the contributor directory, and select album and contributor nodes to confirm each sidebar has one non-repeating related-node list.
+  - At mobile width, confirm the starting points stack and both disclosure controls remain within the viewport.
+- Suggested next step:
+  - Perform a rendered interaction review of direct, indirect, limited, and no-path states to decide whether alternate-path copy also benefits from a dedicated disclosure after observing real result density.
+
+Phase 12T contributor-directory navigation feedback completed on 2026-07-11:
+
+- Outcome for the overall feature: choosing a compact contributor now visibly returns the user to the graph that is being rebuilt, instead of updating content above an unchanged viewport.
+- What changed:
+  - Added a graph-section anchor and smooth return-to-graph behavior to compact contributor selections.
+  - Added an explicit accessible `Explore from ...` label to each compact contributor action.
+- Validation:
+  - Targeted Connections lint passed.
+  - Full frontend suite passed: 9 files and 46 tests.
+  - Production build passed with the existing font-file and bundle-size warnings.
+- Independent testing:
+  - Expand `Browse all contributors`, choose a contributor near the bottom of the directory, and confirm the viewport returns to the graph while the focused contributor network loads.
+
+Phase 12U in-place graph refresh status completed on 2026-07-11:
+
+- Outcome for the overall feature: contributor-driven graph refreshes now provide immediate, localized feedback without removing the previous graph or shifting the page.
+- What changed:
+  - Preserved the current graph during a focused-network request.
+  - Added a subtle translucent graph overlay with a compact spinner and `Updating graph…` status.
+  - Blocked graph interactions while the replacement network is loading and exposed the request state with `aria-busy` and a polite status announcement.
+  - Kept the original standalone loading state for the initial page request, before a graph exists.
+- Validation:
+  - Targeted Connections lint passed.
+  - Full frontend suite passed: 9 files and 46 tests.
+  - Production build passed with the existing font-file and bundle-size warnings.
+- Independent testing:
+  - Choose a contributor from `More starting points` or the expanded directory and confirm the old graph remains visible beneath the status until the focused graph replaces it.
 
 - Unbounded path search or weighted shortest-path optimization beyond the
   bounded MVP.

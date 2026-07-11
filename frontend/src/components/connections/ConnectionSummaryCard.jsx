@@ -28,8 +28,29 @@ function AlbumPreviewList({ albums }) {
   );
 }
 
-export default function ConnectionSummaryCard({ contributor, onFocus, onInspect }) {
+export default function ConnectionSummaryCard({ compact = false, contributor, onFocus, onInspect }) {
   const primaryRole = getPrimaryRole(contributor.role_buckets);
+
+  if (compact) {
+    return (
+      <button
+        aria-label={`Explore from ${contributor.person_name}`}
+        className="flex min-w-0 items-center justify-between gap-3 rounded-lg border border-border bg-card px-4 py-3 text-left transition hover:border-primary/40 hover:bg-muted/40"
+        onClick={() => onFocus?.(contributor)}
+        type="button"
+      >
+        <span className="min-w-0">
+          <span className="block truncate text-sm font-semibold text-foreground">
+            {contributor.person_name}
+          </span>
+          <span className="mt-1 block truncate text-xs text-muted-foreground">
+            {formatRoleLabel(primaryRole)} · {contributor.connected_album_count} albums
+          </span>
+        </span>
+        <ArrowRight className="size-4 shrink-0 text-muted-foreground" />
+      </button>
+    );
+  }
 
   return (
     <Card className="rounded-lg">
@@ -42,7 +63,7 @@ export default function ConnectionSummaryCard({ contributor, onFocus, onInspect 
             </CardTitle>
           </div>
           <Button
-            aria-label={`Refocus on ${contributor.person_name}`}
+            aria-label={`Explore from ${contributor.person_name}`}
             onClick={() => onFocus?.(contributor)}
             size="icon-sm"
             variant="ghost"
@@ -90,7 +111,7 @@ export default function ConnectionSummaryCard({ contributor, onFocus, onInspect 
             size="sm"
             variant="outline"
           >
-            Refocus
+            Explore from here
           </Button>
           <Button
             onClick={() => onInspect(contributor)}

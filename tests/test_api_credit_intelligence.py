@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.database import create_schema
 from backend.app.main import create_app
 from backend.app.models import Album, AlbumCreditFact, AlbumListen, User, UserAlbum
+from backend.app.services import credit_intelligence_service
 
 
 class ApiCreditIntelligenceTests(unittest.TestCase):
@@ -463,7 +464,13 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
         self.assertEqual(payload["album_b"]["name"], "Album Two")
         self.assertFalse(payload["no_direct_connection"])
         self.assertFalse(payload["no_path"])
+        self.assertEqual(payload["search_status"], "complete")
         self.assertEqual(payload["best_path"]["hop_count"], 1)
+        self.assertEqual(len(payload["alternate_paths"]), 1)
+        self.assertEqual(
+            payload["alternate_paths"][0]["steps"][0]["contributor"]["person_name"],
+            "Writer One",
+        )
 
         people = [item["person_name"] for item in payload["shared_contributors"]]
         self.assertEqual(people, ["Producer One", "Writer One"])
@@ -502,6 +509,8 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
         payload = response.json()
         self.assertTrue(payload["no_direct_connection"])
         self.assertFalse(payload["no_path"])
+        self.assertEqual(payload["search_status"], "limited")
+        self.assertEqual(payload["search_limited_reason"], "result_limit")
         self.assertEqual(payload["best_path"]["hop_count"], 2)
         self.assertEqual(
             [step["contributor"]["person_name"] for step in payload["best_path"]["steps"]],
@@ -514,6 +523,18 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
         self.assertIn("Album Three", {node["label"] for node in payload["nodes"]})
         self.assertIn("Bridge Engineer", {node["label"] for node in payload["nodes"]})
         self.assertEqual(payload["max_contributor_hops"], 4)
+        self.assertGreater(payload["search_states_examined"], 0)
+        self.assertGreater(payload["search_edges_examined"], 0)
+        self.assertGreater(payload["search_max_queue_size"], 0)
+        self.assertEqual(len(payload["alternate_paths"]), 3)
+        path_keys = {
+            (
+                tuple(path["album_ids"]),
+                tuple(step["contributor"]["person_key"] for step in path["steps"]),
+            )
+            for path in [payload["best_path"], *payload["alternate_paths"]]
+        }
+        self.assertEqual(len(path_keys), 4)
 
     def test_album_connection_graph_returns_four_hop_path_with_single_track_links(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -525,6 +546,9 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         payload = response.json()
         self.assertFalse(payload["no_path"])
+        self.assertIn(payload["search_status"], {"complete", "limited"})
+        if payload["search_status"] == "limited":
+            self.assertEqual(payload["search_limited_reason"], "result_limit")
         self.assertEqual(payload["best_path"]["hop_count"], 4)
         self.assertEqual(
             [step["contributor"]["person_name"] for step in payload["best_path"]["steps"]],
@@ -544,10 +568,42 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
         payload = response.json()
         self.assertTrue(payload["no_direct_connection"])
         self.assertTrue(payload["no_path"])
+        self.assertEqual(payload["search_status"], "complete")
         self.assertIsNone(payload["best_path"])
         self.assertEqual(payload["shared_contributors"], [])
         self.assertEqual({node["label"] for node in payload["nodes"]}, {"Album Two", "Isolated Album"})
         self.assertEqual(payload["edges"], [])
+
+    def test_album_connection_graph_reports_time_limited_search_without_claiming_no_path(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            with patch.object(credit_intelligence_service, "MAX_ALBUM_CONNECTION_SEARCH_SECONDS", 0):
+                response = client.get(
+                    "/api/users/listener/connections/album-connection?album_a_id=2&album_b_id=6"
+                )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertFalse(payload["no_path"])
+        self.assertIsNone(payload["best_path"])
+        self.assertEqual(payload["search_status"], "limited")
+        self.assertEqual(payload["search_limited_reason"], "time_limit")
+
+    def test_album_connection_graph_enforces_deterministic_state_budget(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            with patch.object(credit_intelligence_service, "MAX_ALBUM_CONNECTION_SEARCH_STATES", 0):
+                response = client.get(
+                    "/api/users/listener/connections/album-connection?album_a_id=2&album_b_id=6"
+                )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertFalse(payload["no_path"])
+        self.assertEqual(payload["search_status"], "limited")
+        self.assertEqual(payload["search_limited_reason"], "state_limit")
+        self.assertEqual(payload["search_states_examined"], 0)
+        self.assertEqual(payload["search_edges_examined"], 0)
 
     def test_album_connection_graph_is_user_scoped(self):
         with tempfile.TemporaryDirectory() as temp_dir:

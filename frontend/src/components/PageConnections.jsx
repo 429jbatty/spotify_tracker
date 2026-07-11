@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   AlertCircle,
   ArrowRight,
@@ -12,6 +12,7 @@ import {
 import ConnectionSummaryCard from "./connections/ConnectionSummaryCard";
 import ConnectionsGraph from "./connections/ConnectionsGraph";
 import { filterContributorOptions } from "./connections/contributorSearch";
+import { connectionSearchProgress } from "./connections/connectionSearchStatus";
 import {
   fetchAlbumConnectionGraph,
   fetchConnectionGraph,
@@ -278,7 +279,9 @@ function ExplorationHeader({
   albumOptions,
   albumPair,
   connectionError,
+  connectionElapsedSeconds,
   connectionLoading,
+  connectionNotice,
   contributorFocusKey,
   contributors,
   onActivateConnectorMode,
@@ -286,6 +289,7 @@ function ExplorationHeader({
   onActivateConnectionMode,
   onAlbumPairChange,
   onConnectAlbums,
+  onCancelConnection,
   onFocusContributorChange,
   onFocusAlbumChange,
   onStartAlbum,
@@ -317,7 +321,7 @@ function ExplorationHeader({
           description={albumStart ? `${albumStart.label} by ${albumStart.artist}` : "Waiting for album data"}
           disabled={!albumStart}
           icon={Search}
-          label="Start from an album"
+          label="Explore an album"
           onClick={onActivateAlbumMode}
         />
         <ExplorationPrompt
@@ -346,9 +350,12 @@ function ExplorationHeader({
               onClick={onStartConnector}
               type="button"
             >
-              Refocus
+              Explore from here
             </Button>
           </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Rebuild the graph around this contributor and their connected albums.
+          </p>
         </div>
       )}
 
@@ -369,9 +376,12 @@ function ExplorationHeader({
               onClick={onStartAlbum}
               type="button"
             >
-              Refocus
+              Explore from here
             </Button>
           </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Rebuild the graph around this album and its credited contributors.
+          </p>
         </div>
       )}
 
@@ -396,15 +406,29 @@ function ExplorationHeader({
             />
             <Button
               className="self-end"
-              disabled={!albumPair.albumAId || !albumPair.albumBId || albumPair.albumAId === albumPair.albumBId || connectionLoading}
-              onClick={onConnectAlbums}
+              disabled={!connectionLoading && (!albumPair.albumAId || !albumPair.albumBId || albumPair.albumAId === albumPair.albumBId)}
+              onClick={connectionLoading ? onCancelConnection : onConnectAlbums}
               type="button"
+              variant={connectionLoading ? "outline" : "default"}
             >
-              {connectionLoading ? "Connecting..." : "Show connection"}
+              {connectionLoading ? "Cancel search" : "Show connection"}
             </Button>
           </div>
+          {connectionLoading && (
+            <div aria-live="polite" className="mt-3 rounded-md bg-muted/60 px-3 py-2 text-sm text-muted-foreground" role="status">
+              <p className="font-medium text-foreground">
+                {connectionSearchProgress(connectionElapsedSeconds).label}
+              </p>
+              <p className="mt-0.5 text-xs">
+                {connectionSearchProgress(connectionElapsedSeconds).detail}
+              </p>
+            </div>
+          )}
           {connectionError && (
             <p className="mt-2 text-sm text-destructive">{connectionError}</p>
+          )}
+          {connectionNotice && (
+            <p className="mt-2 text-sm text-muted-foreground">{connectionNotice}</p>
           )}
         </div>
       )}
@@ -534,7 +558,13 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
   const [albumPair, setAlbumPair] = useState({ albumAId: "", albumBId: "" });
   const [albumConnection, setAlbumConnection] = useState(null);
   const [albumConnectionError, setAlbumConnectionError] = useState(null);
+  const [albumConnectionNotice, setAlbumConnectionNotice] = useState(null);
   const [albumConnectionLoading, setAlbumConnectionLoading] = useState(false);
+  const [albumConnectionElapsedSeconds, setAlbumConnectionElapsedSeconds] = useState(0);
+  const [showContributorDirectory, setShowContributorDirectory] = useState(false);
+  const connectionControllerRef = useRef(null);
+  const connectionRequestIdRef = useRef(0);
+  const graphSectionRef = useRef(null);
   const albumById = useMemo(() => {
     return new Map((albums || []).map((album) => [String(album.id), album]));
   }, [albums]);
@@ -552,6 +582,12 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
       ));
   }, [albums]);
   const selectedUserSlug = selectedUser?.slug;
+
+  useEffect(() => () => {
+    connectionRequestIdRef.current += 1;
+    connectionControllerRef.current?.abort();
+    connectionControllerRef.current = null;
+  }, [selectedUserSlug]);
 
   useEffect(() => {
     if (!selectedUserSlug) return undefined;
@@ -597,6 +633,15 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
     return () => controller.abort();
   }, [graphFocusNodeId, selectedUserSlug]);
 
+  useEffect(() => {
+    if (!albumConnectionLoading) return undefined;
+    const startedAt = Date.now();
+    const intervalId = window.setInterval(() => {
+      setAlbumConnectionElapsedSeconds(Math.floor((Date.now() - startedAt) / 1000));
+    }, 250);
+    return () => window.clearInterval(intervalId);
+  }, [albumConnectionLoading]);
+
   const handleInspect = (contributor) => {
     const controller = new AbortController();
     setSelectedContributor(contributor);
@@ -630,9 +675,16 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
     if (album) onOpenAlbum?.(album);
   };
 
-  const results = payload?.results || [];
+  const activePayload = payload?.user_slug === selectedUserSlug ? payload : null;
+  const activeGraphPayload = graphPayload?.user_slug === selectedUserSlug ? graphPayload : null;
+  const results = activePayload?.results || [];
   const topConnector = results[0] || null;
-  const albumStart = firstGraphAlbumNode(graphPayload);
+  const albumStart = firstGraphAlbumNode(activeGraphPayload);
+  const returnToGraph = () => {
+    window.requestAnimationFrame(() => {
+      graphSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  };
   const focusContributor = (contributor) => {
     const nodeId = graphContributorId(contributor);
     if (nodeId) {
@@ -640,11 +692,13 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
       setAlbumConnection(null);
       setContributorFocusKey(contributor.person_key);
       setGraphFocusNodeId(nodeId);
+      returnToGraph();
     }
   };
   const handleAlbumPairChange = (field, value) => {
     setAlbumPair((current) => ({ ...current, [field]: value }));
     setAlbumConnectionError(null);
+    setAlbumConnectionNotice(null);
   };
   const handleStartAlbum = () => {
     if (!albumFocusId) return;
@@ -676,16 +730,6 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
     setActiveMode("connection");
     setAlbumConnectionError(null);
   };
-  const handleUseAlbumAsPathStart = (albumId) => {
-    if (!albumId) return;
-    setActiveMode("connection");
-    setAlbumConnection(null);
-    setAlbumConnectionError(null);
-    setAlbumPair((current) => ({
-      albumAId: String(albumId),
-      albumBId: current.albumBId === String(albumId) ? "" : current.albumBId,
-    }));
-  };
   const handleConnectAlbums = () => {
     if (!selectedUserSlug) return;
     if (!albumPair.albumAId || !albumPair.albumBId) {
@@ -697,26 +741,45 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
       return;
     }
     const controller = new AbortController();
+    const requestId = connectionRequestIdRef.current + 1;
+    connectionRequestIdRef.current = requestId;
+    connectionControllerRef.current?.abort();
+    connectionControllerRef.current = controller;
     setActiveMode("connection");
+    setAlbumConnection(null);
     setAlbumConnectionLoading(true);
+    setAlbumConnectionElapsedSeconds(0);
     setAlbumConnectionError(null);
+    setAlbumConnectionNotice(null);
     fetchAlbumConnectionGraph(selectedUserSlug, {
       albumAId: albumPair.albumAId,
       albumBId: albumPair.albumBId,
       signal: controller.signal,
     })
       .then((connection) => {
+        if (requestId !== connectionRequestIdRef.current) return;
         setAlbumConnection(connection);
-        setGraphPayload(connection);
         setGraphFocusNodeId(null);
       })
       .catch((error) => {
-        if (controller.signal.aborted) return;
+        if (controller.signal.aborted || requestId !== connectionRequestIdRef.current) return;
         setAlbumConnectionError(error.message || "Album connection could not be loaded.");
       })
       .finally(() => {
-        if (!controller.signal.aborted) setAlbumConnectionLoading(false);
+        if (requestId !== connectionRequestIdRef.current) return;
+        connectionControllerRef.current = null;
+        setAlbumConnectionLoading(false);
       });
+  };
+  const handleCancelConnection = () => {
+    connectionRequestIdRef.current += 1;
+    connectionControllerRef.current?.abort();
+    connectionControllerRef.current = null;
+    setAlbumConnection(null);
+    setAlbumConnectionLoading(false);
+    setAlbumConnectionElapsedSeconds(0);
+    setAlbumConnectionError(null);
+    setAlbumConnectionNotice("Search cancelled. Choose two albums to try another connection.");
   };
 
   return (
@@ -729,13 +792,16 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
           albumOptions={albumOptions}
           albumPair={albumPair}
           connectionError={albumConnectionError}
+          connectionElapsedSeconds={albumConnectionElapsedSeconds}
           connectionLoading={albumConnectionLoading}
+          connectionNotice={albumConnectionNotice}
           contributorFocusKey={contributorFocusKey}
           contributors={results}
           onActivateConnectorMode={handleActivateConnectorMode}
           onActivateAlbumMode={handleActivateAlbumMode}
           onActivateConnectionMode={handleActivateConnectionMode}
           onAlbumPairChange={handleAlbumPairChange}
+          onCancelConnection={handleCancelConnection}
           onConnectAlbums={handleConnectAlbums}
           onFocusContributorChange={setContributorFocusKey}
           onFocusAlbumChange={setAlbumFocusId}
@@ -744,7 +810,7 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
           topConnector={topConnector}
         />
 
-        {loading && (
+        {loading && results.length === 0 && (
           <div className="rounded-lg border border-border p-8 text-center text-sm text-muted-foreground">
             Loading connections...
           </div>
@@ -757,39 +823,52 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
         )}
 
         {!loading && !loadError && results.length === 0 && (
-          <EmptyState reason={payload?.insufficient_data_reason} />
+          <EmptyState reason={activePayload?.insufficient_data_reason} />
         )}
 
         {results.length > 0 && (
-          <ConnectionsGraph
-            albumConnection={albumConnection}
-            focusNodeId={graphFocusNodeId}
-            graph={graphPayload}
-            onFocusNode={(nodeId) => {
-              setActiveMode(null);
-              setAlbumConnection(null);
-              setGraphFocusNodeId(nodeId);
-            }}
-            onInspectContributor={handleInspect}
-            onOpenAlbum={openAlbumById}
-            onUseAlbumAsPathStart={handleUseAlbumAsPathStart}
-          />
+          <div ref={graphSectionRef}>
+            <ConnectionsGraph
+              albumConnection={albumConnection}
+              focusNodeId={graphFocusNodeId}
+              graph={albumConnection || activeGraphPayload}
+              isUpdating={loading}
+              onFocusNode={(nodeId) => {
+                setActiveMode(null);
+                setAlbumConnection(null);
+                setGraphFocusNodeId(nodeId);
+              }}
+              onInspectContributor={handleInspect}
+              onOpenAlbum={openAlbumById}
+            />
+          </div>
         )}
 
         {results.length > 0 && (
-          <section className="space-y-4">
+          <section className="space-y-4 border-t border-border/70 pt-5">
             <div className="flex flex-col gap-1 md:flex-row md:items-end md:justify-between">
-              <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-                Recurring contributors
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Alternate entry points into the graph, ranked by connected albums and artist breadth.
-              </p>
+              <div>
+                <h2 className="text-base font-semibold text-foreground">More starting points</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Try another contributor when you want to restart the graph.
+                </p>
+              </div>
+              {results.length > 4 && (
+                <Button
+                  onClick={() => setShowContributorDirectory((current) => !current)}
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                >
+                  {showContributorDirectory ? "Hide contributor directory" : "Browse all contributors"}
+                </Button>
+              )}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {results.map((contributor) => (
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {results.slice(0, 4).map((contributor) => (
                 <ConnectionSummaryCard
+                  compact
                   contributor={contributor}
                   key={contributor.person_key}
                   onFocus={focusContributor}
@@ -797,6 +876,28 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
                 />
               ))}
             </div>
+
+            {showContributorDirectory && (
+              <div className="space-y-3 rounded-lg border border-border/70 bg-muted/20 p-4">
+                <div>
+                  <h3 className="text-sm font-semibold text-foreground">Contributor directory</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    Additional entry points based on connected albums and artist breadth, never listen count.
+                  </p>
+                </div>
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+                  {results.slice(4).map((contributor) => (
+                    <ConnectionSummaryCard
+                      compact
+                      contributor={contributor}
+                      key={contributor.person_key}
+                      onFocus={focusContributor}
+                      onInspect={handleInspect}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
           </section>
         )}
 

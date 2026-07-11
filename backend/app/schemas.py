@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -317,6 +317,21 @@ class AlbumConnectionGraphResponse(BaseModel):
     no_direct_connection: bool = False
     no_path: bool = False
     max_contributor_hops: int = 1
+    search_status: Literal["complete", "limited"] = "complete"
+    search_limited_reason: Literal[
+        "edge_limit",
+        "expansion_limit",
+        "queue_limit",
+        "result_limit",
+        "state_limit",
+        "time_limit",
+    ] | None = None
+    search_elapsed_ms: int = 0
+    search_time_limit_ms: int = 0
+    search_graph_build_ms: int = 0
+    search_states_examined: int = 0
+    search_edges_examined: int = 0
+    search_max_queue_size: int = 0
     insufficient_data_reason: str | None = None
 
 
