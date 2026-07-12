@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Any
 
 from sqlalchemy import LargeBinary, Select, cast, delete, func, select
@@ -17,11 +18,13 @@ from backend.app.repositories.state_utils import (
     empty_album_state,
 )
 from backend.app.repositories.user_repository import UserRepository
+from backend.app.services.credit_fact_service import rebuild_credit_facts
 from backend.app.user_tags import normalize_user_tags
 
 
 STATE_LAST_CHECKED = "last_checked"
 ARTWORK_URL_PREFIX = "/media/artwork/"
+logger = logging.getLogger(__name__)
 
 
 def _normalize_entry_source(value: str | None) -> str:
@@ -105,10 +108,11 @@ class SqliteStateRepository:
     def save_album_state(self, state: dict[str, Any]) -> None:
         merged_state = {**empty_album_state(), **state}
         self._set_app_state(STATE_LAST_CHECKED, merged_state.get("last_checked"))
-        self._sync_completed_albums(merged_state.get("completed_albums", {}))
+        album_ids = self._sync_completed_albums(merged_state.get("completed_albums", {}))
         self._sync_albums_in_progress(
             merged_state.get("albums_in_progress", {}),
         )
+        self._rebuild_credit_facts(album_ids)
         self.session.commit()
 
     def load_album_state(self) -> dict[str, Any]:
@@ -304,6 +308,7 @@ class SqliteStateRepository:
             record.get("entry_source") or record.get("source")
         )
         album.metadata_json = _album_metadata(record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return new_key
 
@@ -317,6 +322,7 @@ class SqliteStateRepository:
             raise KeyError(f"Album id not found: {album_id}")
 
         self._apply_completed_album_record(album, refreshed_record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -351,9 +357,11 @@ class SqliteStateRepository:
                 },
             }
             self._apply_completed_album_record(existing_target, merged_record)
+            self._rebuild_credit_facts([existing_target.id])
             return self.merge_completed_album_listens(album.id, existing_target.id)
 
         self._apply_completed_album_record(album, refreshed_record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -447,6 +455,7 @@ class SqliteStateRepository:
                 self._add_listen(existing_album, listen_date)
             for listened_at in normalized.get("listen_history") or []:
                 self._add_listen(existing_album, listened_at)
+            self._rebuild_credit_facts([existing_album.id])
             self.session.commit()
             return self._album_record(existing_album)
 
@@ -465,6 +474,7 @@ class SqliteStateRepository:
         for listened_at in normalized.get("listen_history") or []:
             self._add_listen(album, listened_at)
 
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -483,6 +493,7 @@ class SqliteStateRepository:
             **{key: value for key, value in fields.items() if value is not None},
         }
         self._apply_completed_album_record(album, updated_record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -569,7 +580,7 @@ class SqliteStateRepository:
         ).first()
         return app_state.value if app_state else None
 
-    def _sync_completed_albums(self, completed_albums: dict[str, Any]) -> None:
+    def _sync_completed_albums(self, completed_albums: dict[str, Any]) -> list[int]:
         normalized_albums = _normalize_completed_albums(completed_albums)
         incoming_keys = set(normalized_albums)
 
@@ -603,6 +614,7 @@ class SqliteStateRepository:
                 self._delete_unowned_albums(stale_album_ids)
             self.session.flush()
 
+        album_ids = []
         for album_key, record in normalized_albums.items():
             album = self.session.scalars(
                 _album_lookup_statement(album_key)
@@ -619,8 +631,30 @@ class SqliteStateRepository:
             self._apply_completed_album_record(album, record, album_key=album_key)
 
             self.session.flush()
+            album_ids.append(album.id)
             self._add_user_album(album.id)
             self._sync_listens(album, record.get("listen_history") or [])
+
+        return album_ids
+
+    def _rebuild_credit_facts(self, album_ids: list[int]) -> None:
+        unique_album_ids = list(dict.fromkeys(album_ids))
+        if not unique_album_ids:
+            return
+
+        try:
+            self.session.flush()
+            rebuild_credit_facts(
+                self.session,
+                album_ids=unique_album_ids,
+                commit=False,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to rebuild credit facts for persisted album metadata: %s",
+                unique_album_ids,
+            )
+            raise
 
     def _sync_listens(self, album: Album, listen_history: list[str]) -> None:
         incoming_listens = set(listen_history)
