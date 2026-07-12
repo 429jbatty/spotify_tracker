@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  ArrowRight,
   BarChart3,
   CalendarClock,
   Disc3,
@@ -13,6 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { fetchSplashData } from "@/services/albumApi";
+import CreateProfileDialog from "@/components/CreateProfileDialog";
 
 const TRACKED_FEATURES = [
   {
@@ -77,9 +79,10 @@ const HERO_SNAPSHOT = {
 
 const EMPTY_ARRAY = [];
 
-function SplashPage({ onOpenProfile }) {
+function SplashPage({ onCreateProfile, onOpenProfile }) {
   const [payload, setPayload] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [createProfileOpen, setCreateProfileOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -120,11 +123,21 @@ function SplashPage({ onOpenProfile }) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <SplashHeader onBrowse={handleExplore} onAbout={handleAbout} />
+      <SplashHeader
+        onBrowse={handleExplore}
+        onAbout={handleAbout}
+        onCreateProfile={() => setCreateProfileOpen(true)}
+      />
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
-        <section className="grid min-h-[450px] items-center gap-8 lg:min-h-[520px] lg:grid-cols-[minmax(0,0.95fr)_minmax(440px,1fr)]">
-          <SplashHero onExplore={handleExplore} />
-          <HeroAlbumPreview />
+        <section className="flex flex-col gap-6">
+          <div className="grid min-h-[450px] items-center gap-8 lg:min-h-[520px] lg:grid-cols-[minmax(0,0.95fr)_minmax(440px,1fr)]">
+            <SplashHero
+              onExplore={handleExplore}
+              onCreateProfile={() => setCreateProfileOpen(true)}
+            />
+            <HeroAlbumPreview />
+          </div>
+          <HeroConnectionPreview />
         </section>
 
         <FeaturedProfiles
@@ -143,11 +156,16 @@ function SplashPage({ onOpenProfile }) {
 
         <TrackedFeatures />
       </div>
+      <CreateProfileDialog
+        open={createProfileOpen}
+        onOpenChange={setCreateProfileOpen}
+        onCreateProfile={onCreateProfile}
+      />
     </main>
   );
 }
 
-function SplashHeader({ onBrowse, onAbout }) {
+function SplashHeader({ onBrowse, onAbout, onCreateProfile }) {
   return (
     <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
@@ -172,13 +190,16 @@ function SplashHeader({ onBrowse, onAbout }) {
           >
             About
           </button>
+          <Button type="button" size="sm" onClick={onCreateProfile}>
+            Create profile
+          </Button>
         </nav>
       </div>
     </header>
   );
 }
 
-function SplashHero({ onExplore }) {
+function SplashHero({ onExplore, onCreateProfile }) {
   return (
     <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-5">
@@ -194,6 +215,9 @@ function SplashHero({ onExplore }) {
         <Button type="button" onClick={onExplore} className="sm:w-auto">
           <Search data-icon="inline-start" />
           Explore profiles
+        </Button>
+        <Button type="button" variant="outline" onClick={onCreateProfile} className="sm:w-auto">
+          Create your profile
         </Button>
       </div>
     </div>
@@ -235,6 +259,94 @@ function HeroAlbumPreview() {
           <HeroStat label="Most-listened Era" value={HERO_SNAPSHOT.mostListenedEra} />
         </div>
       </div>
+    </div>
+  );
+}
+
+const HERO_CONNECTION_ALBUMS = [
+  {
+    artist: "Taylor Swift",
+    name: "Midnights",
+    cover: "/splash-artwork/midnights.jpg",
+  },
+  {
+    artist: "Kendrick Lamar",
+    name: "To Pimp a Butterfly",
+    cover: "/splash-artwork/to-pimp-a-butterfly.jpg",
+  },
+  {
+    artist: "Nas",
+    name: "Illmatic",
+    cover: "/splash-artwork/illmatic.jpg",
+  },
+];
+
+function HeroConnectionPreview() {
+  return (
+    <div className="grid gap-5 rounded-lg border border-primary/25 bg-[linear-gradient(110deg,rgba(236,201,75,0.12),rgba(255,255,255,0)_42%)] p-4 shadow-sm sm:p-5 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-center lg:gap-8">
+      <div>
+        <p className="text-xs font-medium uppercase tracking-[0.14em] text-primary">
+          Hidden connections
+        </p>
+        <p className="mt-2 text-lg font-semibold tracking-tight text-foreground">
+          Unexpected paths through your music.
+        </p>
+        <p className="mt-1 text-sm leading-5 text-muted-foreground">
+          Follow the people linking albums across your library.
+        </p>
+      </div>
+
+      <div>
+        <div>
+          <p className="text-sm font-semibold tracking-tight text-foreground">
+            Three albums. Two creative links.
+          </p>
+        </div>
+
+        <div className="mt-3 grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 sm:gap-4">
+          <ConnectionAlbum album={HERO_CONNECTION_ALBUMS[0]} />
+          <ConnectionContributor name="Sounwave" role="writer · producer" />
+          <ConnectionAlbum album={HERO_CONNECTION_ALBUMS[1]} featured />
+          <ConnectionContributor name="Pete Rock" role="performer · producer" />
+          <ConnectionAlbum album={HERO_CONNECTION_ALBUMS[2]} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ConnectionAlbum({ album, featured = false }) {
+  return (
+    <div className="min-w-0 text-center">
+      <img
+        src={album.cover}
+        alt={`${album.name} by ${album.artist}`}
+        className={`mx-auto aspect-square w-full max-w-16 rounded-md border object-cover shadow-sm sm:max-w-20 ${
+          featured ? "border-primary/50 ring-2 ring-primary/10" : "border-border/80"
+        }`}
+      />
+      <p className="mt-1.5 truncate text-[11px] font-semibold leading-4 text-foreground sm:text-xs">
+        {album.name}
+      </p>
+      <p className="truncate text-[10px] leading-4 text-muted-foreground">
+        {album.artist}
+      </p>
+    </div>
+  );
+}
+
+function ConnectionContributor({ name, role }) {
+  return (
+    <div className="flex min-w-8 flex-col items-center sm:min-w-14">
+      <ArrowRight
+        aria-hidden="true"
+        className="size-5 text-primary/60 sm:size-6"
+        strokeWidth={1.5}
+      />
+      <span className="my-1 whitespace-nowrap rounded-full border border-primary/25 bg-primary/10 px-1 py-0.5 text-[8px] font-semibold text-primary sm:px-2 sm:text-[10px]">
+        {name}
+      </span>
+      <span className="hidden text-[9px] text-muted-foreground sm:block">{role}</span>
     </div>
   );
 }
@@ -409,8 +521,7 @@ function ProfileMetric({ label, value, secondary }) {
 function CoverStack({ covers, variant = "expanded" }) {
   const realCovers = covers.filter(Boolean);
   const maxVisible = variant === "compact" ? 3 : 4;
-  const visibleCovers = realCovers.length > maxVisible ? realCovers.slice(0, maxVisible) : realCovers;
-  const hiddenCount = Math.max(0, realCovers.length - visibleCovers.length);
+  const visibleCovers = realCovers.slice(0, maxVisible);
   const containerClass =
     variant === "compact"
       ? "h-14 w-28 p-2"
@@ -436,11 +547,6 @@ function CoverStack({ covers, variant = "expanded" }) {
           small
         />
       ))}
-      {hiddenCount > 0 && (
-        <div className={`-ml-3 flex items-center justify-center rounded-md border border-border/80 bg-background/85 text-sm font-semibold text-muted-foreground shadow-sm ${variant === "compact" ? "size-11" : "size-16 sm:size-20"}`}>
-          +{hiddenCount}
-        </div>
-      )}
     </div>
   );
 }

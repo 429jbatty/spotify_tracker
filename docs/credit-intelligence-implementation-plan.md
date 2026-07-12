@@ -3043,6 +3043,24 @@ Phase 12U in-place graph refresh status completed on 2026-07-11:
 - Independent testing:
   - Choose a contributor from `More starting points` or the expanded directory and confirm the old graph remains visible beneath the status until the focused graph replaces it.
 
+Splash hero Connections preview completed on 2026-07-11:
+
+- Outcome for the overall feature: the public splash hero now previews Connections as a second dimension of an Albumary profile without introducing a separate promotional section or embedding the full interactive graph.
+- What changed:
+  - Replaced the hero's two generic stat cards with a compact, overlaid connection path from `Midnights` through `To Pimp a Butterfly` to `Illmatic`.
+  - Used the path returned by Jacob's album-connection API: Sounwave connects the first two albums through writing/production credits, and Pete Rock connects the latter two through performance/production credits.
+  - Added stable splash-specific artwork for all three albums, including cover artwork for `Midnights`, whose current library record has no image.
+  - Kept the main splash headline, profile preview, listening-history moment, and profile-browsing flow unchanged.
+- Validation:
+  - Splash component lint passed.
+  - Production build passed with the existing font-file and bundle-size warnings.
+  - Rendered desktop review confirmed the path reads as an overlay within the existing hero rather than a separate hero.
+  - Rendered 390px bounds check confirmed the connection card remains inside the viewport; the page's existing header still contributes a small pre-existing horizontal overflow.
+- Independent testing:
+  - Open `/` at desktop and mobile widths and confirm all three covers load, TPAB reads as the bridge album, and the contributor labels remain legible without obscuring the profile preview.
+- Suggested next step:
+  - Observe whether first-time visitors understand the overlay without interaction before considering any link from the static preview into a public profile's Connections route.
+
 - Unbounded path search or weighted shortest-path optimization beyond the
   bounded MVP.
 - Separate `credit_people` and track-level credit tables.

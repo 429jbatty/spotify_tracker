@@ -13,6 +13,7 @@ import {
   fetchAlbumState,
   fetchSpotifyStatus,
   fetchUsers,
+  createUser,
   setSelectedUserSlug,
 } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
@@ -104,6 +105,11 @@ function RootRoute() {
   const navigate = useNavigate();
   return (
     <SplashPage
+      onCreateProfile={async (profile) => {
+        const user = await createUser(profile);
+        navigate(profilePath(user.slug, PROFILE_ROUTES.discovery));
+        return user;
+      }}
       onOpenProfile={(userSlug) => navigate(profilePath(userSlug, PROFILE_ROUTES.discovery))}
     />
   );
