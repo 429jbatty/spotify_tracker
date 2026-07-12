@@ -101,6 +101,72 @@ export async function fetchSpotifyStatus(userSlug = getSelectedUserSlug(), optio
   return requestJson(`/users/${userSlug}/spotify/status`, options);
 }
 
+export async function fetchRecurringContributors(
+  userSlug = getSelectedUserSlug(),
+  { limit = 25, ...options } = {}
+) {
+  if (!userSlug) return null;
+  return requestJson(`/users/${userSlug}/connections/recurring?limit=${limit}`, options);
+}
+
+export async function fetchConnectionGraph(
+  userSlug = getSelectedUserSlug(),
+  {
+    contributorLimit = 12,
+    albumLimitPerContributor = 6,
+    albumLimit = 48,
+    focusNodeId = null,
+    ...options
+  } = {}
+) {
+  if (!userSlug) return null;
+  const params = new URLSearchParams({
+    contributor_limit: String(contributorLimit),
+    album_limit_per_contributor: String(albumLimitPerContributor),
+    album_limit: String(albumLimit),
+  });
+  if (focusNodeId) params.set("focus_node_id", focusNodeId);
+  return requestJson(
+    `/users/${userSlug}/connections/graph?${params.toString()}`,
+    options
+  );
+}
+
+export async function fetchAlbumCreditPairs(
+  userSlug = getSelectedUserSlug(),
+  { limit = 12, ...options } = {}
+) {
+  if (!userSlug) return null;
+  return requestJson(`/users/${userSlug}/connections/album-pairs?limit=${limit}`, options);
+}
+
+export async function fetchAlbumConnectionGraph(
+  userSlug = getSelectedUserSlug(),
+  { albumAId, albumBId, ...options } = {}
+) {
+  if (!userSlug || !albumAId || !albumBId) return null;
+  const params = new URLSearchParams({
+    album_a_id: String(albumAId),
+    album_b_id: String(albumBId),
+  });
+  return requestJson(
+    `/users/${userSlug}/connections/album-connection?${params.toString()}`,
+    options
+  );
+}
+
+export async function fetchCreditPersonDetail(
+  personKey,
+  userSlug = getSelectedUserSlug(),
+  options = {}
+) {
+  if (!userSlug || !personKey) return null;
+  return requestJson(
+    `/users/${userSlug}/connections/people/${encodeURIComponent(personKey)}`,
+    options
+  );
+}
+
 export function spotifyConnectUrl(userSlug = getSelectedUserSlug()) {
   if (!userSlug) return null;
   return joinUrl(API_BASE_URL, `/users/${userSlug}/spotify/connect`);

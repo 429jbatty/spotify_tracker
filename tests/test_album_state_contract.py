@@ -32,7 +32,19 @@ def sample_album_state():
                     {
                         "position": "1",
                         "title": "Opening Track",
-                        "credits": [["Producer", "producer", ""]],
+                        "credits": [
+                            ["Producer", "producer", ""],
+                            {
+                                "name": "Structured Producer",
+                                "artist_mbid": "producer-mbid",
+                                "role": "producer",
+                                "raw_credit_type": "producer",
+                                "attributes": [],
+                                "source_scope": "recording",
+                                "identity_resolution": "mbid",
+                                "ingestion_version": "musicbrainz_credit_v2",
+                            },
+                        ],
                         "recording_mbid": "recording-mbid",
                     }
                 ],
@@ -73,6 +85,7 @@ class AlbumStateContractTests(unittest.TestCase):
         self.assertEqual(album.release_month, 4)
         self.assertEqual(album.release_day, 18)
         self.assertEqual(album.tracklist[0].title, "Opening Track")
+        self.assertEqual(album.tracklist[0].credits[1]["artist_mbid"], "producer-mbid")
         self.assertEqual(album.tags, ["indie"])
         self.assertEqual(album.genres, ["rock"])
         self.assertEqual(album.your_tags, [])

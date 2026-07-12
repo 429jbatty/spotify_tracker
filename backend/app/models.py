@@ -40,6 +40,44 @@ class Album(Base):
         back_populates="album",
         cascade="all, delete-orphan",
     )
+    credit_facts: Mapped[list["AlbumCreditFact"]] = relationship(
+        back_populates="album",
+        cascade="all, delete-orphan",
+    )
+
+
+class AlbumCreditFact(Base):
+    __tablename__ = "album_credit_facts"
+    __table_args__ = (
+        UniqueConstraint(
+            "album_id",
+            "person_key",
+            "raw_role",
+            "source_scope",
+            "ingestion_version",
+            name="uq_album_credit_fact_identity_role_scope",
+        ),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    album_id: Mapped[int] = mapped_column(ForeignKey("albums.id"), index=True)
+    person_key: Mapped[str] = mapped_column(String, index=True)
+    person_name: Mapped[str] = mapped_column(String, index=True)
+    person_mbid: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    identity_resolution: Mapped[str] = mapped_column(String, index=True)
+    ingestion_version: Mapped[str] = mapped_column(String, index=True)
+    raw_role: Mapped[str] = mapped_column(String, index=True)
+    role_bucket: Mapped[str] = mapped_column(String, index=True)
+    source_scope: Mapped[str] = mapped_column(String, index=True)
+    recording_mbid: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
+    track_count: Mapped[int] = mapped_column(Integer, default=0)
+    album_track_count: Mapped[int] = mapped_column(Integer, default=0)
+    track_share: Mapped[float] = mapped_column(Float, default=0)
+    quality_flags_json: Mapped[list[str]] = mapped_column(JSON, default=list)
+    created_at: Mapped[str] = mapped_column(String, index=True)
+    updated_at: Mapped[str] = mapped_column(String, index=True)
+
+    album: Mapped[Album] = relationship(back_populates="credit_facts")
 
 
 class AlbumMetadataCache(Base):

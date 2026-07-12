@@ -10,8 +10,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addAlbumListen, createAlbum } from "../services/albumApi";
-import { Field, StatusMessage } from "./dataQuality/FormBits";
-import { inputClass, textOrUndefined } from "./dataQuality/formUtils";
+import { Field, StatusMessage } from "./albumEditor/FormBits";
+import { inputClass, textOrUndefined } from "./albumEditor/formUtils";
 
 const MODE_OPTIONS = [
   { id: "listen", label: "Log listen" },

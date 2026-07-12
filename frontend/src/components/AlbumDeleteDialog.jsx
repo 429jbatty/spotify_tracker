@@ -12,7 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { deleteAlbum } from "../services/albumApi";
-import { StatusMessage } from "./dataQuality/FormBits";
+import { StatusMessage } from "./albumEditor/FormBits";
 
 function AlbumDeleteDialog({ album, disabled, onAlbumDeleted, onDataChanged }) {
   const [open, setOpen] = useState(false);

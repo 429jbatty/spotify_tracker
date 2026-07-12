@@ -37,10 +37,18 @@ and app state are user-scoped.
   and `musicbrainz_client.py` for API calls, retries, and rate limiting.
 - Artwork caching: use `backend/app/services/artwork_cache_service.py` and the
   `MEDIA_DIR`/`DATA_DIR` settings.
+- Imports: use `backend/app/routers/imports.py` for HTTP boundaries and
+  `backend/app/services/import_service.py` for Last.fm, Spotify ZIP, review,
+  diagnostics, and cleanup behavior.
+- Public activity and splash data: use `backend/app/routers/public.py` and
+  `backend/app/services/public_activity_service.py`.
 - API contracts: update `backend/app/schemas.py` and the matching frontend API
   usage in `frontend/src/services/albumApi.js`.
 - Frontend views: page-level components live in `frontend/src/components/`;
   shared UI primitives live in `frontend/src/components/ui/`.
+- Frontend feature folders: use `components/discovery/`,
+  `components/dataQuality/`, `components/importHistory/`, `components/search/`,
+  `components/splash/`, and `components/timeline/` for feature-specific UI.
 
 ## Backend Standards
 
@@ -55,6 +63,12 @@ and app state are user-scoped.
 - Keep migrations idempotent. `create_schema()` is used by app startup and
   tests, so schema changes must tolerate existing databases.
 - Do not make ad hoc MusicBrainz calls from route handlers or frontend code.
+- Import flows should store raw source events first, derive album-listen
+  candidates second, and send uncertain but plausible candidates to review
+  instead of silently creating or dropping listens.
+- `backend/app/services/import_service.py` is a high-risk module. Keep edits
+  focused, preserve resumable import statuses, and cover Last.fm/Spotify ZIP
+  changes with import tests.
 
 ## Frontend Standards
 
@@ -69,6 +83,9 @@ and app state are user-scoped.
   state through the page-level callback.
 - Avoid adding global state unless prop/state flow becomes genuinely
   unmanageable.
+- Keep user-scoped routes as the normal frontend path. Default/global album
+  endpoints exist for compatibility, but active profile views should prefer
+  `/api/users/{user_slug}/...` through `albumApi.js`.
 
 ## Testing Expectations
 
@@ -90,5 +107,6 @@ and app state are user-scoped.
 - Metadata refresh must preserve listen history and user-specific fields.
 - Artwork URLs can be remote or local. API output should prefer usable local
   media URLs when cached artwork exists.
-- The current `main` branch does not contain formal Last.fm/CSV/Spotify export
-  import APIs. Document or implement those as a separate feature if needed.
+- Last.fm username imports and Spotify Extended Streaming History ZIP imports
+  are implemented. CSV, Google Sheets, or other import sources should be added
+  as separate source-specific flows that reuse the existing import/review model.

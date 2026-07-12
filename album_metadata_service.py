@@ -24,6 +24,8 @@ from musicbrainz_resolver import (
 
 logger = logging.getLogger(__name__)
 
+ENRICHED_CREDIT_INGESTION_VERSION = "musicbrainz_credit_v2"
+
 # ---------------------------
 # Release Group Matching
 # ---------------------------
@@ -205,7 +207,25 @@ def _extract_tracks_and_credits(release):
     return tracklist
 
 
-def _extract_artist_relation_credits(relations):
+def _extract_credit_attributes(raw_credit):
+    attributes = []
+    for attr in raw_credit.get("attributes", []):
+        if isinstance(attr, dict):
+            value = attr.get("attribute")
+        else:
+            value = attr
+        if value:
+            attributes.append(str(value))
+    return attributes
+
+
+def _credit_role(credit_type: str, source_scope: str) -> str:
+    if source_scope == "work":
+        return f"work {credit_type}"
+    return credit_type
+
+
+def _extract_artist_relation_credits(relations, source_scope: str = "recording"):
     credits = []
     for raw_credit in relations:
         credit_type = raw_credit.get("type")
@@ -214,9 +234,20 @@ def _extract_artist_relation_credits(relations):
         if not credit_type or not name:
             continue
 
-        attributes = [attr["attribute"] for attr in raw_credit.get("attributes", [])]
-        attributes_str = ", ".join(attributes)
-        credits.append((name, credit_type, attributes_str))
+        attributes = _extract_credit_attributes(raw_credit)
+        artist_mbid = artist.get("id")
+        credits.append(
+            {
+                "name": name,
+                "artist_mbid": artist_mbid,
+                "role": _credit_role(credit_type, source_scope),
+                "raw_credit_type": credit_type,
+                "attributes": attributes,
+                "source_scope": source_scope,
+                "identity_resolution": "mbid" if artist_mbid else "normalized_name",
+                "ingestion_version": ENRICHED_CREDIT_INGESTION_VERSION,
+            }
+        )
 
     return credits
 
@@ -230,16 +261,16 @@ def _extract_recording_credits(recording: dict):
         logging.info(f"No recording credits found for recording: {recording.get('id')}")
         return {}
 
-    credits = _extract_artist_relation_credits(
-        recording.get("artist-relation-list", [])
-    )
+    credits = _extract_artist_relation_credits(recording.get("artist-relation-list", []))
 
     for work_relation in recording.get("work-relation-list", []):
         work = work_relation.get("work", {})
-        for name, credit_type, attributes in _extract_artist_relation_credits(
-            work.get("artist-relation-list", [])
-        ):
-            credits.append((name, f"work {credit_type}", attributes))
+        credits.extend(
+            _extract_artist_relation_credits(
+                work.get("artist-relation-list", []),
+                source_scope="work",
+            )
+        )
 
     return credits or {}
 

@@ -15,9 +15,13 @@ maintenance.
 - `backend/app/routers/users.py`: user list/create and user-scoped album state
   and album mutations.
 - `backend/app/routers/spotify.py`: Spotify connect, callback, status, and sync.
+- `backend/app/routers/imports.py`: Last.fm preview/commit, Spotify ZIP upload,
+  import history, logs, diagnostics, review resolution, cleanup, and interrupted
+  import resume.
+- `backend/app/routers/public.py`: public recent-listen and splash-page data.
 - `backend/app/routers/health.py`: health check.
 - `backend/app/services/`: app services for Spotify tracking/OAuth, artwork
-  cache, and user administration.
+  cache, imports, public activity, and user administration.
 - `backend/app/jobs/`: scheduled or manual tracking entrypoints.
 
 ## Request Flow
@@ -30,6 +34,11 @@ silent fallbacks.
 Pydantic API contracts live in `backend/app/schemas.py`. Keep frontend API
 usage in `frontend/src/services/albumApi.js` aligned with these contracts.
 
+Import routes start background workers and then delegate source parsing,
+candidate matching, progress updates, review rows, and cleanup to
+`backend/app/services/import_service.py`. Keep router changes limited to HTTP
+validation, response shaping, and expected error translation.
+
 ## Jobs and Scripts
 
 - `make track`: runs `main.py`, a compatibility wrapper for default-user
@@ -41,12 +50,16 @@ usage in `frontend/src/services/albumApi.js` aligned with these contracts.
 - `make cache-artwork`: downloads and stores artwork through the artwork cache
   service.
 - `one_time_scripts/_delete_user.py`: deletes a user and dependent data.
+- `one_time_scripts/_dedupe_albums.py`: reports and optionally merges safe
+  duplicate album records.
 
 ## Standards
 
 - Keep route handlers thin and deterministic.
 - Put business behavior in services and persistence behavior in repositories.
 - Do not call Spotify or MusicBrainz directly from routers.
+- Do not bypass import review behavior when a source session is plausible but
+  below confidence thresholds.
 - Keep migrations idempotent because app startup calls schema creation.
 - Treat `tracking.py`, `album_metadata_service.py`, and
   `metadata_refresh_service.py` as active backend modules, not archival files.

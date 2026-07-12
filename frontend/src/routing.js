@@ -2,7 +2,7 @@ export const PROFILE_ROUTES = {
   discovery: "discovery",
   library: "library",
   releases: "releases",
-  quality: "quality",
+  connections: "connections",
 };
 
 export const LEGACY_PROFILE_ROUTES = {

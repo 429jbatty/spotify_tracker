@@ -13,12 +13,13 @@ import {
   fetchAlbumState,
   fetchSpotifyStatus,
   fetchUsers,
+  createUser,
   setSelectedUserSlug,
 } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
 import Header from "./components/universalHeader";
 import PageDiscovery from "./components/PageDiscovery";
-import PageDataQuality from "./components/PageDataQuality";
+import PageConnections from "./components/PageConnections";
 import { filterAlbums } from "./components/utils/albumFilters";
 import SplashPage from "./components/splash/SplashPage";
 import { Toaster } from "./components/Toaster";
@@ -104,6 +105,11 @@ function RootRoute() {
   const navigate = useNavigate();
   return (
     <SplashPage
+      onCreateProfile={async (profile) => {
+        const user = await createUser(profile);
+        navigate(profilePath(user.slug, PROFILE_ROUTES.discovery));
+        return user;
+      }}
       onOpenProfile={(userSlug) => navigate(profilePath(userSlug, PROFILE_ROUTES.discovery))}
     />
   );
@@ -131,6 +137,7 @@ function UserRoute({ view }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState([]);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [inlineAlbumSelection, setInlineAlbumSelection] = useState(null);
   const selectedUser = useMemo(
     () => users.find((user) => user.slug === userSlug) || null,
     [userSlug, users]
@@ -146,6 +153,16 @@ function UserRoute({ view }) {
     setData(normalized);
     setDataUserSlug(selectedUser.slug);
     setLoadError(null);
+    setInlineAlbumSelection((current) => {
+      if (!current) return current;
+      if (current.userSlug !== selectedUser.slug) return null;
+      return Object.prototype.hasOwnProperty.call(
+        normalized.completed_albums,
+        String(current.albumId)
+      )
+        ? current
+        : null;
+    });
     return normalized;
   }, [selectedUser]);
 
@@ -204,6 +221,7 @@ function UserRoute({ view }) {
     setDataUserSlug(null);
     setSpotifyStatus({ connected: false });
     setSpotifyStatusUserSlug(null);
+    setInlineAlbumSelection(null);
     navigate("/");
   };
 
@@ -231,6 +249,12 @@ function UserRoute({ view }) {
   const routedAlbum = albumId
     ? processedAlbums.find((album) => String(album.id) === String(albumId))
     : null;
+  const inlineAlbum = inlineAlbumSelection?.albumId
+    && inlineAlbumSelection.userSlug === selectedUser.slug
+    && !albumId
+    ? processedAlbums.find((album) => String(album.id) === String(inlineAlbumSelection.albumId))
+    : null;
+  const panelAlbum = routedAlbum || inlineAlbum;
   const routeAlbumMissing = Boolean(albumId && !routedAlbum);
 
   const handleFilterSelect = (filter) => {
@@ -238,6 +262,7 @@ function UserRoute({ view }) {
       if (current.some((item) => item.id === filter.id)) return current;
       return [...current, filter];
     });
+    setInlineAlbumSelection(null);
     navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
   };
 
@@ -252,13 +277,25 @@ function UserRoute({ view }) {
 
   const handleOpenAlbum = (album) => {
     if (!album?.id) return;
+    setInlineAlbumSelection(null);
     navigate(albumPath(selectedUser.slug, album.id));
   };
 
-  const handleAlbumRouteOpenChange = (open) => {
-    if (!open) {
+  const handleOpenAlbumInline = (album) => {
+    if (!album?.id) return;
+    setInlineAlbumSelection({
+      userSlug: selectedUser.slug,
+      albumId: String(album.id),
+    });
+  };
+
+  const handleAlbumPanelOpenChange = (open) => {
+    if (open) return;
+    if (albumId) {
       navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
+      return;
     }
+    setInlineAlbumSelection(null);
   };
 
   const handleRoutedAlbumUpdated = (album) => {
@@ -267,7 +304,11 @@ function UserRoute({ view }) {
   };
 
   const handleRoutedAlbumDeleted = () => {
-    navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
+    if (albumId) {
+      navigate(profilePath(selectedUser.slug, PROFILE_ROUTES.library));
+    } else {
+      setInlineAlbumSelection(null);
+    }
     loadAlbumState();
   };
 
@@ -291,7 +332,7 @@ function UserRoute({ view }) {
             onImportDialogOpenChange={setImportDialogOpen}
           />
 
-          {!(view === PROFILE_ROUTES.discovery) && (
+          {[PROFILE_ROUTES.library, PROFILE_ROUTES.releases].includes(view) && (
             <div className="px-6">
               <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
@@ -356,12 +397,11 @@ function UserRoute({ view }) {
             onOpenAlbum={handleOpenAlbum}
           />
         )}
-        {!routeAlbumMissing && view === PROFILE_ROUTES.quality && (
-          <PageDataQuality
-            albums={visibleAlbums}
-            onDataChanged={loadAlbumState}
-            onFilterSelect={handleFilterSelect}
-            onOpenAlbum={handleOpenAlbum}
+        {!routeAlbumMissing && view === PROFILE_ROUTES.connections && (
+          <PageConnections
+            albums={processedAlbums}
+            selectedUser={selectedUser}
+            onOpenAlbum={handleOpenAlbumInline}
           />
         )}
       </div>
@@ -375,9 +415,9 @@ function UserRoute({ view }) {
         hideTrigger
       />
       <AlbumPanelSheet
-        open={Boolean(routedAlbum)}
-        onOpenChange={handleAlbumRouteOpenChange}
-        album={routedAlbum}
+        open={Boolean(panelAlbum)}
+        onOpenChange={handleAlbumPanelOpenChange}
+        album={panelAlbum}
         searchTerm={searchTerm}
         onFilterSelect={handleFilterSelect}
         onAlbumUpdated={handleRoutedAlbumUpdated}
@@ -403,7 +443,7 @@ function App() {
       <Route path="/:userSlug/discovery" element={<UserRoute view={PROFILE_ROUTES.discovery} />} />
       <Route path="/:userSlug/library" element={<UserRoute view={PROFILE_ROUTES.library} />} />
       <Route path="/:userSlug/releases" element={<UserRoute view={PROFILE_ROUTES.releases} />} />
-      <Route path="/:userSlug/quality" element={<UserRoute view={PROFILE_ROUTES.quality} />} />
+      <Route path="/:userSlug/connections" element={<UserRoute view={PROFILE_ROUTES.connections} />} />
       <Route
         path="/:userSlug/albums/:albumId"
         element={<UserRoute view={PROFILE_ROUTES.library} />}

@@ -1,8 +1,39 @@
 // albumNormalizer.jsx
 
+function normalizeCredit(credit) {
+  if (Array.isArray(credit) && credit.length >= 3) {
+    return [credit[0], credit[1], credit[2]];
+  }
+
+  if (credit && typeof credit === "object") {
+    const name = credit.name || credit.artist || "";
+    const role = credit.role || credit.raw_credit_type || credit.type || "";
+    const detail = Array.isArray(credit.attributes)
+      ? credit.attributes.join(", ")
+      : credit.attributes || credit.detail || "";
+
+    if (name && role) {
+      return [name, role, detail];
+    }
+  }
+
+  return null;
+}
+
+function normalizeTrackCredits(track) {
+  if (!Array.isArray(track?.credits)) {
+    return track;
+  }
+
+  return {
+    ...track,
+    credits: track.credits.map(normalizeCredit).filter(Boolean),
+  };
+}
+
 /**
  * Aggregate all track-level credits into a single album-level array.
- * Each credit is an array: [name, role, detail]
+ * Each display credit is an array: [name, role, detail]
  */
 function aggregateAlbumCredits(album) {
   const seen = new Set();
@@ -11,12 +42,12 @@ function aggregateAlbumCredits(album) {
   for (const track of album.tracklist || []) {
     const credits = Array.isArray(track.credits) ? track.credits : [];
     for (const credit of credits) {
-      if (Array.isArray(credit) && credit.length >= 3) {
-        const key = `${credit[0]}||${credit[1]}||${credit[2]}`; // unique string key
-        if (!seen.has(key)) {
-          seen.add(key);
-          allCredits.push([credit[0], credit[1], credit[2]]);
-        }
+      const normalizedCredit = normalizeCredit(credit);
+      if (normalizedCredit) {
+        const key = `${normalizedCredit[0]}||${normalizedCredit[1]}||${normalizedCredit[2]}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        allCredits.push(normalizedCredit);
       }
     }
   }
@@ -40,10 +71,17 @@ export function normalizeAlbum(album) {
     : null;
 
   // Aggregate album-level credits
-  const album_credits = aggregateAlbumCredits(album);
+  const tracklist = Array.isArray(album.tracklist)
+    ? album.tracklist.map(normalizeTrackCredits)
+    : album.tracklist;
+  const normalizedAlbum = {
+    ...album,
+    tracklist,
+  };
+  const album_credits = aggregateAlbumCredits(normalizedAlbum);
 
   return {
-    ...album,
+    ...normalizedAlbum,
     release_date,
     album_credits, // array of arrays: [name, role, detail]
   };
