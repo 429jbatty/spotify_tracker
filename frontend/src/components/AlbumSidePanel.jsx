@@ -3,7 +3,7 @@ import AlbumHeader from "./AlbumCardHeader";
 import ListenCountBadge from "./ListenCountBadge";
 import AlbumRatingBadge from "./AlbumRatingBadge";
 import AlbumListenHistory from "./AlbumListenHistory";
-import AlbumListenEditor from "./dataQuality/AlbumListenEditor";
+import AlbumListenEditor from "./albumEditor/AlbumListenEditor";
 import AlbumMetadata from "./AlbumMetadata";
 import AlbumMetadataActions from "./AlbumMetadataActions";
 import AlbumTrackDetails from "./AlbumTrackDetails";

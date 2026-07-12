@@ -19,7 +19,6 @@ import normalizeAlbums from "./services/albumNormalizer";
 import Header from "./components/universalHeader";
 import PageDiscovery from "./components/PageDiscovery";
 import PageConnections from "./components/PageConnections";
-import PageDataQuality from "./components/PageDataQuality";
 import { filterAlbums } from "./components/utils/albumFilters";
 import SplashPage from "./components/splash/SplashPage";
 import { Toaster } from "./components/Toaster";
@@ -327,7 +326,7 @@ function UserRoute({ view }) {
             onImportDialogOpenChange={setImportDialogOpen}
           />
 
-          {[PROFILE_ROUTES.library, PROFILE_ROUTES.releases, PROFILE_ROUTES.quality].includes(view) && (
+          {[PROFILE_ROUTES.library, PROFILE_ROUTES.releases].includes(view) && (
             <div className="px-6">
               <AlbumSearch searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </div>
@@ -399,14 +398,6 @@ function UserRoute({ view }) {
             onOpenAlbum={handleOpenAlbumInline}
           />
         )}
-        {!routeAlbumMissing && view === PROFILE_ROUTES.quality && (
-          <PageDataQuality
-            albums={visibleAlbums}
-            onDataChanged={loadAlbumState}
-            onFilterSelect={handleFilterSelect}
-            onOpenAlbum={handleOpenAlbum}
-          />
-        )}
       </div>
       <Toaster />
       <ImportHistoryDialog
@@ -447,7 +438,6 @@ function App() {
       <Route path="/:userSlug/library" element={<UserRoute view={PROFILE_ROUTES.library} />} />
       <Route path="/:userSlug/releases" element={<UserRoute view={PROFILE_ROUTES.releases} />} />
       <Route path="/:userSlug/connections" element={<UserRoute view={PROFILE_ROUTES.connections} />} />
-      <Route path="/:userSlug/quality" element={<UserRoute view={PROFILE_ROUTES.quality} />} />
       <Route
         path="/:userSlug/albums/:albumId"
         element={<UserRoute view={PROFILE_ROUTES.library} />}

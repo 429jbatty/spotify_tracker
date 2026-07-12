@@ -3,7 +3,6 @@ export const PROFILE_ROUTES = {
   library: "library",
   releases: "releases",
   connections: "connections",
-  quality: "quality",
 };
 
 export const LEGACY_PROFILE_ROUTES = {

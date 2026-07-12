@@ -134,8 +134,6 @@ export function albumMatchesFilter(album, filter) {
   if (filter.type === "entry-source") {
     return normalize(album.entry_source || album.source) === value;
   }
-  if (filter.type === "quality") return getQualityIssueIds(album).includes(filter.value);
-
   return true;
 }
 
@@ -154,36 +152,4 @@ export function filterAlbums(albums, searchTerm, filters = []) {
     matchedAlbums.push(term ? { ...album, searchMatches } : album);
     return matchedAlbums;
   }, []);
-}
-
-export const QUALITY_ISSUES = [
-  { id: "missing-artwork", label: "Missing or unresolved artwork" },
-  { id: "missing-label", label: "Missing label" },
-  { id: "missing-release-date", label: "Missing release date" },
-  { id: "missing-tracklist", label: "Missing tracklist" },
-  { id: "missing-credits", label: "Missing track credits" },
-];
-
-export function hasMissingArtwork(album) {
-  const imageUrl = String(album.image_url || "").trim();
-
-  if (!imageUrl) return true;
-  if (imageUrl.toLowerCase().includes("placeholder")) return true;
-  return false;
-}
-
-export function getQualityIssueIds(album) {
-  const issues = [];
-  const tracklist = album.tracklist || [];
-  const hasCredits = tracklist.some(
-    (track) => Array.isArray(track.credits) && track.credits.length > 0
-  );
-
-  if (hasMissingArtwork(album)) issues.push("missing-artwork");
-  if (!album.label) issues.push("missing-label");
-  if (!album.release_year) issues.push("missing-release-date");
-  if (tracklist.length === 0) issues.push("missing-tracklist");
-  if (!hasCredits) issues.push("missing-credits");
-
-  return issues;
 }

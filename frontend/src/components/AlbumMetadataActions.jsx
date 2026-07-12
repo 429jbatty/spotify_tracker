@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, DatabaseZap, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { refreshAlbumMetadata } from "../services/albumApi";
-import AlbumEditForm from "./dataQuality/AlbumEditForm";
-import { StatusMessage } from "./dataQuality/FormBits";
+import AlbumEditForm from "./albumEditor/AlbumEditForm";
+import { StatusMessage } from "./albumEditor/FormBits";
 import AlbumDeleteDialog from "./AlbumDeleteDialog";
 
 function valueKey(value) {

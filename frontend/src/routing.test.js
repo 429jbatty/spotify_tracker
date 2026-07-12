@@ -16,7 +16,6 @@ describe("routing helpers", () => {
     expect(profilePath("jacob", PROFILE_ROUTES.library)).toBe("/jacob/library");
     expect(profilePath("jacob", PROFILE_ROUTES.releases)).toBe("/jacob/releases");
     expect(profilePath("jacob", PROFILE_ROUTES.connections)).toBe("/jacob/connections");
-    expect(profilePath("jacob", PROFILE_ROUTES.quality)).toBe("/jacob/quality");
   });
 
   it("builds route-backed album detail paths", () => {
