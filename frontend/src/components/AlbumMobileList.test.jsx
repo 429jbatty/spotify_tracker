@@ -92,5 +92,6 @@ describe("AlbumMobileList", () => {
     await user.click(screen.getByRole("button", { name: "Apply" }));
 
     expect(onFilterChange).toHaveBeenCalledWith("artist", ["Test Artist"]);
+    expect(screen.getByRole("button", { name: "Filter Artist" })).toHaveClass("min-h-11");
   });
 });

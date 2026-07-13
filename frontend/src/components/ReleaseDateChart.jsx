@@ -53,12 +53,10 @@ function ReleaseDateChart({
       ? albumsPerDecade.map((d) => ({ label: d.decade, count: d.count }))
       : allYears.map((y) => ({ label: y.year, count: y.count }));
 
-  const minimumYearBarPitch = 48;
-  const minChartWidth =
-    chartMode === "year"
-      ? margin.left + margin.right + bars.length * minimumYearBarPitch
-      : 1;
+  const minimumBarPitch = 48;
+  const minChartWidth = margin.left + margin.right + bars.length * minimumBarPitch;
   const chartWidth = Math.max(containerWidth || 1, minChartWidth);
+  const chartScrolls = chartWidth > (containerWidth || chartWidth);
   const innerWidth = Math.max(1, chartWidth - margin.left - margin.right);
   const innerHeight = chartHeight - margin.top - margin.bottom;
   const currentMax = bars.length > 0 ? Math.max(...bars.map((b) => b.count)) : 1;
@@ -134,14 +132,14 @@ function ReleaseDateChart({
         ref={chartRef}
         className="w-full overflow-x-auto pb-4"
         aria-label={
-          chartMode === "year"
-            ? "Release dates by year. Scroll horizontally to reach every year."
+          chartScrolls
+            ? `Release dates by ${chartMode}. Scroll horizontally to reach every ${chartMode === "year" ? "year" : "decade"}.`
             : "Release dates by decade."
         }
       >
-        {chartMode === "year" && (
+        {chartScrolls && (
           <p className="mb-3 text-xs text-muted-foreground">
-            Scroll horizontally to browse every year. Select a bar to filter the library.
+            Scroll horizontally to browse every {chartMode === "year" ? "year" : "decade"}. Select a bar to filter the library.
           </p>
         )}
         <svg

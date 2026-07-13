@@ -15,6 +15,7 @@ function AlbumColumnFilter({
   onApply,
   buttonClassName = "",
   optionClassName = "",
+  mobile = false,
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -142,6 +143,7 @@ function AlbumColumnFilter({
                 size="icon-xs"
                 aria-label="Clear search"
                 onClick={() => setQuery("")}
+                className={mobile ? "min-h-11 min-w-11" : ""}
               >
                 <X />
               </Button>
@@ -151,14 +153,14 @@ function AlbumColumnFilter({
           <div className="mt-3 flex items-center justify-between gap-2 text-xs">
             <button
               type="button"
-              className="text-primary hover:underline"
+              className={`px-2 text-primary hover:underline ${mobile ? "min-h-11" : ""}`}
               onClick={allVisibleSelected ? clearVisible : selectVisible}
             >
               {allVisibleSelected ? "Clear shown" : "Select shown"}
             </button>
             <button
               type="button"
-              className="text-muted-foreground hover:text-foreground"
+              className={`px-2 text-muted-foreground hover:text-foreground ${mobile ? "min-h-11" : ""}`}
               onClick={() => setDraftValues(new Set())}
             >
               Clear all
@@ -195,7 +197,7 @@ function AlbumColumnFilter({
           </div>
 
           <div className="mt-3 flex justify-between gap-2">
-            <Button type="button" variant="ghost" size="sm" onClick={clearFilter}>
+            <Button type="button" variant="ghost" size="sm" onClick={clearFilter} className={mobile ? "min-h-11" : ""}>
               Clear Filter
             </Button>
             <div className="flex gap-2">
@@ -204,10 +206,11 @@ function AlbumColumnFilter({
                 variant="outline"
                 size="sm"
                 onClick={() => setOpen(false)}
+                className={mobile ? "min-h-11" : ""}
               >
                 Cancel
               </Button>
-              <Button type="button" size="sm" onClick={applyFilter}>
+              <Button type="button" size="sm" onClick={applyFilter} className={mobile ? "min-h-11" : ""}>
                 Apply
               </Button>
             </div>

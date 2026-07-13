@@ -41,6 +41,20 @@ describe("ReleaseDateChart", () => {
     expect(onSelect).toHaveBeenCalledWith(1970, null);
   });
 
+  it("uses an intentional horizontal scroll model when decade bars need touch space", () => {
+    const { container } = render(
+      <ReleaseDateChart
+        {...commonProps}
+        albums={albumsForYears([1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010])}
+        chartMode="decade"
+        onSelect={vi.fn()}
+      />,
+    );
+
+    expect(container.querySelector("svg")).toHaveAttribute("width", "460");
+    expect(screen.getByText(/Scroll horizontally to browse every decade/i)).toBeInTheDocument();
+  });
+
   it("provides a clearly labeled horizontal year view with reachable bar controls", () => {
     const onSelect = vi.fn();
     const years = Array.from({ length: 12 }, (_, index) => 2000 + index);

@@ -50,6 +50,7 @@ function AlbumMobileList({
                 onApply={(values) => onFilterChange(header.key, values)}
                 buttonClassName="min-h-11"
                 optionClassName="min-h-11"
+                mobile
               />
             </div>
           ))}
