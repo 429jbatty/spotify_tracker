@@ -110,7 +110,7 @@ function ReleaseDateChart({
 
         <div className="flex shrink-0">
           <Tabs value={chartMode} onValueChange={onToggle}>
-            <TabsList className="grid grid-cols-2 rounded-md bg-muted p-1">
+            <TabsList className="grid h-12 grid-cols-2 rounded-md bg-muted p-1">
               <TabsTrigger
                 value="year"
                 className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"

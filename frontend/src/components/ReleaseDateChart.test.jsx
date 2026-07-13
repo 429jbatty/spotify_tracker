@@ -34,6 +34,7 @@ describe("ReleaseDateChart", () => {
     );
 
     expect(container.querySelector("svg")).toHaveAttribute("width", "390");
+    expect(screen.getByRole("tab", { name: "Year" }).parentElement).toHaveClass("h-12");
 
     const decade = screen.getByRole("button", { name: "Decade 1970: 1 album" });
     fireEvent.keyDown(decade, { key: "Enter" });
