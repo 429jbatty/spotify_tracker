@@ -539,6 +539,27 @@ def migrate_import_sessions_artifact_path(engine: Engine) -> None:
         connection.execute(text("ALTER TABLE import_sessions ADD COLUMN artifact_path TEXT"))
 
 
+def migrate_profile_ownership(engine: Engine) -> None:
+    """Fail closed for profiles created before authenticated ownership existed.
+
+    Existing Spotify refresh tokens cannot be safely attributed to a newly
+    introduced account, so they are removed once when adding the ownership
+    column. The profile data remains public and intact, but must be claimed by
+    an explicit future migration rather than becoming writable by URL alone.
+    """
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "users"):
+        return
+
+    columns = _table_columns(engine, "users")
+    if "owner_account_id" in columns:
+        return
+
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE users ADD COLUMN owner_account_id INTEGER"))
+        if _table_exists(engine, "user_spotify_credentials"):
+            connection.execute(text("DELETE FROM user_spotify_credentials"))
+
+
 def migrate_import_session_source_metadata(engine: Engine) -> None:
     if not _is_sqlite_engine(engine):
         return
@@ -817,6 +838,7 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_imported_event_candidate_key(engine)
     migrate_album_metadata_cache(engine)
     migrate_import_sessions_artifact_path(engine)
+    migrate_profile_ownership(engine)
     migrate_import_session_source_metadata(engine)
     migrate_spotify_streaming_events(engine)
     migrate_import_session_logs(engine)

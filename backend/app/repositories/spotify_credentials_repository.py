@@ -46,6 +46,11 @@ class SpotifyCredentialsRepository:
         self.session.commit()
         return credentials
 
+    def delete_for_user(self, user_id: int) -> None:
+        credentials = self.get_for_user(user_id)
+        if credentials is not None:
+            self.session.delete(credentials)
+
     def record_sync_success(self, *, user_id: int, synced_at: str) -> None:
         credentials = self.get_for_user(user_id)
         if credentials is None:

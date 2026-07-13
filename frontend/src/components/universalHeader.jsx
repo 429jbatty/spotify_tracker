@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import AlbumCreateDialog from "./AlbumCreateDialog";
-import { spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
+import { disconnectSpotify, spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -54,6 +54,7 @@ function UniversalHeader({
   albums,
   onDataChanged,
   selectedUser,
+  isOwner = false,
   spotifyStatus,
   onSpotifyStatusChanged,
   onSwitchUser,
@@ -63,8 +64,8 @@ function UniversalHeader({
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isSyncing, setIsSyncing] = useState(false);
-  const handleConnectSpotify = () => {
-    const url = spotifyConnectUrl(selectedUser?.slug);
+  const handleConnectSpotify = async () => {
+    const url = await spotifyConnectUrl(selectedUser?.slug);
     if (url) window.location.href = url;
   };
 
@@ -86,6 +87,20 @@ function UniversalHeader({
       });
     } finally {
       setIsSyncing(false);
+    }
+  };
+
+  const handleDisconnectSpotify = async () => {
+    try {
+      await disconnectSpotify(selectedUser?.slug);
+      await onSpotifyStatusChanged?.();
+      toast({ title: "Spotify disconnected" });
+    } catch (error) {
+      toast({
+        title: "Could not disconnect Spotify",
+        description: error.message || "An error occurred while disconnecting.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -113,12 +128,14 @@ function UniversalHeader({
               </div>
             </button>
 
-            <AlbumCreateDialog
-              albums={albums}
-              onDataChanged={onDataChanged}
-              variant="outline"
-              triggerClassName="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 xl:hidden"
-            />
+            {isOwner && (
+              <AlbumCreateDialog
+                albums={albums}
+                onDataChanged={onDataChanged}
+                variant="outline"
+                triggerClassName="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 xl:hidden"
+              />
+            )}
           </div>
 
           <Tabs
@@ -165,26 +182,32 @@ function UniversalHeader({
                 Switch user
               </button>
             </div>
-            <Button
-              variant="outline"
-              onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}
-            >
-              Import History
-            </Button>
-            {spotifyStatus?.connected ? (
-              <Button variant="outline" onClick={handleSyncNow} disabled={isSyncing}>
-                {isSyncing ? "Syncing..." : "Sync Spotify"}
-              </Button>
+            {isOwner ? (
+              <>
+                <Button variant="outline" onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}>
+                  Import History
+                </Button>
+                {spotifyStatus?.connected ? (
+                  <>
+                    <Button variant="outline" onClick={handleSyncNow} disabled={isSyncing}>
+                      {isSyncing ? "Syncing..." : "Sync Spotify"}
+                    </Button>
+                    <Button variant="outline" onClick={handleDisconnectSpotify}>Disconnect Spotify</Button>
+                  </>
+                ) : (
+                  <Button variant="outline" onClick={handleConnectSpotify}>
+                    Connect Spotify
+                  </Button>
+                )}
+                <AlbumCreateDialog
+                  albums={albums}
+                  onDataChanged={onDataChanged}
+                  triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
+                />
+              </>
             ) : (
-              <Button variant="outline" onClick={handleConnectSpotify}>
-                Connect Spotify
-              </Button>
+              <span className="text-xs text-muted-foreground">Public profile · read-only</span>
             )}
-            <AlbumCreateDialog
-              albums={albums}
-              onDataChanged={onDataChanged}
-              triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
-            />
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 xl:hidden">
@@ -194,21 +217,26 @@ function UniversalHeader({
           <Button variant="outline" size="sm" onClick={onSwitchUser}>
             Switch user
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}
-          >
-            Import History
-          </Button>
-          {spotifyStatus?.connected ? (
-            <Button variant="outline" size="sm" onClick={handleSyncNow} disabled={isSyncing}>
-              {isSyncing ? "Syncing..." : "Sync Spotify"}
-            </Button>
+          {isOwner ? (
+            <>
+              <Button variant="outline" size="sm" onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}>
+                Import History
+              </Button>
+              {spotifyStatus?.connected ? (
+                <>
+                  <Button variant="outline" size="sm" onClick={handleSyncNow} disabled={isSyncing}>
+                    {isSyncing ? "Syncing..." : "Sync Spotify"}
+                  </Button>
+                  <Button variant="outline" size="sm" onClick={handleDisconnectSpotify}>Disconnect Spotify</Button>
+                </>
+              ) : (
+                <Button variant="outline" size="sm" onClick={handleConnectSpotify}>
+                  Connect Spotify
+                </Button>
+              )}
+            </>
           ) : (
-            <Button variant="outline" size="sm" onClick={handleConnectSpotify}>
-              Connect Spotify
-            </Button>
+            <span className="text-xs text-muted-foreground">Public profile · read-only</span>
           )}
         </div>
       </div>

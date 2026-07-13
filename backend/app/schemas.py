@@ -17,6 +17,30 @@ class User(BaseModel):
 class UserCreate(BaseModel):
     slug: str
     display_name: str
+    email: str
+    password: str = Field(min_length=12)
+
+
+class ProfileCreateResponse(User):
+    session_token: str
+
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
+class AuthenticatedAccount(BaseModel):
+    email: str
+    profile_slugs: list[str] = Field(default_factory=list)
+
+
+class LoginResponse(AuthenticatedAccount):
+    session_token: str
+
+
+class SpotifyConnectResponse(BaseModel):
+    authorize_url: str
 
 
 class SpotifyStatus(BaseModel):

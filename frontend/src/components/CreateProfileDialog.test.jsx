@@ -31,6 +31,11 @@ function deferred() {
   return { promise, resolve };
 }
 
+async function fillCredentials(user) {
+  await user.type(screen.getByLabelText("Email"), "listener@example.com");
+  await user.type(screen.getByLabelText("Password"), "correct-horse-battery-staple");
+}
+
 describe("profileSlugFromName", () => {
   it("creates URL-safe slugs from display names", () => {
     expect(profileSlugFromName("  Béyoncé & JAY-Z! ")).toBe("beyonce-jay-z");
@@ -57,12 +62,15 @@ describe("CreateProfileDialog", () => {
     render(<DialogHarness onCreateProfile={onCreateProfile} />);
 
     await user.type(screen.getByLabelText("Profile name"), "Béyoncé & JAY-Z!");
+    await fillCredentials(user);
     expect(screen.getByText("Your profile URL: /beyonce-jay-z")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Create profile" }));
 
     expect(onCreateProfile).toHaveBeenCalledWith({
       display_name: "Béyoncé & JAY-Z!",
       slug: "beyonce-jay-z",
+      email: "listener@example.com",
+      password: "correct-horse-battery-staple",
     });
     await waitFor(() => {
       expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
@@ -75,6 +83,7 @@ describe("CreateProfileDialog", () => {
     render(<DialogHarness onCreateProfile={vi.fn().mockReturnValue(request.promise)} />);
 
     await user.type(screen.getByLabelText("Profile name"), "Listener");
+    await fillCredentials(user);
     await user.click(screen.getByRole("button", { name: "Create profile" }));
 
     expect(screen.getByRole("button", { name: "Creating profile..." })).toBeDisabled();
@@ -91,6 +100,7 @@ describe("CreateProfileDialog", () => {
     render(<DialogHarness onCreateProfile={onCreateProfile} />);
 
     await user.type(screen.getByLabelText("Profile name"), "Alex");
+    await fillCredentials(user);
     await user.click(screen.getByRole("button", { name: "Create profile" }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("User already exists: alex");

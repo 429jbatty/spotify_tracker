@@ -16,10 +16,15 @@ import {
 
 vi.mock("./services/albumApi", () => ({
   createUser: vi.fn(),
+  disconnectSpotify: vi.fn(),
   fetchAlbumState: vi.fn(),
   fetchSpotifyStatus: vi.fn(),
   fetchUsers: vi.fn(),
+  login: vi.fn(),
+  ownsProfile: vi.fn(() => true),
   setSelectedUserSlug: vi.fn(),
+  spotifyConnectUrl: vi.fn(),
+  syncSpotifyNow: vi.fn(),
 }));
 
 vi.mock("./components/splash/SplashPage", () => ({

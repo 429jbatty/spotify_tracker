@@ -100,6 +100,13 @@ class User(Base):
     slug: Mapped[str] = mapped_column(String, unique=True, index=True)
     display_name: Mapped[str] = mapped_column(String)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+    owner_account_id: Mapped[int | None] = mapped_column(
+        ForeignKey("accounts.id"),
+        nullable=True,
+        index=True,
+    )
+
+    owner_account: Mapped["Account | None"] = relationship(back_populates="profiles")
 
     listens: Mapped[list["AlbumListen"]] = relationship(back_populates="user")
     user_albums: Mapped[list["UserAlbum"]] = relationship(back_populates="user")
@@ -123,6 +130,48 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+
+
+class Account(Base):
+    __tablename__ = "accounts"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    email: Mapped[str] = mapped_column(String, unique=True, index=True)
+    password_hash: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String, index=True)
+
+    profiles: Mapped[list[User]] = relationship(back_populates="owner_account")
+    sessions: Mapped[list["AccountSession"]] = relationship(
+        back_populates="account",
+        cascade="all, delete-orphan",
+    )
+    spotify_oauth_states: Mapped[list["SpotifyOAuthState"]] = relationship(
+        back_populates="account",
+        cascade="all, delete-orphan",
+    )
+
+
+class AccountSession(Base):
+    __tablename__ = "account_sessions"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    account_id: Mapped[int] = mapped_column(ForeignKey("accounts.id"), index=True)
+    token_hash: Mapped[str] = mapped_column(String, unique=True, index=True)
+    created_at: Mapped[str] = mapped_column(String, index=True)
+
+    account: Mapped[Account] = relationship(back_populates="sessions")
+
+
+class SpotifyOAuthState(Base):
+    __tablename__ = "spotify_oauth_states"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    account_id: Mapped[int] = mapped_column(ForeignKey("accounts.id"), index=True)
+    state_hash: Mapped[str] = mapped_column(String, unique=True, index=True)
+    created_at: Mapped[str] = mapped_column(String, index=True)
+
+    account: Mapped[Account] = relationship(back_populates="spotify_oauth_states")
 
 
 class UserAlbum(Base):

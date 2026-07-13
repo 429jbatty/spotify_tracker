@@ -15,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { fetchSplashData } from "@/services/albumApi";
 import CreateProfileDialog from "@/components/CreateProfileDialog";
+import LoginDialog from "@/components/LoginDialog";
 
 const TRACKED_FEATURES = [
   {
@@ -79,10 +80,11 @@ const HERO_SNAPSHOT = {
 
 const EMPTY_ARRAY = [];
 
-function SplashPage({ onCreateProfile, onOpenProfile }) {
+function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
   const [payload, setPayload] = useState(null);
   const [status, setStatus] = useState("loading");
   const [createProfileOpen, setCreateProfileOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -127,6 +129,7 @@ function SplashPage({ onCreateProfile, onOpenProfile }) {
         onBrowse={handleExplore}
         onAbout={handleAbout}
         onCreateProfile={() => setCreateProfileOpen(true)}
+        onLogin={() => setLoginOpen(true)}
       />
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
         <section className="flex flex-col gap-6">
@@ -161,11 +164,12 @@ function SplashPage({ onCreateProfile, onOpenProfile }) {
         onOpenChange={setCreateProfileOpen}
         onCreateProfile={onCreateProfile}
       />
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} onLogin={onLogin} />
     </main>
   );
 }
 
-function SplashHeader({ onBrowse, onAbout, onCreateProfile }) {
+function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin }) {
   return (
     <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
@@ -190,6 +194,7 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile }) {
           >
             About
           </button>
+          <button type="button" onClick={onLogin} className="transition-colors hover:text-foreground">Sign in</button>
           <Button type="button" size="sm" onClick={onCreateProfile}>
             Create profile
           </Button>

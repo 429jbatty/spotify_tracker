@@ -14,6 +14,8 @@ import {
   fetchSpotifyStatus,
   fetchUsers,
   createUser,
+  login,
+  ownsProfile,
   setSelectedUserSlug,
 } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
@@ -111,6 +113,12 @@ function RootRoute() {
         return user;
       }}
       onOpenProfile={(userSlug) => navigate(profilePath(userSlug, PROFILE_ROUTES.discovery))}
+      onLogin={async (credentials) => {
+        const account = await login(credentials);
+        const userSlug = account.profile_slugs?.[0];
+        if (userSlug) navigate(profilePath(userSlug, PROFILE_ROUTES.discovery));
+        return account;
+      }}
     />
   );
 }
@@ -142,6 +150,7 @@ function UserRoute({ view }) {
     () => users.find((user) => user.slug === userSlug) || null,
     [userSlug, users]
   );
+  const isOwner = Boolean(selectedUser && ownsProfile(selectedUser.slug));
 
   const loadAlbumState = useCallback(async (options = {}) => {
     if (!selectedUser) return null;
@@ -201,7 +210,7 @@ function UserRoute({ view }) {
   }, [loadAlbumState, selectedUser]);
 
   useEffect(() => {
-    if (!selectedUser) return undefined;
+    if (!selectedUser || !isOwner) return undefined;
     const controller = new AbortController();
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -213,7 +222,7 @@ function UserRoute({ view }) {
       setSpotifyStatus({ connected: false, last_sync_error: err.message });
     });
     return () => controller.abort();
-  }, [loadSpotifyStatus, selectedUser]);
+  }, [isOwner, loadSpotifyStatus, selectedUser]);
 
   const handleSwitchUser = () => {
     setSelectedUserSlug(null);
@@ -321,6 +330,7 @@ function UserRoute({ view }) {
             albums={processedAlbums}
             onDataChanged={loadAlbumState}
             selectedUser={selectedUser}
+            isOwner={isOwner}
             spotifyStatus={
               spotifyStatusUserSlug === selectedUser.slug
                 ? spotifyStatus
@@ -410,7 +420,7 @@ function UserRoute({ view }) {
         selectedUser={selectedUser}
         albums={processedAlbums}
         onDataChanged={loadAlbumState}
-        open={importDialogOpen}
+        open={isOwner && importDialogOpen}
         onOpenChange={setImportDialogOpen}
         hideTrigger
       />
@@ -423,6 +433,7 @@ function UserRoute({ view }) {
         onAlbumUpdated={handleRoutedAlbumUpdated}
         onAlbumDeleted={handleRoutedAlbumDeleted}
         onDataChanged={loadAlbumState}
+        isOwner={isOwner}
       />
     </>
   );

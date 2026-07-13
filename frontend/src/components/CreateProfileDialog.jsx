@@ -13,6 +13,8 @@ import { profileSlugFromName } from "@/components/utils/profileSlug";
 
 function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
   const [displayName, setDisplayName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [pending, setPending] = useState(false);
   const displayNameId = useId();
@@ -21,6 +23,8 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
 
   const reset = () => {
     setDisplayName("");
+    setEmail("");
+    setPassword("");
     setError(null);
     setPending(false);
   };
@@ -43,11 +47,19 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
       setError("Use a profile name with at least one letter or number.");
       return;
     }
+    if (!email.trim() || !password) {
+      setError("Enter an email address and password to protect this profile.");
+      return;
+    }
+    if (password.length < 12) {
+      setError("Use a password with at least 12 characters.");
+      return;
+    }
 
     setError(null);
     setPending(true);
     try {
-      await onCreateProfile({ display_name: trimmedName, slug });
+      await onCreateProfile({ display_name: trimmedName, slug, email, password });
       reset();
       onOpenChange(false);
     } catch (requestError) {
@@ -88,6 +100,30 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
             {slug && (
               <p className="text-sm text-muted-foreground">Your profile URL: /{slug}</p>
             )}
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="profile-email" className="text-sm font-medium text-foreground">Email</label>
+            <Input
+              id="profile-email"
+              type="email"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+              disabled={pending}
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="profile-password" className="text-sm font-medium text-foreground">Password</label>
+            <Input
+              id="profile-password"
+              type="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete="new-password"
+              minLength={12}
+              disabled={pending}
+            />
+            <p className="text-sm text-muted-foreground">Use at least 12 characters. This account owns and protects your profile.</p>
           </div>
 
           {error && (

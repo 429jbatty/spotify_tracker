@@ -3,7 +3,7 @@ import logging
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, Header, HTTPException, UploadFile, status
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
@@ -22,6 +22,7 @@ from backend.app.schemas import (
     ImportSessionSummary,
 )
 from backend.app.services import import_service
+from backend.app.services import auth_service
 
 
 router = APIRouter(prefix="/users/{user_slug}/imports", tags=["imports"])
@@ -70,10 +71,12 @@ def resume_interrupted_imports() -> None:
 def preview_user_import(
     user_slug: str,
     request: ImportPreviewRequest,
+    authorization: str | None = Header(default=None),
 ) -> ImportPreviewResponse:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.preview_import(session, repository, request)
         except KeyError as exc:
@@ -86,10 +89,12 @@ def preview_user_import(
 def commit_user_import(
     user_slug: str,
     request: ImportPreviewRequest,
+    authorization: str | None = Header(default=None),
 ) -> ImportCommitResponse:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             response = import_service.commit_import(session, repository, request)
             _start_import_background_worker(response.import_session_id)
@@ -104,12 +109,14 @@ def commit_user_import(
 async def upload_spotify_import(
     user_slug: str,
     file: UploadFile = File(...),
+    authorization: str | None = Header(default=None),
 ) -> ImportCommitResponse:
     artifact_path: Path | None = None
     session_factory = _session_factory()
     try:
         artifact_path = await _store_spotify_zip_upload(file)
         with session_factory() as session:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             response = import_service.create_spotify_import_session(
                 session,
@@ -130,10 +137,14 @@ async def upload_spotify_import(
 
 
 @router.get("", response_model=list[ImportSessionSummary])
-def list_user_imports(user_slug: str) -> list[ImportSessionSummary]:
+def list_user_imports(
+    user_slug: str,
+    authorization: str | None = Header(default=None),
+) -> list[ImportSessionSummary]:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.import_history(session, repository)
         except KeyError as exc:
@@ -146,10 +157,12 @@ def list_user_import_logs(
     import_session_id: int,
     limit: int = 100,
     order: str = "asc",
+    authorization: str | None = Header(default=None),
 ) -> list[ImportSessionLogEntry]:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.import_session_logs(
                 session,
@@ -168,10 +181,12 @@ def get_spotify_import_diagnostics(
     import_session_id: int,
     artist: str,
     album: str,
+    authorization: str | None = Header(default=None),
 ) -> SpotifyImportDiagnosticsResponse:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.spotify_import_diagnostics(
                 session,
@@ -224,10 +239,14 @@ async def _store_spotify_zip_upload(file: UploadFile) -> Path:
 
 
 @router.get("/review", response_model=list[ImportReviewItem])
-def list_user_import_review(user_slug: str) -> list[ImportReviewItem]:
+def list_user_import_review(
+    user_slug: str,
+    authorization: str | None = Header(default=None),
+) -> list[ImportReviewItem]:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.unresolved_review_items(session, repository)
         except KeyError as exc:
@@ -239,10 +258,12 @@ def resolve_user_import_review(
     user_slug: str,
     review_item_id: int,
     request: ImportResolveRequest,
+    authorization: str | None = Header(default=None),
 ) -> CompletedAlbum:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.resolve_review_item(
                 session,
@@ -260,10 +281,12 @@ def resolve_user_import_review(
 def delete_user_import(
     user_slug: str,
     import_session_id: int,
+    authorization: str | None = Header(default=None),
 ) -> ImportDeleteResponse:
     session_factory = _session_factory()
     with session_factory() as session:
         try:
+            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             return import_service.delete_import_session(
                 session,

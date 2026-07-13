@@ -51,6 +51,7 @@ function AlbumSidePanel({
   onDataChanged,
   trackDetailsOpen = false,
   onTrackDetailsOpenChange,
+  isOwner = false,
 }) {
   const displayAlbum = normalizeAlbum(album);
 
@@ -116,13 +117,15 @@ function AlbumSidePanel({
             <AccordionContent className="pb-0">
               {showListenGraph && <Sparkline counts={sparklineCounts} />}
               {showListenHistory && <AlbumListenHistory listenStats={listenStats} />}
-              <div className="mt-4">
-                <AlbumListenEditor
-                  album={displayAlbum}
-                  onAlbumUpdated={handleAlbumUpdated}
-                  onDataChanged={onDataChanged}
-                />
-              </div>
+              {isOwner && (
+                <div className="mt-4">
+                  <AlbumListenEditor
+                    album={displayAlbum}
+                    onAlbumUpdated={handleAlbumUpdated}
+                    onDataChanged={onDataChanged}
+                  />
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
@@ -136,25 +139,31 @@ function AlbumSidePanel({
         <AlbumMetadata album={displayAlbum} onFilterSelect={onFilterSelect} />
       </section>
 
-      <AlbumUserFeedback
-        album={displayAlbum}
-        onAlbumUpdated={handleAlbumUpdated}
-        onDataChanged={onDataChanged}
-      />
-
-      <AlbumUserTags
-        album={displayAlbum}
-        onAlbumUpdated={handleAlbumUpdated}
-        onDataChanged={onDataChanged}
-        onFilterSelect={onFilterSelect}
-      />
-
-      <AlbumMetadataActions
-        album={displayAlbum}
-        onAlbumUpdated={handleAlbumUpdated}
-        onAlbumDeleted={onAlbumDeleted}
-        onDataChanged={onDataChanged}
-      />
+      {isOwner ? (
+        <>
+          <AlbumUserFeedback
+            album={displayAlbum}
+            onAlbumUpdated={handleAlbumUpdated}
+            onDataChanged={onDataChanged}
+          />
+          <AlbumUserTags
+            album={displayAlbum}
+            onAlbumUpdated={handleAlbumUpdated}
+            onDataChanged={onDataChanged}
+            onFilterSelect={onFilterSelect}
+          />
+          <AlbumMetadataActions
+            album={displayAlbum}
+            onAlbumUpdated={handleAlbumUpdated}
+            onAlbumDeleted={onAlbumDeleted}
+            onDataChanged={onDataChanged}
+          />
+        </>
+      ) : (
+        <p className="border-t pt-4 text-sm text-muted-foreground">
+          You’re viewing this public album history. Sign in as the profile owner to edit it.
+        </p>
+      )}
 
       {/* Tracks and credits */}
       {hasTrackDetails && (
