@@ -12,12 +12,13 @@ from unittest.mock import Mock, patch
 import ijson
 import httpx
 from fastapi.testclient import TestClient
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema, get_engine
 from backend.app.models import (
     Album,
+    AlbumCreditFact,
     AlbumMetadataCache,
     AlbumListen,
     ImportSession,
@@ -2724,6 +2725,74 @@ class ApiImportTests(unittest.TestCase):
             state["Existing Artist - Existing Album"]["listen_history"],
             ["2026-04-01T10:00:00.000Z"],
         )
+
+    def test_delete_import_removes_credit_facts_for_orphaned_album(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                listened_at = "2026-04-01T10:00:00+00:00"
+                created = repository.create_completed_album(
+                    {
+                        "artist": "Import Artist",
+                        "name": "Import Album",
+                        "source": "lastfm",
+                        "tracklist": [
+                            {
+                                "position": "1",
+                                "title": "Imported Track",
+                                "credits": [["Import Producer", "producer", ""]],
+                            }
+                        ],
+                    },
+                    listen_date=listened_at,
+                )
+                import_session = ImportSession(
+                    user_id=repository.user.id,
+                    source="lastfm",
+                    source_user_id="importer",
+                    status="completed",
+                    session_name="Delete credited import",
+                    started_at=listened_at,
+                    completed_at=listened_at,
+                    summary_json={},
+                )
+                session.add(import_session)
+                session.flush()
+                session.add(
+                    ImportedListeningEvent(
+                        user_id=repository.user.id,
+                        import_session_id=import_session.id,
+                        album_id=created["id"],
+                        source="lastfm",
+                        source_user_id="importer",
+                        source_event_id="credited-event",
+                        event_fingerprint="credited-event",
+                        listened_at=listened_at,
+                        artist="Import Artist",
+                        album="Import Album",
+                        track="Imported Track",
+                        match_status="processed_album_listen",
+                        match_confidence=100,
+                        raw_payload={},
+                    )
+                )
+                session.commit()
+
+                result = import_service.delete_import_session(
+                    session,
+                    repository,
+                    import_session.id,
+                )
+                remaining_albums = list(session.scalars(select(Album)))
+                remaining_credit_facts = list(session.scalars(select(AlbumCreditFact)))
+
+        self.assertEqual(result.deleted_albums, 1)
+        self.assertEqual(remaining_albums, [])
+        self.assertEqual(remaining_credit_facts, [])
 
     def test_delete_lastfm_import_rejects_active_session(self):
         with tempfile.TemporaryDirectory() as temp_dir:

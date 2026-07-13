@@ -56,6 +56,7 @@ from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
 from backend.app.config import get_settings
 from backend.app.models import (
     Album,
+    AlbumCreditFact,
     AlbumListen,
     AlbumMetadataCache,
     ImportSession,
@@ -892,6 +893,9 @@ def delete_import_session(
             select(func.count()).select_from(UserAlbum).where(UserAlbum.album_id == album_id)
         )
         if global_listen_count == 0 and global_membership_count == 0:
+            session.execute(
+                delete(AlbumCreditFact).where(AlbumCreditFact.album_id == album_id)
+            )
             result = session.execute(delete(Album).where(Album.id == album_id))
             deleted_albums += result.rowcount or 0
 
