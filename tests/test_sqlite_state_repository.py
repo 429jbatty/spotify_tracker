@@ -175,6 +175,23 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             ["2026-04-18T16:45:00.000Z"],
         )
 
+    def test_save_album_state_removes_credit_facts_for_unowned_stale_album(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            updated_state = sample_album_state()
+            del updated_state["completed_albums"]["Artist - Finished Album"]
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+                repository.save_album_state(updated_state)
+
+                album_count = len(session.scalars(select(Album)).all())
+                credit_fact_count = len(session.scalars(select(AlbumCreditFact)).all())
+
+        self.assertEqual(album_count, 1)
+        self.assertEqual(credit_fact_count, 0)
+
     def test_replace_completed_album_metadata_preserves_listens_and_renames_key(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)

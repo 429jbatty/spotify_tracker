@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.models import (
     Album,
+    AlbumCreditFact,
     AlbumInProgress,
     AlbumListen,
     ImportedListeningEvent,
@@ -966,6 +967,11 @@ class SqliteStateRepository:
         if albums_without_owners:
             self.session.execute(
                 delete(AlbumListen).where(AlbumListen.album_id.in_(albums_without_owners))
+            )
+            self.session.execute(
+                delete(AlbumCreditFact).where(
+                    AlbumCreditFact.album_id.in_(albums_without_owners)
+                )
             )
             self.session.execute(
                 delete(Album).where(Album.id.in_(albums_without_owners))
