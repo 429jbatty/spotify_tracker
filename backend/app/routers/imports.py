@@ -114,9 +114,15 @@ async def upload_spotify_import(
     artifact_path: Path | None = None
     session_factory = _session_factory()
     try:
+        # Authorize before writing a potentially large file to local storage.
+        with session_factory() as session:
+            auth_service.require_profile_owner(
+                session,
+                user_slug=user_slug,
+                authorization=authorization,
+            )
         artifact_path = await _store_spotify_zip_upload(file)
         with session_factory() as session:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             response = import_service.create_spotify_import_session(
                 session,

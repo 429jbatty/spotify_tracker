@@ -84,6 +84,10 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
                 json={"source": "lastfm", "lastfm_username": "owner"},
             )
             import_history = client.get("/api/users/owner/imports")
+            upload = client.post(
+                "/api/users/owner/imports/spotify/upload",
+                files={"file": ("history.zip", b"not authorized", "application/zip")},
+            )
             spotify_connect = client.post("/api/users/owner/spotify/connect")
             spotify_status = client.get("/api/users/owner/spotify/status")
             spotify_sync = client.post("/api/users/owner/spotify/sync")
@@ -94,6 +98,7 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         for response in (
             import_preview,
             import_history,
+            upload,
             spotify_connect,
             spotify_status,
             spotify_sync,
@@ -102,3 +107,4 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
             legacy_delete,
         ):
             self.assertEqual(response.status_code, 401)
+        self.assertFalse((Path(temp_dir) / "import_uploads").exists())
