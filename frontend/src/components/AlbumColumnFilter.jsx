@@ -7,7 +7,15 @@ function normalize(value) {
   return String(value || "").toLowerCase();
 }
 
-function AlbumColumnFilter({ align = "left", label, options, selectedValues, onApply }) {
+function AlbumColumnFilter({
+  align = "left",
+  label,
+  options,
+  selectedValues,
+  onApply,
+  buttonClassName = "",
+  optionClassName = "",
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [draftValues, setDraftValues] = useState(() => new Set());
@@ -105,7 +113,7 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
         aria-label={`Filter ${label}`}
         aria-expanded={open}
         onClick={toggleOpen}
-        className="h-7 w-full justify-between px-2"
+        className={`h-7 w-full justify-between px-2 ${buttonClassName}`}
       >
         <span className="truncate text-xs">
           {active ? `${displayCount} selected` : "All"}
@@ -165,7 +173,7 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
                 return (
                   <label
                     key={option.value}
-                    className="flex cursor-pointer items-center gap-2 px-2 py-1.5 text-xs hover:bg-muted"
+                    className={`flex cursor-pointer items-center gap-2 px-2 py-1.5 text-xs hover:bg-muted ${optionClassName}`}
                   >
                     <input
                       type="checkbox"

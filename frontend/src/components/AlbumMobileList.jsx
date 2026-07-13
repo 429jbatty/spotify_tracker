@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import AlbumColumnFilter from "./AlbumColumnFilter";
 import { getSourceLabel } from "./utils/sourceLabels";
 
 const PAGE_SIZE = 50;
@@ -11,7 +12,17 @@ function formatDate(isoString) {
   return `${date.getMonth() + 1}/${String(date.getDate()).padStart(2, "0")}/${date.getFullYear()}`;
 }
 
-function AlbumMobileList({ albums, sortBy, ascending, onSortChange, onOpenAlbum }) {
+function AlbumMobileList({
+  albums,
+  sortBy,
+  ascending,
+  onSortChange,
+  onOpenAlbum,
+  filterHeaders = [],
+  filterOptions = {},
+  columnFilters = {},
+  onFilterChange,
+}) {
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const visibleAlbums = albums.slice(0, visibleCount);
@@ -19,6 +30,32 @@ function AlbumMobileList({ albums, sortBy, ascending, onSortChange, onOpenAlbum 
 
   return (
     <section className="md:hidden" aria-label="Album library">
+      <details className="mb-3 rounded-lg border border-border bg-card">
+        <summary className="flex min-h-11 cursor-pointer items-center justify-between px-3 text-sm font-medium text-foreground">
+          <span>Filters</span>
+          {Object.keys(columnFilters).length > 0 && (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs text-primary">
+              {Object.keys(columnFilters).length} active
+            </span>
+          )}
+        </summary>
+        <div className="grid gap-3 border-t border-border p-3">
+          {filterHeaders.map((header) => (
+            <div key={header.key} className="grid gap-1.5">
+              <span className="text-xs font-medium text-muted-foreground">{header.label}</span>
+              <AlbumColumnFilter
+                label={header.label}
+                selectedValues={columnFilters[header.key]}
+                options={filterOptions[header.key] || []}
+                onApply={(values) => onFilterChange(header.key, values)}
+                buttonClassName="min-h-11"
+                optionClassName="min-h-11"
+              />
+            </div>
+          ))}
+        </div>
+      </details>
+
       <label className="mb-3 flex items-center justify-between gap-3 text-sm font-medium text-foreground">
         <span>Sort library</span>
         <select
@@ -36,6 +73,10 @@ function AlbumMobileList({ albums, sortBy, ascending, onSortChange, onOpenAlbum 
           <option value="name:desc">Album, Z–A</option>
           <option value="artist:asc">Artist, A–Z</option>
           <option value="artist:desc">Artist, Z–A</option>
+          <option value="label:asc">Label, A–Z</option>
+          <option value="label:desc">Label, Z–A</option>
+          <option value="entry_source:asc">Source, A–Z</option>
+          <option value="entry_source:desc">Source, Z–A</option>
           <option value="release_year:desc">Release year, newest</option>
           <option value="release_year:asc">Release year, oldest</option>
           <option value="totalListens:desc">Listens, most</option>

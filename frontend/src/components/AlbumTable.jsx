@@ -190,6 +190,10 @@ function AlbumTable({
         ascending={ascending}
         onSortChange={handleMobileSort}
         onOpenAlbum={handleRowClick}
+        filterHeaders={TABLE_HEADERS.filter((header) => header.filterable)}
+        filterOptions={filterOptions}
+        columnFilters={columnFilters}
+        onFilterChange={updateColumnFilter}
       />
 
       <div className="hidden overflow-x-auto rounded-lg border border-border md:block">

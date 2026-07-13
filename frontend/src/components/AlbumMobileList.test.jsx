@@ -62,4 +62,35 @@ describe("AlbumMobileList", () => {
     await user.click(screen.getByRole("button", { name: /Album 1/i }));
     expect(onOpenAlbum).toHaveBeenCalledWith(library[0]);
   });
+
+  it("keeps column filters available on mobile", async () => {
+    const user = userEvent.setup();
+    const onFilterChange = vi.fn();
+    render(
+      <AlbumMobileList
+        albums={albums(1)}
+        sortBy="label"
+        ascending={true}
+        onSortChange={vi.fn()}
+        onOpenAlbum={vi.fn()}
+        filterHeaders={[{ key: "artist", label: "Artist" }]}
+        filterOptions={{
+          artist: [
+            { value: "Test Artist", label: "Test Artist" },
+            { value: "Other Artist", label: "Other Artist" },
+          ],
+        }}
+        columnFilters={{}}
+        onFilterChange={onFilterChange}
+      />,
+    );
+
+    expect(screen.getByLabelText("Sort library")).toHaveValue("label:asc");
+    await user.click(screen.getByText("Filters"));
+    await user.click(screen.getByRole("button", { name: "Filter Artist" }));
+    await user.click(screen.getByRole("checkbox", { name: "Other Artist" }));
+    await user.click(screen.getByRole("button", { name: "Apply" }));
+
+    expect(onFilterChange).toHaveBeenCalledWith("artist", ["Test Artist"]);
+  });
 });
