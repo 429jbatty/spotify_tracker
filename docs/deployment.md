@@ -39,6 +39,10 @@ Copy and edit environment settings:
 cp deploy/env.example .env
 ```
 
+Set `LASTFM_API_KEY` in `.env` before starting the API when Last.fm imports
+are enabled. Keep the key only in the server environment file, never in the
+repository or frontend build.
+
 Install systemd units:
 
 ```bash

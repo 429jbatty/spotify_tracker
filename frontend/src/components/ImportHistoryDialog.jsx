@@ -136,20 +136,18 @@ function ImportHistoryDialog({
     selectedUserSlug,
   ]);
 
-  const resetState = () => {
+  const resetImportForm = () => {
     setActiveSource("lastfm");
     setLastfmUsername("");
     setSpotifyFile(null);
     setPreview(null);
-    setHistory([]);
-    setReviewItems([]);
     setExpandedLogIds({});
     setError(null);
   };
 
   const handleDialogChange = (nextOpen) => {
     onOpenChange?.(nextOpen);
-    if (!nextOpen) resetState();
+    if (!nextOpen) resetImportForm();
   };
 
   const handlePreview = async () => {
