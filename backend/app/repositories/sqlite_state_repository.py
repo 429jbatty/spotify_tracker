@@ -620,6 +620,9 @@ class SqliteStateRepository:
             album = self.session.scalars(
                 _album_lookup_statement(album_key)
             ).first()
+            previous_credit_source = (
+                self._credit_source_signature(album) if album is not None else None
+            )
 
             if album is None:
                 album = Album(
@@ -632,11 +635,19 @@ class SqliteStateRepository:
             self._apply_completed_album_record(album, record, album_key=album_key)
 
             self.session.flush()
-            album_ids.append(album.id)
+            if previous_credit_source != self._credit_source_signature(album):
+                album_ids.append(album.id)
             self._add_user_album(album.id)
             self._sync_listens(album, record.get("listen_history") or [])
 
         return album_ids
+
+    def _credit_source_signature(self, album: Album) -> tuple[Any, Any, Any]:
+        return (
+            album.artist,
+            album.artist_mbid,
+            _safe_album_metadata(album),
+        )
 
     def _rebuild_credit_facts(self, album_ids: list[int]) -> None:
         unique_album_ids = list(dict.fromkeys(album_ids))

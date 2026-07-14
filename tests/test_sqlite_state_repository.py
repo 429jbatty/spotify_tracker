@@ -132,6 +132,21 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         self.assertEqual(facts[0].raw_role, "producer")
         self.assertEqual(facts[0].track_count, 1)
 
+    def test_import_does_not_rebuild_unchanged_credit_facts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.import_album_state(sample_album_state())
+                original = session.scalars(select(AlbumCreditFact)).one()
+                original_identity = (original.id, original.updated_at)
+
+                repository.import_album_state(sample_album_state())
+                unchanged = session.scalars(select(AlbumCreditFact)).one()
+
+        self.assertEqual((unchanged.id, unchanged.updated_at), original_identity)
+
     def test_sparse_album_identity_is_filled_from_key(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
