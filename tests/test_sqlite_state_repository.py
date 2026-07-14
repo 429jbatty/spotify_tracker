@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
-from backend.app.models import Album, AlbumListen
+from backend.app.models import Album, AlbumCreditFact, AlbumListen
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 
 
@@ -114,6 +114,39 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         self.assertEqual(album_count, 2)
         self.assertEqual(listen_count, 3)
 
+    def test_import_projects_credit_facts_from_persisted_album_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.import_album_state(sample_album_state())
+                repository.import_album_state(sample_album_state())
+
+                facts = session.scalars(
+                    select(AlbumCreditFact).order_by(AlbumCreditFact.person_name)
+                ).all()
+
+        self.assertEqual(len(facts), 1)
+        self.assertEqual(facts[0].person_name, "Producer")
+        self.assertEqual(facts[0].raw_role, "producer")
+        self.assertEqual(facts[0].track_count, 1)
+
+    def test_import_does_not_rebuild_unchanged_credit_facts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.import_album_state(sample_album_state())
+                original = session.scalars(select(AlbumCreditFact)).one()
+                original_identity = (original.id, original.updated_at)
+
+                repository.import_album_state(sample_album_state())
+                unchanged = session.scalars(select(AlbumCreditFact)).one()
+
+        self.assertEqual((unchanged.id, unchanged.updated_at), original_identity)
+
     def test_sparse_album_identity_is_filled_from_key(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
@@ -157,6 +190,23 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             ["2026-04-18T16:45:00.000Z"],
         )
 
+    def test_save_album_state_removes_credit_facts_for_unowned_stale_album(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            updated_state = sample_album_state()
+            del updated_state["completed_albums"]["Artist - Finished Album"]
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+                repository.save_album_state(updated_state)
+
+                album_count = len(session.scalars(select(Album)).all())
+                credit_fact_count = len(session.scalars(select(AlbumCreditFact)).all())
+
+        self.assertEqual(album_count, 1)
+        self.assertEqual(credit_fact_count, 0)
+
     def test_replace_completed_album_metadata_preserves_listens_and_renames_key(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
@@ -190,6 +240,36 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             loaded["completed_albums"]["Artist - Canonical Album"]["release_year"],
             2027,
         )
+
+    def test_replacing_metadata_replaces_existing_credit_facts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                repository.save_album_state(sample_album_state())
+                repository.replace_completed_album_metadata(
+                    "Artist - Finished Album",
+                    {
+                        "artist": "Artist",
+                        "name": "Finished Album",
+                        "source": "musicbrainz",
+                        "tracklist": [
+                            {
+                                "position": "1",
+                                "title": "Replacement Track",
+                                "credits": [["New Producer", "producer", ""]],
+                            }
+                        ],
+                    },
+                )
+                facts = session.scalars(
+                    select(AlbumCreditFact).order_by(AlbumCreditFact.person_name)
+                ).all()
+
+        self.assertEqual(len(facts), 1)
+        self.assertEqual(facts[0].person_name, "New Producer")
+        self.assertEqual(facts[0].raw_role, "producer")
 
     def test_find_completed_album_key_supports_exact_and_casefolded_lookup(self):
         with tempfile.TemporaryDirectory() as temp_dir:

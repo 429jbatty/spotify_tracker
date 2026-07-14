@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.database import create_schema
 from backend.app.models import (
     Album,
+    AlbumCreditFact,
     AlbumInProgress,
     AlbumListen,
     User,
@@ -74,6 +75,13 @@ class AdminUserServiceTests(unittest.TestCase):
                         "artist": "Friend Artist",
                         "name": "Friend Only Album",
                         "source": "manual",
+                        "tracklist": [
+                            {
+                                "position": "1",
+                                "title": "Friend Track",
+                                "credits": [["Friend Producer", "producer", ""]],
+                            }
+                        ],
                     },
                     listen_date="2026-04-21T10:00:00.000Z",
                 )
@@ -120,6 +128,7 @@ class AdminUserServiceTests(unittest.TestCase):
                         select(UserAlbum).where(UserAlbum.album_id == shared_album_id)
                     )
                 )
+                remaining_credit_facts = list(session.scalars(select(AlbumCreditFact)))
 
         self.assertTrue(result.found)
         self.assertEqual(result.deleted_spotify_credentials, 1)
@@ -133,6 +142,7 @@ class AdminUserServiceTests(unittest.TestCase):
         self.assertIn("Artist - Shared Album", remaining_albums)
         self.assertNotIn("Friend Artist - Friend Only Album", remaining_albums)
         self.assertEqual(len(shared_album_memberships), 1)
+        self.assertEqual(remaining_credit_facts, [])
 
     def test_delete_user_refuses_default_user_without_override(self):
         with tempfile.TemporaryDirectory() as temp_dir:

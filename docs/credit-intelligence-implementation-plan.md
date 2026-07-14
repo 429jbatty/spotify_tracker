@@ -3061,6 +3061,21 @@ Splash hero Connections preview completed on 2026-07-11:
 - Suggested next step:
   - Observe whether first-time visitors understand the overlay without interaction before considering any link from the static preview into a public profile's Connections route.
 
+Phase 12Y automatic credit-fact maintenance completed on 2026-07-12:
+
+- Outcome for the overall feature: newly persisted and refreshed album metadata now updates the shared `album_credit_facts` projection as part of the same SQLite transaction, so Connections coverage no longer depends on an operational rebuild for normal workflows.
+- What changed:
+  - Routed album-state imports/tracking persistence, album creation, metadata replacement/refresh, and metadata edits through a targeted credit-fact rebuild for the affected album IDs.
+  - Added a non-committing mode to the credit-fact rebuild service so repository operations commit metadata and facts atomically; projection failures are logged and re-raised instead of being silently ignored.
+  - Preserved the one-time rebuild script's existing committing behavior, including full-catalog and `--album-id` repair/backfill workflows.
+- Validation:
+  - Repository tests cover credit-fact creation from an imported persisted state and replacement after a metadata refresh.
+- Independent testing:
+  - Import a credit-bearing album, open Connections, and verify its contributors appear without running the rebuild script.
+  - Refresh that album's metadata with changed credits and verify removed contributors disappear while new contributors appear.
+- Suggested next step:
+  - Run the one-time rebuild once in production to backfill existing albums, then use normal imports and metadata refreshes to keep the projection current.
+
 - Unbounded path search or weighted shortest-path optimization beyond the
   bounded MVP.
 - Separate `credit_people` and track-level credit tables.

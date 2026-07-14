@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from backend.app.models import (
     Album,
+    AlbumCreditFact,
     AlbumInProgress,
     AlbumListen,
     User,
@@ -111,5 +112,8 @@ def _delete_orphaned_albums(session: Session, album_ids: list[int]) -> int:
         return 0
 
     session.execute(delete(AlbumListen).where(AlbumListen.album_id.in_(orphaned_album_ids)))
+    session.execute(
+        delete(AlbumCreditFact).where(AlbumCreditFact.album_id.in_(orphaned_album_ids))
+    )
     result = session.execute(delete(Album).where(Album.id.in_(orphaned_album_ids)))
     return int(result.rowcount or 0)

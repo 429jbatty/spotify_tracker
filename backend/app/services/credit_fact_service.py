@@ -74,6 +74,7 @@ def rebuild_credit_facts(
     session: Session,
     *,
     album_ids: Iterable[int] | None = None,
+    commit: bool = True,
 ) -> RebuildResult:
     sources = load_album_credit_sources(session, album_ids=album_ids)
     source_ids = [source.album_id for source in sources]
@@ -94,7 +95,10 @@ def rebuild_credit_facts(
         facts.extend(_facts_for_album(source, now=now))
 
     session.add_all(facts)
-    session.commit()
+    if commit:
+        session.commit()
+    else:
+        session.flush()
 
     return RebuildResult(
         album_ids=source_ids,
