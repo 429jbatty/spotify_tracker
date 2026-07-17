@@ -127,6 +127,7 @@ class SplashFeaturedUser(BaseModel):
 
 
 class SplashActivityItem(BaseModel):
+    listen_id: int
     type: str
     user_display_name: str
     public_user_display_name: str
