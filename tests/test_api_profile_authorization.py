@@ -4,9 +4,12 @@ from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from sqlalchemy import select
+from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
 from backend.app.main import create_app
+from backend.app.models import Album, AlbumCreditFact
 
 
 class ProfileAuthorizationApiTests(unittest.TestCase):
@@ -46,6 +49,46 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
             )
         self.assertEqual(response.status_code, 201)
         return response.json()["id"]
+
+    def _add_credit_fact(self, temp_dir, album_id, *, person_key):
+        database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+        session_factory = sessionmaker(bind=create_schema(database_url))
+        with session_factory() as session:
+            session.add(
+                AlbumCreditFact(
+                    album_id=album_id,
+                    person_key=person_key,
+                    person_name="Test Producer",
+                    person_mbid=None,
+                    identity_resolution="name",
+                    ingestion_version="test",
+                    raw_role="producer",
+                    role_bucket="producer",
+                    source_scope="release_group",
+                    recording_mbid=None,
+                    track_count=1,
+                    album_track_count=1,
+                    track_share=1.0,
+                    quality_flags_json=[],
+                    created_at="2026-07-17T00:00:00Z",
+                    updated_at="2026-07-17T00:00:00Z",
+                )
+            )
+            session.commit()
+
+    def _album_and_fact_exist(self, temp_dir, album_id):
+        database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+        session_factory = sessionmaker(bind=create_schema(database_url))
+        with session_factory() as session:
+            return (
+                session.get(Album, album_id) is not None,
+                session.scalar(
+                    select(AlbumCreditFact.id).where(
+                        AlbumCreditFact.album_id == album_id
+                    )
+                )
+                is not None,
+            )
 
     def test_public_and_cross_account_requests_cannot_mutate_a_profile(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -245,3 +288,49 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         self.assertIn(
             "Duplicate Artist - Source Album", bob_state["completed_albums"]
         )
+
+    def test_delete_and_merge_remove_last_membership_with_credit_facts(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            headers = self._create_profile(
+                client, slug="owner", email="owner@example.com"
+            )
+            delete_id = self._create_album(
+                client,
+                slug="owner",
+                headers=headers,
+                artist="Delete Artist",
+                name="Delete Album",
+            )
+            source_id = self._create_album(
+                client,
+                slug="owner",
+                headers=headers,
+                artist="Merge Artist",
+                name="Source Album",
+            )
+            target_id = self._create_album(
+                client,
+                slug="owner",
+                headers=headers,
+                artist="Merge Artist",
+                name="Target Album",
+            )
+            self._add_credit_fact(temp_dir, delete_id, person_key="delete-producer")
+            self._add_credit_fact(temp_dir, source_id, person_key="source-producer")
+
+            delete_response = client.delete(
+                f"/api/users/owner/albums/{delete_id}", headers=headers
+            )
+            merge_response = client.post(
+                f"/api/users/owner/albums/{source_id}/merge",
+                json={"target_album_id": target_id},
+                headers=headers,
+            )
+            deleted_state = self._album_and_fact_exist(temp_dir, delete_id)
+            merged_state = self._album_and_fact_exist(temp_dir, source_id)
+
+        self.assertEqual(delete_response.status_code, 204)
+        self.assertEqual(merge_response.status_code, 200)
+        self.assertEqual(deleted_state, (False, False))
+        self.assertEqual(merged_state, (False, False))

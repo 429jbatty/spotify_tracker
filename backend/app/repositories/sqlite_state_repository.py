@@ -957,12 +957,11 @@ class SqliteStateRepository:
                 albums_without_owners.append(album_id)
 
         if albums_without_owners:
-            self.session.execute(
-                delete(AlbumListen).where(AlbumListen.album_id.in_(albums_without_owners))
-            )
-            self.session.execute(
-                delete(Album).where(Album.id.in_(albums_without_owners))
-            )
+            albums = self.session.scalars(
+                select(Album).where(Album.id.in_(albums_without_owners))
+            ).all()
+            for album in albums:
+                self.session.delete(album)
 
 
 def _artwork_url(local_image_path: str) -> str:
