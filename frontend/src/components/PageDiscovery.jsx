@@ -1,12 +1,10 @@
 import { useMemo, useState } from "react";
-import { ArrowRight } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import AlbumCardVertical from "./AlbumCardVertical";
 import AlbumPanelSheet from "./AlbumPanelSheet";
 import DiscoveryMetricRail from "./discovery/DiscoveryMetricRail";
 import DiscoveryQualityCard from "./discovery/DiscoveryQualityCard";
 import NewVsReplayTrend from "./discovery/NewVsReplayTrend";
-import { Button } from "./ui/button";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { buildDiscoveryFeed } from "./utils/discoveryFeed";
 import { aggregateDiscoveryInsights } from "./utils/discoveryInsights";
@@ -64,11 +62,9 @@ export default function Discovery({
     searchParams.get("range"),
     Object.keys(TIME_RANGES)
   );
-  const [showAllListens, setShowAllListens] = useState(false);
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const analysisNow = useMemo(() => new Date(), []);
-  const albumsArray = useMemo(() => Object.values(albums), [albums]);
   const allAlbumsArray = useMemo(() => Object.values(allAlbums), [allAlbums]);
   const listenRecords = useMemo(
     () => buildDiscoveryListenRecords(allAlbumsArray),
@@ -79,10 +75,9 @@ export default function Discovery({
     [allAlbums, analysisNow, timeRange]
   );
   const recentListens = useMemo(
-    () => buildDiscoveryFeed(albumsArray, timeRange, { now: analysisNow }),
-    [albumsArray, analysisNow, timeRange]
+    () => buildDiscoveryFeed(allAlbumsArray, timeRange, { now: analysisNow }),
+    [allAlbumsArray, analysisNow, timeRange]
   );
-  const visibleListens = showAllListens ? recentListens : recentListens.slice(0, 8);
   const discoveryRate = getDiscoveryRate(discoveryInsights.summary);
   const previousDiscoveryRate = discoveryInsights.previousPeriod
     ? getDiscoveryRate(discoveryInsights.previousPeriod.summary)
@@ -194,27 +189,17 @@ export default function Discovery({
         <section className="space-y-4">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
-              Recent listens
+              Listens in this range
             </h2>
-            {recentListens.length > 8 ? (
-              <Button
-                className="text-primary"
-                onClick={() => setShowAllListens((current) => !current)}
-                variant="ghost"
-              >
-                {showAllListens ? "Show fewer" : "View all listens"}
-                <ArrowRight />
-              </Button>
-            ) : null}
           </div>
 
-          {visibleListens.length === 0 ? (
+          {recentListens.length === 0 ? (
             <div className="rounded-lg border border-dashed border-border p-8 text-center text-sm text-muted-foreground">
               No album listens in this range.
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {visibleListens.map((album) => (
+              {recentListens.map((album) => (
                 <AlbumCardVertical
                   key={album.id || album.release_group_mbid}
                   album={album}
