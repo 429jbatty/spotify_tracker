@@ -73,6 +73,14 @@ function DialogHarness() {
   );
 }
 
+function importFor(id, detail) {
+  return {
+    ...activeSpotifyImport(),
+    id,
+    current_step_detail: detail,
+  };
+}
+
 describe("ImportHistoryDialog", () => {
   it("keeps persisted active-import status visible while reopening refreshes", async () => {
     const user = userEvent.setup();
@@ -102,5 +110,48 @@ describe("ImportHistoryDialog", () => {
     await waitFor(() => {
       expect(api.fetchImportHistory).toHaveBeenCalled();
     });
+  });
+
+  it("hides prior-profile data and ignores its late refresh response", async () => {
+    const jacobImport = importFor(19, "Jacob import is active.");
+    const taylorImport = importFor(20, "Taylor import is active.");
+    let resolveJacobRefresh;
+    const jacobRefresh = new Promise((resolve) => {
+      resolveJacobRefresh = resolve;
+    });
+
+    api.fetchImportHistory.mockImplementation((slug) =>
+      slug === "jacob" ? jacobRefresh : Promise.resolve([taylorImport])
+    );
+    api.fetchImportReview.mockResolvedValue([]);
+
+    const { rerender } = render(
+      <ImportHistoryDialog
+        hideTrigger
+        open
+        onOpenChange={vi.fn()}
+        selectedUser={{ slug: "jacob", display_name: "Jacob" }}
+      />
+    );
+
+    rerender(
+      <ImportHistoryDialog
+        hideTrigger
+        open
+        onOpenChange={vi.fn()}
+        selectedUser={{ slug: "taylor", display_name: "Taylor" }}
+      />
+    );
+
+    expect(
+      (await screen.findAllByText("Taylor import is active.")).length
+    ).toBeGreaterThan(0);
+
+    resolveJacobRefresh([jacobImport]);
+    await waitFor(() => {
+      expect(api.fetchImportHistory).toHaveBeenCalledWith("jacob");
+    });
+    expect(screen.queryByText("Jacob import is active.")).not.toBeInTheDocument();
+    expect(screen.getAllByText("Taylor import is active.").length).toBeGreaterThan(0);
   });
 });
