@@ -217,6 +217,7 @@ def refresh_user_album_metadata(
         try:
             _require_owner(session, user_slug, authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
+            repository.require_user_album(album_id)
             existing = repository.get_completed_album_record_by_id(album_id)
             refreshed = metadata_refresh_service.refresh_album_record(
                 existing,
