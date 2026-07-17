@@ -7,6 +7,7 @@ from backend.app.models import Album, AlbumListen, User, UserAlbum
 
 
 ARTWORK_URL_PREFIX = "/media/artwork/"
+SPLASH_RECENT_ACTIVITY_LIMIT = 20
 PUBLIC_DISPLAY_NAME_OVERRIDES = {
     "test": "Jacob",
     "smoke test": "Demo Listener",
@@ -20,7 +21,7 @@ def splash_payload(
     session: Session,
     *,
     featured_limit: int = 6,
-    activity_limit: int = 5,
+    activity_limit: int = SPLASH_RECENT_ACTIVITY_LIMIT,
 ) -> dict:
     users = _featured_users(session, limit=featured_limit)
     return {
@@ -97,9 +98,11 @@ def _public_album_payload(
     }
 
 
-def recent_activity(session: Session, limit: int = 5) -> list[dict]:
-    bounded_limit = max(1, min(limit, 12))
-    candidate_limit = max(bounded_limit * 4, 12)
+def recent_activity(
+    session: Session,
+    limit: int = SPLASH_RECENT_ACTIVITY_LIMIT,
+) -> list[dict]:
+    bounded_limit = max(1, min(limit, SPLASH_RECENT_ACTIVITY_LIMIT))
     rows = session.execute(
         select(
             AlbumListen,
@@ -114,12 +117,11 @@ def recent_activity(session: Session, limit: int = 5) -> list[dict]:
         .join(User, User.id == AlbumListen.user_id)
         .where(User.is_active.is_(True))
         .order_by(AlbumListen.listened_at.desc(), AlbumListen.id.desc())
-        .limit(candidate_limit)
+        .limit(bounded_limit)
     )
 
-    candidates = [
-        _activity_payload(
-            session,
+    return [
+        _recent_listen_activity_payload(
             listen,
             artist=artist,
             name=name,
@@ -129,8 +131,6 @@ def recent_activity(session: Session, limit: int = 5) -> list[dict]:
         )
         for listen, artist, name, image_url, local_image_path, user in rows
     ]
-    selected = _select_activity_items(candidates, limit=bounded_limit)
-    return [_public_activity_item(item) for item in selected]
 
 
 def _featured_users(session: Session, limit: int) -> list[dict]:
@@ -418,8 +418,7 @@ def _discovery_rate_for_listens(listen_rows) -> float | None:
     return round(len(discovered_album_keys) / total_valid_listens, 2)
 
 
-def _activity_payload(
-    session: Session,
+def _recent_listen_activity_payload(
     listen: AlbumListen,
     *,
     artist: str,
@@ -428,104 +427,17 @@ def _activity_payload(
     local_image_path: str | None,
     user: User,
 ) -> dict:
-    previous_listen = session.execute(
-        select(AlbumListen.listened_at)
-        .where(
-            AlbumListen.user_id == listen.user_id,
-            AlbumListen.album_id == listen.album_id,
-            AlbumListen.listened_at < listen.listened_at,
-        )
-        .order_by(AlbumListen.listened_at.desc())
-        .limit(1)
-    ).scalar_one_or_none()
-
-    activity_type = "discovery"
     public_name = _public_display_name(user)
-    text = f"{public_name} discovered {name}."
-    score = 3.0
-    if previous_listen:
-        activity_type = "replay"
-        days_between = _days_between(previous_listen, listen.listened_at)
-        if days_between is None:
-            text = f"{public_name} replayed {name}."
-            score = 3.5
-        elif days_between == 1:
-            text = f"{public_name} replayed {name} after 1 day."
-            score = _replay_activity_score(days_between)
-        else:
-            text = f"{public_name} replayed {name} after {days_between} days."
-            score = _replay_activity_score(days_between)
-
     return {
-        "type": activity_type,
+        "type": "listen",
         "user_display_name": user.display_name,
         "public_user_display_name": public_name,
         "album_title": name,
         "artist_name": artist,
         "album_cover_url": _display_image_url(image_url, local_image_path),
-        "text": text,
+        "text": f"{public_name} listened to {name}.",
         "timestamp": listen.listened_at,
         "profile_url": f"/{user.slug}",
-        "_score": score,
-        "_user_slug": user.slug,
-    }
-
-
-def _select_activity_items(candidates: list[dict], limit: int) -> list[dict]:
-    selected = []
-    remaining = list(enumerate(candidates))
-
-    while remaining and len(selected) < limit:
-        type_counts = {
-            activity_type: sum(1 for item in selected if item["type"] == activity_type)
-            for activity_type in {"discovery", "replay"}
-        }
-        available_types = {item["type"] for _, item in remaining}
-        last_two_user_slugs = [item["_user_slug"] for item in selected[-2:]]
-        has_user_alternative = any(
-            item["_user_slug"] not in last_two_user_slugs for _, item in remaining
-        )
-
-        best_index = None
-        best_rank = None
-        for remaining_index, (original_index, item) in enumerate(remaining):
-            would_repeat_user = (
-                len(last_two_user_slugs) == 2
-                and last_two_user_slugs[0] == last_two_user_slugs[1] == item["_user_slug"]
-            )
-            if would_repeat_user and has_user_alternative:
-                continue
-
-            diversity_bonus = (
-                1.25
-                if type_counts.get(item["type"], 0) == 0 and len(available_types) > 1
-                else 0
-            )
-            rank = (
-                item["_score"] + diversity_bonus,
-                -original_index,
-            )
-            if best_rank is None or rank > best_rank:
-                best_rank = rank
-                best_index = remaining_index
-
-        if best_index is None:
-            best_index = 0
-        _, selected_item = remaining.pop(best_index)
-        selected.append(selected_item)
-
-    return selected
-
-
-def _replay_activity_score(days_between: int) -> float:
-    return 3.5 + min(days_between, 365) / 365
-
-
-def _public_activity_item(item: dict) -> dict:
-    return {
-        key: value
-        for key, value in item.items()
-        if not key.startswith("_")
     }
 
 
@@ -555,11 +467,3 @@ def _parse_datetime(value: str) -> datetime | None:
     if parsed.tzinfo is None:
         return parsed
     return parsed.astimezone(timezone.utc).replace(tzinfo=None)
-
-
-def _days_between(previous_value: str, current_value: str) -> int | None:
-    previous = _parse_datetime(previous_value)
-    current = _parse_datetime(current_value)
-    if previous is None or current is None:
-        return None
-    return max(0, (current - previous).days)

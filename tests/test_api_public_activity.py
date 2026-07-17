@@ -12,25 +12,7 @@ from backend.app.main import create_app
 from backend.app.models import User
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.repositories.user_repository import UserRepository
-from backend.app.services.public_activity_service import _select_activity_items
-
-
 class PublicActivityApiTests(unittest.TestCase):
-    def _activity_candidate(self, user_slug, activity_type, score, text):
-        return {
-            "type": activity_type,
-            "user_display_name": user_slug,
-            "public_user_display_name": user_slug,
-            "album_title": text,
-            "artist_name": "Artist",
-            "album_cover_url": None,
-            "text": text,
-            "timestamp": "2026-04-20T15:45:00.000Z",
-            "profile_url": f"/{user_slug}",
-            "_score": score,
-            "_user_slug": user_slug,
-        }
-
     def _client(self, temp_dir):
         database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
         engine = create_schema(database_url)
@@ -281,58 +263,71 @@ class PublicActivityApiTests(unittest.TestCase):
         self.assertNotIn("inactive", [user["slug"] for user in payload["featured_users"]])
 
         activity = payload["recent_activity"]
-        self.assertLessEqual(len(activity), 5)
-        self.assertTrue(
-            any(
-                item["user_display_name"] == "Friend"
-                and item["public_user_display_name"] == "Friend"
-                and item["type"] == "discovery"
-                and item["album_cover_url"] == "/media/artwork/newer.jpg"
-                and item["profile_url"] == "/friend"
-                and "Friend discovered Newer Album." in item["text"]
+        self.assertEqual(
+            [
+                (item["user_display_name"], item["album_title"], item["timestamp"])
                 for item in activity
-            )
+            ],
+            [
+                ("Friend", "Newer Album", "2026-04-19T15:45:00.000Z"),
+                ("Jacob", "Replay Album", "2026-04-18T15:45:00.000Z"),
+                ("Jacob", "Older Album", "2026-04-18T15:45:00.000Z"),
+                ("Friend", "Missing Art", "2026-04-17T15:45:00.000Z"),
+                ("smoke test", "Demo Album", "2026-04-16T15:45:00.000Z"),
+                ("Jacob", "Replay Album", "2026-04-01T15:45:00.000"),
+            ],
         )
-        self.assertTrue(
-            any(
-                item["user_display_name"] == "smoke test"
-                and item["public_user_display_name"] == "Demo Listener"
-                and item["text"] == "Demo Listener discovered Demo Album."
-                for item in activity
-            )
-        )
-        self.assertTrue(
-            any(
-                item["type"] == "replay"
-                and item["text"] == "Jacob replayed Replay Album after 17 days."
-                for item in activity
-            )
-        )
+        self.assertTrue(all(item["type"] == "listen" for item in activity))
+        self.assertEqual(activity[0]["album_cover_url"], "/media/artwork/newer.jpg")
+        self.assertEqual(activity[0]["text"], "Friend listened to Newer Album.")
         self.assertFalse(
             any(item["user_display_name"] == "Inactive" for item in activity)
         )
 
-    def test_activity_selection_prefers_mix_and_long_gap_replays(self):
-        candidates = [
-            self._activity_candidate("jacob", "replay", 3.51, "latest same user 1"),
-            self._activity_candidate("jacob", "replay", 3.52, "latest same user 2"),
-            self._activity_candidate("jacob", "replay", 3.53, "latest same user 3"),
-            self._activity_candidate("friend", "discovery", 3.0, "friend discovery"),
-            self._activity_candidate("smoke-test", "replay", 4.4, "long gap replay"),
-            self._activity_candidate("ben", "discovery", 3.0, "ben discovery"),
-        ]
+    def test_splash_returns_at_most_twenty_strictly_latest_listens(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(
+                bind=engine,
+                autoflush=False,
+                autocommit=False,
+            )
+            with session_factory() as session:
+                UserRepository(session).create_user(
+                    slug="listener",
+                    display_name="Listener",
+                )
+                completed_albums = {
+                    f"Artist - Album {day:02d}": {
+                        "artist": "Artist",
+                        "name": f"Album {day:02d}",
+                        "source": "manual",
+                        "listen_history": [f"2026-05-{day:02d}T12:00:00.000Z"],
+                    }
+                    for day in range(1, 22)
+                }
+                SqliteStateRepository(session, user_slug="listener").save_album_state(
+                    {
+                        "last_checked": None,
+                        "albums_in_progress": {},
+                        "completed_albums": completed_albums,
+                        "most_recently_listened": list(completed_albums),
+                    }
+                )
 
-        selected = _select_activity_items(candidates, limit=5)
+            with patch.dict(
+                "os.environ",
+                {"DATABASE_URL": database_url, "MEDIA_DIR": temp_dir},
+            ):
+                response = TestClient(create_app()).get("/api/public/splash")
 
-        self.assertIn("friend discovery", [item["text"] for item in selected])
-        self.assertLessEqual(
-            max_consecutive(
-                [item["_user_slug"] for item in selected],
-                "jacob",
-            ),
-            2,
-        )
-        self.assertEqual(selected[0]["text"], "long gap replay")
+        self.assertEqual(response.status_code, 200)
+        activity = response.json()["recent_activity"]
+        self.assertEqual(len(activity), 20)
+        self.assertEqual(activity[0]["album_title"], "Album 21")
+        self.assertEqual(activity[-1]["album_title"], "Album 02")
+        self.assertNotIn("Album 01", [item["album_title"] for item in activity])
 
     def test_splash_handles_empty_database(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -354,18 +349,6 @@ class PublicActivityApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["featured_users"], [])
         self.assertEqual(response.json()["recent_activity"], [])
-
-
-def max_consecutive(values, target):
-    longest = 0
-    current = 0
-    for value in values:
-        if value == target:
-            current += 1
-        else:
-            longest = max(longest, current)
-            current = 0
-    return max(longest, current)
 
 
 if __name__ == "__main__":
