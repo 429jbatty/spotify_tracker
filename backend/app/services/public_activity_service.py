@@ -116,7 +116,7 @@ def recent_activity(
         .join(Album, Album.id == AlbumListen.album_id)
         .join(User, User.id == AlbumListen.user_id)
         .where(User.is_active.is_(True))
-        .order_by(AlbumListen.listened_at.desc(), AlbumListen.id.desc())
+        .order_by(func.julianday(AlbumListen.listened_at).desc(), AlbumListen.id.desc())
         .limit(bounded_limit)
     )
 
@@ -429,6 +429,7 @@ def _recent_listen_activity_payload(
 ) -> dict:
     public_name = _public_display_name(user)
     return {
+        "listen_id": listen.id,
         "type": "listen",
         "user_display_name": user.display_name,
         "public_user_display_name": public_name,

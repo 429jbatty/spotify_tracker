@@ -576,7 +576,7 @@ function RecentActivity({ activity, status, onOpenProfile }) {
           <div className="max-h-[34rem] divide-y divide-border/70 overflow-y-auto">
             {activity.map((item) => (
               <ActivityItem
-                key={`${item.timestamp}-${item.text}`}
+                key={item.listen_id}
                 item={item}
                 onOpenProfile={onOpenProfile}
               />

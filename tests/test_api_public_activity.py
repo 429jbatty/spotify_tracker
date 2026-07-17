@@ -278,6 +278,8 @@ class PublicActivityApiTests(unittest.TestCase):
             ],
         )
         self.assertTrue(all(item["type"] == "listen" for item in activity))
+        self.assertTrue(all(isinstance(item["listen_id"], int) for item in activity))
+        self.assertEqual(len({item["listen_id"] for item in activity}), len(activity))
         self.assertEqual(activity[0]["album_cover_url"], "/media/artwork/newer.jpg")
         self.assertEqual(activity[0]["text"], "Friend listened to Newer Album.")
         self.assertFalse(
@@ -305,8 +307,24 @@ class PublicActivityApiTests(unittest.TestCase):
                         "source": "manual",
                         "listen_history": [f"2026-05-{day:02d}T12:00:00.000Z"],
                     }
-                    for day in range(1, 22)
+                    for day in range(2, 21)
                 }
+                completed_albums.update(
+                    {
+                        "Artist - Offset Newest": {
+                            "artist": "Artist",
+                            "name": "Offset Newest",
+                            "source": "manual",
+                            "listen_history": ["2026-05-21T14:00:00+02:00"],
+                        },
+                        "Artist - Offset Oldest": {
+                            "artist": "Artist",
+                            "name": "Offset Oldest",
+                            "source": "manual",
+                            "listen_history": ["2026-05-02T13:00:00+14:00"],
+                        },
+                    }
+                )
                 SqliteStateRepository(session, user_slug="listener").save_album_state(
                     {
                         "last_checked": None,
@@ -325,9 +343,9 @@ class PublicActivityApiTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         activity = response.json()["recent_activity"]
         self.assertEqual(len(activity), 20)
-        self.assertEqual(activity[0]["album_title"], "Album 21")
+        self.assertEqual(activity[0]["album_title"], "Offset Newest")
         self.assertEqual(activity[-1]["album_title"], "Album 02")
-        self.assertNotIn("Album 01", [item["album_title"] for item in activity])
+        self.assertNotIn("Offset Oldest", [item["album_title"] for item in activity])
 
     def test_splash_handles_empty_database(self):
         with tempfile.TemporaryDirectory() as temp_dir:
