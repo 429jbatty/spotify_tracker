@@ -465,8 +465,9 @@ def migrate_album_canonical_identity(engine: Engine) -> None:
         return
 
     columns = _table_columns(engine, "albums")
+    identity_column_added = "normalized_identity" not in columns
     with engine.begin() as connection:
-        if "normalized_identity" not in columns:
+        if identity_column_added:
             connection.execute(text("ALTER TABLE albums ADD COLUMN normalized_identity VARCHAR"))
 
     # Some historical test/database snapshots predate the metadata columns
@@ -509,10 +510,26 @@ def migrate_album_canonical_identity(engine: Engine) -> None:
     session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
     with session_factory() as session:
         repository = SqliteStateRepository(session)
+        remaining = list(session.scalars(select(Album).order_by(Album.id)))
+        if identity_column_added:
+            by_text_identity: dict[str, list[Album]] = {}
+            for album in remaining:
+                identity = normalized_artist_title_identity(album.artist, album.name)
+                by_text_identity.setdefault(identity, []).append(album)
+            for group in by_text_identity.values():
+                target = group[0]
+                for duplicate in group[1:]:
+                    if (
+                        target.release_group_mbid
+                        and duplicate.release_group_mbid
+                        and target.release_group_mbid.casefold()
+                        != duplicate.release_group_mbid.casefold()
+                    ):
+                        continue
+                    repository.merge_completed_album_listens(duplicate.id, target.id)
+
         # A matching release-group MBID is authoritative and safe even where
-        # display text changed between sources. Text-only matches are
-        # deliberately left for the existing review/report flow: without an
-        # authoritative ID they may represent distinct editions.
+        # display text changed between sources.
         remaining = list(session.scalars(select(Album).order_by(Album.id)))
         by_release_group: dict[str, list[Album]] = {}
         for album in remaining:

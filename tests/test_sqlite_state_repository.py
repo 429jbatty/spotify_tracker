@@ -446,6 +446,42 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         self.assertEqual(first["id"], second["id"])
         self.assertEqual(len(second["listen_history"]), 2)
 
+    def test_canonical_identity_reuses_release_groups_in_each_source_order(self):
+        source_pairs = [
+            ("spotify_import", "spotify_sync"),
+            ("spotify_sync", "spotify_import"),
+            ("manual", "spotify_sync"),
+            ("spotify_import", "manual"),
+        ]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            for index, (first_source, second_source) in enumerate(source_pairs):
+                with self.subTest(first=first_source, second=second_source):
+                    with session_factory() as session:
+                        repository = SqliteStateRepository(session)
+                        first = repository.create_completed_album(
+                            {
+                                "artist": "Artist Name",
+                                "name": f"Album Name {index}",
+                                "release_group_mbid": f"{index}-pair-rg",
+                                "source": first_source,
+                                "entry_source": first_source,
+                            },
+                            listen_date="2025-01-01T00:00:00Z",
+                        )
+                        second = repository.create_completed_album(
+                            {
+                                "artist": "artist name",
+                                "name": f"album name {index}",
+                                "release_group_mbid": f"{index}-pair-rg",
+                                "source": second_source,
+                                "entry_source": second_source,
+                            },
+                            listen_date="2026-01-01T00:00:00Z",
+                        )
+
+                    self.assertEqual(first["id"], second["id"])
+
     def test_conflicting_release_groups_are_not_merged_by_text_identity(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
@@ -461,6 +497,35 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                 )
 
         self.assertNotEqual(first["id"], second["id"])
+
+    def test_metadata_refresh_merges_existing_release_group_identity(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                source = repository.create_completed_album(
+                    {"artist": "Source Artist", "name": "Source Album"},
+                    listen_date="2025-01-01T00:00:00Z",
+                )
+                target = repository.create_completed_album(
+                    {
+                        "artist": "Target Artist",
+                        "name": "Target Album",
+                        "release_group_mbid": "refreshed-rg",
+                    },
+                    listen_date="2026-01-01T00:00:00Z",
+                )
+                refreshed = repository.replace_completed_album_metadata_by_id_or_merge_duplicate(
+                    source["id"],
+                    {
+                        "artist": "Source Artist",
+                        "name": "Source Album",
+                        "release_group_mbid": "refreshed-rg",
+                    },
+                )
+
+        self.assertEqual(refreshed["id"], target["id"])
+        self.assertEqual(len(refreshed["listen_history"]), 2)
 
 
 if __name__ == "__main__":

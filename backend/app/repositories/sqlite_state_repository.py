@@ -296,13 +296,19 @@ class SqliteStateRepository:
         )
         new_key, record = next(iter(normalized_record.items()))
 
-        existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
+        existing_target = self._resolve_album_identity(refreshed_record)
         if existing_target is not None and existing_target.id != album.id:
-            raise ValueError(f"Album key already exists: {new_key}")
+            self._apply_completed_album_record(
+                existing_target,
+                self._merged_completed_album_record(existing_target, record),
+            )
+            self._rebuild_credit_facts([existing_target.id])
+            return self.merge_completed_album_listens(album.id, existing_target.id)["album_key"]
 
         album.album_key = new_key
         album.artist = record["artist"]
         album.name = record["name"]
+        album.normalized_identity = self._normalized_identity(record)
         album.artist_mbid = record.get("artist_mbid")
         album.release_group_mbid = record.get("release_group_mbid")
         album.release_mbid = record.get("release_mbid")
@@ -352,18 +358,13 @@ class SqliteStateRepository:
             }
         )
         new_key = next(iter(normalized_record))
-        existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
+        existing_target = self._resolve_album_identity(refreshed_record)
 
         if existing_target is not None and existing_target.id != album.id:
-            existing_record = self._album_record_for_update(existing_target)
-            merged_record = {
-                **existing_record,
-                **{
-                    key: value
-                    for key, value in refreshed_record.items()
-                    if value is not None and value != "" and value != []
-                },
-            }
+            merged_record = self._merged_completed_album_record(
+                existing_target,
+                refreshed_record,
+            )
             self._apply_completed_album_record(existing_target, merged_record)
             self._rebuild_credit_facts([existing_target.id])
             return self.merge_completed_album_listens(album.id, existing_target.id)
@@ -461,10 +462,6 @@ class SqliteStateRepository:
 
         existing_album = self._resolve_album_identity(normalized)
         if existing_album is not None:
-            if self._user_has_album(existing_album.id) and _normalize_entry_source(
-                normalized.get("entry_source") or normalized.get("source")
-            ) == "manual":
-                raise ValueError(f"Album already exists: {existing_album.album_key}")
             self._apply_completed_album_record(
                 existing_album,
                 self._merged_completed_album_record(existing_album, normalized),
