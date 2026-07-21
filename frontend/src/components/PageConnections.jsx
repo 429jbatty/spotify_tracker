@@ -607,6 +607,9 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
     connectionControllerRef.current = null;
     contributorSearchControllerRef.current?.abort();
     contributorSearchControllerRef.current = null;
+    setContributorFocusKey("");
+    setContributorSearchLoading(false);
+    setContributorSearchResults([]);
   }, [selectedUserSlug]);
 
   useEffect(() => {

@@ -152,6 +152,25 @@ describe("PageConnections request lifecycle", () => {
     expect(screen.getByRole("button", { name: "Explore from here" })).toBeEnabled();
   });
 
+  it("clears a pending contributor search when the selected user changes", async () => {
+    const pending = deferred();
+    searchContributors.mockReturnValue(pending.promise);
+    const { rerender, user } = await renderLoaded();
+
+    await user.click(screen.getByRole("button", { name: /Start from a contributor/ }));
+    await user.type(screen.getByLabelText("Contributor"), "Ranked Contributor 29");
+    const signal = searchContributors.mock.calls.at(-1)[1].signal;
+
+    fetchRecurringContributors.mockResolvedValue(recurring("friend"));
+    fetchConnectionGraph.mockResolvedValue(graph("friend"));
+    rerender(<PageConnections albums={albums} onOpenAlbum={vi.fn()} selectedUser={{ slug: "friend" }} />);
+
+    expect(signal.aborted).toBe(true);
+    expect(screen.getByRole("button", { name: "Explore from here" })).toBeDisabled();
+    await act(async () => pending.resolve({ results: [{ person_key: "name:stale" }] }));
+    expect(screen.getByRole("button", { name: "Explore from here" })).toBeDisabled();
+  });
+
   it("shows an initial loading failure instead of rendering a graph", async () => {
     fetchRecurringContributors.mockRejectedValue(new Error("Connections unavailable"));
     fetchConnectionGraph.mockResolvedValue(graph());
