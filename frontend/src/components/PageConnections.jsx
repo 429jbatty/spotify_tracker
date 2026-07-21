@@ -18,6 +18,7 @@ import {
   fetchConnectionGraph,
   fetchCreditPersonDetail,
   fetchRecurringContributors,
+  searchContributors,
 } from "@/services/albumApi";
 import { Button } from "@/components/ui/button";
 import {
@@ -202,15 +203,20 @@ function ContributorSearch({
   id,
   label,
   onChange,
+  onQueryChange,
+  searchLoading,
+  searchResults,
   value,
 }) {
   const selectedContributor = contributors.find((contributor) => contributor.person_key === value) || null;
   const [query, setQuery] = useState(contributorOptionLabel(selectedContributor));
   const [open, setOpen] = useState(false);
-  const filteredOptions = useMemo(
+  const localOptions = useMemo(
     () => filterContributorOptions(contributors, query),
     [contributors, query]
   );
+  const hasQuery = Boolean(query.trim());
+  const options = hasQuery ? searchResults : localOptions;
 
   const selectContributor = (contributor) => {
     onChange(contributor.person_key);
@@ -233,6 +239,7 @@ function ContributorSearch({
           onChange={(event) => {
             setQuery(event.target.value);
             if (value) onChange("");
+            onQueryChange(event.target.value);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}
@@ -242,8 +249,10 @@ function ContributorSearch({
       </div>
       {open && (
         <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-72 overflow-y-auto rounded-md border border-border bg-popover p-1 shadow-md">
-          {filteredOptions.length > 0 ? (
-            filteredOptions.map((contributor) => (
+          {searchLoading ? (
+            <p className="px-3 py-2 text-sm text-muted-foreground">Searching contributors...</p>
+          ) : options.length > 0 ? (
+            options.map((contributor) => (
               <button
                 className="flex w-full min-w-0 flex-col rounded-sm px-3 py-2 text-left hover:bg-muted"
                 key={contributor.person_key}
@@ -291,10 +300,13 @@ function ExplorationHeader({
   onConnectAlbums,
   onCancelConnection,
   onFocusContributorChange,
+  onContributorQueryChange,
   onFocusAlbumChange,
   onStartAlbum,
   onStartConnector,
   topConnector,
+  contributorSearchLoading,
+  contributorSearchResults,
 }) {
   return (
     <section className="space-y-4">
@@ -342,6 +354,9 @@ function ExplorationHeader({
               id="contributor-start-search"
               label="Contributor"
               onChange={onFocusContributorChange}
+              onQueryChange={onContributorQueryChange}
+              searchLoading={contributorSearchLoading}
+              searchResults={contributorSearchResults}
               value={contributorFocusKey}
             />
             <Button
@@ -562,7 +577,10 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
   const [albumConnectionLoading, setAlbumConnectionLoading] = useState(false);
   const [albumConnectionElapsedSeconds, setAlbumConnectionElapsedSeconds] = useState(0);
   const [showContributorDirectory, setShowContributorDirectory] = useState(false);
+  const [contributorSearchLoading, setContributorSearchLoading] = useState(false);
+  const [contributorSearchResults, setContributorSearchResults] = useState([]);
   const connectionControllerRef = useRef(null);
+  const contributorSearchControllerRef = useRef(null);
   const connectionRequestIdRef = useRef(0);
   const graphSectionRef = useRef(null);
   const albumById = useMemo(() => {
@@ -587,6 +605,8 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
     connectionRequestIdRef.current += 1;
     connectionControllerRef.current?.abort();
     connectionControllerRef.current = null;
+    contributorSearchControllerRef.current?.abort();
+    contributorSearchControllerRef.current = null;
   }, [selectedUserSlug]);
 
   useEffect(() => {
@@ -715,8 +735,41 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
   };
   const handleStartConnector = () => {
     if (!contributorFocusKey) return;
-    const contributor = results.find((item) => item.person_key === contributorFocusKey);
+    const contributor = [...results, ...contributorSearchResults]
+      .find((item) => item.person_key === contributorFocusKey);
     if (contributor) focusContributor(contributor);
+  };
+  const handleContributorQueryChange = (query) => {
+    contributorSearchControllerRef.current?.abort();
+    if (!query.trim() || !selectedUserSlug) {
+      setContributorSearchLoading(false);
+      setContributorSearchResults([]);
+      return;
+    }
+
+    const controller = new AbortController();
+    contributorSearchControllerRef.current = controller;
+    setContributorSearchLoading(true);
+    searchContributors(selectedUserSlug, {
+      query,
+      limit: 8,
+      signal: controller.signal,
+    })
+      .then((response) => {
+        if (contributorSearchControllerRef.current === controller) {
+          setContributorSearchResults(response?.results || []);
+        }
+      })
+      .catch(() => {
+        if (contributorSearchControllerRef.current === controller) {
+          setContributorSearchResults([]);
+        }
+      })
+      .finally(() => {
+        if (contributorSearchControllerRef.current === controller) {
+          setContributorSearchLoading(false);
+        }
+      });
   };
   const handleActivateAlbumMode = () => {
     setActiveMode("album");
@@ -803,11 +856,14 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
           onAlbumPairChange={handleAlbumPairChange}
           onCancelConnection={handleCancelConnection}
           onConnectAlbums={handleConnectAlbums}
+          onContributorQueryChange={handleContributorQueryChange}
           onFocusContributorChange={setContributorFocusKey}
           onFocusAlbumChange={setAlbumFocusId}
           onStartAlbum={handleStartAlbum}
           onStartConnector={handleStartConnector}
           topConnector={topConnector}
+          contributorSearchLoading={contributorSearchLoading}
+          contributorSearchResults={contributorSearchResults}
         />
 
         {loading && results.length === 0 && (
@@ -860,7 +916,7 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
                   type="button"
                   variant="ghost"
                 >
-                  {showContributorDirectory ? "Hide contributor directory" : "Browse all contributors"}
+                  {showContributorDirectory ? "Hide contributor directory" : "Browse contributor directory"}
                 </Button>
               )}
             </div>
@@ -882,9 +938,19 @@ export default function PageConnections({ albums, selectedUser, onOpenAlbum }) {
                 <div>
                   <h3 className="text-sm font-semibold text-foreground">Contributor directory</h3>
                   <p className="mt-1 text-xs text-muted-foreground">
-                    Additional entry points based on connected albums and artist breadth, never listen count.
+                    Search every eligible contributor in your library. Results use connected albums and artist breadth, never listen count.
                   </p>
                 </div>
+                <ContributorSearch
+                  contributors={results}
+                  id="contributor-directory-search"
+                  label="Search all contributors"
+                  onChange={setContributorFocusKey}
+                  onQueryChange={handleContributorQueryChange}
+                  searchLoading={contributorSearchLoading}
+                  searchResults={contributorSearchResults}
+                  value={contributorFocusKey}
+                />
                 <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                   {results.slice(4).map((contributor) => (
                     <ConnectionSummaryCard

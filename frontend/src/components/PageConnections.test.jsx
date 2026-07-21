@@ -9,6 +9,7 @@ import {
   fetchAlbumConnectionGraph,
   fetchConnectionGraph,
   fetchRecurringContributors,
+  searchContributors,
 } from "@/services/albumApi";
 
 vi.mock("@/services/albumApi", () => ({
@@ -16,6 +17,7 @@ vi.mock("@/services/albumApi", () => ({
   fetchConnectionGraph: vi.fn(),
   fetchCreditPersonDetail: vi.fn(),
   fetchRecurringContributors: vi.fn(),
+  searchContributors: vi.fn(),
 }));
 
 vi.mock("./connections/ConnectionsGraph", () => ({
@@ -122,6 +124,32 @@ describe("PageConnections request lifecycle", () => {
     expect(fetchConnectionGraph).toHaveBeenCalledWith("listener", expect.objectContaining({ contributorLimit: 8 }));
     expect(screen.getByTestId("connections-graph-mock")).toHaveTextContent("listener graph");
     expect(screen.getByRole("button", { name: /Connect two albums/ })).toBeEnabled();
+  });
+
+  it("searches beyond the initial recommendations before enabling contributor exploration", async () => {
+    searchContributors.mockResolvedValue({
+      results: [{
+        person_key: "name:ranked-contributor-29",
+        person_name: "Ranked Contributor 29",
+        role_buckets: { writer_composer: 2 },
+        connected_album_count: 2,
+        distinct_primary_artist_count: 2,
+      }],
+    });
+    const { user } = await renderLoaded();
+
+    await user.click(screen.getByRole("button", { name: /Start from a contributor/ }));
+    const input = screen.getByLabelText("Contributor");
+    await user.clear(input);
+    await user.type(input, "Ranked Contributor 29");
+
+    await waitFor(() => expect(searchContributors).toHaveBeenLastCalledWith(
+      "listener",
+      expect.objectContaining({ query: "Ranked Contributor 29", limit: 8 }),
+    ));
+    const result = await screen.findByRole("button", { name: /Ranked Contributor 29/ });
+    fireEvent.mouseDown(result);
+    expect(screen.getByRole("button", { name: "Explore from here" })).toBeEnabled();
   });
 
   it("shows an initial loading failure instead of rendering a graph", async () => {

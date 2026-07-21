@@ -109,6 +109,19 @@ export async function fetchRecurringContributors(
   return requestJson(`/users/${userSlug}/connections/recurring?limit=${limit}`, options);
 }
 
+export async function searchContributors(
+  userSlug = getSelectedUserSlug(),
+  { query = "", limit = 25, offset = 0, ...options } = {}
+) {
+  if (!userSlug) return null;
+  const params = new URLSearchParams({
+    query,
+    limit: String(limit),
+    offset: String(offset),
+  });
+  return requestJson(`/users/${userSlug}/connections/contributors?${params.toString()}`, options);
+}
+
 export async function fetchConnectionGraph(
   userSlug = getSelectedUserSlug(),
   {

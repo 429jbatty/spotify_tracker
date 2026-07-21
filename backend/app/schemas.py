@@ -185,6 +185,15 @@ class RecurringContributorsResponse(BaseModel):
     insufficient_data_reason: str | None = None
 
 
+class ContributorSearchResponse(BaseModel):
+    user_slug: str
+    query: str = ""
+    offset: int = 0
+    limit: int
+    total: int
+    results: list[RecurringContributor] = Field(default_factory=list)
+
+
 class CreditPersonDetail(RecurringContributor):
     albums: list[CreditAlbumFactSummary] = Field(default_factory=list)
 
