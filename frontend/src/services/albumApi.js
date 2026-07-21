@@ -113,11 +113,18 @@ export async function createUser(payload) {
   }));
 }
 
-export async function login(payload) {
-  return storeAuthenticatedSession(await requestJson("/auth/login", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  }));
+export async function beginGoogleSignIn() {
+  return requestJson("/auth/google/start");
+}
+
+export function storeGoogleSessionFromFragment(fragment = window.location.hash) {
+  const params = new URLSearchParams(fragment.replace(/^#/, ""));
+  const sessionToken = params.get("session_token");
+  if (!sessionToken) throw new Error("Google sign-in did not return a session.");
+  return storeAuthenticatedSession({
+    session_token: sessionToken,
+    profile_slugs: [],
+  });
 }
 
 export function ownsProfile(userSlug) {

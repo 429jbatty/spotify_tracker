@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import os
 from pathlib import Path
 from unittest.mock import patch
 
@@ -10,6 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.database import create_schema
 from backend.app.main import create_app
 from backend.app.models import Album, AlbumCreditFact
+from backend.app.services import auth_service
 
 
 class ProfileAuthorizationApiTests(unittest.TestCase):
@@ -25,17 +27,22 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         return TestClient(create_app())
 
     def _create_profile(self, client, *, slug, email):
+        from backend.app.database import get_engine
+        session_factory = sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))
+        with session_factory() as session:
+            account = auth_service.create_account(session, email=email, password="unused")
+            token = auth_service.create_session(session, account=account)
+            session.commit()
         response = client.post(
             "/api/users",
             json={
                 "slug": slug,
                 "display_name": slug.title(),
-                "email": email,
-                "password": "correct-horse-battery-staple",
             },
+            headers={"Authorization": f"Bearer {token}"},
         )
         self.assertEqual(response.status_code, 201)
-        return {"Authorization": f"Bearer {response.json()['session_token']}"}
+        return {"Authorization": f"Bearer {token}"}
 
     def _create_album(self, client, *, slug, headers, artist, name):
         with patch(

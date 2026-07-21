@@ -17,17 +17,10 @@ class User(BaseModel):
 class UserCreate(BaseModel):
     slug: str
     display_name: str
-    email: str
-    password: str = Field(min_length=12)
 
 
 class ProfileCreateResponse(User):
     session_token: str
-
-
-class LoginRequest(BaseModel):
-    email: str
-    password: str
 
 
 class AuthenticatedAccount(BaseModel):
@@ -37,6 +30,10 @@ class AuthenticatedAccount(BaseModel):
 
 class LoginResponse(AuthenticatedAccount):
     session_token: str
+
+
+class GoogleAuthorizeResponse(BaseModel):
+    authorize_url: str
 
 
 class SpotifyConnectResponse(BaseModel):

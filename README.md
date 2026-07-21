@@ -95,6 +95,7 @@ Important environment variables:
 - `DATABASE_URL`: optional SQLite URL override.
 - `MEDIA_DIR`: optional media directory override.
 - `LASTFM_API_KEY`: required for Last.fm username imports.
+- `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`: Google OpenID Connect settings. Create a Web application OAuth client in Google Cloud and register the redirect URI exactly.
 - `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, `SPOTIFY_REDIRECT_URI`:
   Spotify OAuth settings.
 

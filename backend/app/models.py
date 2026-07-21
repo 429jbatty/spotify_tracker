@@ -138,6 +138,7 @@ class Account(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     email: Mapped[str] = mapped_column(String, unique=True, index=True)
     password_hash: Mapped[str] = mapped_column(String)
+    google_subject: Mapped[str | None] = mapped_column(String, unique=True, index=True, nullable=True)
     created_at: Mapped[str] = mapped_column(String, index=True)
 
     profiles: Mapped[list[User]] = relationship(back_populates="owner_account")
@@ -160,6 +161,24 @@ class AccountSession(Base):
     created_at: Mapped[str] = mapped_column(String, index=True)
 
     account: Mapped[Account] = relationship(back_populates="sessions")
+
+
+class GoogleOAuthState(Base):
+    __tablename__ = "google_oauth_states"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    state_hash: Mapped[str] = mapped_column(String, unique=True, index=True)
+    created_at: Mapped[str] = mapped_column(String, index=True)
+
+
+class ProfileOwnershipAssignment(Base):
+    __tablename__ = "profile_ownership_assignments"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    account_id: Mapped[int] = mapped_column(ForeignKey("accounts.id"), index=True)
+    assigned_at: Mapped[str] = mapped_column(String, index=True)
+    assigned_by: Mapped[str] = mapped_column(String, default="operator_cli")
 
 
 class SpotifyOAuthState(Base):

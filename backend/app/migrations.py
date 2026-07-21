@@ -560,6 +560,16 @@ def migrate_profile_ownership(engine: Engine) -> None:
             connection.execute(text("DELETE FROM user_spotify_credentials"))
 
 
+def migrate_google_account_identity(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "accounts"):
+        return
+    columns = _table_columns(engine, "accounts")
+    with engine.begin() as connection:
+        if "google_subject" not in columns:
+            connection.execute(text("ALTER TABLE accounts ADD COLUMN google_subject VARCHAR"))
+        connection.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_accounts_google_subject ON accounts (google_subject)"))
+
+
 def migrate_import_session_source_metadata(engine: Engine) -> None:
     if not _is_sqlite_engine(engine):
         return
@@ -839,6 +849,7 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_album_metadata_cache(engine)
     migrate_import_sessions_artifact_path(engine)
     migrate_profile_ownership(engine)
+    migrate_google_account_identity(engine)
     migrate_import_session_source_metadata(engine)
     migrate_spotify_streaming_events(engine)
     migrate_import_session_logs(engine)

@@ -14,9 +14,10 @@ import {
   fetchSpotifyStatus,
   fetchUsers,
   createUser,
-  login,
+  beginGoogleSignIn,
   ownsProfile,
   setSelectedUserSlug,
+  storeGoogleSessionFromFragment,
 } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
 import Header from "./components/universalHeader";
@@ -113,11 +114,9 @@ function RootRoute() {
         return user;
       }}
       onOpenProfile={(userSlug) => navigate(profilePath(userSlug, PROFILE_ROUTES.discovery))}
-      onLogin={async (credentials) => {
-        const account = await login(credentials);
-        const userSlug = account.profile_slugs?.[0];
-        if (userSlug) navigate(profilePath(userSlug, PROFILE_ROUTES.discovery));
-        return account;
+      onLogin={async () => {
+        const { authorize_url } = await beginGoogleSignIn();
+        window.location.assign(authorize_url);
       }}
     />
   );
@@ -444,10 +443,24 @@ function AppNotFound() {
   return <NotFound onBackHome={() => navigate("/")} />;
 }
 
+function GoogleAuthCallback() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    try {
+      storeGoogleSessionFromFragment();
+      navigate("/", { replace: true });
+    } catch {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
+  return <LoadingState />;
+}
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<RootRoute />} />
+      <Route path="/auth/callback" element={<GoogleAuthCallback />} />
       <Route path="/:userSlug" element={<ProfileIndexRedirect />} />
       <Route path="/:userSlug/albums" element={<LegacyRedirect legacySection="albums" />} />
       <Route path="/:userSlug/timeline" element={<LegacyRedirect legacySection="timeline" />} />

@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import os
 from pathlib import Path
 from unittest.mock import patch
 
@@ -9,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.database import create_schema
 from backend.app.main import create_app
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.services import auth_service
 
 
 def sample_album_state():
@@ -29,16 +31,17 @@ def sample_album_state():
 
 class MultiUserAlbumStateTests(unittest.TestCase):
     def _create_user(self, client, slug="friend", display_name="Friend"):
+        from backend.app.database import get_engine
+        with sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))() as session:
+            account = auth_service.create_account(session, email=f"{slug}@example.com", password="unused")
+            token = auth_service.create_session(session, account=account)
+            session.commit()
         response = client.post(
             "/api/users",
-            json={
-                "slug": slug,
-                "display_name": display_name,
-                "email": f"{slug}@example.com",
-                "password": "correct-horse-battery-staple",
-            },
+            json={"slug": slug, "display_name": display_name},
+            headers={"Authorization": f"Bearer {token}"},
         )
-        return response, {"Authorization": f"Bearer {response.json()['session_token']}"}
+        return response, {"Authorization": f"Bearer {token}"}
 
     def _client(self, temp_dir):
         database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

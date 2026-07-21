@@ -2400,9 +2400,8 @@ class ApiImportTests(unittest.TestCase):
                 json={
                     "slug": "test-user",
                     "display_name": "Test User",
-                    "email": "test-user@example.com",
-                    "password": "correct-horse-battery-staple",
                 },
+                headers={"Authorization": jacob_authorization},
             )
             test_user_headers = {
                 "Authorization": f"Bearer {created.json()['session_token']}"
@@ -3794,9 +3793,8 @@ class ApiImportTests(unittest.TestCase):
                 json={
                     "slug": "test",
                     "display_name": "Test",
-                    "email": "test@example.com",
-                    "password": "correct-horse-battery-staple",
                 },
+                headers={"Authorization": jacob_authorization},
             )
             test_headers = {
                 "Authorization": f"Bearer {create_user_response.json()['session_token']}"

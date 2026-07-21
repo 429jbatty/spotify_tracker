@@ -1,33 +1,34 @@
-from fastapi import APIRouter, HTTPException, status
+from urllib.parse import urlencode
+
+from fastapi import APIRouter, HTTPException, Query, status
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
 from backend.app.database import get_engine
-from backend.app.schemas import LoginRequest, LoginResponse
+from backend.app.schemas import GoogleAuthorizeResponse
 from backend.app.services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
 def _session_factory():
-    return sessionmaker(
-        bind=get_engine(get_settings().database_url),
-        autoflush=False,
-        autocommit=False,
-    )
+    return sessionmaker(bind=get_engine(get_settings().database_url), autoflush=False, autocommit=False)
 
 
-@router.post("/login", response_model=LoginResponse)
-def login(request: LoginRequest) -> LoginResponse:
+@router.get("/google/start", response_model=GoogleAuthorizeResponse)
+def start_google_sign_in() -> GoogleAuthorizeResponse:
     with _session_factory()() as session:
-        try:
-            account = auth_service.authenticate_account(
-                session,
-                email=request.email,
-                password=request.password,
-            )
-            token = auth_service.create_session(session, account=account)
-            session.commit()
-            return LoginResponse(session_token=token, **auth_service.account_payload(account))
-        except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+        url = auth_service.begin_google_sign_in(session, settings=get_settings())
+        session.commit()
+        return GoogleAuthorizeResponse(authorize_url=url)
+
+
+@router.get("/google/callback")
+def google_callback(code: str = Query(), state: str = Query()):
+    settings = get_settings()
+    with _session_factory()() as session:
+        account, session_token = auth_service.complete_google_sign_in(session, code=code, state=state, settings=settings)
+        session.commit()
+        fragment = urlencode({"session_token": session_token, "email": account.email})
+    return RedirectResponse(url=f"{settings.frontend_origin.rstrip('/')}/auth/callback#{fragment}", status_code=status.HTTP_303_SEE_OTHER)

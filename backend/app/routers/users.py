@@ -61,16 +61,12 @@ def list_users() -> list:
 
 
 @router.post("", response_model=ProfileCreateResponse, status_code=status.HTTP_201_CREATED)
-def create_user(request: UserCreate) -> object:
+def create_user(request: UserCreate, authorization: str | None = Header(default=None)) -> object:
     session_factory = _session_factory()
     with session_factory() as session:
         repository = UserRepository(session)
         try:
-            account = auth_service.create_account(
-                session,
-                email=request.email,
-                password=request.password,
-            )
+            account = auth_service.require_account(session, authorization=authorization)
             user = repository.create_user(
                 slug=request.slug,
                 display_name=request.display_name,
