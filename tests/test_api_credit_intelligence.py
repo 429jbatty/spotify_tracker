@@ -112,8 +112,7 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
             ]
         )
 
-        session.add_all(
-            [
+        facts = [
                 self._fact(album_one, "mbid:producer-1", "Producer One", "producer-1", "producer"),
                 self._fact(album_two, "mbid:producer-1", "Producer One", "producer-1", "producer"),
                 self._fact(album_three, "mbid:producer-1", "Producer One", "producer-1", "producer"),
@@ -275,7 +274,27 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
                 ),
                 self._fact(friend_album, "mbid:producer-1", "Producer One", "producer-1", "producer"),
             ]
+        facts.extend(
+            fact
+            for index in range(30)
+            for fact in (
+                self._fact(
+                    album_one,
+                    f"name:zzz ranked contributor {index:02}",
+                    f"Zzz Ranked Contributor {index:02}",
+                    None,
+                    "other",
+                ),
+                self._fact(
+                    album_two,
+                    f"name:zzz ranked contributor {index:02}",
+                    f"Zzz Ranked Contributor {index:02}",
+                    None,
+                    "other",
+                ),
+            )
         )
+        session.add_all(facts)
         session.commit()
 
     def _album(self, key, artist, name, artist_mbid):
@@ -355,6 +374,41 @@ class ApiCreditIntelligenceTests(unittest.TestCase):
             [album["name"] for album in producer["representative_albums"]],
             ["Album One", "Album Three", "Album Two"],
         )
+
+    def test_contributor_search_matches_beyond_initial_recommendations(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            initial = client.get("/api/users/listener/connections/recurring?limit=25")
+            response = client.get(
+                "/api/users/listener/connections/contributors"
+                "?query=Zzz%20Ranked%20Contributor%2029&limit=8"
+            )
+
+        self.assertEqual(initial.status_code, 200)
+        self.assertNotIn(
+            "Zzz Ranked Contributor 29",
+            [item["person_name"] for item in initial.json()["results"]],
+        )
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["user_slug"], "listener")
+        self.assertEqual(payload["total"], 1)
+        self.assertEqual([item["person_name"] for item in payload["results"]], ["Zzz Ranked Contributor 29"])
+
+    def test_contributor_search_is_user_scoped_and_excludes_default_noise(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            response = client.get(
+                "/api/users/friend/connections/contributors?query=Producer%20One"
+            )
+            noise_response = client.get(
+                "/api/users/listener/connections/contributors?query=Artist%20A"
+            )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["results"], [])
+        self.assertEqual(noise_response.status_code, 200)
+        self.assertEqual(noise_response.json()["results"], [])
 
     def test_album_pairs_return_traceable_direct_connections(self):
         with tempfile.TemporaryDirectory() as temp_dir:

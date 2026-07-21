@@ -3076,6 +3076,22 @@ Phase 12Y automatic credit-fact maintenance completed on 2026-07-12:
 - Suggested next step:
   - Run the one-time rebuild once in production to backfill existing albums, then use normal imports and metadata refreshes to keep the projection current.
 
+Issue #30 contributor discovery completed on 2026-07-20:
+
+- Outcome for the overall feature: contributor search and the contributor directory now search the full eligible contributor set instead of treating the first ranked recommendations as a complete directory.
+- What changed:
+  - Kept the existing small recurring-contributor response for recommendations and initial graph construction.
+  - Added a user-scoped, paged contributor discovery API that applies the query before the page limit and retains the default Connections noise exclusions.
+  - Updated both contributor search controls to request a small server-filtered result list as the user types, without loading an unbounded library into the browser.
+  - Clarified directory copy so it promises searchable eligibility rather than a preloaded complete list.
+- Validation:
+  - `./.venv/bin/python -m unittest tests.test_api_credit_intelligence -v` passed: 20 tests, including a contributor ranked beyond the first 25.
+  - `node_modules/.bin/vitest run src/components/PageConnections.test.jsx`, targeted eslint, and the production frontend build passed.
+- Independent testing:
+  - Open `/emily/connections`, select **Start from a contributor**, search for `Ryan Tedder`, and confirm he is selectable and enables **Explore from here**.
+- Suggested next step:
+  - If large libraries make frequent type-ahead requests noticeable, add a short debounced input delay while preserving request cancellation and server-side matching.
+
 - Unbounded path search or weighted shortest-path optimization beyond the
   bounded MVP.
 - Separate `credit_people` and track-level credit tables.
