@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
-from backend.app.models import Album, AlbumCreditFact, AlbumListen
+from backend.app.models import Album, AlbumCreditFact, AlbumListen, UserAlbum
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 
 
@@ -391,6 +391,76 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             "https://example.test/new-cover.jpg",
         )
         self.assertEqual(album["local_image_path"], "artwork/release-group-mbid.jpg")
+
+    def test_canonical_identity_reuses_release_group_across_sources(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                imported = repository.create_completed_album(
+                    {
+                        "artist": "Charli XCX",
+                        "name": "how i’m feeling now",
+                        "release_group_mbid": "e6f8d52b-3b24-4546-b86d-99d79b0df209",
+                        "source": "spotify_import",
+                    },
+                    listen_date="2025-01-01T00:00:00Z",
+                )
+                repository.update_user_album_tags(imported["id"], ["cohesive"])
+                repository.update_user_album_feedback(
+                    imported["id"], rating=9, notes="Keep this note"
+                )
+                synced = repository.create_completed_album(
+                    {
+                        "artist": "Charli xcx",
+                        "name": "how i'm feeling now",
+                        "release_group_mbid": "e6f8d52b-3b24-4546-b86d-99d79b0df209",
+                        "source": "spotify_sync",
+                    },
+                    listen_date="2026-01-01T00:00:00Z",
+                )
+
+                albums = session.scalars(select(Album)).all()
+
+        self.assertEqual(len(albums), 1)
+        self.assertEqual(synced["id"], imported["id"])
+        self.assertEqual(synced["listen_history"], ["2025-01-01T00:00:00Z", "2026-01-01T00:00:00Z"])
+        self.assertEqual(synced["your_tags"], ["cohesive"])
+        self.assertEqual(synced["rating"], 9)
+        self.assertEqual(synced["notes"], "Keep this note")
+
+    def test_canonical_identity_normalizes_punctuation_without_mbids(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                first = repository.create_completed_album(
+                    {"artist": "Beyoncé", "name": "Lemonade", "source": "manual"},
+                    listen_date="2025-01-01T00:00:00Z",
+                )
+                second = repository.create_completed_album(
+                    {"artist": "beyonce", "name": "LEMONADE", "source": "spotify_import"},
+                    listen_date="2026-01-01T00:00:00Z",
+                )
+
+        self.assertEqual(first["id"], second["id"])
+        self.assertEqual(len(second["listen_history"]), 2)
+
+    def test_conflicting_release_groups_are_not_merged_by_text_identity(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            with session_factory() as session:
+                repository = SqliteStateRepository(session)
+                first = repository.create_completed_album(
+                    {"artist": "Artist", "name": "Album", "release_group_mbid": "rg-one"},
+                    listen_date="2025-01-01T00:00:00Z",
+                )
+                second = repository.create_completed_album(
+                    {"artist": "Artist", "name": "Album", "release_group_mbid": "rg-two"},
+                    listen_date="2026-01-01T00:00:00Z",
+                )
+
+        self.assertNotEqual(first["id"], second["id"])
 
 
 if __name__ == "__main__":

@@ -14,6 +14,10 @@ from backend.app.models import (
     UserAlbum,
     UserAppState,
 )
+from backend.app.album_identity import (
+    normalized_artist_title_identity,
+    release_group_identity,
+)
 from backend.app.repositories.state_utils import (
     _normalize_completed_albums,
     empty_album_state,
@@ -61,6 +65,9 @@ def _album_metadata(record: dict[str, Any]) -> dict[str, Any]:
             "remote_image_url",
             "local_image_path",
             "entry_source",
+            "normalized_identity",
+            "rating",
+            "notes",
         }
     }
 
@@ -417,6 +424,12 @@ class SqliteStateRepository:
                 target_membership.notes = membership.notes
 
         self.session.execute(
+            ImportedListeningEvent.__table__.update()
+            .where(ImportedListeningEvent.album_id == source_album.id)
+            .values(album_id=target_album.id)
+        )
+
+        self.session.execute(
             delete(AlbumListen).where(AlbumListen.album_id == source_album.id)
         )
         self.session.execute(
@@ -446,11 +459,16 @@ class SqliteStateRepository:
         )
         album_key, normalized = next(iter(normalized_record.items()))
 
-        existing_album = self.session.scalars(_album_lookup_statement(album_key)).first()
+        existing_album = self._resolve_album_identity(normalized)
         if existing_album is not None:
-            if self._user_has_album(existing_album.id):
-                raise ValueError(f"Album already exists: {album_key}")
-            self._apply_completed_album_record(existing_album, normalized)
+            if self._user_has_album(existing_album.id) and _normalize_entry_source(
+                normalized.get("entry_source") or normalized.get("source")
+            ) == "manual":
+                raise ValueError(f"Album already exists: {existing_album.album_key}")
+            self._apply_completed_album_record(
+                existing_album,
+                self._merged_completed_album_record(existing_album, normalized),
+            )
             self._add_user_album(existing_album.id)
             if listen_date:
                 self._add_listen(existing_album, listen_date)
@@ -461,12 +479,17 @@ class SqliteStateRepository:
             return self._album_record(existing_album)
 
         album = Album(
-            album_key=album_key,
+            album_key=self._new_album_key(normalized, album_key),
             artist=normalized["artist"],
             name=normalized["name"],
+            normalized_identity=self._normalized_identity(normalized),
         )
         self.session.add(album)
-        self._apply_completed_album_record(album, normalized)
+        self._apply_completed_album_record(
+            album,
+            normalized,
+            album_key=album.album_key,
+        )
         self.session.flush()
         self._add_user_album(album.id)
 
@@ -583,22 +606,23 @@ class SqliteStateRepository:
 
     def _sync_completed_albums(self, completed_albums: dict[str, Any]) -> list[int]:
         normalized_albums = _normalize_completed_albums(completed_albums)
-        incoming_keys = set(normalized_albums)
+        resolved_albums = [
+            (album_key, record, self._resolve_album_identity(record))
+            for album_key, record in normalized_albums.items()
+        ]
+        incoming_existing_ids = {
+            album.id for _, _, album in resolved_albums if album is not None
+        }
 
-        existing_keys = set(
+        existing_ids = set(
             self.session.scalars(
-                select(Album.album_key)
+                select(Album.id)
                 .join(UserAlbum)
                 .where(UserAlbum.user_id == self.user.id)
             )
         )
-        stale_keys = existing_keys - incoming_keys
-        if stale_keys:
-            stale_album_ids = list(
-                self.session.scalars(
-                    select(Album.id).where(Album.album_key.in_(stale_keys))
-                )
-            )
+        stale_album_ids = list(existing_ids - incoming_existing_ids)
+        if stale_album_ids:
             if stale_album_ids:
                 self.session.execute(
                     delete(AlbumListen).where(
@@ -616,29 +640,40 @@ class SqliteStateRepository:
             self.session.flush()
 
         album_ids = []
-        for album_key, record in normalized_albums.items():
-            album = self.session.scalars(
-                _album_lookup_statement(album_key)
-            ).first()
+        synced_album_ids: set[int] = set()
+        for album_key, record, album in resolved_albums:
+            album = album or self._resolve_album_identity(record)
             previous_credit_source = (
                 self._credit_source_signature(album) if album is not None else None
             )
 
             if album is None:
+                album_key = self._new_album_key(record, album_key)
                 album = Album(
                     album_key=album_key,
                     artist=record["artist"],
                     name=record["name"],
+                    normalized_identity=self._normalized_identity(record),
                 )
                 self.session.add(album)
 
-            self._apply_completed_album_record(album, record, album_key=album_key)
+            self._apply_completed_album_record(
+                album,
+                self._merged_completed_album_record(album, record)
+                if album.id is not None else record,
+                album_key=album_key if album.id is None else None,
+            )
 
             self.session.flush()
             if previous_credit_source != self._credit_source_signature(album):
                 album_ids.append(album.id)
             self._add_user_album(album.id)
-            self._sync_listens(album, record.get("listen_history") or [])
+            if album.id in synced_album_ids:
+                for listened_at in record.get("listen_history") or []:
+                    self._add_listen(album, listened_at)
+            else:
+                self._sync_listens(album, record.get("listen_history") or [])
+                synced_album_ids.add(album.id)
 
         return album_ids
 
@@ -841,6 +876,7 @@ class SqliteStateRepository:
             {album_key or _album_key(record.get("artist", ""), record.get("name", "")): record}
         )
         new_key, normalized = next(iter(normalized_record.items()))
+        new_key = album_key or new_key
 
         existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
         if existing_target is not None and existing_target.id != album.id:
@@ -849,6 +885,7 @@ class SqliteStateRepository:
         album.album_key = new_key
         album.artist = normalized["artist"]
         album.name = normalized["name"]
+        album.normalized_identity = self._normalized_identity(normalized)
         album.artist_mbid = normalized.get("artist_mbid")
         album.release_group_mbid = normalized.get("release_group_mbid")
         album.release_mbid = normalized.get("release_mbid")
@@ -862,6 +899,69 @@ class SqliteStateRepository:
             normalized.get("entry_source") or normalized.get("source")
         )
         album.metadata_json = _album_metadata(normalized)
+
+    def _merged_completed_album_record(
+        self,
+        album: Album,
+        incoming: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Apply useful enrichment without downgrading the canonical row."""
+        merged = self._album_record_for_update(album)
+        for key, value in incoming.items():
+            if value not in (None, "", [], {}):
+                merged[key] = value
+        # A source-specific spelling must not replace the established display
+        # identity merely because it resolved to the same canonical entity.
+        merged["artist"] = album.artist
+        merged["name"] = album.name
+        merged["source"] = album.source
+        merged["entry_source"] = album.entry_source
+        if incoming.get("image_url"):
+            merged["image_url"] = incoming["image_url"]
+            merged["remote_image_url"] = (
+                incoming.get("remote_image_url") or incoming["image_url"]
+            )
+        return merged
+
+    def _normalized_identity(self, record: dict[str, Any]) -> str:
+        return normalized_artist_title_identity(record.get("artist"), record.get("name"))
+
+    def _resolve_album_identity(self, record: dict[str, Any]) -> Album | None:
+        """Resolve an incoming derived record without merging conflicting MBIDs."""
+        release_group_mbid = release_group_identity(record.get("release_group_mbid"))
+        pending_albums = [pending for pending in self.session.new if isinstance(pending, Album)]
+        if release_group_mbid:
+            for pending in pending_albums:
+                if release_group_identity(pending.release_group_mbid) == release_group_mbid:
+                    return pending
+            by_release_group = self.session.scalars(
+                select(Album).where(func.lower(Album.release_group_mbid) == release_group_mbid)
+            ).first()
+            if by_release_group is not None:
+                return by_release_group
+
+        identity = self._normalized_identity(record)
+        candidates = list(self.session.scalars(
+            select(Album).where(Album.normalized_identity == identity)
+        ))
+        candidates.extend(
+            album for album in pending_albums
+            if album.normalized_identity == identity
+        )
+        for candidate in candidates:
+            candidate_release_group = release_group_identity(candidate.release_group_mbid)
+            if not (release_group_mbid and candidate_release_group and candidate_release_group != release_group_mbid):
+                return candidate
+        return None
+
+    def _new_album_key(self, record: dict[str, Any], proposed_key: str) -> str:
+        """Keep conflicting authoritative IDs distinct without key collisions."""
+        if self.session.scalars(_album_lookup_statement(proposed_key)).first() is None:
+            return proposed_key
+        release_group_mbid = release_group_identity(record.get("release_group_mbid"))
+        if release_group_mbid:
+            return f"{proposed_key} [{release_group_mbid[:8]}]"
+        return proposed_key
 
     def _add_listen(
         self,

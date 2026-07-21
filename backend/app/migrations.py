@@ -1,4 +1,6 @@
-from sqlalchemy import Engine, text
+import json
+
+from sqlalchemy import Engine, select, text
 
 DEFAULT_USER_SLUG = "jacob"
 DEFAULT_USER_DISPLAY_NAME = "Jacob"
@@ -457,6 +459,86 @@ def migrate_album_entry_source(engine: Engine) -> None:
         )
 
 
+def migrate_album_canonical_identity(engine: Engine) -> None:
+    """Backfill and safely consolidate identities before enforcing indexes."""
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "albums"):
+        return
+
+    columns = _table_columns(engine, "albums")
+    with engine.begin() as connection:
+        if "normalized_identity" not in columns:
+            connection.execute(text("ALTER TABLE albums ADD COLUMN normalized_identity VARCHAR"))
+
+    # Some historical test/database snapshots predate the metadata columns
+    # required by the ORM mapping. Their existing migrations remain responsible
+    # for bringing that schema forward before this identity migration runs.
+    required_columns = {"artist", "name", "artist_mbid", "release_group_mbid"}
+    if not required_columns.issubset(_table_columns(engine, "albums")):
+        return
+
+    from backend.app.album_identity import normalized_artist_title_identity
+
+    # The repository merge preserves per-user fields and moves raw import
+    # provenance.  Import lazily to avoid the database module import cycle.
+    with engine.connect() as connection:
+        raw_rows = connection.execute(
+            text("SELECT id, artist, name, release_group_mbid, metadata_json FROM albums")
+        ).mappings().all()
+    # Old databases can contain malformed JSON metadata. The normal repository
+    # already tolerates that on reads; defer reconciliation rather than making
+    # startup fail while SQLAlchemy deserializes such a row.
+    if any(
+        row["metadata_json"] and not _is_valid_json(row["metadata_json"])
+        for row in raw_rows
+    ):
+        with engine.begin() as connection:
+            for row in raw_rows:
+                connection.execute(
+                    text("UPDATE albums SET normalized_identity = :identity WHERE id = :id"),
+                    {
+                        "id": row["id"],
+                        "identity": normalized_artist_title_identity(row["artist"], row["name"]),
+                    },
+                )
+        return
+
+    from sqlalchemy.orm import sessionmaker
+    from backend.app.models import Album
+    from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+
+    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    with session_factory() as session:
+        repository = SqliteStateRepository(session)
+        # A matching release-group MBID is authoritative and safe even where
+        # display text changed between sources. Text-only matches are
+        # deliberately left for the existing review/report flow: without an
+        # authoritative ID they may represent distinct editions.
+        remaining = list(session.scalars(select(Album).order_by(Album.id)))
+        by_release_group: dict[str, list[Album]] = {}
+        for album in remaining:
+            if album.release_group_mbid:
+                by_release_group.setdefault(album.release_group_mbid.casefold(), []).append(album)
+        for group in by_release_group.values():
+            target = group[0]
+            for duplicate in group[1:]:
+                repository.merge_completed_album_listens(duplicate.id, target.id)
+        for album in session.scalars(select(Album)):
+            album.normalized_identity = normalized_artist_title_identity(album.artist, album.name)
+        session.commit()
+
+    with engine.begin() as connection:
+        connection.execute(text("CREATE INDEX IF NOT EXISTS ix_albums_normalized_identity ON albums (normalized_identity)"))
+        connection.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS uq_albums_release_group_mbid ON albums (release_group_mbid) WHERE release_group_mbid IS NOT NULL AND release_group_mbid != ''"))
+
+
+def _is_valid_json(value) -> bool:
+    try:
+        json.loads(value)
+    except (TypeError, ValueError):
+        return False
+    return True
+
+
 def migrate_imported_event_candidate_key(engine: Engine) -> None:
     if not _is_sqlite_engine(engine):
         return
@@ -813,6 +895,7 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_user_album_tags(engine)
     migrate_user_album_feedback(engine)
     migrate_album_entry_source(engine)
+    migrate_album_canonical_identity(engine)
     cleanup_default_user_cross_user_album_memberships(engine)
     migrate_imported_event_candidate_key(engine)
     migrate_album_metadata_cache(engine)
