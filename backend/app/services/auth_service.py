@@ -109,6 +109,8 @@ def bind_profile_owner(session: Session, *, user_slug: str, account_email: str, 
         raise ValueError("Account not found or has not signed in with Google yet.")
     if user.owner_account_id is not None and user.owner_account_id != account.id:
         raise ValueError(f"Profile {user.slug} is already assigned to another account.")
+    if user.owner_account_id == account.id:
+        return user
     user.owner_account_id = account.id
     session.add(ProfileOwnershipAssignment(user_id=user.id, account_id=account.id, assigned_at=_now(), assigned_by=assigned_by))
     session.commit()

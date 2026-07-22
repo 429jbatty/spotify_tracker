@@ -40,3 +40,14 @@ class GoogleAuthServiceTests(unittest.TestCase):
             session.commit()
             with self.assertRaisesRegex(ValueError, "has not signed in with Google"):
                 auth_service.bind_profile_owner(session, user_slug="legacy-jacob", account_email="person@example.com")
+
+    def test_repeating_an_owner_binding_does_not_create_another_audit_entry(self):
+        with self.session_factory() as session:
+            account = Account(email="person@example.com", google_subject="google-subject", password_hash="disabled", created_at="2026-01-01T00:00:00+00:00")
+            user = User(slug="legacy-jacob", display_name="Jacob", is_active=True)
+            session.add_all((account, user))
+            session.commit()
+            auth_service.bind_profile_owner(session, user_slug="legacy-jacob", account_email="person@example.com")
+            auth_service.bind_profile_owner(session, user_slug="legacy-jacob", account_email="person@example.com")
+            from backend.app.models import ProfileOwnershipAssignment
+            self.assertEqual(session.query(ProfileOwnershipAssignment).count(), 1)

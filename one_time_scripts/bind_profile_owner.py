@@ -21,10 +21,11 @@ def main() -> int:
     with sessionmaker(bind=create_schema(), autoflush=False, autocommit=False)() as session:
         try:
             user = bind_profile_owner(session, user_slug=args.user_slug, account_email=args.account_email)
+            assigned_slug = user.slug
         except ValueError as exc:
             print(str(exc), file=sys.stderr)
             return 2
-    print(f"Assigned profile {user.slug} to {args.account_email}.")
+    print(f"Assigned profile {assigned_slug} to {args.account_email}.")
     return 0
 
 
