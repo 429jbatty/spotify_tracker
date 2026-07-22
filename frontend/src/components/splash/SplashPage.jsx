@@ -5,6 +5,7 @@ import {
   CalendarClock,
   Disc3,
   History,
+  Library,
   Music2,
   RefreshCw,
   Search,
@@ -13,7 +14,6 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { fetchCurrentAccount, fetchSplashData } from "@/services/albumApi";
-import SiteHeader from "@/components/SiteHeader";
 import CreateProfileDialog from "@/components/CreateProfileDialog";
 import LoginDialog from "@/components/LoginDialog";
 
@@ -130,12 +130,12 @@ function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <SiteHeader
-        onBrowseProfiles={handleExplore}
+      <SplashHeader
+        onBrowse={handleExplore}
         onAbout={handleAbout}
+        onCreateProfile={() => setCreateProfileOpen(true)}
         onLogin={() => setLoginOpen(true)}
         authenticatedAccount={authenticatedAccount}
-        primaryAction={{ label: "Create profile", onClick: () => setCreateProfileOpen(true) }}
       />
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
         <section className="flex flex-col gap-6">
@@ -172,6 +172,46 @@ function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
       />
       <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} onLogin={onLogin} />
     </main>
+  );
+}
+
+function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticatedAccount }) {
+  return (
+    <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3" aria-label="Albumary home">
+          <span className="flex size-10 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
+            <Library className="size-5" />
+          </span>
+          <span className="text-lg font-semibold tracking-tight">Albumary</span>
+        </div>
+        <nav className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
+          <button
+            type="button"
+            onClick={onBrowse}
+            className="transition-colors hover:text-foreground"
+          >
+            Browse Profiles
+          </button>
+          <button
+            type="button"
+            onClick={onAbout}
+            className="transition-colors hover:text-foreground"
+          >
+            About
+          </button>
+          {authenticatedAccount ? (
+            <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-foreground" title={`Signed in as ${authenticatedAccount.email}`}>
+              <span className="hidden text-xs sm:inline">Signed in as {authenticatedAccount.email}</span>
+              <span className="text-xs sm:hidden">Signed in</span>
+            </div>
+          ) : <button type="button" onClick={onLogin} className="transition-colors hover:text-foreground">Sign in</button>}
+          <Button type="button" size="sm" onClick={onCreateProfile}>
+            Create profile
+          </Button>
+        </nav>
+      </div>
+    </header>
   );
 }
 
