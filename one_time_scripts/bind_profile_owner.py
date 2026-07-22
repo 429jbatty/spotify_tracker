@@ -3,6 +3,7 @@
 import argparse
 import sys
 
+from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
@@ -10,6 +11,7 @@ from backend.app.services.auth_service import bind_profile_owner
 
 
 def main() -> int:
+    load_dotenv()
     parser = argparse.ArgumentParser(description="Assign a legacy profile to a Google-authenticated account.")
     parser.add_argument("user_slug", help="Existing profile slug, for example jacob")
     parser.add_argument("account_email", help="Verified Google email of an account that has signed in once")
