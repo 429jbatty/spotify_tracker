@@ -13,7 +13,6 @@ import {
   Network,
   Table2,
   CheckCircle2,
-  UserRound,
 } from "lucide-react";
 import { PROFILE_ROUTES, profilePath } from "@/routing";
 
@@ -177,9 +176,8 @@ function UniversalHeader({
             <div className="mr-2 flex flex-col items-end text-xs">
               <div className="flex items-center gap-2">
                 <span className="font-medium text-foreground">{selectedUser?.display_name}</span>
-                <ViewBadge isOwner={isOwner} />
+                <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
               </div>
-              {authenticatedAccount && <span className="text-muted-foreground">Signed in as {authenticatedAccount.email}</span>}
               <button
                 type="button"
                 onClick={onSwitchUser}
@@ -211,17 +209,16 @@ function UniversalHeader({
                   triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
                 />
               </>
-            ) : (
+            ) : !authenticatedAccount ? (
               <span className="text-xs text-muted-foreground">Public profile · read-only</span>
-            )}
+            ) : null}
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 xl:hidden">
           <span className="text-sm font-medium text-foreground">
             {selectedUser?.display_name}
           </span>
-          <ViewBadge isOwner={isOwner} />
-          {authenticatedAccount && <span className="text-xs text-muted-foreground">Signed in as {authenticatedAccount.email}</span>}
+          <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
           <Button variant="outline" size="sm" onClick={onSwitchUser}>
             Switch user
           </Button>
@@ -243,23 +240,23 @@ function UniversalHeader({
                 </Button>
               )}
             </>
-          ) : (
+          ) : !authenticatedAccount ? (
             <span className="text-xs text-muted-foreground">Public profile · read-only</span>
-          )}
+          ) : null}
         </div>
       </div>
     </header>
   );
 }
 
-function ViewBadge({ isOwner }) {
+function ViewBadge({ isOwner, authenticatedAccount }) {
   return isOwner ? (
     <Badge className="gap-1 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-300" variant="outline">
       <CheckCircle2 className="size-3" /> Owner view
     </Badge>
-  ) : (
-    <Badge className="gap-1" variant="secondary"><UserRound className="size-3" /> Public view</Badge>
-  );
+  ) : authenticatedAccount ? (
+    <Badge className="max-w-56 truncate" variant="secondary">Viewing as {authenticatedAccount.email}</Badge>
+  ) : <Badge variant="secondary">Public profile</Badge>;
 }
 
 export default UniversalHeader;
