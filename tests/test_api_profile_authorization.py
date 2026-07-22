@@ -106,6 +106,7 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
             other_headers = self._create_profile(
                 client, slug="other", email="other@example.com"
             )
+            current_account = client.get("/api/auth/me", headers=owner_headers)
 
             anonymous = client.post(
                 "/api/users/owner/albums",
@@ -136,6 +137,8 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         self.assertEqual(created.status_code, 201)
         self.assertEqual(anonymous_delete.status_code, 401)
         self.assertEqual(cross_account_delete.status_code, 403)
+        self.assertEqual(current_account.status_code, 200)
+        self.assertEqual(current_account.json()["profile_slugs"], ["owner"])
 
     def test_import_and_spotify_owner_operations_reject_public_requests(self):
         with tempfile.TemporaryDirectory() as temp_dir:

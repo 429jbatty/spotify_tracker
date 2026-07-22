@@ -1,12 +1,12 @@
 from urllib.parse import urlencode
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, Header, Query, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
 from backend.app.database import get_engine
-from backend.app.schemas import GoogleAuthorizeResponse
+from backend.app.schemas import AuthenticatedAccount, GoogleAuthorizeResponse
 from backend.app.services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -22,6 +22,13 @@ def start_google_sign_in() -> GoogleAuthorizeResponse:
         url = auth_service.begin_google_sign_in(session, settings=get_settings())
         session.commit()
         return GoogleAuthorizeResponse(authorize_url=url)
+
+
+@router.get("/me", response_model=AuthenticatedAccount)
+def current_account(authorization: str | None = Header(default=None)) -> AuthenticatedAccount:
+    with _session_factory()() as session:
+        account = auth_service.require_account(session, authorization=authorization)
+        return AuthenticatedAccount(**auth_service.account_payload(account))
 
 
 @router.get("/google/callback")

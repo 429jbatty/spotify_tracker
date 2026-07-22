@@ -15,7 +15,8 @@ import {
   fetchUsers,
   createUser,
   beginGoogleSignIn,
-  ownsProfile,
+  fetchCurrentAccount,
+  getOwnedProfileSlugs,
   setSelectedUserSlug,
   storeGoogleSessionFromFragment,
 } from "./services/albumApi";
@@ -145,11 +146,18 @@ function UserRoute({ view }) {
   const [activeFilters, setActiveFilters] = useState([]);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [inlineAlbumSelection, setInlineAlbumSelection] = useState(null);
+  const [ownedProfileSlugs, setOwnedProfileSlugs] = useState(getOwnedProfileSlugs);
   const selectedUser = useMemo(
     () => users.find((user) => user.slug === userSlug) || null,
     [userSlug, users]
   );
-  const isOwner = Boolean(selectedUser && ownsProfile(selectedUser.slug));
+  const isOwner = Boolean(selectedUser && ownedProfileSlugs.includes(selectedUser.slug));
+
+  useEffect(() => {
+    fetchCurrentAccount()
+      .then((account) => setOwnedProfileSlugs(account.profile_slugs || []))
+      .catch(() => setOwnedProfileSlugs(getOwnedProfileSlugs()));
+  }, []);
 
   const loadAlbumState = useCallback(async (options = {}) => {
     if (!selectedUser) return null;

@@ -23,6 +23,14 @@ function storeAuthenticatedSession(payload) {
   return payload;
 }
 
+export function getOwnedProfileSlugs() {
+  try {
+    return JSON.parse(window.localStorage.getItem(OWNED_PROFILE_STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
 async function requestJson(path, options = {}) {
   const { headers, ...requestOptions } = options;
   const response = await fetch(joinUrl(API_BASE_URL, path), {
@@ -127,13 +135,12 @@ export function storeGoogleSessionFromFragment(fragment = window.location.hash) 
   });
 }
 
+export async function fetchCurrentAccount() {
+  return storeAuthenticatedSession(await requestJson("/auth/me"));
+}
+
 export function ownsProfile(userSlug) {
-  try {
-    return JSON.parse(window.localStorage.getItem(OWNED_PROFILE_STORAGE_KEY) || "[]")
-      .includes(userSlug);
-  } catch {
-    return false;
-  }
+  return getOwnedProfileSlugs().includes(userSlug);
 }
 
 export async function fetchPublicRecentListens(limit = 5) {
