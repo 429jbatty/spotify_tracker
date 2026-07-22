@@ -2,9 +2,16 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_DATA_DIR = ROOT_DIR / "data"
+
+# Local development and one-time commands should resolve the same database and
+# OAuth settings. Existing process environment values (including systemd's
+# EnvironmentFile values) take precedence over this file.
+load_dotenv(ROOT_DIR / ".env")
 
 
 @dataclass(frozen=True)
