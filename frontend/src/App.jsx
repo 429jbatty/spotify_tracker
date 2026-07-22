@@ -147,6 +147,7 @@ function UserRoute({ view }) {
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [inlineAlbumSelection, setInlineAlbumSelection] = useState(null);
   const [ownedProfileSlugs, setOwnedProfileSlugs] = useState(getOwnedProfileSlugs);
+  const [authenticatedAccount, setAuthenticatedAccount] = useState(null);
   const selectedUser = useMemo(
     () => users.find((user) => user.slug === userSlug) || null,
     [userSlug, users]
@@ -155,8 +156,14 @@ function UserRoute({ view }) {
 
   useEffect(() => {
     fetchCurrentAccount()
-      .then((account) => setOwnedProfileSlugs(account.profile_slugs || []))
-      .catch(() => setOwnedProfileSlugs(getOwnedProfileSlugs()));
+      .then((account) => {
+        setAuthenticatedAccount(account);
+        setOwnedProfileSlugs(account.profile_slugs || []);
+      })
+      .catch(() => {
+        setAuthenticatedAccount(null);
+        setOwnedProfileSlugs(getOwnedProfileSlugs());
+      });
   }, []);
 
   const loadAlbumState = useCallback(async (options = {}) => {
@@ -338,6 +345,7 @@ function UserRoute({ view }) {
             onDataChanged={loadAlbumState}
             selectedUser={selectedUser}
             isOwner={isOwner}
+            authenticatedAccount={authenticatedAccount}
             spotifyStatus={
               spotifyStatusUserSlug === selectedUser.slug
                 ? spotifyStatus

@@ -19,6 +19,8 @@ vi.mock("./services/albumApi", () => ({
   disconnectSpotify: vi.fn(),
   fetchAlbumState: vi.fn(),
   fetchSpotifyStatus: vi.fn(),
+  fetchCurrentAccount: vi.fn().mockRejectedValue(new Error("No active session")),
+  getOwnedProfileSlugs: vi.fn(() => []),
   fetchUsers: vi.fn(),
   login: vi.fn(),
   ownsProfile: vi.fn(() => true),

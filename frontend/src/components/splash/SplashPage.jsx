@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { fetchSplashData } from "@/services/albumApi";
+import { fetchCurrentAccount, fetchSplashData } from "@/services/albumApi";
 import CreateProfileDialog from "@/components/CreateProfileDialog";
 import LoginDialog from "@/components/LoginDialog";
 
@@ -85,6 +85,7 @@ function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
   const [status, setStatus] = useState("loading");
   const [createProfileOpen, setCreateProfileOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
+  const [authenticatedAccount, setAuthenticatedAccount] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -110,6 +111,10 @@ function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
     };
   }, []);
 
+  useEffect(() => {
+    fetchCurrentAccount().then(setAuthenticatedAccount).catch(() => setAuthenticatedAccount(null));
+  }, []);
+
   const featuredUsers = payload?.featured_users || EMPTY_ARRAY;
   const recentActivity = payload?.recent_activity || EMPTY_ARRAY;
 
@@ -130,6 +135,7 @@ function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
         onAbout={handleAbout}
         onCreateProfile={() => setCreateProfileOpen(true)}
         onLogin={() => setLoginOpen(true)}
+        authenticatedAccount={authenticatedAccount}
       />
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
         <section className="flex flex-col gap-6">
@@ -169,7 +175,7 @@ function SplashPage({ onCreateProfile, onOpenProfile, onLogin }) {
   );
 }
 
-function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin }) {
+function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticatedAccount }) {
   return (
     <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
@@ -194,7 +200,13 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin }) {
           >
             About
           </button>
-          <button type="button" onClick={onLogin} className="transition-colors hover:text-foreground">Sign in</button>
+          {authenticatedAccount ? (
+            <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-foreground" title={`Signed in as ${authenticatedAccount.email}`}>
+              <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">{authenticatedAccount.email.slice(0, 1).toUpperCase()}</span>
+              <span className="hidden text-xs sm:inline">Signed in as {authenticatedAccount.email}</span>
+              <span className="text-xs sm:hidden">Signed in</span>
+            </div>
+          ) : <button type="button" onClick={onLogin} className="transition-colors hover:text-foreground">Sign in</button>}
           <Button type="button" size="sm" onClick={onCreateProfile}>
             Create profile
           </Button>

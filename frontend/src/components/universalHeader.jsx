@@ -1,5 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import AlbumCreateDialog from "./AlbumCreateDialog";
 import { disconnectSpotify, spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
 import { useToast } from "@/hooks/use-toast";
@@ -11,6 +12,8 @@ import {
   Library,
   Network,
   Table2,
+  CheckCircle2,
+  UserRound,
 } from "lucide-react";
 import { PROFILE_ROUTES, profilePath } from "@/routing";
 
@@ -55,6 +58,7 @@ function UniversalHeader({
   onDataChanged,
   selectedUser,
   isOwner = false,
+  authenticatedAccount = null,
   spotifyStatus,
   onSpotifyStatusChanged,
   onSwitchUser,
@@ -171,9 +175,11 @@ function UniversalHeader({
 
           <div className="hidden items-center gap-2 xl:flex">
             <div className="mr-2 flex flex-col items-end text-xs">
-              <span className="font-medium text-foreground">
-                {selectedUser?.display_name}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className="font-medium text-foreground">{selectedUser?.display_name}</span>
+                <ViewBadge isOwner={isOwner} />
+              </div>
+              {authenticatedAccount && <span className="text-muted-foreground">Signed in as {authenticatedAccount.email}</span>}
               <button
                 type="button"
                 onClick={onSwitchUser}
@@ -214,6 +220,8 @@ function UniversalHeader({
           <span className="text-sm font-medium text-foreground">
             {selectedUser?.display_name}
           </span>
+          <ViewBadge isOwner={isOwner} />
+          {authenticatedAccount && <span className="text-xs text-muted-foreground">Signed in as {authenticatedAccount.email}</span>}
           <Button variant="outline" size="sm" onClick={onSwitchUser}>
             Switch user
           </Button>
@@ -241,6 +249,16 @@ function UniversalHeader({
         </div>
       </div>
     </header>
+  );
+}
+
+function ViewBadge({ isOwner }) {
+  return isOwner ? (
+    <Badge className="gap-1 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-300" variant="outline">
+      <CheckCircle2 className="size-3" /> Owner view
+    </Badge>
+  ) : (
+    <Badge className="gap-1" variant="secondary"><UserRound className="size-3" /> Public view</Badge>
   );
 }
 
