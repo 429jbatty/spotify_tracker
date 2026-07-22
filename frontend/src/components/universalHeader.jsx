@@ -126,7 +126,7 @@ function UniversalHeader({
                   Albumary
                 </h1>
                 <p className="text-xs text-muted-foreground">
-                  Album listening history
+                  {selectedUser?.display_name ? `${selectedUser.display_name}'s listening history` : "Album listening history"}
                 </p>
               </div>
             </button>
@@ -173,19 +173,8 @@ function UniversalHeader({
           </Tabs>
 
           <div className="hidden items-center gap-2 xl:flex">
-            <div className="mr-2 flex flex-col items-end text-xs">
-              <div className="flex items-center gap-2">
-                <span className="font-medium text-foreground">{selectedUser?.display_name}</span>
-                <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
-              </div>
-              <button
-                type="button"
-                onClick={onSwitchUser}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Switch user
-              </button>
-            </div>
+            <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
+            <Button variant="ghost" size="sm" onClick={onSwitchUser}>Browse profiles</Button>
             {isOwner ? (
               <>
                 <Button variant="outline" onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}>
@@ -215,13 +204,8 @@ function UniversalHeader({
           </div>
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-2 xl:hidden">
-          <span className="text-sm font-medium text-foreground">
-            {selectedUser?.display_name}
-          </span>
           <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
-          <Button variant="outline" size="sm" onClick={onSwitchUser}>
-            Switch user
-          </Button>
+          <Button variant="ghost" size="sm" onClick={onSwitchUser}>Browse profiles</Button>
           {isOwner ? (
             <>
               <Button variant="outline" size="sm" onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}>
