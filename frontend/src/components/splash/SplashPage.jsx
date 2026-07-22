@@ -202,7 +202,6 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticat
           </button>
           {authenticatedAccount ? (
             <div className="flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-foreground" title={`Signed in as ${authenticatedAccount.email}`}>
-              <span className="flex size-5 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">{authenticatedAccount.email.slice(0, 1).toUpperCase()}</span>
               <span className="hidden text-xs sm:inline">Signed in as {authenticatedAccount.email}</span>
               <span className="text-xs sm:hidden">Signed in</span>
             </div>
