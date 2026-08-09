@@ -203,7 +203,7 @@ class ApiAlbumActionTests(unittest.TestCase):
         self.assertEqual(payload["source"], "manual")
         self.assertEqual(payload["entry_source"], "manual")
 
-    def test_duplicate_album_creation_returns_clear_error(self):
+    def test_manual_creation_reuses_existing_canonical_album(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)
 
@@ -220,8 +220,8 @@ class ApiAlbumActionTests(unittest.TestCase):
                     },
                 )
 
-        self.assertEqual(response.status_code, 409)
-        self.assertIn("Album already exists", response.json()["detail"])
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["name"], "Old Title")
 
     def test_metadata_edit_updates_only_supplied_fields(self):
         with tempfile.TemporaryDirectory() as temp_dir:

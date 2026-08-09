@@ -6,6 +6,7 @@ from backend.app.database import get_engine
 from backend.app.schemas import (
     AlbumConnectionGraphResponse,
     AlbumCreditPairsResponse,
+    ContributorSearchResponse,
     ConnectionGraphResponse,
     CreditPersonDetail,
     RecurringContributorsResponse,
@@ -15,6 +16,7 @@ from backend.app.services.credit_intelligence_service import (
     connection_graph,
     person_detail,
     recurring_contributors,
+    search_recurring_contributors,
     suggested_album_pairs,
 )
 
@@ -40,6 +42,30 @@ def get_recurring_contributors(
     with session_factory() as session:
         try:
             return recurring_contributors(session, user_slug, limit=limit)
+        except KeyError as exc:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+
+
+@router.get(
+    "/{user_slug}/connections/contributors",
+    response_model=ContributorSearchResponse,
+)
+def search_contributors(
+    user_slug: str,
+    query: str = Query(default="", max_length=200),
+    limit: int = Query(default=25, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+) -> dict:
+    session_factory = _session_factory()
+    with session_factory() as session:
+        try:
+            return search_recurring_contributors(
+                session,
+                user_slug,
+                query=query,
+                limit=limit,
+                offset=offset,
+            )
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 

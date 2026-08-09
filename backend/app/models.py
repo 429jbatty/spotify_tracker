@@ -14,6 +14,7 @@ class Album(Base):
     album_key: Mapped[str] = mapped_column(String, unique=True, index=True)
     artist: Mapped[str] = mapped_column(String)
     name: Mapped[str] = mapped_column(String)
+    normalized_identity: Mapped[str | None] = mapped_column(String, nullable=True, index=True)
     artist_mbid: Mapped[str | None] = mapped_column(String, nullable=True)
     release_group_mbid: Mapped[str | None] = mapped_column(
         String,

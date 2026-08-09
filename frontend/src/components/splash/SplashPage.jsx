@@ -722,9 +722,9 @@ function RecentActivity({ activity, status, onOpenProfile }) {
     <section>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <SectionHeading title="Recently on Albumary" />
-        {activity.length > 6 && (
+        {activity.length > 0 && (
           <span className="text-sm font-medium text-muted-foreground">
-            Latest {Math.min(activity.length, 6)}
+            Latest {activity.length} listens
           </span>
         )}
       </div>
@@ -739,10 +739,10 @@ function RecentActivity({ activity, status, onOpenProfile }) {
             ))}
           </div>
         ) : activity.length > 0 ? (
-          <div className="divide-y divide-border/70">
-            {activity.slice(0, 5).map((item) => (
+          <div className="max-h-[34rem] divide-y divide-border/70 overflow-y-auto">
+            {activity.map((item) => (
               <ActivityItem
-                key={`${item.timestamp}-${item.text}`}
+                key={item.listen_id}
                 item={item}
                 onOpenProfile={onOpenProfile}
               />
@@ -964,17 +964,7 @@ function activityActionText(item) {
     </>
   );
 
-  if (item.type === "replay") {
-    const match = item.text?.match(/after (.+)\.$/);
-    return (
-      <>
-        replayed {albumText}
-        {match ? <span className="text-muted-foreground"> after {match[1]}</span> : null}
-      </>
-    );
-  }
-
-  return <>discovered {albumText}</>;
+  return <>listened to {albumText}</>;
 }
 
 function profileDisplayName(user) {

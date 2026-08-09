@@ -154,6 +154,7 @@ class SplashFeaturedUser(BaseModel):
 
 
 class SplashActivityItem(BaseModel):
+    listen_id: int
     type: str
     user_display_name: str
     public_user_display_name: str
@@ -209,6 +210,15 @@ class RecurringContributorsResponse(BaseModel):
     coverage: CreditCoverage
     results: list[RecurringContributor] = Field(default_factory=list)
     insufficient_data_reason: str | None = None
+
+
+class ContributorSearchResponse(BaseModel):
+    user_slug: str
+    query: str = ""
+    offset: int = 0
+    limit: int
+    total: int
+    results: list[RecurringContributor] = Field(default_factory=list)
 
 
 class CreditPersonDetail(RecurringContributor):

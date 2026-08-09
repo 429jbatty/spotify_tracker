@@ -103,14 +103,12 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                 groups = dedupe.find_duplicate_groups(session)
 
         reasons = [group.reason for group in groups]
-        self.assertIn("same_release_group_mbid", reasons)
-        self.assertIn("exact_normalized_artist_album", reasons)
         self.assertIn("near_normalized_artist_album", reasons)
 
         safe_reasons = {group.reason for group in groups if group.safe_to_apply}
         self.assertEqual(
             safe_reasons,
-            {"same_release_group_mbid", "exact_normalized_artist_album"},
+            set(),
         )
         near_pairs = {
             frozenset((album.artist, album.name) for album in group.albums)
@@ -153,8 +151,8 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                 dedupe.find_duplicate_groups(session)
                 after = len(SqliteStateRepository(session).load_album_state()["completed_albums"])
 
-        self.assertEqual(before, 10)
-        self.assertEqual(after, 10)
+        self.assertEqual(before, 8)
+        self.assertEqual(after, 8)
 
     def test_apply_merges_only_safe_duplicate_groups(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -165,7 +163,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                 actions = dedupe.apply_duplicate_groups(repository, groups)
                 state = repository.load_album_state()
 
-        self.assertEqual(len(actions), 2)
+        self.assertEqual(len(actions), 0)
         self.assertIn("The Beatles - Revolver", state["completed_albums"])
         self.assertIn("Beatles - Revolver", state["completed_albums"])
         self.assertEqual(len(state["completed_albums"]), 8)
