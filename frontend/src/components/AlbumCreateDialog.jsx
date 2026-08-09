@@ -10,6 +10,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { addAlbumListen, createAlbum } from "../services/albumApi";
+import { useToast } from "@/hooks/use-toast";
 import { Field, StatusMessage } from "./albumEditor/FormBits";
 import { inputClass, textOrUndefined } from "./albumEditor/formUtils";
 
@@ -39,6 +40,7 @@ function AlbumCreateDialog({
   triggerClassName,
   variant = "default",
 }) {
+  const { toast } = useToast();
   const initialForm = useMemo(
     () => ({
       artist: "",
@@ -121,13 +123,20 @@ function AlbumCreateDialog({
     setPending(true);
     setError(null);
     try {
-      await createAlbum({
+      const createdAlbum = await createAlbum({
         artist: textOrUndefined(form.artist),
         name: textOrUndefined(form.name),
         listen_date: textOrUndefined(form.listen_date),
       });
       await onDataChanged?.();
       setOpen(false);
+      if (createdAlbum?.source === "manual") {
+        toast({
+          title: "Album added without automatic metadata",
+          description:
+            "It is safely in your Library. Open it and choose Refresh metadata to try again.",
+        });
+      }
     } catch (err) {
       setError(err.message);
     } finally {
