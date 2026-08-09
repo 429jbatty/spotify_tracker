@@ -102,6 +102,9 @@ LASTFM_ALBUM_LISTEN_WINDOW_HOURS = 48
 LASTFM_PREVIEW_MAX_PAGES = 5
 LASTFM_PREVIEW_MAX_SCROBBLES = 1000
 LASTFM_REMOTE_METADATA_MIN_UNIQUE_TRACKS = 3
+LASTFM_IMPORT_UNAVAILABLE_MESSAGE = (
+    "Last.fm imports are temporarily unavailable. Please try again later."
+)
 SPOTIFY_IMPORT_SOURCE = "spotify_import"
 SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 1_000
 SPOTIFY_CANDIDATE_INSERT_BATCH_SIZE = 500
@@ -1118,15 +1121,20 @@ def _preview_lastfm_import(
     )
 
 
+def _lastfm_api_key() -> str:
+    api_key = get_settings().lastfm_api_key
+    if not api_key:
+        raise ValueError(LASTFM_IMPORT_UNAVAILABLE_MESSAGE)
+    return api_key
+
+
 def _create_lastfm_import_session(
     session: Session,
     repository: SqliteStateRepository,
     request: ImportPreviewRequest,
 ) -> ImportCommitResponse:
     source_user_id = _lastfm_username(request)
-    settings = get_settings()
-    if not settings.lastfm_api_key:
-        raise ValueError("LASTFM_API_KEY is not configured.")
+    _lastfm_api_key()
 
     import_session = ImportSession(
         user_id=repository.user.id,
@@ -1242,9 +1250,7 @@ def _run_lastfm_import_session(
     import_session: ImportSession,
 ) -> None:
     source_user_id = import_session.source_user_id
-    settings = get_settings()
-    if not settings.lastfm_api_key:
-        raise ValueError("LASTFM_API_KEY is not configured.")
+    api_key = _lastfm_api_key()
     if import_session.status in {"fetching_metadata", "finalizing"}:
         pending_rows = _pending_metadata_rows(session, repository, import_session)
         if pending_rows:
@@ -1287,7 +1293,7 @@ def _run_lastfm_import_session(
 
     fetch_result = fetch_lastfm_recent_tracks(
         source_user_id or "",
-        settings.lastfm_api_key,
+        api_key,
         latest_imported_timestamp(
             session,
             repository.user.id,
@@ -1995,13 +2001,11 @@ def _parse_lastfm(
 ]:
     username = _lastfm_username(request)
 
-    settings = get_settings()
-    if not settings.lastfm_api_key:
-        raise ValueError("LASTFM_API_KEY is not configured.")
+    api_key = _lastfm_api_key()
 
     fetch_result = fetch_lastfm_recent_tracks(
         username,
-        settings.lastfm_api_key,
+        api_key,
         latest_imported_timestamp(
             session,
             repository.user.id,

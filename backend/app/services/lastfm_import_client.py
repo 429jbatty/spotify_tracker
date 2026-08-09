@@ -140,11 +140,11 @@ def _fetch_lastfm_page(
         raise ValueError(
             f"Last.fm failed while fetching page {page} with HTTP {status_code}. "
             "No import rows were saved. Try again later."
-        ) from last_error
+        ) from None
 
     raise ValueError(
         f"Last.fm failed while fetching page {page}. No import rows were saved. Try again later."
-    ) from last_error
+    ) from None
 
 
 def _raise_for_lastfm_error_payload(payload: dict[str, Any], page: int) -> None:

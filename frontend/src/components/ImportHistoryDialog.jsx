@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,7 +40,9 @@ function ImportHistoryDialog({
   const [spotifyFile, setSpotifyFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [history, setHistory] = useState([]);
+  const [historyUserSlug, setHistoryUserSlug] = useState(null);
   const [reviewItems, setReviewItems] = useState([]);
+  const [reviewUserSlug, setReviewUserSlug] = useState(null);
   const [expandedLogIds, setExpandedLogIds] = useState({});
   const [pendingPreview, setPendingPreview] = useState(false);
   const [pendingCommit, setPendingCommit] = useState(false);
@@ -55,8 +57,14 @@ function ImportHistoryDialog({
 
   const summary = preview?.summary;
   const selectedUserSlug = selectedUser?.slug;
+  const selectedUserSlugRef = useRef(selectedUserSlug);
+  selectedUserSlugRef.current = selectedUserSlug;
+  const visibleHistory = historyUserSlug === selectedUserSlug ? history : [];
+  const visibleReviewItems = reviewUserSlug === selectedUserSlug ? reviewItems : [];
   const canCommit = Boolean(summary && (summary.total_rows > 0 || summary.new_event_rows > 0));
-  const activeImport = history.find((item) => !["completed", "failed"].includes(item.status));
+  const activeImport = visibleHistory.find(
+    (item) => !["completed", "failed"].includes(item.status)
+  );
   const activeImportId = activeImport?.id;
   const activeImportStatus = activeImport?.status;
   const normalizedAlbums = useMemo(
@@ -80,13 +88,18 @@ function ImportHistoryDialog({
 
   const refreshImportData = useCallback(async () => {
     if (!selectedUserSlug) return { historyPayload: [], reviewPayload: [] };
+    const requestedUserSlug = selectedUserSlug;
 
     const [historyPayload, reviewPayload] = await Promise.all([
-      fetchImportHistory(selectedUserSlug),
-      fetchImportReview(selectedUserSlug),
+      fetchImportHistory(requestedUserSlug),
+      fetchImportReview(requestedUserSlug),
     ]);
-    setHistory(historyPayload);
-    setReviewItems(reviewPayload);
+    if (selectedUserSlugRef.current === requestedUserSlug) {
+      setHistory(historyPayload);
+      setHistoryUserSlug(requestedUserSlug);
+      setReviewItems(reviewPayload);
+      setReviewUserSlug(requestedUserSlug);
+    }
     return { historyPayload, reviewPayload };
   }, [selectedUserSlug]);
 
@@ -105,7 +118,9 @@ function ImportHistoryDialog({
     const refresh = () => {
       fetchImportHistory(selectedUserSlug)
         .then((historyPayload) => {
+          if (selectedUserSlugRef.current !== selectedUserSlug) return null;
           setHistory(historyPayload);
+          setHistoryUserSlug(selectedUserSlug);
           const nextActiveImport = historyPayload.find(
             (item) => !["completed", "failed"].includes(item.status)
           );
@@ -114,9 +129,11 @@ function ImportHistoryDialog({
           }
           if (activeImportId && !nextActiveImport) {
             return Promise.all([
-              fetchImportReview(selectedUserSlug).then((reviewPayload) =>
-                setReviewItems(reviewPayload)
-              ),
+              fetchImportReview(selectedUserSlug).then((reviewPayload) => {
+                if (selectedUserSlugRef.current !== selectedUserSlug) return;
+                setReviewItems(reviewPayload);
+                setReviewUserSlug(selectedUserSlug);
+              }),
               onDataChanged?.(),
             ]);
           }
@@ -136,20 +153,18 @@ function ImportHistoryDialog({
     selectedUserSlug,
   ]);
 
-  const resetState = () => {
+  const resetImportForm = () => {
     setActiveSource("lastfm");
     setLastfmUsername("");
     setSpotifyFile(null);
     setPreview(null);
-    setHistory([]);
-    setReviewItems([]);
     setExpandedLogIds({});
     setError(null);
   };
 
   const handleDialogChange = (nextOpen) => {
     onOpenChange?.(nextOpen);
-    if (!nextOpen) resetState();
+    if (!nextOpen) resetImportForm();
   };
 
   const handlePreview = async () => {
@@ -346,7 +361,7 @@ function ImportHistoryDialog({
           <ActiveImportStatus activeImport={activeImport} pendingCommit={pendingCommit} />
 
           <ImportHistoryList
-            history={history}
+            history={visibleHistory}
             loadingHistory={loadingHistory}
             pendingDeleteImportId={pendingDeleteImportId}
             expandedLogIds={expandedLogIds}
@@ -356,7 +371,7 @@ function ImportHistoryDialog({
           />
 
           <ReviewQueue
-            reviewItems={reviewItems}
+            reviewItems={visibleReviewItems}
             resolveMode={resolveMode}
             setResolveModeById={setResolveModeById}
             existingSearchById={existingSearchById}

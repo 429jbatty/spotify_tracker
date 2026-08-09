@@ -5,6 +5,7 @@ import io
 import json
 import os
 import time
+import traceback
 import zipfile
 from pathlib import Path
 from unittest.mock import Mock, patch
@@ -30,6 +31,7 @@ from backend.app.models import (
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import import_service
 from backend.app.services import spotify_catalog_service
+from backend.app.services.lastfm_import_client import _fetch_lastfm_page
 from backend.app.services import auth_service
 
 
@@ -499,6 +501,23 @@ class ApiImportTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 422)
         self.assertIn("Only Last.fm imports are enabled", response.json()["detail"])
+
+    def test_lastfm_preview_hides_missing_server_configuration(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _ = self._client(temp_dir)
+
+            with patch.dict("os.environ", {"LASTFM_API_KEY": ""}):
+                response = client.post(
+                    "/api/users/jacob/imports/preview",
+                    json={"source": "lastfm", "lastfm_username": "jacobfm"},
+                )
+
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(
+            response.json()["detail"],
+            "Last.fm imports are temporarily unavailable. Please try again later.",
+        )
+        self.assertNotIn("LASTFM_API_KEY", response.json()["detail"])
 
     def test_lastfm_commit_returns_queued_session_before_fetching(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -3021,6 +3040,48 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(response.json()["status"], "queued")
         self.assertEqual(history_response.json()[0]["status"], "failed")
         self.assertEqual(mock_client.get.call_count, 3)
+
+    def test_lastfm_upstream_failure_traceback_hides_api_key(self):
+        api_key = "super-secret-lastfm-key"
+        request = httpx.Request(
+            "GET",
+            "https://ws.audioscrobbler.com/2.0/",
+            params={"api_key": api_key, "user": "jacobfm"},
+        )
+        upstream_response = httpx.Response(429, request=request)
+        upstream_error = httpx.HTTPStatusError(
+            "Last.fm rate limited the request",
+            request=request,
+            response=upstream_response,
+        )
+
+        mock_response = Mock()
+        mock_response.raise_for_status.side_effect = upstream_error
+        mock_client = Mock()
+        mock_client.get.return_value = mock_response
+
+        with patch(
+            "backend.app.services.lastfm_import_client.time.sleep",
+            return_value=None,
+        ):
+            try:
+                _fetch_lastfm_page(
+                    client=mock_client,
+                    username="jacobfm",
+                    api_key=api_key,
+                    page=1,
+                    from_timestamp=None,
+                )
+            except ValueError as exc:
+                logged_traceback = "".join(
+                    traceback.format_exception(type(exc), exc, exc.__traceback__)
+                )
+            else:
+                self.fail("Expected the Last.fm request to fail.")
+
+        self.assertNotIn(api_key, logged_traceback)
+        self.assertNotIn("api_key=", logged_traceback)
+        self.assertIn("HTTP 429", logged_traceback)
 
     def test_lastfm_commit_reports_api_error_payload_as_failed_import(self):
         with tempfile.TemporaryDirectory() as temp_dir:
