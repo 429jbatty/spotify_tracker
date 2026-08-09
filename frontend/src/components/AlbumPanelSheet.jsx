@@ -14,6 +14,7 @@ function AlbumPanelSheet({
   onAlbumUpdated,
   onAlbumDeleted,
   onDataChanged,
+  isOwner = false,
 }) {
   const [trackDetailsState, setTrackDetailsState] = useState({
     albumId: null,
@@ -70,6 +71,7 @@ function AlbumPanelSheet({
                 onAlbumUpdated={onAlbumUpdated}
                 onAlbumDeleted={onAlbumDeleted}
                 onDataChanged={onDataChanged}
+                isOwner={isOwner}
                 trackDetailsOpen={trackDetailsOpen}
                 onTrackDetailsOpenChange={setTrackDetailsOpen}
               />

@@ -638,6 +638,37 @@ def migrate_import_sessions_artifact_path(engine: Engine) -> None:
         connection.execute(text("ALTER TABLE import_sessions ADD COLUMN artifact_path TEXT"))
 
 
+def migrate_profile_ownership(engine: Engine) -> None:
+    """Fail closed for profiles created before authenticated ownership existed.
+
+    Existing Spotify refresh tokens cannot be safely attributed to a newly
+    introduced account, so they are removed once when adding the ownership
+    column. The profile data remains public and intact, but must be claimed by
+    an explicit future migration rather than becoming writable by URL alone.
+    """
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "users"):
+        return
+
+    columns = _table_columns(engine, "users")
+    if "owner_account_id" in columns:
+        return
+
+    with engine.begin() as connection:
+        connection.execute(text("ALTER TABLE users ADD COLUMN owner_account_id INTEGER"))
+        if _table_exists(engine, "user_spotify_credentials"):
+            connection.execute(text("DELETE FROM user_spotify_credentials"))
+
+
+def migrate_google_account_identity(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "accounts"):
+        return
+    columns = _table_columns(engine, "accounts")
+    with engine.begin() as connection:
+        if "google_subject" not in columns:
+            connection.execute(text("ALTER TABLE accounts ADD COLUMN google_subject VARCHAR"))
+        connection.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS ix_accounts_google_subject ON accounts (google_subject)"))
+
+
 def migrate_import_session_source_metadata(engine: Engine) -> None:
     if not _is_sqlite_engine(engine):
         return
@@ -899,7 +930,37 @@ def migrate_album_credit_facts(engine: Engine) -> None:
                     f"CREATE INDEX IF NOT EXISTS {name} "
                     f"ON album_credit_facts ({column})"
                 )
+        )
+
+
+def migrate_single_profile_ownership(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "users"):
+        return
+
+    with engine.begin() as connection:
+        duplicate_account_ids = connection.execute(
+            text(
+                """
+                SELECT owner_account_id
+                FROM users
+                WHERE owner_account_id IS NOT NULL
+                GROUP BY owner_account_id
+                HAVING COUNT(*) > 1
+                """
             )
+        ).scalars().all()
+        if duplicate_account_ids:
+            raise RuntimeError(
+                "Cannot enforce one-profile-per-account while duplicate profile "
+                "ownership assignments exist for account IDs: "
+                + ", ".join(str(account_id) for account_id in duplicate_account_ids)
+            )
+        connection.execute(
+            text(
+                "CREATE UNIQUE INDEX IF NOT EXISTS uq_users_owner_account_id "
+                "ON users (owner_account_id) WHERE owner_account_id IS NOT NULL"
+            )
+        )
 
 
 def run_sqlite_migrations(engine: Engine) -> None:
@@ -917,7 +978,10 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_imported_event_candidate_key(engine)
     migrate_album_metadata_cache(engine)
     migrate_import_sessions_artifact_path(engine)
+    migrate_profile_ownership(engine)
+    migrate_google_account_identity(engine)
     migrate_import_session_source_metadata(engine)
     migrate_spotify_streaming_events(engine)
     migrate_import_session_logs(engine)
     migrate_album_credit_facts(engine)
+    migrate_single_profile_ownership(engine)

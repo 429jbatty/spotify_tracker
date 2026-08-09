@@ -5,6 +5,7 @@ import {
   Routes,
   useNavigate,
   useParams,
+  useSearchParams,
 } from "react-router-dom";
 import AlbumTable from "./components/AlbumTable";
 import AlbumTimeView from "./components/PageReleaseDate";
@@ -14,7 +15,12 @@ import {
   fetchSpotifyStatus,
   fetchUsers,
   createUser,
+  beginGoogleSignIn,
+  fetchCurrentAccount,
+  getOwnedProfileSlugs,
+  signOut,
   setSelectedUserSlug,
+  storeGoogleSessionFromFragment,
 } from "./services/albumApi";
 import normalizeAlbums from "./services/albumNormalizer";
 import Header from "./components/universalHeader";
@@ -103,6 +109,16 @@ function useUsers() {
 
 function RootRoute() {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const openCreateProfileAfterSignIn = searchParams.get("create_profile") === "1";
+  const hasMultipleProfiles = searchParams.get("ownership_error") === "multiple_profiles";
+  const authError = searchParams.get("auth_error");
+
+  const startGoogleSignIn = async () => {
+    const { authorize_url } = await beginGoogleSignIn();
+    window.location.assign(authorize_url);
+  };
+
   return (
     <SplashPage
       onCreateProfile={async (profile) => {
@@ -111,6 +127,17 @@ function RootRoute() {
         return user;
       }}
       onOpenProfile={(userSlug) => navigate(profilePath(userSlug, PROFILE_ROUTES.discovery))}
+      onLogin={startGoogleSignIn}
+      onStartProfileCreation={startGoogleSignIn}
+      openCreateProfileAfterSignIn={openCreateProfileAfterSignIn}
+      onCreateProfileIntentHandled={() => setSearchParams({}, { replace: true })}
+      hasMultipleProfiles={hasMultipleProfiles}
+      authError={authError}
+      onAuthErrorHandled={() => {
+        const nextSearchParams = new URLSearchParams(searchParams);
+        nextSearchParams.delete("auth_error");
+        setSearchParams(nextSearchParams, { replace: true });
+      }}
     />
   );
 }
@@ -138,10 +165,25 @@ function UserRoute({ view }) {
   const [activeFilters, setActiveFilters] = useState([]);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
   const [inlineAlbumSelection, setInlineAlbumSelection] = useState(null);
+  const [ownedProfileSlugs, setOwnedProfileSlugs] = useState(getOwnedProfileSlugs);
+  const [authenticatedAccount, setAuthenticatedAccount] = useState(null);
   const selectedUser = useMemo(
     () => users.find((user) => user.slug === userSlug) || null,
     [userSlug, users]
   );
+  const isOwner = Boolean(selectedUser && ownedProfileSlugs.includes(selectedUser.slug));
+
+  useEffect(() => {
+    fetchCurrentAccount()
+      .then((account) => {
+        setAuthenticatedAccount(account);
+        setOwnedProfileSlugs(account.profile_slugs || []);
+      })
+      .catch(() => {
+        setAuthenticatedAccount(null);
+        setOwnedProfileSlugs(getOwnedProfileSlugs());
+      });
+  }, []);
 
   const loadAlbumState = useCallback(async (options = {}) => {
     if (!selectedUser) return null;
@@ -201,7 +243,7 @@ function UserRoute({ view }) {
   }, [loadAlbumState, selectedUser]);
 
   useEffect(() => {
-    if (!selectedUser) return undefined;
+    if (!selectedUser || !isOwner) return undefined;
     const controller = new AbortController();
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -213,7 +255,7 @@ function UserRoute({ view }) {
       setSpotifyStatus({ connected: false, last_sync_error: err.message });
     });
     return () => controller.abort();
-  }, [loadSpotifyStatus, selectedUser]);
+  }, [isOwner, loadSpotifyStatus, selectedUser]);
 
   const handleSwitchUser = () => {
     setSelectedUserSlug(null);
@@ -312,6 +354,17 @@ function UserRoute({ view }) {
     loadAlbumState();
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch {
+      // Local auth state is cleared by signOut even when the request fails.
+    }
+    setAuthenticatedAccount(null);
+    setOwnedProfileSlugs([]);
+    navigate("/", { replace: true });
+  };
+
   return (
     <>
       <div className="min-h-screen space-y-10 ">
@@ -321,6 +374,9 @@ function UserRoute({ view }) {
             albums={processedAlbums}
             onDataChanged={loadAlbumState}
             selectedUser={selectedUser}
+            isOwner={isOwner}
+            authenticatedAccount={authenticatedAccount}
+            onSignOut={handleSignOut}
             spotifyStatus={
               spotifyStatusUserSlug === selectedUser.slug
                 ? spotifyStatus
@@ -410,7 +466,7 @@ function UserRoute({ view }) {
         selectedUser={selectedUser}
         albums={processedAlbums}
         onDataChanged={loadAlbumState}
-        open={importDialogOpen}
+        open={isOwner && importDialogOpen}
         onOpenChange={setImportDialogOpen}
         hideTrigger
       />
@@ -423,6 +479,7 @@ function UserRoute({ view }) {
         onAlbumUpdated={handleRoutedAlbumUpdated}
         onAlbumDeleted={handleRoutedAlbumDeleted}
         onDataChanged={loadAlbumState}
+        isOwner={isOwner}
       />
     </>
   );
@@ -433,10 +490,40 @@ function AppNotFound() {
   return <NotFound onBackHome={() => navigate("/")} />;
 }
 
+function GoogleAuthCallback() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const authError = searchParams.get("auth_error");
+  useEffect(() => {
+    async function completeSignIn() {
+      if (authError) {
+        navigate(`/?auth_error=${encodeURIComponent(authError)}`, { replace: true });
+        return;
+      }
+      try {
+        storeGoogleSessionFromFragment();
+        const account = await fetchCurrentAccount();
+        const profileSlugs = account.profile_slugs || [];
+        const destination = profileSlugs.length === 0
+          ? "/?create_profile=1"
+          : profileSlugs.length === 1
+            ? profilePath(profileSlugs[0], PROFILE_ROUTES.discovery)
+            : "/?ownership_error=multiple_profiles";
+        navigate(destination, { replace: true });
+      } catch {
+        navigate("/?auth_error=sign_in_failed", { replace: true });
+      }
+    }
+    completeSignIn();
+  }, [authError, navigate]);
+  return <LoadingState />;
+}
+
 function App() {
   return (
     <Routes>
       <Route path="/" element={<RootRoute />} />
+      <Route path="/auth/callback" element={<GoogleAuthCallback />} />
       <Route path="/:userSlug" element={<ProfileIndexRedirect />} />
       <Route path="/:userSlug/albums" element={<LegacyRedirect legacySection="albums" />} />
       <Route path="/:userSlug/timeline" element={<LegacyRedirect legacySection="timeline" />} />

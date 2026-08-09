@@ -2,9 +2,16 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 
 ROOT_DIR = Path(__file__).resolve().parents[2]
 DEFAULT_DATA_DIR = ROOT_DIR / "data"
+
+# Local development and one-time commands should resolve the same database and
+# OAuth settings. Existing process environment values (including systemd's
+# EnvironmentFile values) take precedence over this file.
+load_dotenv(ROOT_DIR / ".env")
 
 
 @dataclass(frozen=True)
@@ -16,6 +23,9 @@ class Settings:
     frontend_origin: str = "http://localhost:5173"
     media_dir: str = str(DEFAULT_DATA_DIR / "media")
     lastfm_api_key: str | None = None
+    google_client_id: str | None = None
+    google_client_secret: str | None = None
+    google_redirect_uri: str | None = None
     spotify_import_max_zip_bytes: int = 250 * 1024 * 1024
     spotify_import_max_uncompressed_bytes: int = 2 * 1024 * 1024 * 1024
     spotify_import_max_zip_entries: int = 200
@@ -40,6 +50,9 @@ def get_settings() -> Settings:
         ),
         media_dir=media_dir,
         lastfm_api_key=os.environ.get("LASTFM_API_KEY"),
+        google_client_id=os.environ.get("GOOGLE_CLIENT_ID"),
+        google_client_secret=os.environ.get("GOOGLE_CLIENT_SECRET"),
+        google_redirect_uri=os.environ.get("GOOGLE_REDIRECT_URI"),
         spotify_import_max_zip_bytes=int(
             os.environ.get(
                 "SPOTIFY_IMPORT_MAX_ZIP_BYTES",

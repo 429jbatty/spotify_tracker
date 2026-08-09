@@ -19,6 +19,33 @@ class UserCreate(BaseModel):
     display_name: str
 
 
+class ProfileCreateResponse(User):
+    session_token: str
+
+
+class OwnedProfile(BaseModel):
+    slug: str
+    display_name: str
+
+
+class AuthenticatedAccount(BaseModel):
+    email: str
+    profile_slugs: list[str] = Field(default_factory=list)
+    profiles: list[OwnedProfile] = Field(default_factory=list)
+
+
+class LoginResponse(AuthenticatedAccount):
+    session_token: str
+
+
+class GoogleAuthorizeResponse(BaseModel):
+    authorize_url: str
+
+
+class SpotifyConnectResponse(BaseModel):
+    authorize_url: str
+
+
 class SpotifyStatus(BaseModel):
     connected: bool
     spotify_user_id: str | None = None
