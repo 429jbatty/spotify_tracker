@@ -31,6 +31,11 @@ export function getOwnedProfileSlugs() {
   }
 }
 
+export function clearAuthenticatedSession() {
+  window.localStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
+  window.localStorage.removeItem(OWNED_PROFILE_STORAGE_KEY);
+}
+
 async function requestJson(path, options = {}) {
   const { headers, ...requestOptions } = options;
   const response = await fetch(joinUrl(API_BASE_URL, path), {
@@ -137,6 +142,14 @@ export function storeGoogleSessionFromFragment(fragment = window.location.hash) 
 
 export async function fetchCurrentAccount() {
   return storeAuthenticatedSession(await requestJson("/auth/me"));
+}
+
+export async function signOut() {
+  try {
+    await requestJson("/auth/logout", { method: "POST" });
+  } finally {
+    clearAuthenticatedSession();
+  }
 }
 
 export function ownsProfile(userSlug) {

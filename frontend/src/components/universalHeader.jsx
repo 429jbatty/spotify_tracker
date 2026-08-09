@@ -1,26 +1,27 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import AlbumCreateDialog from "./AlbumCreateDialog";
 import { disconnectSpotify, spotifyConnectUrl, syncSpotifyNow } from "../services/albumApi";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { DropdownMenu } from "radix-ui";
 import {
   BarChart3,
   CalendarDays,
+  Ellipsis,
   Library,
   Network,
   Table2,
-  CheckCircle2,
+  UserRound,
 } from "lucide-react";
 import { PROFILE_ROUTES, profilePath } from "@/routing";
+import { accountProfileLabel } from "./utils/accountProfileLabel";
 
 const NAV_ITEMS = [
   {
     value: PROFILE_ROUTES.discovery,
     label: "Discovery",
-    description: "Recent patterns",
     icon: BarChart3,
     accent: "data-active:bg-chart-1/20 data-active:text-foreground",
     iconAccent: "text-chart-4",
@@ -28,7 +29,6 @@ const NAV_ITEMS = [
   {
     value: PROFILE_ROUTES.library,
     label: "Library",
-    description: "All albums",
     icon: Table2,
     accent: "data-active:bg-chart-2/20 data-active:text-foreground",
     iconAccent: "text-chart-2",
@@ -36,7 +36,6 @@ const NAV_ITEMS = [
   {
     value: PROFILE_ROUTES.releases,
     label: "Release Dates",
-    description: "Years and decades",
     icon: CalendarDays,
     accent: "data-active:bg-chart-3/20 data-active:text-foreground",
     iconAccent: "text-chart-3",
@@ -44,7 +43,6 @@ const NAV_ITEMS = [
   {
     value: PROFILE_ROUTES.connections,
     label: "Connections",
-    description: "Shared credits",
     icon: Network,
     accent: "data-active:bg-primary/15 data-active:text-foreground",
     iconAccent: "text-primary",
@@ -58,6 +56,7 @@ function UniversalHeader({
   selectedUser,
   isOwner = false,
   authenticatedAccount = null,
+  onSignOut,
   spotifyStatus,
   onSpotifyStatusChanged,
   onSwitchUser,
@@ -109,36 +108,27 @@ function UniversalHeader({
 
   return (
     <header className="sticky top-0 z-30 border-b border-primary/20 bg-muted backdrop-blur">
-      <div className="px-6 py-4">
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
-          <div className="flex items-center justify-between gap-4">
+      <div className="px-4 py-3 sm:px-6">
+        <div className="flex flex-wrap items-center gap-2 xl:flex-nowrap xl:gap-4">
+          <div className="min-w-0 shrink-0">
             <button
               type="button"
               onClick={onSwitchUser}
-              className="-mx-2 -my-1 flex items-center gap-3 rounded-md px-2 py-1 text-left transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-muted"
+              className="-mx-1 -my-1 flex items-center gap-2 rounded-md px-1 py-1 text-left transition-colors hover:bg-primary/10 hover:text-primary active:bg-primary/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-muted"
               aria-label="Go to Albumary splash page"
             >
-              <div className="flex size-11 items-center justify-center rounded-md border border-primary/20 bg-primary/30 text-primary shadow-sm">
+              <div className="flex size-9 items-center justify-center rounded-md border border-primary/20 bg-primary/30 text-primary shadow-sm">
                 <Library className="size-5" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-foreground">
+                <h1 className="text-lg font-semibold text-foreground">
                   Albumary
                 </h1>
-                <p className="text-xs text-muted-foreground">
+                <p className="hidden text-xs text-muted-foreground 2xl:block">
                   {selectedUser?.display_name ? `${selectedUser.display_name}'s listening history` : "Album listening history"}
                 </p>
               </div>
             </button>
-
-            {isOwner && (
-              <AlbumCreateDialog
-                albums={albums}
-                onDataChanged={onDataChanged}
-                variant="outline"
-                triggerClassName="border-primary/20 bg-primary/10 text-primary hover:bg-primary/15 xl:hidden"
-              />
-            )}
           </div>
 
           <Tabs
@@ -147,9 +137,9 @@ function UniversalHeader({
               if (!selectedUser?.slug) return;
               navigate(profilePath(selectedUser.slug, nextView));
             }}
-            className="w-full min-w-0 xl:flex-1 xl:items-center"
+            className="order-last w-full min-w-0 xl:order-none xl:flex-1"
           >
-            <TabsList className="grid !h-auto w-full grid-cols-2 items-stretch gap-2 overflow-hidden rounded-md border border-primary/15 bg-background/75 p-2 shadow-sm sm:grid-cols-3 xl:grid-cols-4">
+            <TabsList className="flex !h-9 w-full items-center gap-1 overflow-x-auto rounded-md border border-primary/15 bg-background/75 p-1 shadow-sm">
               {NAV_ITEMS.map((item) => {
                 const Icon = item.icon;
 
@@ -157,90 +147,132 @@ function UniversalHeader({
                   <TabsTrigger
                     key={item.value}
                     value={item.value}
-                    className={`h-auto min-w-0 self-stretch justify-start gap-2 rounded-md px-2.5 py-3.5 hover:bg-muted/70 after:hidden ${item.accent}`}
+                    className={`h-7 shrink-0 justify-center gap-1.5 rounded px-2.5 text-xs hover:bg-muted/70 after:hidden sm:px-3 sm:text-sm ${item.accent}`}
                   >
                     <Icon className={`size-4 ${item.iconAccent}`} />
-                    <span className="flex min-w-0 flex-col items-start leading-snug">
-                      <span className="w-full truncate text-sm font-medium">{item.label}</span>
-                      <span className="w-full truncate text-[11px] font-normal text-muted-foreground">
-                        {item.description}
-                      </span>
-                    </span>
+                    <span className="truncate font-medium">{item.label}</span>
                   </TabsTrigger>
                 );
               })}
             </TabsList>
           </Tabs>
 
-          <div className="hidden items-center gap-2 xl:flex">
-            <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
-            <Button variant="ghost" size="sm" onClick={onSwitchUser}>Browse profiles</Button>
-            {isOwner ? (
-              <>
-                <Button variant="outline" onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}>
-                  Import History
-                </Button>
-                {spotifyStatus?.connected ? (
-                  <>
-                    <Button variant="outline" onClick={handleSyncNow} disabled={isSyncing}>
-                      {isSyncing ? "Syncing..." : "Sync Spotify"}
-                    </Button>
-                    <Button variant="outline" onClick={handleDisconnectSpotify}>Disconnect Spotify</Button>
-                  </>
-                ) : (
-                  <Button variant="outline" onClick={handleConnectSpotify}>
-                    Connect Spotify
-                  </Button>
-                )}
-                <AlbumCreateDialog
-                  albums={albums}
-                  onDataChanged={onDataChanged}
-                  triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
-                />
-              </>
-            ) : !authenticatedAccount ? (
-              <span className="text-xs text-muted-foreground">Public profile · read-only</span>
-            ) : null}
+          <div className="flex shrink-0 items-center gap-1">
+            {isOwner && (
+              <AlbumCreateDialog
+                albums={albums}
+                onDataChanged={onDataChanged}
+                triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
+              />
+            )}
+            <ProfileToolsMenu
+              isOwner={isOwner}
+              importDialogOpen={importDialogOpen}
+              onImportDialogOpenChange={onImportDialogOpenChange}
+              spotifyStatus={spotifyStatus}
+              isSyncing={isSyncing}
+              onConnectSpotify={handleConnectSpotify}
+              onDisconnectSpotify={handleDisconnectSpotify}
+              onSyncSpotify={handleSyncNow}
+            />
+            <AccountMenu
+              account={authenticatedAccount}
+              onBrowseProfiles={onSwitchUser}
+              onSignOut={onSignOut}
+            />
           </div>
-        </div>
-        <div className="mt-4 flex flex-wrap items-center gap-2 xl:hidden">
-          <ViewBadge isOwner={isOwner} authenticatedAccount={authenticatedAccount} />
-          <Button variant="ghost" size="sm" onClick={onSwitchUser}>Browse profiles</Button>
-          {isOwner ? (
-            <>
-              <Button variant="outline" size="sm" onClick={() => onImportDialogOpenChange?.(!importDialogOpen)}>
-                Import History
-              </Button>
-              {spotifyStatus?.connected ? (
-                <>
-                  <Button variant="outline" size="sm" onClick={handleSyncNow} disabled={isSyncing}>
-                    {isSyncing ? "Syncing..." : "Sync Spotify"}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleDisconnectSpotify}>Disconnect Spotify</Button>
-                </>
-              ) : (
-                <Button variant="outline" size="sm" onClick={handleConnectSpotify}>
-                  Connect Spotify
-                </Button>
-              )}
-            </>
-          ) : !authenticatedAccount ? (
-            <span className="text-xs text-muted-foreground">Public profile · read-only</span>
-          ) : null}
         </div>
       </div>
     </header>
   );
 }
 
-function ViewBadge({ isOwner, authenticatedAccount }) {
-  return isOwner ? (
-    <Badge className="gap-1 border-emerald-500/30 bg-emerald-500/10 text-emerald-700 hover:bg-emerald-500/10 dark:text-emerald-300" variant="outline">
-      <CheckCircle2 className="size-3" /> Owner view
-    </Badge>
-  ) : authenticatedAccount ? (
-    <Badge className="max-w-56 truncate" variant="secondary">Viewing as {authenticatedAccount.email}</Badge>
-  ) : <Badge variant="secondary">Public profile</Badge>;
+function AccountMenu({ account, onBrowseProfiles, onSignOut }) {
+  if (!account) return null;
+  const profileLabel = accountProfileLabel(account);
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="ghost" size="icon-sm" aria-label="Open account menu">
+          <UserRound />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="end"
+          sideOffset={8}
+          className="z-50 min-w-56 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-none"
+        >
+          <div className="px-2 py-1.5 text-xs text-muted-foreground">Signed in as</div>
+          <div className="max-w-52 truncate px-2 text-sm font-medium">{profileLabel}</div>
+          <div className="max-w-52 truncate px-2 pb-2 text-xs text-muted-foreground">{account.email}</div>
+          <DropdownMenu.Separator className="-mx-1 my-1 h-px bg-border" />
+          <MenuItem onSelect={onBrowseProfiles}>Browse profiles</MenuItem>
+          <DropdownMenu.Separator className="-mx-1 my-1 h-px bg-border" />
+          <MenuItem onSelect={onSignOut} destructive>Sign out</MenuItem>
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+
+function ProfileToolsMenu({
+  isOwner,
+  importDialogOpen,
+  onImportDialogOpenChange,
+  spotifyStatus,
+  isSyncing,
+  onConnectSpotify,
+  onDisconnectSpotify,
+  onSyncSpotify,
+}) {
+  if (!isOwner) return null;
+
+  return (
+    <DropdownMenu.Root>
+      <DropdownMenu.Trigger asChild>
+        <Button variant="ghost" size="icon-sm" aria-label="Open profile tools">
+          <Ellipsis />
+        </Button>
+      </DropdownMenu.Trigger>
+      <DropdownMenu.Portal>
+        <DropdownMenu.Content
+          align="end"
+          sideOffset={8}
+          className="z-50 min-w-48 rounded-md border border-border bg-popover p-1 text-popover-foreground shadow-lg outline-none"
+        >
+          <MenuItem onSelect={() => onImportDialogOpenChange?.(!importDialogOpen)}>
+            Import history
+          </MenuItem>
+          <DropdownMenu.Separator className="-mx-1 my-1 h-px bg-border" />
+          {spotifyStatus?.connected ? (
+            <>
+              <MenuItem onSelect={onSyncSpotify} disabled={isSyncing}>
+                {isSyncing ? "Syncing Spotify…" : "Sync Spotify"}
+              </MenuItem>
+              <MenuItem onSelect={onDisconnectSpotify}>Disconnect Spotify</MenuItem>
+            </>
+          ) : (
+            <MenuItem onSelect={onConnectSpotify}>Connect Spotify</MenuItem>
+          )}
+        </DropdownMenu.Content>
+      </DropdownMenu.Portal>
+    </DropdownMenu.Root>
+  );
+}
+
+function MenuItem({ children, destructive = false, ...props }) {
+  return (
+    <DropdownMenu.Item
+      className={`flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none data-[highlighted]:bg-muted data-[disabled]:pointer-events-none data-[disabled]:opacity-50 ${
+        destructive ? "text-destructive data-[highlighted]:bg-destructive/10" : ""
+      }`}
+      {...props}
+    >
+      {children}
+    </DropdownMenu.Item>
+  );
 }
 
 export default UniversalHeader;

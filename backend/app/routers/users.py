@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Header, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 import metadata_refresh_service
@@ -67,6 +68,7 @@ def create_user(request: UserCreate, authorization: str | None = Header(default=
         repository = UserRepository(session)
         try:
             account = auth_service.require_account(session, authorization=authorization)
+            auth_service.require_profile_creation_eligibility(session, account=account)
             user = repository.create_user(
                 slug=request.slug,
                 display_name=request.display_name,
@@ -76,9 +78,14 @@ def create_user(request: UserCreate, authorization: str | None = Header(default=
             token = auth_service.create_session(session, account=account)
             session.commit()
             return ProfileCreateResponse(session_token=token, **_user_payload(user))
-        except ValueError as exc:
+        except (IntegrityError, ValueError) as exc:
             session.rollback()
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
+            detail = (
+                "This Google account already owns a profile."
+                if isinstance(exc, IntegrityError)
+                else str(exc)
+            )
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=detail)
 
 
 @router.get("/{user_slug}/album-state", response_model=AlbumState)

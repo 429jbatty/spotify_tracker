@@ -39,7 +39,13 @@ def complete_google_sign_in(session: Session, *, code: str, state: str, settings
             session.commit()
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Google sign-in request is invalid or expired. Try again.")
     session.delete(oauth_state)
-    token_response = httpx.post(GOOGLE_TOKEN_ENDPOINT, data={"code": code, "client_id": settings.google_client_id, "client_secret": settings.google_client_secret, "redirect_uri": settings.google_redirect_uri, "grant_type": "authorization_code"}, timeout=10)
+    try:
+        token_response = httpx.post(GOOGLE_TOKEN_ENDPOINT, data={"code": code, "client_id": settings.google_client_id, "client_secret": settings.google_client_secret, "redirect_uri": settings.google_redirect_uri, "grant_type": "authorization_code"}, timeout=10)
+    except httpx.HTTPError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Google sign-in is temporarily unavailable. Try again.",
+        ) from exc
     if token_response.is_error:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Google could not complete sign-in. Try again.")
     try:
@@ -52,12 +58,28 @@ def complete_google_sign_in(session: Session, *, code: str, state: str, settings
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Google did not return a verified account identity.")
     account = session.scalars(select(Account).where(Account.google_subject == subject)).first()
     if account is None:
-        if session.scalars(select(Account).where(Account.email == _normalize_email(email))).first():
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This Google email belongs to an existing account and must be linked by an operator.")
-        account = Account(email=_normalize_email(email), google_subject=subject, password_hash=_disabled_password_marker(), created_at=_now())
-        session.add(account)
-        session.flush()
+        normalized_email = _normalize_email(email)
+        account = session.scalars(select(Account).where(Account.email == normalized_email)).first()
+        if account is not None:
+            if account.google_subject is not None:
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="This Google email belongs to a different account identity.")
+            account.google_subject = subject
+        else:
+            account = Account(email=normalized_email, google_subject=subject, password_hash=_disabled_password_marker(), created_at=_now())
+            session.add(account)
+            session.flush()
     return account, create_session(session, account=account)
+
+
+def cancel_google_sign_in(session: Session, *, state: str | None) -> None:
+    """Consume a pending OAuth state when Google returns a denial callback."""
+    if not state:
+        return
+    oauth_state = session.scalars(
+        select(GoogleOAuthState).where(GoogleOAuthState.state_hash == _token_hash(state))
+    ).first()
+    if oauth_state is not None:
+        session.delete(oauth_state)
 
 
 def create_session(session: Session, *, account: Account) -> str:
@@ -91,6 +113,19 @@ def require_account(session: Session, *, authorization: str | None) -> Account:
     return account_session.account
 
 
+def revoke_session(session: Session, *, authorization: str | None) -> None:
+    """Invalidate the account session represented by the supplied bearer token."""
+    token = _bearer_token(authorization)
+    if token is None:
+        return
+    account_session = session.scalars(
+        select(AccountSession).where(AccountSession.token_hash == _token_hash(token))
+    ).first()
+    if account_session is not None:
+        session.delete(account_session)
+        session.commit()
+
+
 def require_profile_owner(session: Session, *, user_slug: str, authorization: str | None) -> User:
     user = session.scalars(select(User).where(User.slug == user_slug.strip().casefold())).first()
     if user is None:
@@ -98,6 +133,27 @@ def require_profile_owner(session: Session, *, user_slug: str, authorization: st
     if user.owner_account_id != require_account(session, authorization=authorization).id:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You do not own this profile.")
     return user
+
+
+def require_profile_creation_eligibility(session: Session, *, account: Account) -> None:
+    if session.scalars(select(User.id).where(User.owner_account_id == account.id)).first() is not None:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="This Google account already owns a profile.",
+        )
+
+
+def _require_account_without_other_profile(session: Session, *, account: Account, user: User) -> None:
+    existing_profile = session.scalars(
+        select(User).where(
+            User.owner_account_id == account.id,
+            User.id != user.id,
+        )
+    ).first()
+    if existing_profile is not None:
+        raise ValueError(
+            f"Account {account.email} already owns profile {existing_profile.slug}."
+        )
 
 
 def bind_profile_owner(session: Session, *, user_slug: str, account_email: str, assigned_by: str = "operator_cli") -> User:
@@ -111,14 +167,80 @@ def bind_profile_owner(session: Session, *, user_slug: str, account_email: str, 
         raise ValueError(f"Profile {user.slug} is already assigned to another account.")
     if user.owner_account_id == account.id:
         return user
+    _require_account_without_other_profile(session, account=account, user=user)
     user.owner_account_id = account.id
     session.add(ProfileOwnershipAssignment(user_id=user.id, account_id=account.id, assigned_at=_now(), assigned_by=assigned_by))
     session.commit()
     return user
 
 
+def unbind_profile_owner(session: Session, *, user_slug: str) -> User:
+    """Remove a profile's current owner without deleting its account or history.
+
+    This is intentionally idempotent so operators can reset a development
+    profile before repeating ownership-flow tests.
+    """
+    user = session.scalars(select(User).where(User.slug == user_slug.strip().casefold())).first()
+    if user is None:
+        raise ValueError(f"Profile not found: {user_slug}")
+    if user.owner_account_id is None:
+        return user
+    user.owner_account_id = None
+    session.commit()
+    return user
+
+
+def prebind_profile_owner(session: Session, *, user_slug: str, account_email: str) -> User:
+    """Pre-authorize a verified Google email to claim an existing profile.
+
+    The Google subject is deliberately stored only after that email completes
+    its first verified Google sign-in.
+    """
+    user = session.scalars(select(User).where(User.slug == user_slug.strip().casefold())).first()
+    if user is None:
+        raise ValueError(f"Profile not found: {user_slug}")
+
+    normalized_email = _normalize_email(account_email)
+    if user.owner_account_id is not None:
+        current_account = session.get(Account, user.owner_account_id)
+        if current_account is not None and current_account.email == normalized_email:
+            return user
+        raise ValueError(f"Profile {user.slug} is already assigned to another account.")
+
+    account = session.scalars(select(Account).where(Account.email == normalized_email)).first()
+    if account is None:
+        account = Account(
+            email=normalized_email,
+            password_hash=_disabled_password_marker(),
+            created_at=_now(),
+        )
+        session.add(account)
+        session.flush()
+
+    _require_account_without_other_profile(session, account=account, user=user)
+    user.owner_account_id = account.id
+    session.add(
+        ProfileOwnershipAssignment(
+            user_id=user.id,
+            account_id=account.id,
+            assigned_at=_now(),
+            assigned_by="operator_prebind",
+        )
+    )
+    session.commit()
+    return user
+
+
 def account_payload(account: Account) -> dict:
-    return {"email": account.email, "profile_slugs": sorted(profile.slug for profile in account.profiles)}
+    profiles = sorted(account.profiles, key=lambda profile: profile.slug)
+    return {
+        "email": account.email,
+        "profile_slugs": [profile.slug for profile in profiles],
+        "profiles": [
+            {"slug": profile.slug, "display_name": profile.display_name}
+            for profile in profiles
+        ],
+    }
 
 
 def _require_google_settings(settings: Settings) -> None:

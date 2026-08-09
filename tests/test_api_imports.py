@@ -131,6 +131,26 @@ class ApiImportTests(unittest.TestCase):
         client.headers.update({"Authorization": f"Bearer {token}"})
         return client, database_url
 
+    def _create_owned_profile_session(self, database_url, *, slug, display_name):
+        engine = get_engine(database_url)
+        session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+        with session_factory() as session:
+            account = auth_service.create_account(
+                session,
+                email=f"{slug}@example.com",
+                password="correct-horse-battery-staple",
+            )
+            session.add(
+                User(
+                    slug=slug,
+                    display_name=display_name,
+                    owner_account_id=account.id,
+                )
+            )
+            token = auth_service.create_session(session, account=account)
+            session.commit()
+        return token
+
     def test_post_import_artwork_backfill_failure_preserves_completed_status(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
@@ -2394,17 +2414,8 @@ class ApiImportTests(unittest.TestCase):
     def test_spotify_import_delete_is_user_scoped(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, database_url = self._client(temp_dir, state=sample_album_state_with_tracklist())
-            jacob_authorization = client.headers["authorization"]
-            created = client.post(
-                "/api/users",
-                json={
-                    "slug": "test-user",
-                    "display_name": "Test User",
-                },
-                headers={"Authorization": jacob_authorization},
-            )
             test_user_headers = {
-                "Authorization": f"Bearer {created.json()['session_token']}"
+                "Authorization": f"Bearer {self._create_owned_profile_session(database_url, slug='test-user', display_name='Test User')}"
             }
             zip_file = self._spotify_zip(
                 {"Streaming_History_Audio_0.json": self._spotify_rows()}
@@ -3788,16 +3799,8 @@ class ApiImportTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, database_url = self._client(temp_dir)
             jacob_authorization = client.headers["authorization"]
-            create_user_response = client.post(
-                "/api/users",
-                json={
-                    "slug": "test",
-                    "display_name": "Test",
-                },
-                headers={"Authorization": jacob_authorization},
-            )
             test_headers = {
-                "Authorization": f"Bearer {create_user_response.json()['session_token']}"
+                "Authorization": f"Bearer {self._create_owned_profile_session(database_url, slug='test', display_name='Test')}"
             }
             lastfm_payload = self._lastfm_payload(
                 "Test Import Artist",
@@ -3839,7 +3842,6 @@ class ApiImportTests(unittest.TestCase):
                 headers={"Authorization": jacob_authorization},
             ).json()
 
-        self.assertEqual(create_user_response.status_code, 201)
         self.assertEqual(response.status_code, 200)
         self.assertNotIn(
             "Test Import Artist - Test Import Album",

@@ -88,7 +88,7 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
               <p className="text-sm text-muted-foreground">Your profile URL: /{slug}</p>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">You must sign in with Google before creating a profile. Your signed-in Google account will own it.</p>
+          <p className="text-sm text-muted-foreground">Your signed-in Google account will own this profile.</p>
 
           {error && (
             <p id={errorId} role="alert" className="text-sm text-destructive">

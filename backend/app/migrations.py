@@ -831,7 +831,37 @@ def migrate_album_credit_facts(engine: Engine) -> None:
                     f"CREATE INDEX IF NOT EXISTS {name} "
                     f"ON album_credit_facts ({column})"
                 )
+        )
+
+
+def migrate_single_profile_ownership(engine: Engine) -> None:
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "users"):
+        return
+
+    with engine.begin() as connection:
+        duplicate_account_ids = connection.execute(
+            text(
+                """
+                SELECT owner_account_id
+                FROM users
+                WHERE owner_account_id IS NOT NULL
+                GROUP BY owner_account_id
+                HAVING COUNT(*) > 1
+                """
             )
+        ).scalars().all()
+        if duplicate_account_ids:
+            raise RuntimeError(
+                "Cannot enforce one-profile-per-account while duplicate profile "
+                "ownership assignments exist for account IDs: "
+                + ", ".join(str(account_id) for account_id in duplicate_account_ids)
+            )
+        connection.execute(
+            text(
+                "CREATE UNIQUE INDEX IF NOT EXISTS uq_users_owner_account_id "
+                "ON users (owner_account_id) WHERE owner_account_id IS NOT NULL"
+            )
+        )
 
 
 def run_sqlite_migrations(engine: Engine) -> None:
@@ -854,3 +884,4 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_spotify_streaming_events(engine)
     migrate_import_session_logs(engine)
     migrate_album_credit_facts(engine)
+    migrate_single_profile_ownership(engine)

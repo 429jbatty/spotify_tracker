@@ -104,6 +104,7 @@ class User(Base):
         ForeignKey("accounts.id"),
         nullable=True,
         index=True,
+        unique=True,
     )
 
     owner_account: Mapped["Account | None"] = relationship(back_populates="profiles")

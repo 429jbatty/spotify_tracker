@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
@@ -139,6 +140,74 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         self.assertEqual(cross_account_delete.status_code, 403)
         self.assertEqual(current_account.status_code, 200)
         self.assertEqual(current_account.json()["profile_slugs"], ["owner"])
+
+    def test_logout_revokes_the_current_session(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            owner_headers = self._create_profile(
+                client, slug="owner", email="owner@example.com"
+            )
+
+            logged_out = client.post("/api/auth/logout", headers=owner_headers)
+            current_account = client.get("/api/auth/me", headers=owner_headers)
+            owner_write = client.post(
+                "/api/users/owner/albums",
+                json={"artist": "Artist", "name": "Album"},
+                headers=owner_headers,
+            )
+
+        self.assertEqual(logged_out.status_code, 204)
+        self.assertEqual(current_account.status_code, 401)
+        self.assertEqual(owner_write.status_code, 401)
+
+    def test_account_that_owns_a_profile_cannot_create_another(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            owner_headers = self._create_profile(
+                client, slug="owner", email="owner@example.com"
+            )
+
+            second_profile = client.post(
+                "/api/users",
+                json={"slug": "second-profile", "display_name": "Second Profile"},
+                headers=owner_headers,
+            )
+
+        self.assertEqual(second_profile.status_code, 409)
+        self.assertEqual(
+            second_profile.json()["detail"],
+            "This Google account already owns a profile.",
+        )
+
+    def test_concurrent_profile_creation_conflict_is_reported_as_a_409(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            from backend.app.database import get_engine
+
+            with sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))() as session:
+                account = auth_service.create_account(
+                    session,
+                    email="new@example.com",
+                    password="unused",
+                )
+                token = auth_service.create_session(session, account=account)
+                session.commit()
+
+            with patch(
+                "backend.app.routers.users.UserRepository.create_user",
+                side_effect=IntegrityError("INSERT", {}, Exception("unique ownership")),
+            ):
+                response = client.post(
+                    "/api/users",
+                    json={"slug": "new-profile", "display_name": "New Profile"},
+                    headers={"Authorization": f"Bearer {token}"},
+                )
+
+        self.assertEqual(response.status_code, 409)
+        self.assertEqual(
+            response.json()["detail"],
+            "This Google account already owns a profile.",
+        )
 
     def test_import_and_spotify_owner_operations_reject_public_requests(self):
         with tempfile.TemporaryDirectory() as temp_dir:
