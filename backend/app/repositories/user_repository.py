@@ -33,7 +33,14 @@ class UserRepository:
         self.session.flush()
         return user
 
-    def create_user(self, *, slug: str, display_name: str) -> User:
+    def create_user(
+        self,
+        *,
+        slug: str,
+        display_name: str,
+        owner_account_id: int | None = None,
+        commit: bool = True,
+    ) -> User:
         normalized_slug = _normalize_slug(slug)
         if self.get_user_by_slug(normalized_slug):
             raise ValueError(f"User already exists: {normalized_slug}")
@@ -42,9 +49,13 @@ class UserRepository:
             slug=normalized_slug,
             display_name=display_name,
             is_active=True,
+            owner_account_id=owner_account_id,
         )
         self.session.add(user)
-        self.session.commit()
+        if commit:
+            self.session.commit()
+        else:
+            self.session.flush()
         return user
 
     def get_user_by_slug(self, slug: str) -> User | None:

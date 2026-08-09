@@ -1,17 +1,50 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 export const SELECTED_USER_STORAGE_KEY = "spotify_tracker_user_slug";
+export const AUTH_SESSION_STORAGE_KEY = "spotify_tracker_auth_session";
+export const OWNED_PROFILE_STORAGE_KEY = "spotify_tracker_owned_profiles";
 
 function joinUrl(baseUrl, path) {
   return `${baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
 }
 
+function authHeaders() {
+  const token = window.localStorage.getItem(AUTH_SESSION_STORAGE_KEY);
+  return token ? { Authorization: `Bearer ${token}` } : {};
+}
+
+function storeAuthenticatedSession(payload) {
+  if (payload?.session_token) {
+    window.localStorage.setItem(AUTH_SESSION_STORAGE_KEY, payload.session_token);
+  }
+  window.localStorage.setItem(
+    OWNED_PROFILE_STORAGE_KEY,
+    JSON.stringify(payload?.profile_slugs || [payload?.slug].filter(Boolean))
+  );
+  return payload;
+}
+
+export function getOwnedProfileSlugs() {
+  try {
+    return JSON.parse(window.localStorage.getItem(OWNED_PROFILE_STORAGE_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+export function clearAuthenticatedSession() {
+  window.localStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
+  window.localStorage.removeItem(OWNED_PROFILE_STORAGE_KEY);
+}
+
 async function requestJson(path, options = {}) {
+  const { headers, ...requestOptions } = options;
   const response = await fetch(joinUrl(API_BASE_URL, path), {
     headers: {
       "Content-Type": "application/json",
-      ...(options.headers || {}),
+      ...authHeaders(),
+      ...(headers || {}),
     },
-    ...options,
+    ...requestOptions,
   });
 
   if (!response.ok) {
@@ -41,8 +74,13 @@ async function requestJson(path, options = {}) {
 }
 
 async function requestForm(path, formData, options = {}) {
+  const { headers, ...requestOptions } = options;
   const response = await fetch(joinUrl(API_BASE_URL, path), {
-    ...options,
+    headers: {
+      ...authHeaders(),
+      ...(headers || {}),
+    },
+    ...requestOptions,
     body: formData,
   });
 
@@ -82,10 +120,40 @@ export async function fetchUsers() {
 }
 
 export async function createUser(payload) {
-  return requestJson("/users", {
+  return storeAuthenticatedSession(await requestJson("/users", {
     method: "POST",
     body: JSON.stringify(payload),
+  }));
+}
+
+export async function beginGoogleSignIn() {
+  return requestJson("/auth/google/start");
+}
+
+export function storeGoogleSessionFromFragment(fragment = window.location.hash) {
+  const params = new URLSearchParams(fragment.replace(/^#/, ""));
+  const sessionToken = params.get("session_token");
+  if (!sessionToken) throw new Error("Google sign-in did not return a session.");
+  return storeAuthenticatedSession({
+    session_token: sessionToken,
+    profile_slugs: [],
   });
+}
+
+export async function fetchCurrentAccount() {
+  return storeAuthenticatedSession(await requestJson("/auth/me"));
+}
+
+export async function signOut() {
+  try {
+    await requestJson("/auth/logout", { method: "POST" });
+  } finally {
+    clearAuthenticatedSession();
+  }
+}
+
+export function ownsProfile(userSlug) {
+  return getOwnedProfileSlugs().includes(userSlug);
 }
 
 export async function fetchPublicRecentListens(limit = 5) {
@@ -107,6 +175,19 @@ export async function fetchRecurringContributors(
 ) {
   if (!userSlug) return null;
   return requestJson(`/users/${userSlug}/connections/recurring?limit=${limit}`, options);
+}
+
+export async function searchContributors(
+  userSlug = getSelectedUserSlug(),
+  { query = "", limit = 25, offset = 0, ...options } = {}
+) {
+  if (!userSlug) return null;
+  const params = new URLSearchParams({
+    query,
+    limit: String(limit),
+    offset: String(offset),
+  });
+  return requestJson(`/users/${userSlug}/connections/contributors?${params.toString()}`, options);
 }
 
 export async function fetchConnectionGraph(
@@ -167,9 +248,12 @@ export async function fetchCreditPersonDetail(
   );
 }
 
-export function spotifyConnectUrl(userSlug = getSelectedUserSlug()) {
+export async function spotifyConnectUrl(userSlug = getSelectedUserSlug()) {
   if (!userSlug) return null;
-  return joinUrl(API_BASE_URL, `/users/${userSlug}/spotify/connect`);
+  const payload = await requestJson(`/users/${userSlug}/spotify/connect`, {
+    method: "POST",
+  });
+  return payload.authorize_url;
 }
 
 export async function syncSpotifyNow(userSlug = getSelectedUserSlug()) {
@@ -178,8 +262,13 @@ export async function syncSpotifyNow(userSlug = getSelectedUserSlug()) {
   });
 }
 
+export async function disconnectSpotify(userSlug = getSelectedUserSlug()) {
+  return requestJson(`/users/${userSlug}/spotify`, { method: "DELETE" });
+}
+
 export async function refreshAlbumMetadata(albumId, payload = {}) {
-  return requestJson(`/albums/${albumId}/refresh-metadata`, {
+  const userSlug = getSelectedUserSlug();
+  return requestJson(`/users/${userSlug}/albums/${albumId}/refresh-metadata`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -187,15 +276,16 @@ export async function refreshAlbumMetadata(albumId, payload = {}) {
 
 export async function createAlbum(payload) {
   const userSlug = getSelectedUserSlug();
-  const path = userSlug ? `/users/${userSlug}/albums` : "/albums";
-  return requestJson(path, {
+  if (!userSlug) throw new Error("Sign in to add an album.");
+  return requestJson(`/users/${userSlug}/albums`, {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
 export async function updateAlbum(albumId, payload) {
-  return requestJson(`/albums/${albumId}`, {
+  const userSlug = getSelectedUserSlug();
+  return requestJson(`/users/${userSlug}/albums/${albumId}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
   });
@@ -203,10 +293,8 @@ export async function updateAlbum(albumId, payload) {
 
 export async function addAlbumListen(albumId, listenedAt) {
   const userSlug = getSelectedUserSlug();
-  const path = userSlug
-    ? `/users/${userSlug}/albums/${albumId}/listens`
-    : `/albums/${albumId}/listens`;
-  return requestJson(path, {
+  if (!userSlug) throw new Error("Sign in to edit an album.");
+  return requestJson(`/users/${userSlug}/albums/${albumId}/listens`, {
     method: "POST",
     body: JSON.stringify({ listened_at: listenedAt }),
   });
@@ -214,17 +302,16 @@ export async function addAlbumListen(albumId, listenedAt) {
 
 export async function deleteAlbumListen(albumId, listenedAt) {
   const userSlug = getSelectedUserSlug();
-  const path = userSlug
-    ? `/users/${userSlug}/albums/${albumId}/listens`
-    : `/albums/${albumId}/listens`;
-  return requestJson(path, {
+  if (!userSlug) throw new Error("Sign in to edit an album.");
+  return requestJson(`/users/${userSlug}/albums/${albumId}/listens`, {
     method: "DELETE",
     body: JSON.stringify({ listened_at: listenedAt }),
   });
 }
 
 export async function mergeAlbum(albumId, targetAlbumId) {
-  return requestJson(`/albums/${albumId}/merge`, {
+  const userSlug = getSelectedUserSlug();
+  return requestJson(`/users/${userSlug}/albums/${albumId}/merge`, {
     method: "POST",
     body: JSON.stringify({ target_album_id: targetAlbumId }),
   });
@@ -232,10 +319,8 @@ export async function mergeAlbum(albumId, targetAlbumId) {
 
 export async function updateAlbumUserTags(albumId, yourTags) {
   const userSlug = getSelectedUserSlug();
-  const path = userSlug
-    ? `/users/${userSlug}/albums/${albumId}/your-tags`
-    : `/albums/${albumId}/your-tags`;
-  return requestJson(path, {
+  if (!userSlug) throw new Error("Sign in to edit an album.");
+  return requestJson(`/users/${userSlug}/albums/${albumId}/your-tags`, {
     method: "PUT",
     body: JSON.stringify({ your_tags: yourTags }),
   });
@@ -243,17 +328,16 @@ export async function updateAlbumUserTags(albumId, yourTags) {
 
 export async function updateAlbumUserFeedback(albumId, payload) {
   const userSlug = getSelectedUserSlug();
-  const path = userSlug
-    ? `/users/${userSlug}/albums/${albumId}/your-feedback`
-    : `/albums/${albumId}/your-feedback`;
-  return requestJson(path, {
+  if (!userSlug) throw new Error("Sign in to edit an album.");
+  return requestJson(`/users/${userSlug}/albums/${albumId}/your-feedback`, {
     method: "PUT",
     body: JSON.stringify(payload),
   });
 }
 
 export async function deleteAlbum(albumId) {
-  return requestJson(`/albums/${albumId}`, {
+  const userSlug = getSelectedUserSlug();
+  return requestJson(`/users/${userSlug}/albums/${albumId}`, {
     method: "DELETE",
   });
 }

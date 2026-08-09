@@ -163,15 +163,7 @@ def recurring_contributors(
 ) -> dict:
     user = _require_user(session, user_slug)
     coverage = _coverage(session, user.id)
-    rows = _user_fact_rows(session, user.id)
-    contributors = _aggregate_contributors(rows, exclude_default_noise=True)
-    ranked = [
-        contributor
-        for contributor in contributors.values()
-        if len(contributor.album_ids) >= MIN_ALBUMS_FOR_RECURRING
-        and len(contributor.artist_keys) >= MIN_PRIMARY_ARTISTS_FOR_RECURRING
-    ]
-    ranked.sort(key=_contributor_sort_key)
+    ranked = _eligible_recurring_contributors(session, user.id)
     limited = ranked[:limit]
 
     return {
@@ -179,6 +171,33 @@ def recurring_contributors(
         "coverage": coverage,
         "results": [_contributor_payload(contributor) for contributor in limited],
         "insufficient_data_reason": _insufficient_data_reason(coverage, limited),
+    }
+
+
+def search_recurring_contributors(
+    session: Session,
+    user_slug: str,
+    *,
+    query: str = "",
+    limit: int = 25,
+    offset: int = 0,
+) -> dict:
+    user = _require_user(session, user_slug)
+    terms = _search_terms(query)
+    matches = [
+        contributor
+        for contributor in _eligible_recurring_contributors(session, user.id)
+        if _contributor_matches_search(contributor, terms)
+    ]
+    page = matches[offset : offset + limit]
+
+    return {
+        "user_slug": user.slug,
+        "query": query,
+        "offset": offset,
+        "limit": limit,
+        "total": len(matches),
+        "results": [_contributor_payload(contributor) for contributor in page],
     }
 
 
@@ -501,6 +520,32 @@ def _user_fact_rows(session: Session, user_id: int) -> list[dict]:
         }
         for fact, album_key, artist, name, artist_mbid, image_url, local_image_path in rows
     ]
+
+
+def _eligible_recurring_contributors(session: Session, user_id: int) -> list[ContributorSummary]:
+    contributors = _aggregate_contributors(_user_fact_rows(session, user_id), exclude_default_noise=True)
+    ranked = [
+        contributor
+        for contributor in contributors.values()
+        if len(contributor.album_ids) >= MIN_ALBUMS_FOR_RECURRING
+        and len(contributor.artist_keys) >= MIN_PRIMARY_ARTISTS_FOR_RECURRING
+    ]
+    ranked.sort(key=_contributor_sort_key)
+    return ranked
+
+
+def _search_terms(query: str) -> list[str]:
+    return [_normalize(term) for term in query.split() if _normalize(term)]
+
+
+def _contributor_matches_search(contributor: ContributorSummary, terms: list[str]) -> bool:
+    if not terms:
+        return True
+    searchable = " ".join(
+        [contributor.person_name, *contributor.role_buckets.keys()]
+    )
+    normalized = _normalize(searchable)
+    return all(term in normalized for term in terms)
 
 
 def _aggregate_contributors(rows: list[dict], *, exclude_default_noise: bool) -> dict[str, ContributorSummary]:

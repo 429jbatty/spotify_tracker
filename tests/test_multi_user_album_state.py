@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import os
 from pathlib import Path
 from unittest.mock import patch
 
@@ -9,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.database import create_schema
 from backend.app.main import create_app
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.services import auth_service
 
 
 def sample_album_state():
@@ -28,6 +30,19 @@ def sample_album_state():
 
 
 class MultiUserAlbumStateTests(unittest.TestCase):
+    def _create_user(self, client, slug="friend", display_name="Friend"):
+        from backend.app.database import get_engine
+        with sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))() as session:
+            account = auth_service.create_account(session, email=f"{slug}@example.com", password="unused")
+            token = auth_service.create_session(session, account=account)
+            session.commit()
+        response = client.post(
+            "/api/users",
+            json={"slug": slug, "display_name": display_name},
+            headers={"Authorization": f"Bearer {token}"},
+        )
+        return response, {"Authorization": f"Bearer {token}"}
+
     def _client(self, temp_dir):
         database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
         engine = create_schema(database_url)
@@ -50,10 +65,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
     def test_user_scoped_state_keeps_listens_independent_on_shared_album(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
-            create_user_response = client.post(
-                "/api/users",
-                json={"slug": "friend", "display_name": "Friend"},
-            )
+            create_user_response, friend_headers = self._create_user(client)
             self.assertEqual(create_user_response.status_code, 201)
 
             with patch(
@@ -67,6 +79,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                         "name": "Shared Album",
                         "listen_date": "2026-04-18T15:45:00.000Z",
                     },
+                    headers=friend_headers,
                 )
             self.assertEqual(friend_create_response.status_code, 201)
 
@@ -90,7 +103,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
     def test_user_scoped_listen_mutation_does_not_touch_default_user(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
-            client.post("/api/users", json={"slug": "friend", "display_name": "Friend"})
+            _, friend_headers = self._create_user(client)
             album_id = client.get("/api/album-state").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
@@ -98,6 +111,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
             response = client.post(
                 f"/api/users/friend/albums/{album_id}/listens",
                 json={"listened_at": "2026-04-19T12:00:00.000Z"},
+                headers=friend_headers,
             )
             default_state = client.get("/api/album-state").json()
             friend_state = client.get("/api/users/friend/album-state").json()
@@ -119,7 +133,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
     def test_user_scoped_tags_do_not_touch_default_user(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
-            client.post("/api/users", json={"slug": "friend", "display_name": "Friend"})
+            _, friend_headers = self._create_user(client)
             album_id = client.get("/api/album-state").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
@@ -134,11 +148,13 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                         "name": "Shared Album",
                         "listen_date": "2026-04-18T15:45:00.000Z",
                     },
+                    headers=friend_headers,
                 )
 
             response = client.put(
                 f"/api/users/friend/albums/{album_id}/your-tags",
                 json={"your_tags": ["atmospheric", "cohesive"]},
+                headers=friend_headers,
             )
             default_state = client.get("/api/album-state").json()
             friend_state = client.get("/api/users/friend/album-state").json()
@@ -156,7 +172,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
     def test_user_scoped_feedback_does_not_touch_default_user(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
-            client.post("/api/users", json={"slug": "friend", "display_name": "Friend"})
+            _, friend_headers = self._create_user(client)
             album_id = client.get("/api/album-state").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
@@ -171,11 +187,13 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                         "name": "Shared Album",
                         "listen_date": "2026-04-18T15:45:00.000Z",
                     },
+                    headers=friend_headers,
                 )
 
             response = client.put(
                 f"/api/users/friend/albums/{album_id}/your-feedback",
                 json={"rating": 9, "notes": "Locked in immediately."},
+                headers=friend_headers,
             )
             default_state = client.get("/api/album-state").json()
             friend_state = client.get("/api/users/friend/album-state").json()

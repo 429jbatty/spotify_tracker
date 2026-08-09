@@ -13,8 +13,10 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { fetchSplashData } from "@/services/albumApi";
+import { fetchCurrentAccount, fetchSplashData, signOut } from "@/services/albumApi";
 import CreateProfileDialog from "@/components/CreateProfileDialog";
+import LoginDialog from "@/components/LoginDialog";
+import { accountProfileLabel } from "@/components/utils/accountProfileLabel";
 
 const TRACKED_FEATURES = [
   {
@@ -79,10 +81,23 @@ const HERO_SNAPSHOT = {
 
 const EMPTY_ARRAY = [];
 
-function SplashPage({ onCreateProfile, onOpenProfile }) {
+function SplashPage({
+  onCreateProfile,
+  onOpenProfile,
+  onLogin,
+  onStartProfileCreation,
+  openCreateProfileAfterSignIn = false,
+  onCreateProfileIntentHandled,
+  hasMultipleProfiles = false,
+  authError = null,
+  onAuthErrorHandled,
+}) {
   const [payload, setPayload] = useState(null);
   const [status, setStatus] = useState("loading");
   const [createProfileOpen, setCreateProfileOpen] = useState(false);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [authenticatedAccount, setAuthenticatedAccount] = useState(null);
+  const [authLoaded, setAuthLoaded] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -108,8 +123,24 @@ function SplashPage({ onCreateProfile, onOpenProfile }) {
     };
   }, []);
 
+  useEffect(() => {
+    fetchCurrentAccount()
+      .then(setAuthenticatedAccount)
+      .catch(() => setAuthenticatedAccount(null))
+      .finally(() => setAuthLoaded(true));
+  }, []);
+
   const featuredUsers = payload?.featured_users || EMPTY_ARRAY;
   const recentActivity = payload?.recent_activity || EMPTY_ARRAY;
+  const canCreateProfile = authLoaded && (!authenticatedAccount || authenticatedAccount.profile_slugs?.length === 0);
+  const profileSetupIncomplete = authLoaded
+    && Boolean(authenticatedAccount)
+    && authenticatedAccount.profile_slugs?.length === 0;
+  const opensAfterSignIn = openCreateProfileAfterSignIn
+    && authLoaded
+    && Boolean(authenticatedAccount)
+    && authenticatedAccount.profile_slugs?.length === 0;
+  const profileDialogOpen = createProfileOpen || opensAfterSignIn;
 
   const handleExplore = () => {
     const target = document.getElementById("profiles");
@@ -121,19 +152,72 @@ function SplashPage({ onCreateProfile, onOpenProfile }) {
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+    } catch {
+      // Local auth state is cleared by signOut even when the request fails.
+    }
+    setAuthenticatedAccount(null);
+  };
+
+  const handleCreateProfile = () => {
+    if (authenticatedAccount) {
+      setCreateProfileOpen(true);
+      return;
+    }
+    onStartProfileCreation?.();
+  };
+
+  const handleCreateProfileOpenChange = (nextOpen) => {
+    setCreateProfileOpen(nextOpen);
+    if (!nextOpen && opensAfterSignIn) {
+      onCreateProfileIntentHandled?.();
+    }
+  };
+
+  const handleProfileCreated = async (profile) => {
+    const user = await onCreateProfile(profile);
+    setAuthenticatedAccount((currentAccount) => {
+      if (!currentAccount) return currentAccount;
+
+      return {
+        ...currentAccount,
+        profile_slugs: [user.slug],
+        profiles: [{ slug: user.slug, display_name: user.display_name }],
+      };
+    });
+    return user;
+  };
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <SplashHeader
         onBrowse={handleExplore}
         onAbout={handleAbout}
-        onCreateProfile={() => setCreateProfileOpen(true)}
+        onCreateProfile={canCreateProfile ? handleCreateProfile : undefined}
+        onLogin={() => setLoginOpen(true)}
+        authenticatedAccount={authenticatedAccount}
+        onSignOut={handleSignOut}
       />
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
+        {authError && (
+          <GoogleSignInNotice
+            errorCode={authError}
+            onRetry={onStartProfileCreation}
+            onDismiss={onAuthErrorHandled}
+          />
+        )}
+        {hasMultipleProfiles && <MultipleProfileOwnershipNotice />}
+        {profileSetupIncomplete && (
+          <ProfileSetupPrompt onFinishSetup={handleCreateProfile} />
+        )}
         <section className="flex flex-col gap-6">
           <div className="grid min-h-[450px] items-center gap-8 lg:min-h-[520px] lg:grid-cols-[minmax(0,0.95fr)_minmax(440px,1fr)]">
             <SplashHero
               onExplore={handleExplore}
-              onCreateProfile={() => setCreateProfileOpen(true)}
+              onCreateProfile={canCreateProfile ? handleCreateProfile : undefined}
+              profileSetupIncomplete={profileSetupIncomplete}
             />
             <HeroAlbumPreview />
           </div>
@@ -156,16 +240,20 @@ function SplashPage({ onCreateProfile, onOpenProfile }) {
 
         <TrackedFeatures />
       </div>
-      <CreateProfileDialog
-        open={createProfileOpen}
-        onOpenChange={setCreateProfileOpen}
-        onCreateProfile={onCreateProfile}
-      />
+      {canCreateProfile && (
+        <CreateProfileDialog
+          open={profileDialogOpen}
+          onOpenChange={handleCreateProfileOpenChange}
+          onCreateProfile={handleProfileCreated}
+        />
+      )}
+      <LoginDialog open={loginOpen} onOpenChange={setLoginOpen} onLogin={onLogin} />
     </main>
   );
 }
 
-function SplashHeader({ onBrowse, onAbout, onCreateProfile }) {
+function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticatedAccount, onSignOut }) {
+  const profileLabel = accountProfileLabel(authenticatedAccount);
   return (
     <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
@@ -190,16 +278,29 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile }) {
           >
             About
           </button>
-          <Button type="button" size="sm" onClick={onCreateProfile}>
-            Create profile
-          </Button>
+          {authenticatedAccount ? (
+            <div className="flex items-center gap-2">
+              <div className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-foreground" title={`Signed in as ${profileLabel}`}>
+                <span className="hidden text-xs sm:inline">Signed in as {profileLabel}</span>
+                <span className="text-xs sm:hidden">Signed in</span>
+              </div>
+              <Button type="button" size="sm" variant="ghost" onClick={onSignOut}>
+                Sign out
+              </Button>
+            </div>
+          ) : <button type="button" onClick={onLogin} className="transition-colors hover:text-foreground">Sign in</button>}
+          {onCreateProfile && (
+            <Button type="button" size="sm" onClick={onCreateProfile}>
+              {authenticatedAccount ? "Finish setup" : "Create profile"}
+            </Button>
+          )}
         </nav>
       </div>
     </header>
   );
 }
 
-function SplashHero({ onExplore, onCreateProfile }) {
+function SplashHero({ onExplore, onCreateProfile, profileSetupIncomplete = false }) {
   return (
     <div className="flex flex-col gap-7">
       <div className="flex flex-col gap-5">
@@ -216,11 +317,76 @@ function SplashHero({ onExplore, onCreateProfile }) {
           <Search data-icon="inline-start" />
           Explore profiles
         </Button>
-        <Button type="button" variant="outline" onClick={onCreateProfile} className="sm:w-auto">
-          Create your profile
-        </Button>
+        {onCreateProfile && (
+          <Button type="button" variant="outline" onClick={onCreateProfile} className="sm:w-auto">
+            {profileSetupIncomplete ? "Finish setting up your profile" : "Create your profile"}
+          </Button>
+        )}
       </div>
     </div>
+  );
+}
+
+function ProfileSetupPrompt({ onFinishSetup }) {
+  return (
+    <section className="flex flex-col gap-4 rounded-lg border border-primary/30 bg-primary/5 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h2 className="font-semibold text-foreground">Finish setting up your profile</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          You’re signed in. Choose a profile name to start tracking your album listens.
+        </p>
+      </div>
+      <Button type="button" onClick={onFinishSetup}>Choose profile name</Button>
+    </section>
+  );
+}
+
+const GOOGLE_SIGN_IN_MESSAGES = {
+  cancelled: "Google sign-in was cancelled. You can try again whenever you’re ready.",
+  invalid_request: "That sign-in link is incomplete. Please start again from here.",
+  invalid_or_expired: "That sign-in request expired or is no longer valid. Please try again.",
+  unavailable: "Google sign-in is temporarily unavailable. Please try again shortly.",
+  identity_conflict: "This email is already linked to a different Google identity. Contact the app owner for help.",
+  sign_in_failed: "We couldn’t finish signing you in. Please try again.",
+};
+
+function GoogleSignInNotice({ errorCode, onRetry, onDismiss }) {
+  const message = GOOGLE_SIGN_IN_MESSAGES[errorCode] || GOOGLE_SIGN_IN_MESSAGES.sign_in_failed;
+  const canRetry = errorCode !== "identity_conflict";
+
+  return (
+    <section
+      role="alert"
+      className="flex flex-col gap-4 rounded-lg border border-destructive/30 bg-destructive/5 p-5 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div>
+        <h2 className="font-semibold text-foreground">Couldn’t sign in with Google</h2>
+        <p className="mt-1 text-sm text-muted-foreground">{message}</p>
+      </div>
+      <div className="flex shrink-0 gap-2">
+        {canRetry && onRetry && (
+          <Button type="button" onClick={onRetry}>
+            Try again
+          </Button>
+        )}
+        {onDismiss && (
+          <Button type="button" variant="outline" onClick={onDismiss}>
+            Dismiss
+          </Button>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function MultipleProfileOwnershipNotice() {
+  return (
+    <section className="rounded-lg border border-destructive/30 bg-destructive/5 p-5">
+      <h2 className="font-semibold text-foreground">Profile ownership needs attention</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        This Google account is linked to more than one profile. Contact the app owner to resolve it.
+      </p>
+    </section>
   );
 }
 
@@ -556,9 +722,9 @@ function RecentActivity({ activity, status, onOpenProfile }) {
     <section>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <SectionHeading title="Recently on Albumary" />
-        {activity.length > 6 && (
+        {activity.length > 0 && (
           <span className="text-sm font-medium text-muted-foreground">
-            Latest {Math.min(activity.length, 6)}
+            Latest {activity.length} listens
           </span>
         )}
       </div>
@@ -573,10 +739,10 @@ function RecentActivity({ activity, status, onOpenProfile }) {
             ))}
           </div>
         ) : activity.length > 0 ? (
-          <div className="divide-y divide-border/70">
-            {activity.slice(0, 5).map((item) => (
+          <div className="max-h-[34rem] divide-y divide-border/70 overflow-y-auto">
+            {activity.map((item) => (
               <ActivityItem
-                key={`${item.timestamp}-${item.text}`}
+                key={item.listen_id}
                 item={item}
                 onOpenProfile={onOpenProfile}
               />
@@ -798,17 +964,7 @@ function activityActionText(item) {
     </>
   );
 
-  if (item.type === "replay") {
-    const match = item.text?.match(/after (.+)\.$/);
-    return (
-      <>
-        replayed {albumText}
-        {match ? <span className="text-muted-foreground"> after {match[1]}</span> : null}
-      </>
-    );
-  }
-
-  return <>discovered {albumText}</>;
+  return <>listened to {albumText}</>;
 }
 
 function profileDisplayName(user) {

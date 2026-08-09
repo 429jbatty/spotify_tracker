@@ -9,6 +9,7 @@ from backend.app.database import create_schema
 from backend.app.routers import (
     album_state,
     albums,
+    auth,
     credit_intelligence,
     health,
     imports,
@@ -32,6 +33,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router, prefix=settings.api_prefix)
     app.include_router(album_state.router, prefix=settings.api_prefix)
     app.include_router(albums.router, prefix=settings.api_prefix)
+    app.include_router(auth.router, prefix=settings.api_prefix)
     app.include_router(credit_intelligence.router, prefix=settings.api_prefix)
     app.include_router(imports.router, prefix=settings.api_prefix)
     app.include_router(public.router, prefix=settings.api_prefix)

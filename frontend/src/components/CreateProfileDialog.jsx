@@ -43,7 +43,6 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
       setError("Use a profile name with at least one letter or number.");
       return;
     }
-
     setError(null);
     setPending(true);
     try {
@@ -89,6 +88,7 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
               <p className="text-sm text-muted-foreground">Your profile URL: /{slug}</p>
             )}
           </div>
+          <p className="text-sm text-muted-foreground">Your signed-in Google account will own this profile.</p>
 
           {error && (
             <p id={errorId} role="alert" className="text-sm text-destructive">

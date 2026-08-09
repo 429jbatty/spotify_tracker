@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 from unittest.mock import patch
 
@@ -11,6 +12,8 @@ from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
 from backend.app.repositories.user_repository import UserRepository
+from backend.app.models import SpotifyOAuthState
+from backend.app.services import auth_service
 from backend.app.services import spotify_oauth_service
 
 
@@ -56,11 +59,26 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
             )
 
             with session_factory() as session:
+                account = auth_service.create_account(
+                    session,
+                    email="friend@example.com",
+                    password="correct-horse-battery-staple",
+                )
                 user = UserRepository(session).create_user(
                     slug="friend",
                     display_name="Friend",
+                    owner_account_id=account.id,
                 )
                 user_id = user.id
+                session.add(
+                    SpotifyOAuthState(
+                        user_id=user.id,
+                        account_id=account.id,
+                        state_hash=spotify_oauth_service._state_hash("callback-state"),
+                        created_at=datetime.now(timezone.utc).isoformat(),
+                    )
+                )
+                session.commit()
 
             with session_factory() as session:
                 with patch.object(spotify_oauth_service, "_oauth", return_value=FakeOAuth()):
@@ -68,7 +86,7 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
                         user_slug = spotify_oauth_service.connect_user_from_callback(
                             session,
                             code="callback-code",
-                            state="friend",
+                            state="callback-state",
                         )
                 credentials = SpotifyCredentialsRepository(session).get_for_user(user_id)
 
@@ -88,10 +106,25 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                UserRepository(session).create_user(
+                account = auth_service.create_account(
+                    session,
+                    email="friend@example.com",
+                    password="correct-horse-battery-staple",
+                )
+                user = UserRepository(session).create_user(
                     slug="friend",
                     display_name="Friend",
+                    owner_account_id=account.id,
                 )
+                session.add(
+                    SpotifyOAuthState(
+                        user_id=user.id,
+                        account_id=account.id,
+                        state_hash=spotify_oauth_service._state_hash("callback-state"),
+                        created_at=datetime.now(timezone.utc).isoformat(),
+                    )
+                )
+                session.commit()
 
             with session_factory() as session:
                 with patch.object(spotify_oauth_service, "_oauth", return_value=FakeOAuth()):
@@ -104,7 +137,7 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
                             spotify_oauth_service.connect_user_from_callback(
                                 session,
                                 code="callback-code",
-                                state="friend",
+                                state="callback-state",
                             )
 
         self.assertIn("not allowed to use the app yet", str(exc.exception))

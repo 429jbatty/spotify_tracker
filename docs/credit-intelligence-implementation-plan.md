@@ -3061,6 +3061,37 @@ Splash hero Connections preview completed on 2026-07-11:
 - Suggested next step:
   - Observe whether first-time visitors understand the overlay without interaction before considering any link from the static preview into a public profile's Connections route.
 
+Phase 12Y automatic credit-fact maintenance completed on 2026-07-12:
+
+- Outcome for the overall feature: newly persisted and refreshed album metadata now updates the shared `album_credit_facts` projection as part of the same SQLite transaction, so Connections coverage no longer depends on an operational rebuild for normal workflows.
+- What changed:
+  - Routed album-state imports/tracking persistence, album creation, metadata replacement/refresh, and metadata edits through a targeted credit-fact rebuild for the affected album IDs.
+  - Added a non-committing mode to the credit-fact rebuild service so repository operations commit metadata and facts atomically; projection failures are logged and re-raised instead of being silently ignored.
+  - Preserved the one-time rebuild script's existing committing behavior, including full-catalog and `--album-id` repair/backfill workflows.
+- Validation:
+  - Repository tests cover credit-fact creation from an imported persisted state and replacement after a metadata refresh.
+- Independent testing:
+  - Import a credit-bearing album, open Connections, and verify its contributors appear without running the rebuild script.
+  - Refresh that album's metadata with changed credits and verify removed contributors disappear while new contributors appear.
+- Suggested next step:
+  - Run the one-time rebuild once in production to backfill existing albums, then use normal imports and metadata refreshes to keep the projection current.
+
+Issue #30 contributor discovery completed on 2026-07-20:
+
+- Outcome for the overall feature: contributor search and the contributor directory now search the full eligible contributor set instead of treating the first ranked recommendations as a complete directory.
+- What changed:
+  - Kept the existing small recurring-contributor response for recommendations and initial graph construction.
+  - Added a user-scoped, paged contributor discovery API that applies the query before the page limit and retains the default Connections noise exclusions.
+  - Updated both contributor search controls to request a small server-filtered result list as the user types, without loading an unbounded library into the browser.
+  - Clarified directory copy so it promises searchable eligibility rather than a preloaded complete list.
+- Validation:
+  - `./.venv/bin/python -m unittest tests.test_api_credit_intelligence -v` passed: 20 tests, including a contributor ranked beyond the first 25.
+  - `node_modules/.bin/vitest run src/components/PageConnections.test.jsx`, targeted eslint, and the production frontend build passed.
+- Independent testing:
+  - Open `/emily/connections`, select **Start from a contributor**, search for `Ryan Tedder`, and confirm he is selectable and enables **Explore from here**.
+- Suggested next step:
+  - If large libraries make frequent type-ahead requests noticeable, add a short debounced input delay while preserving request cancellation and server-side matching.
+
 - Unbounded path search or weighted shortest-path optimization beyond the
   bounded MVP.
 - Separate `credit_people` and track-level credit tables.

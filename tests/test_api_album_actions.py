@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from backend.app.database import create_schema
 from backend.app.main import create_app
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.services import auth_service
 
 
 def sample_album_state():
@@ -38,6 +39,14 @@ class ApiAlbumActionTests(unittest.TestCase):
             repository = SqliteStateRepository(session)
             repository.save_album_state(state or sample_album_state())
             album = next(iter(repository.load_album_state()["completed_albums"].values()))
+            account = auth_service.create_account(
+                session,
+                email="owner@example.com",
+                password="correct-horse-battery-staple",
+            )
+            repository.user.owner_account_id = account.id
+            token = auth_service.create_session(session, account=account)
+            session.commit()
 
         env = {
             "DATABASE_URL": database_url,
@@ -46,7 +55,9 @@ class ApiAlbumActionTests(unittest.TestCase):
         patcher = patch.dict("os.environ", env)
         patcher.start()
         self.addCleanup(patcher.stop)
-        return TestClient(create_app()), album["id"], database_url
+        client = TestClient(create_app())
+        client.headers.update({"Authorization": f"Bearer {token}"})
+        return client, album["id"], database_url
 
     def test_refresh_one_album_updates_metadata_and_preserves_listens(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -192,7 +203,7 @@ class ApiAlbumActionTests(unittest.TestCase):
         self.assertEqual(payload["source"], "manual")
         self.assertEqual(payload["entry_source"], "manual")
 
-    def test_duplicate_album_creation_returns_clear_error(self):
+    def test_manual_creation_reuses_existing_canonical_album(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)
 
@@ -209,8 +220,8 @@ class ApiAlbumActionTests(unittest.TestCase):
                     },
                 )
 
-        self.assertEqual(response.status_code, 409)
-        self.assertIn("Album already exists", response.json()["detail"])
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["name"], "Old Title")
 
     def test_metadata_edit_updates_only_supplied_fields(self):
         with tempfile.TemporaryDirectory() as temp_dir:

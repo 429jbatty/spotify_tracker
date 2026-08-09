@@ -1,4 +1,6 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
+import hashlib
+import secrets
 
 from spotipy import Spotify
 from spotipy.exceptions import SpotifyException
@@ -7,18 +9,41 @@ from spotipy.oauth2 import SpotifyOAuth
 from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.models import SpotifyOAuthState, User
 
 
 SCOPES = ["user-read-recently-played"]
+OAUTH_STATE_TTL = timedelta(minutes=10)
 
 
-def authorize_url(user_slug: str) -> str:
-    return _oauth().get_authorize_url(state=user_slug)
+def authorize_url(session, *, user_id: int, account_id: int) -> str:
+    state = secrets.token_urlsafe(32)
+    session.add(
+        SpotifyOAuthState(
+            user_id=user_id,
+            account_id=account_id,
+            state_hash=_state_hash(state),
+            created_at=datetime.now(timezone.utc).isoformat(),
+        )
+    )
+    session.flush()
+    return _oauth().get_authorize_url(state=state)
 
 
 def connect_user_from_callback(session, *, code: str, state: str) -> str:
-    user = UserRepository(session).require_user_by_slug(state)
+    oauth_state = session.query(SpotifyOAuthState).filter_by(
+        state_hash=_state_hash(state)
+    ).one_or_none()
+    if oauth_state is None:
+        raise KeyError("Spotify authorization state is invalid or has expired.")
+    created_at = datetime.fromisoformat(oauth_state.created_at)
+    if created_at < datetime.now(timezone.utc) - OAUTH_STATE_TTL:
+        session.delete(oauth_state)
+        session.commit()
+        raise KeyError("Spotify authorization state is invalid or has expired.")
+    user = session.get(User, oauth_state.user_id)
+    if user is None or user.owner_account_id != oauth_state.account_id:
+        raise KeyError("Spotify authorization state does not belong to an active profile.")
     try:
         token_info = _oauth().get_access_token(
             code=code,
@@ -45,6 +70,8 @@ def connect_user_from_callback(session, *, code: str, state: str) -> str:
         scope=token_info.get("scope"),
         connected_at=datetime.now(timezone.utc).isoformat(),
     )
+    session.delete(oauth_state)
+    session.commit()
     return user.slug
 
 
@@ -93,3 +120,7 @@ def _friendly_spotify_error(exc: SpotifyException) -> str:
         return f"Spotify authorization failed: {message}"
 
     return "Spotify authorization failed."
+
+
+def _state_hash(state: str) -> str:
+    return hashlib.sha256(state.encode("utf-8")).hexdigest()

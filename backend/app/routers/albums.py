@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import sessionmaker
 
 import metadata_refresh_service
@@ -6,6 +6,7 @@ from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.manual_album_service import create_manual_album
+from backend.app.services import auth_service
 from backend.app.schemas import (
     AlbumListenCreate,
     AlbumListenDelete,
@@ -18,7 +19,26 @@ from backend.app.schemas import (
     UserAlbumTagsUpdate,
 )
 
-router = APIRouter(prefix="/albums", tags=["albums"])
+def _require_default_profile_owner(
+    authorization: str | None = Header(default=None),
+) -> None:
+    """Keep compatibility routes fail-closed behind the default owner's session."""
+    settings = get_settings()
+    engine = get_engine(settings.database_url)
+    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    with session_factory() as session:
+        auth_service.require_profile_owner(
+            session,
+            user_slug="jacob",
+            authorization=authorization,
+        )
+
+
+router = APIRouter(
+    prefix="/albums",
+    tags=["albums"],
+    dependencies=[Depends(_require_default_profile_owner)],
+)
 
 
 DUPLICATE_KEY_PREFIX = "Album key already exists: "

@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Any
 
 from sqlalchemy import LargeBinary, Select, cast, delete, func, select
@@ -6,22 +7,29 @@ from sqlalchemy.orm import Session
 
 from backend.app.models import (
     Album,
+    AlbumCreditFact,
     AlbumInProgress,
     AlbumListen,
     ImportedListeningEvent,
     UserAlbum,
     UserAppState,
 )
+from backend.app.album_identity import (
+    normalized_artist_title_identity,
+    release_group_identity,
+)
 from backend.app.repositories.state_utils import (
     _normalize_completed_albums,
     empty_album_state,
 )
 from backend.app.repositories.user_repository import UserRepository
+from backend.app.services.credit_fact_service import rebuild_credit_facts
 from backend.app.user_tags import normalize_user_tags
 
 
 STATE_LAST_CHECKED = "last_checked"
 ARTWORK_URL_PREFIX = "/media/artwork/"
+logger = logging.getLogger(__name__)
 
 
 def _normalize_entry_source(value: str | None) -> str:
@@ -57,6 +65,9 @@ def _album_metadata(record: dict[str, Any]) -> dict[str, Any]:
             "remote_image_url",
             "local_image_path",
             "entry_source",
+            "normalized_identity",
+            "rating",
+            "notes",
         }
     }
 
@@ -105,10 +116,11 @@ class SqliteStateRepository:
     def save_album_state(self, state: dict[str, Any]) -> None:
         merged_state = {**empty_album_state(), **state}
         self._set_app_state(STATE_LAST_CHECKED, merged_state.get("last_checked"))
-        self._sync_completed_albums(merged_state.get("completed_albums", {}))
+        album_ids = self._sync_completed_albums(merged_state.get("completed_albums", {}))
         self._sync_albums_in_progress(
             merged_state.get("albums_in_progress", {}),
         )
+        self._rebuild_credit_facts(album_ids)
         self.session.commit()
 
     def load_album_state(self) -> dict[str, Any]:
@@ -166,6 +178,13 @@ class SqliteStateRepository:
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
         return self._album_record(album)
+
+    def require_user_album(self, album_id: int) -> None:
+        album = self.session.get(Album, album_id)
+        if album is None:
+            raise KeyError(f"Album id not found: {album_id}")
+        if not self._user_has_album(album.id):
+            raise KeyError(f"Album is not available for user: {album_id}")
 
     def albums_for_artwork_cache(self) -> list[dict[str, Any]]:
         albums = self.session.scalars(select(Album).order_by(Album.album_key)).all()
@@ -284,13 +303,19 @@ class SqliteStateRepository:
         )
         new_key, record = next(iter(normalized_record.items()))
 
-        existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
+        existing_target = self._resolve_album_identity(refreshed_record)
         if existing_target is not None and existing_target.id != album.id:
-            raise ValueError(f"Album key already exists: {new_key}")
+            self._apply_completed_album_record(
+                existing_target,
+                self._merged_completed_album_record(existing_target, record),
+            )
+            self._rebuild_credit_facts([existing_target.id])
+            return self.merge_completed_album_listens(album.id, existing_target.id)["album_key"]
 
         album.album_key = new_key
         album.artist = record["artist"]
         album.name = record["name"]
+        album.normalized_identity = self._normalized_identity(record)
         album.artist_mbid = record.get("artist_mbid")
         album.release_group_mbid = record.get("release_group_mbid")
         album.release_mbid = record.get("release_mbid")
@@ -304,6 +329,7 @@ class SqliteStateRepository:
             record.get("entry_source") or record.get("source")
         )
         album.metadata_json = _album_metadata(record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return new_key
 
@@ -317,6 +343,7 @@ class SqliteStateRepository:
             raise KeyError(f"Album id not found: {album_id}")
 
         self._apply_completed_album_record(album, refreshed_record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -328,6 +355,7 @@ class SqliteStateRepository:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
+        self.require_user_album(album.id)
 
         normalized_record = _normalize_completed_albums(
             {
@@ -338,22 +366,20 @@ class SqliteStateRepository:
             }
         )
         new_key = next(iter(normalized_record))
-        existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
+        existing_target = self._resolve_album_identity(refreshed_record)
 
         if existing_target is not None and existing_target.id != album.id:
-            existing_record = self._album_record_for_update(existing_target)
-            merged_record = {
-                **existing_record,
-                **{
-                    key: value
-                    for key, value in refreshed_record.items()
-                    if value is not None and value != "" and value != []
-                },
-            }
+            self.require_user_album(existing_target.id)
+            merged_record = self._merged_completed_album_record(
+                existing_target,
+                refreshed_record,
+            )
             self._apply_completed_album_record(existing_target, merged_record)
+            self._rebuild_credit_facts([existing_target.id])
             return self.merge_completed_album_listens(album.id, existing_target.id)
 
         self._apply_completed_album_record(album, refreshed_record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -365,10 +391,12 @@ class SqliteStateRepository:
         source_album = self.session.get(Album, source_album_id)
         if source_album is None:
             raise KeyError(f"Album id not found: {source_album_id}")
+        self.require_user_album(source_album.id)
 
         target_album = self.session.get(Album, target_album_id)
         if target_album is None:
             raise KeyError(f"Album id not found: {target_album_id}")
+        self.require_user_album(target_album.id)
 
         if source_album.id == target_album.id:
             raise ValueError("Cannot merge an album into itself.")
@@ -376,44 +404,55 @@ class SqliteStateRepository:
         source_listens = list(
             self.session.scalars(
                 select(AlbumListen)
-                .where(AlbumListen.album_id == source_album.id)
-                .order_by(AlbumListen.user_id, AlbumListen.listened_at)
+                .where(
+                    AlbumListen.user_id == self.user.id,
+                    AlbumListen.album_id == source_album.id,
+                )
+                .order_by(AlbumListen.listened_at)
             )
         )
 
         for listen in source_listens:
-            self._add_user_album(target_album.id, user_id=listen.user_id)
             self._add_listen(
                 target_album,
                 listen.listened_at,
-                user_id=listen.user_id,
             )
 
-        source_memberships = list(
-            self.session.scalars(
-                select(UserAlbum).where(UserAlbum.album_id == source_album.id)
-            )
+        source_membership = self._user_album_membership(source_album.id)
+        target_membership = self._user_album_membership(target_album.id)
+        target_membership.your_tags = normalize_user_tags(
+            [
+                *(target_membership.your_tags or []),
+                *(source_membership.your_tags or []),
+            ]
         )
-        for membership in source_memberships:
-            target_membership = self._add_user_album(
-                target_album.id,
-                user_id=membership.user_id,
-            )
-            target_membership.your_tags = normalize_user_tags(
-                [*(target_membership.your_tags or []), *(membership.your_tags or [])]
-            )
-            if target_membership.rating is None:
-                target_membership.rating = membership.rating
-            if not (target_membership.notes or "").strip():
-                target_membership.notes = membership.notes
+        if target_membership.rating is None:
+            target_membership.rating = source_membership.rating
+        if not (target_membership.notes or "").strip():
+            target_membership.notes = source_membership.notes
 
         self.session.execute(
-            delete(AlbumListen).where(AlbumListen.album_id == source_album.id)
+            ImportedListeningEvent.__table__.update()
+            .where(
+                ImportedListeningEvent.user_id == self.user.id,
+                ImportedListeningEvent.album_id == source_album.id,
+            )
+            .values(album_id=target_album.id)
         )
         self.session.execute(
-            delete(UserAlbum).where(UserAlbum.album_id == source_album.id)
+            delete(AlbumListen).where(
+                AlbumListen.user_id == self.user.id,
+                AlbumListen.album_id == source_album.id,
+            )
         )
-        self.session.delete(source_album)
+        self.session.execute(
+            delete(UserAlbum).where(
+                UserAlbum.user_id == self.user.id,
+                UserAlbum.album_id == source_album.id,
+            )
+        )
+        self.session.flush()
+        self._delete_unowned_albums([source_album.id])
         self.session.commit()
         return self._album_record(target_album)
 
@@ -421,10 +460,22 @@ class SqliteStateRepository:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
+        self.require_user_album(album.id)
 
-        self.session.execute(delete(AlbumListen).where(AlbumListen.album_id == album.id))
-        self.session.execute(delete(UserAlbum).where(UserAlbum.album_id == album.id))
-        self.session.delete(album)
+        self.session.execute(
+            delete(AlbumListen).where(
+                AlbumListen.user_id == self.user.id,
+                AlbumListen.album_id == album.id,
+            )
+        )
+        self.session.execute(
+            delete(UserAlbum).where(
+                UserAlbum.user_id == self.user.id,
+                UserAlbum.album_id == album.id,
+            )
+        )
+        self.session.flush()
+        self._delete_unowned_albums([album.id])
         self.session.commit()
 
     def create_completed_album(
@@ -437,26 +488,33 @@ class SqliteStateRepository:
         )
         album_key, normalized = next(iter(normalized_record.items()))
 
-        existing_album = self.session.scalars(_album_lookup_statement(album_key)).first()
+        existing_album = self._resolve_album_identity(normalized)
         if existing_album is not None:
-            if self._user_has_album(existing_album.id):
-                raise ValueError(f"Album already exists: {album_key}")
-            self._apply_completed_album_record(existing_album, normalized)
+            self._apply_completed_album_record(
+                existing_album,
+                self._merged_completed_album_record(existing_album, normalized),
+            )
             self._add_user_album(existing_album.id)
             if listen_date:
                 self._add_listen(existing_album, listen_date)
             for listened_at in normalized.get("listen_history") or []:
                 self._add_listen(existing_album, listened_at)
+            self._rebuild_credit_facts([existing_album.id])
             self.session.commit()
             return self._album_record(existing_album)
 
         album = Album(
-            album_key=album_key,
+            album_key=self._new_album_key(normalized, album_key),
             artist=normalized["artist"],
             name=normalized["name"],
+            normalized_identity=self._normalized_identity(normalized),
         )
         self.session.add(album)
-        self._apply_completed_album_record(album, normalized)
+        self._apply_completed_album_record(
+            album,
+            normalized,
+            album_key=album.album_key,
+        )
         self.session.flush()
         self._add_user_album(album.id)
 
@@ -465,6 +523,7 @@ class SqliteStateRepository:
         for listened_at in normalized.get("listen_history") or []:
             self._add_listen(album, listened_at)
 
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -476,6 +535,7 @@ class SqliteStateRepository:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
+        self.require_user_album(album.id)
 
         existing_record = self._album_record_for_update(album)
         updated_record = {
@@ -483,6 +543,7 @@ class SqliteStateRepository:
             **{key: value for key, value in fields.items() if value is not None},
         }
         self._apply_completed_album_record(album, updated_record)
+        self._rebuild_credit_facts([album.id])
         self.session.commit()
         return self._album_record(album)
 
@@ -569,24 +630,25 @@ class SqliteStateRepository:
         ).first()
         return app_state.value if app_state else None
 
-    def _sync_completed_albums(self, completed_albums: dict[str, Any]) -> None:
+    def _sync_completed_albums(self, completed_albums: dict[str, Any]) -> list[int]:
         normalized_albums = _normalize_completed_albums(completed_albums)
-        incoming_keys = set(normalized_albums)
+        resolved_albums = [
+            (album_key, record, self._resolve_album_identity(record))
+            for album_key, record in normalized_albums.items()
+        ]
+        incoming_existing_ids = {
+            album.id for _, _, album in resolved_albums if album is not None
+        }
 
-        existing_keys = set(
+        existing_ids = set(
             self.session.scalars(
-                select(Album.album_key)
+                select(Album.id)
                 .join(UserAlbum)
                 .where(UserAlbum.user_id == self.user.id)
             )
         )
-        stale_keys = existing_keys - incoming_keys
-        if stale_keys:
-            stale_album_ids = list(
-                self.session.scalars(
-                    select(Album.id).where(Album.album_key.in_(stale_keys))
-                )
-            )
+        stale_album_ids = list(existing_ids - incoming_existing_ids)
+        if stale_album_ids:
             if stale_album_ids:
                 self.session.execute(
                     delete(AlbumListen).where(
@@ -603,24 +665,69 @@ class SqliteStateRepository:
                 self._delete_unowned_albums(stale_album_ids)
             self.session.flush()
 
-        for album_key, record in normalized_albums.items():
-            album = self.session.scalars(
-                _album_lookup_statement(album_key)
-            ).first()
+        album_ids = []
+        synced_album_ids: set[int] = set()
+        for album_key, record, album in resolved_albums:
+            album = album or self._resolve_album_identity(record)
+            previous_credit_source = (
+                self._credit_source_signature(album) if album is not None else None
+            )
 
             if album is None:
+                album_key = self._new_album_key(record, album_key)
                 album = Album(
                     album_key=album_key,
                     artist=record["artist"],
                     name=record["name"],
+                    normalized_identity=self._normalized_identity(record),
                 )
                 self.session.add(album)
 
-            self._apply_completed_album_record(album, record, album_key=album_key)
+            self._apply_completed_album_record(
+                album,
+                self._merged_completed_album_record(album, record)
+                if album.id is not None else record,
+                album_key=album_key if album.id is None else None,
+            )
 
             self.session.flush()
+            if previous_credit_source != self._credit_source_signature(album):
+                album_ids.append(album.id)
             self._add_user_album(album.id)
-            self._sync_listens(album, record.get("listen_history") or [])
+            if album.id in synced_album_ids:
+                for listened_at in record.get("listen_history") or []:
+                    self._add_listen(album, listened_at)
+            else:
+                self._sync_listens(album, record.get("listen_history") or [])
+                synced_album_ids.add(album.id)
+
+        return album_ids
+
+    def _credit_source_signature(self, album: Album) -> tuple[Any, Any, Any]:
+        return (
+            album.artist,
+            album.artist_mbid,
+            _safe_album_metadata(album),
+        )
+
+    def _rebuild_credit_facts(self, album_ids: list[int]) -> None:
+        unique_album_ids = list(dict.fromkeys(album_ids))
+        if not unique_album_ids:
+            return
+
+        try:
+            self.session.flush()
+            rebuild_credit_facts(
+                self.session,
+                album_ids=unique_album_ids,
+                commit=False,
+            )
+        except Exception:
+            logger.exception(
+                "Failed to rebuild credit facts for persisted album metadata: %s",
+                unique_album_ids,
+            )
+            raise
 
     def _sync_listens(self, album: Album, listen_history: list[str]) -> None:
         incoming_listens = set(listen_history)
@@ -795,6 +902,7 @@ class SqliteStateRepository:
             {album_key or _album_key(record.get("artist", ""), record.get("name", "")): record}
         )
         new_key, normalized = next(iter(normalized_record.items()))
+        new_key = album_key or new_key
 
         existing_target = self.session.scalars(_album_lookup_statement(new_key)).first()
         if existing_target is not None and existing_target.id != album.id:
@@ -803,6 +911,7 @@ class SqliteStateRepository:
         album.album_key = new_key
         album.artist = normalized["artist"]
         album.name = normalized["name"]
+        album.normalized_identity = self._normalized_identity(normalized)
         album.artist_mbid = normalized.get("artist_mbid")
         album.release_group_mbid = normalized.get("release_group_mbid")
         album.release_mbid = normalized.get("release_mbid")
@@ -816,6 +925,69 @@ class SqliteStateRepository:
             normalized.get("entry_source") or normalized.get("source")
         )
         album.metadata_json = _album_metadata(normalized)
+
+    def _merged_completed_album_record(
+        self,
+        album: Album,
+        incoming: dict[str, Any],
+    ) -> dict[str, Any]:
+        """Apply useful enrichment without downgrading the canonical row."""
+        merged = self._album_record_for_update(album)
+        for key, value in incoming.items():
+            if value not in (None, "", [], {}):
+                merged[key] = value
+        # A source-specific spelling must not replace the established display
+        # identity merely because it resolved to the same canonical entity.
+        merged["artist"] = album.artist
+        merged["name"] = album.name
+        merged["source"] = album.source
+        merged["entry_source"] = album.entry_source
+        if incoming.get("image_url"):
+            merged["image_url"] = incoming["image_url"]
+            merged["remote_image_url"] = (
+                incoming.get("remote_image_url") or incoming["image_url"]
+            )
+        return merged
+
+    def _normalized_identity(self, record: dict[str, Any]) -> str:
+        return normalized_artist_title_identity(record.get("artist"), record.get("name"))
+
+    def _resolve_album_identity(self, record: dict[str, Any]) -> Album | None:
+        """Resolve an incoming derived record without merging conflicting MBIDs."""
+        release_group_mbid = release_group_identity(record.get("release_group_mbid"))
+        pending_albums = [pending for pending in self.session.new if isinstance(pending, Album)]
+        if release_group_mbid:
+            for pending in pending_albums:
+                if release_group_identity(pending.release_group_mbid) == release_group_mbid:
+                    return pending
+            by_release_group = self.session.scalars(
+                select(Album).where(func.lower(Album.release_group_mbid) == release_group_mbid)
+            ).first()
+            if by_release_group is not None:
+                return by_release_group
+
+        identity = self._normalized_identity(record)
+        candidates = list(self.session.scalars(
+            select(Album).where(Album.normalized_identity == identity)
+        ))
+        candidates.extend(
+            album for album in pending_albums
+            if album.normalized_identity == identity
+        )
+        for candidate in candidates:
+            candidate_release_group = release_group_identity(candidate.release_group_mbid)
+            if not (release_group_mbid and candidate_release_group and candidate_release_group != release_group_mbid):
+                return candidate
+        return None
+
+    def _new_album_key(self, record: dict[str, Any], proposed_key: str) -> str:
+        """Keep conflicting authoritative IDs distinct without key collisions."""
+        if self.session.scalars(_album_lookup_statement(proposed_key)).first() is None:
+            return proposed_key
+        release_group_mbid = release_group_identity(record.get("release_group_mbid"))
+        if release_group_mbid:
+            return f"{proposed_key} [{release_group_mbid[:8]}]"
+        return proposed_key
 
     def _add_listen(
         self,
@@ -932,6 +1104,11 @@ class SqliteStateRepository:
         if albums_without_owners:
             self.session.execute(
                 delete(AlbumListen).where(AlbumListen.album_id.in_(albums_without_owners))
+            )
+            self.session.execute(
+                delete(AlbumCreditFact).where(
+                    AlbumCreditFact.album_id.in_(albums_without_owners)
+                )
             )
             self.session.execute(
                 delete(Album).where(Album.id.in_(albums_without_owners))

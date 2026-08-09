@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import AlbumColumnFilter from "./AlbumColumnFilter";
 import AlbumRow from "./AlbumRow";
 import AlbumPanelSheet from "./AlbumPanelSheet";
+import AlbumMobileList from "./AlbumMobileList";
 import { getSourceLabel } from "./utils/sourceLabels";
 import { formatLibrarySortParam, parseLibrarySortParam } from "@/routing";
 import {
@@ -141,6 +142,18 @@ function AlbumTable({
     }
   };
 
+  const handleMobileSort = (key, nextAscending) => {
+    setSortBy(key);
+    setAscending(nextAscending);
+    if (syncSortWithUrl) {
+      setSearchParams((current) => {
+        const next = new URLSearchParams(current);
+        next.set("sort", formatLibrarySortParam(key, nextAscending));
+        return next;
+      });
+    }
+  };
+
   const handleRowClick = (album) => {
     if (onOpenAlbum) {
       onOpenAlbum(album);
@@ -170,7 +183,20 @@ function AlbumTable({
 
   return (
     <>
-      <div className="overflow-x-auto rounded-lg border border-border">
+      <AlbumMobileList
+        key={`${sortBy}:${ascending}:${sortedAlbums.map((album) => album.id).join(",")}`}
+        albums={sortedAlbums}
+        sortBy={sortBy}
+        ascending={ascending}
+        onSortChange={handleMobileSort}
+        onOpenAlbum={handleRowClick}
+        filterHeaders={TABLE_HEADERS.filter((header) => header.filterable)}
+        filterOptions={filterOptions}
+        columnFilters={columnFilters}
+        onFilterChange={updateColumnFilter}
+      />
+
+      <div className="hidden overflow-x-auto rounded-lg border border-border md:block">
         <Table className="w-full table-fixed bg-card">
           <TableHeader className="bg-muted">
             <TableRow>

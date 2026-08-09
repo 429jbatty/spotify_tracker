@@ -7,7 +7,16 @@ function normalize(value) {
   return String(value || "").toLowerCase();
 }
 
-function AlbumColumnFilter({ align = "left", label, options, selectedValues, onApply }) {
+function AlbumColumnFilter({
+  align = "left",
+  label,
+  options,
+  selectedValues,
+  onApply,
+  buttonClassName = "",
+  optionClassName = "",
+  mobile = false,
+}) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [draftValues, setDraftValues] = useState(() => new Set());
@@ -105,7 +114,7 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
         aria-label={`Filter ${label}`}
         aria-expanded={open}
         onClick={toggleOpen}
-        className="h-7 w-full justify-between px-2"
+        className={`h-7 w-full justify-between px-2 ${buttonClassName}`}
       >
         <span className="truncate text-xs">
           {active ? `${displayCount} selected` : "All"}
@@ -134,6 +143,7 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
                 size="icon-xs"
                 aria-label="Clear search"
                 onClick={() => setQuery("")}
+                className={mobile ? "min-h-11 min-w-11" : ""}
               >
                 <X />
               </Button>
@@ -143,14 +153,14 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
           <div className="mt-3 flex items-center justify-between gap-2 text-xs">
             <button
               type="button"
-              className="text-primary hover:underline"
+              className={`px-2 text-primary hover:underline ${mobile ? "min-h-11" : ""}`}
               onClick={allVisibleSelected ? clearVisible : selectVisible}
             >
               {allVisibleSelected ? "Clear shown" : "Select shown"}
             </button>
             <button
               type="button"
-              className="text-muted-foreground hover:text-foreground"
+              className={`px-2 text-muted-foreground hover:text-foreground ${mobile ? "min-h-11" : ""}`}
               onClick={() => setDraftValues(new Set())}
             >
               Clear all
@@ -165,7 +175,7 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
                 return (
                   <label
                     key={option.value}
-                    className="flex cursor-pointer items-center gap-2 px-2 py-1.5 text-xs hover:bg-muted"
+                    className={`flex cursor-pointer items-center gap-2 px-2 py-1.5 text-xs hover:bg-muted ${optionClassName}`}
                   >
                     <input
                       type="checkbox"
@@ -187,7 +197,7 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
           </div>
 
           <div className="mt-3 flex justify-between gap-2">
-            <Button type="button" variant="ghost" size="sm" onClick={clearFilter}>
+            <Button type="button" variant="ghost" size="sm" onClick={clearFilter} className={mobile ? "min-h-11" : ""}>
               Clear Filter
             </Button>
             <div className="flex gap-2">
@@ -196,10 +206,11 @@ function AlbumColumnFilter({ align = "left", label, options, selectedValues, onA
                 variant="outline"
                 size="sm"
                 onClick={() => setOpen(false)}
+                className={mobile ? "min-h-11" : ""}
               >
                 Cancel
               </Button>
-              <Button type="button" size="sm" onClick={applyFilter}>
+              <Button type="button" size="sm" onClick={applyFilter} className={mobile ? "min-h-11" : ""}>
                 Apply
               </Button>
             </div>
