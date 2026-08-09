@@ -1,4 +1,5 @@
 import logging
+import threading
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from typing import Any
 
@@ -12,22 +13,33 @@ logger = logging.getLogger(__name__)
 # must never keep a user's own album and listen from being saved.
 MANUAL_METADATA_TIMEOUT_SECONDS = 8
 _metadata_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="manual-metadata")
+_metadata_slots = threading.BoundedSemaphore(value=2)
 
 
 def _manual_record(request: ManualAlbumCreate) -> dict[str, Any]:
     record = request.model_dump(exclude={"listen_date"}, exclude_none=True)
     record["source"] = "manual"
     record["entry_source"] = "manual"
+    record["_manual_input_identity"] = f"{request.artist}\0{request.name}".casefold()
     return record
 
 
 def _metadata_record(request: ManualAlbumCreate) -> dict[str, Any] | None:
-    future = _metadata_executor.submit(
-        album_metadata_service.get_album_metadata,
-        request.artist,
-        request.name,
-        spotify_url=request.spotify_url,
-    )
+    if not _metadata_slots.acquire(blocking=False):
+        logger.info("Skipping manual album metadata lookup while workers are busy")
+        return None
+
+    try:
+        future = _metadata_executor.submit(
+            album_metadata_service.get_album_metadata,
+            request.artist,
+            request.name,
+            spotify_url=request.spotify_url,
+        )
+    except Exception:
+        _metadata_slots.release()
+        raise
+    future.add_done_callback(lambda _completed: _metadata_slots.release())
     try:
         metadata = future.result(timeout=MANUAL_METADATA_TIMEOUT_SECONDS)
     except TimeoutError:
@@ -54,6 +66,7 @@ def _metadata_record(request: ManualAlbumCreate) -> dict[str, Any] | None:
         return None
 
     metadata["entry_source"] = "manual"
+    metadata["_manual_input_identity"] = f"{request.artist}\0{request.name}".casefold()
     return metadata
 
 

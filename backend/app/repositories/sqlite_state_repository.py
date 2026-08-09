@@ -488,7 +488,9 @@ class SqliteStateRepository:
         )
         album_key, normalized = next(iter(normalized_record.items()))
 
-        existing_album = self._resolve_album_identity(normalized)
+        existing_album = self._resolve_manual_input_identity(normalized)
+        if existing_album is None:
+            existing_album = self._resolve_album_identity(normalized)
         if existing_album is not None:
             self._apply_completed_album_record(
                 existing_album,
@@ -851,8 +853,13 @@ class SqliteStateRepository:
         if album.local_image_path:
             image_url = _artwork_url(album.local_image_path)
 
+        metadata = {
+            key: value
+            for key, value in _safe_album_metadata(album).items()
+            if key != "_manual_input_identity"
+        }
         return {
-            **_safe_album_metadata(album),
+            **metadata,
             "id": album.id,
             "album_key": album.album_key,
             "artist": album.artist,
@@ -951,6 +958,23 @@ class SqliteStateRepository:
 
     def _normalized_identity(self, record: dict[str, Any]) -> str:
         return normalized_artist_title_identity(record.get("artist"), record.get("name"))
+
+    def _resolve_manual_input_identity(self, record: dict[str, Any]) -> Album | None:
+        manual_input_identity = record.get("_manual_input_identity")
+        if not manual_input_identity:
+            return None
+        albums = self.session.scalars(
+            select(Album).join(UserAlbum).where(UserAlbum.user_id == self.user.id)
+        )
+        return next(
+            (
+                album
+                for album in albums
+                if _safe_album_metadata(album).get("_manual_input_identity")
+                == manual_input_identity
+            ),
+            None,
+        )
 
     def _resolve_album_identity(self, record: dict[str, Any]) -> Album | None:
         """Resolve an incoming derived record without merging conflicting MBIDs."""
