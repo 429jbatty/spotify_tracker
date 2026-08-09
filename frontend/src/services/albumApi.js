@@ -2,6 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
 export const SELECTED_USER_STORAGE_KEY = "spotify_tracker_user_slug";
 export const AUTH_SESSION_STORAGE_KEY = "spotify_tracker_auth_session";
 export const OWNED_PROFILE_STORAGE_KEY = "spotify_tracker_owned_profiles";
+const MANUAL_ALBUM_CREATE_TIMEOUT_MS = 12_000;
 
 function joinUrl(baseUrl, path) {
   return `${baseUrl.replace(/\/$/, "")}/${path.replace(/^\//, "")}`;
@@ -71,6 +72,23 @@ async function requestJson(path, options = {}) {
   }
 
   return response.json();
+}
+
+async function requestJsonWithTimeout(path, options, timeoutMs) {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await requestJson(path, { ...options, signal: controller.signal });
+  } catch (error) {
+    if (error.name === "AbortError") {
+      throw new Error(
+        "Creating this album took too long. Check your Library before trying again; a retry is safe."
+      );
+    }
+    throw error;
+  } finally {
+    window.clearTimeout(timeoutId);
+  }
 }
 
 async function requestForm(path, formData, options = {}) {
@@ -277,10 +295,14 @@ export async function refreshAlbumMetadata(albumId, payload = {}) {
 export async function createAlbum(payload) {
   const userSlug = getSelectedUserSlug();
   if (!userSlug) throw new Error("Sign in to add an album.");
-  return requestJson(`/users/${userSlug}/albums`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  return requestJsonWithTimeout(
+    `/users/${userSlug}/albums`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+    MANUAL_ALBUM_CREATE_TIMEOUT_MS
+  );
 }
 
 export async function updateAlbum(albumId, payload) {

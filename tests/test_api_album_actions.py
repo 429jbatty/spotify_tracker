@@ -1,4 +1,5 @@
 import tempfile
+import time
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -202,6 +203,80 @@ class ApiAlbumActionTests(unittest.TestCase):
         self.assertEqual(payload["name"], "Input Album")
         self.assertEqual(payload["source"], "manual")
         self.assertEqual(payload["entry_source"], "manual")
+
+    def test_manual_album_creation_persists_when_metadata_lookup_times_out(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+
+            def slow_metadata_lookup(*_args, **_kwargs):
+                time.sleep(0.05)
+                return {
+                    "artist": "Canonical Artist",
+                    "name": "Canonical Album",
+                    "source": "musicbrainz",
+                    "_musicbrainz_match": {"confidence": 100},
+                }
+
+            with (
+                patch(
+                    "backend.app.services.manual_album_service.MANUAL_METADATA_TIMEOUT_SECONDS",
+                    0.01,
+                ),
+                patch(
+                    "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                    side_effect=slow_metadata_lookup,
+                ),
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={"artist": "New Artist", "name": "New Album"},
+                )
+
+        self.assertEqual(response.status_code, 201)
+        payload = response.json()
+        self.assertEqual(payload["artist"], "New Artist")
+        self.assertEqual(payload["name"], "New Album")
+        self.assertEqual(payload["source"], "manual")
+
+    def test_manual_album_creation_persists_when_metadata_lookup_fails(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                side_effect=OSError("MusicBrainz is unavailable"),
+            ):
+                response = client.post(
+                    "/api/albums",
+                    json={"artist": "New Artist", "name": "New Album"},
+                )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.json()["source"], "manual")
+
+    def test_repeated_manual_submission_is_idempotent(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+            payload = {
+                "artist": "New Artist",
+                "name": "New Album",
+                "listen_date": "2026-04-02T10:00:00.000Z",
+            }
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                first_response = client.post("/api/albums", json=payload)
+                retry_response = client.post("/api/albums", json=payload)
+
+            state = client.get("/api/album-state").json()
+
+        self.assertEqual(first_response.status_code, 201)
+        self.assertEqual(retry_response.status_code, 201)
+        self.assertEqual(first_response.json()["id"], retry_response.json()["id"])
+        album = state["completed_albums"]["New Artist - New Album"]
+        self.assertEqual(album["listen_history"], [payload["listen_date"]])
 
     def test_manual_creation_reuses_existing_canonical_album(self):
         with tempfile.TemporaryDirectory() as temp_dir:

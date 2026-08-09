@@ -1,4 +1,5 @@
 import logging
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from typing import Any
 
 import album_metadata_service
@@ -6,6 +7,11 @@ from backend.app.repositories.sqlite_state_repository import SqliteStateReposito
 from backend.app.schemas import ManualAlbumCreate
 
 logger = logging.getLogger(__name__)
+
+# Manual creation is a foreground first-use flow.  Metadata is useful, but it
+# must never keep a user's own album and listen from being saved.
+MANUAL_METADATA_TIMEOUT_SECONDS = 8
+_metadata_executor = ThreadPoolExecutor(max_workers=2, thread_name_prefix="manual-metadata")
 
 
 def _manual_record(request: ManualAlbumCreate) -> dict[str, Any]:
@@ -16,12 +22,24 @@ def _manual_record(request: ManualAlbumCreate) -> dict[str, Any]:
 
 
 def _metadata_record(request: ManualAlbumCreate) -> dict[str, Any] | None:
+    future = _metadata_executor.submit(
+        album_metadata_service.get_album_metadata,
+        request.artist,
+        request.name,
+        spotify_url=request.spotify_url,
+    )
     try:
-        metadata = album_metadata_service.get_album_metadata(
+        metadata = future.result(timeout=MANUAL_METADATA_TIMEOUT_SECONDS)
+    except TimeoutError:
+        # The lookup can continue harmlessly in the bounded executor, but the
+        # request must return so the manually supplied album is persisted.
+        logger.warning(
+            "Manual album metadata lookup timed out for %s - %s after %ss",
             request.artist,
             request.name,
-            spotify_url=request.spotify_url,
+            MANUAL_METADATA_TIMEOUT_SECONDS,
         )
+        return None
     except Exception as exc:
         logger.warning(
             "Manual album metadata lookup failed for %s - %s: %s",
