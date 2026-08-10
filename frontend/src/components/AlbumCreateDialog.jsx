@@ -18,6 +18,28 @@ const MODE_OPTIONS = [
   { id: "listen", label: "Log listen" },
   { id: "album", label: "New album" },
 ];
+const ALBUM_STATE_REFRESH_TIMEOUT_MS = 5_000;
+
+function refreshAlbumState(onDataChanged) {
+  if (!onDataChanged) return Promise.resolve();
+
+  return new Promise((resolve, reject) => {
+    const timeoutId = window.setTimeout(
+      () => reject(new Error("Library refresh timed out.")),
+      ALBUM_STATE_REFRESH_TIMEOUT_MS
+    );
+    Promise.resolve(onDataChanged()).then(
+      () => {
+        window.clearTimeout(timeoutId);
+        resolve();
+      },
+      (error) => {
+        window.clearTimeout(timeoutId);
+        reject(error);
+      }
+    );
+  });
+}
 
 function normalize(value) {
   return String(value || "").toLowerCase().trim();
@@ -128,7 +150,7 @@ function AlbumCreateDialog({
         name: textOrUndefined(form.name),
         listen_date: textOrUndefined(form.listen_date),
       });
-      await onDataChanged?.();
+      await refreshAlbumState(onDataChanged);
       setOpen(false);
       if (createdAlbum?.source === "manual") {
         toast({
@@ -138,7 +160,11 @@ function AlbumCreateDialog({
         });
       }
     } catch (err) {
-      setError(err.message);
+      setError(
+        err.message === "Library refresh timed out."
+          ? "The album was saved, but Library could not refresh. Refresh the page before trying again."
+          : err.message
+      );
     } finally {
       setPending(false);
     }
