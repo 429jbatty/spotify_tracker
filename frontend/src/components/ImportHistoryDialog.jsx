@@ -34,6 +34,7 @@ function ImportHistoryDialog({
   triggerClassName,
   triggerVariant = "outline",
   hideTrigger = false,
+  initialSource = "lastfm",
 }) {
   const [activeSource, setActiveSource] = useState("lastfm");
   const [lastfmUsername, setLastfmUsername] = useState("");
@@ -106,11 +107,13 @@ function ImportHistoryDialog({
   useEffect(() => {
     if (!open || !selectedUserSlug) return;
 
+    setActiveSource(initialSource);
+
     setLoadingHistory(true);
     refreshImportData()
       .catch((err) => setError(err.message))
       .finally(() => setLoadingHistory(false));
-  }, [open, refreshImportData, selectedUserSlug]);
+  }, [initialSource, open, refreshImportData, selectedUserSlug]);
 
   useEffect(() => {
     if (!open || !selectedUserSlug || (!pendingCommit && !activeImportId)) return undefined;

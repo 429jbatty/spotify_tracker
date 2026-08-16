@@ -41,6 +41,22 @@ describe("SplashPage", () => {
     expect(screen.queryByRole("button", { name: "Create your profile" })).not.toBeInTheDocument();
   });
 
+  it("keeps an owned profile reachable even when it is not in public browse results", async () => {
+    const user = userEvent.setup();
+    const onOpenProfile = vi.fn();
+    fetchSplashData.mockResolvedValue({ featured_users: [], recent_activity: [] });
+    fetchCurrentAccount.mockResolvedValue({
+      email: "person@example.com",
+      profile_slugs: ["private-listener"],
+      profiles: [{ slug: "private-listener", display_name: "Private Listener" }],
+    });
+
+    render(<SplashPage onCreateProfile={vi.fn()} onOpenProfile={onOpenProfile} onLogin={vi.fn()} />);
+
+    await user.click(await screen.findByRole("button", { name: "Open your profile" }));
+    expect(onOpenProfile).toHaveBeenCalledWith("private-listener");
+  });
+
   it("starts Google sign-in from Create profile for a visitor without a session", async () => {
     const user = userEvent.setup();
     const onStartProfileCreation = vi.fn();

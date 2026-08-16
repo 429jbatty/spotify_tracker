@@ -13,6 +13,7 @@ import {
   fetchCurrentAccount,
   fetchSpotifyStatus,
   fetchUsers,
+  spotifyConnectUrl,
 } from "./services/albumApi";
 
 vi.mock("./services/albumApi", () => ({
@@ -114,5 +115,23 @@ describe("profile creation route", () => {
     await waitFor(() => {
       expect(screen.getByTestId("current-path")).toHaveTextContent("/?auth_error=cancelled");
     });
+  });
+
+  it("starts Spotify authorization from an empty owned profile", async () => {
+    const user = userEvent.setup();
+    fetchUsers.mockResolvedValue([{ slug: "owner", display_name: "Owner" }]);
+    fetchCurrentAccount.mockResolvedValue({ profile_slugs: ["owner"] });
+    fetchAlbumState.mockResolvedValue({ completed_albums: {} });
+    fetchSpotifyStatus.mockResolvedValue({ connected: false });
+    spotifyConnectUrl.mockResolvedValue(null);
+
+    render(
+      <MemoryRouter initialEntries={["/owner/discovery"]}>
+        <App />
+      </MemoryRouter>
+    );
+
+    await user.click(await screen.findByRole("button", { name: "Connect Spotify" }));
+    expect(spotifyConnectUrl).toHaveBeenCalledWith("owner");
   });
 });

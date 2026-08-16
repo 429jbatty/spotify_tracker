@@ -61,7 +61,7 @@ function CreateProfileDialog({ open, onOpenChange, onCreateProfile }) {
         <DialogHeader>
           <DialogTitle>Create your profile</DialogTitle>
           <DialogDescription>
-            Start an album listening history. Your profile URL will be created from your name.
+            Start an album listening history. Your profile URL is created from your name and is viewable by anyone with the link; controls for profile visibility are coming soon.
           </DialogDescription>
         </DialogHeader>
 

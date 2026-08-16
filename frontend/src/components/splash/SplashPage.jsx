@@ -199,6 +199,7 @@ function SplashPage({
         onLogin={() => setLoginOpen(true)}
         authenticatedAccount={authenticatedAccount}
         onSignOut={handleSignOut}
+        onOpenProfile={onOpenProfile}
       />
       <div className="mx-auto flex max-w-7xl flex-col gap-14 px-5 pb-14 pt-4 sm:px-6 lg:px-8">
         {authError && (
@@ -252,7 +253,7 @@ function SplashPage({
   );
 }
 
-function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticatedAccount, onSignOut }) {
+function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticatedAccount, onSignOut, onOpenProfile }) {
   const profileLabel = accountProfileLabel(authenticatedAccount);
   return (
     <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
@@ -284,6 +285,16 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticat
                 <span className="hidden text-xs sm:inline">Signed in as {profileLabel}</span>
                 <span className="text-xs sm:hidden">Signed in</span>
               </div>
+              {authenticatedAccount.profiles?.[0] && (
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onOpenProfile(authenticatedAccount.profiles[0].slug)}
+                >
+                  Open your profile
+                </Button>
+              )}
               <Button type="button" size="sm" variant="ghost" onClick={onSignOut}>
                 Sign out
               </Button>

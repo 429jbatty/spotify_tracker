@@ -62,6 +62,8 @@ function UniversalHeader({
   onSwitchUser,
   importDialogOpen,
   onImportDialogOpenChange,
+  albumCreateOpen,
+  onAlbumCreateOpenChange,
 }) {
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -163,6 +165,8 @@ function UniversalHeader({
                 albums={albums}
                 onDataChanged={onDataChanged}
                 triggerClassName="bg-primary text-primary-foreground hover:bg-primary/85"
+                open={albumCreateOpen}
+                onOpenChange={onAlbumCreateOpenChange}
               />
             )}
             <ProfileToolsMenu
