@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 
-export const LIBRARY_PAGE_SIZE = 50;
+// This caps initial, search, scroll, and mobile rendering to 50 album cards/rows.
+export const LIBRARY_RENDER_BUDGET = 50;
+export const LIBRARY_PAGE_SIZE = LIBRARY_RENDER_BUDGET;
 
 function LibraryPagination({ page, totalItems, onPageChange }) {
   const pageCount = Math.ceil(totalItems / LIBRARY_PAGE_SIZE);

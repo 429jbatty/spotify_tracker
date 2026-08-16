@@ -4,7 +4,10 @@ import { render } from "@testing-library/react";
 import "@testing-library/jest-dom/vitest";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { useDocumentMetadata } from "./useDocumentMetadata";
+import {
+  getProfileDocumentMetadata,
+  useDocumentMetadata,
+} from "./useDocumentMetadata";
 
 function MetadataProbe(props) {
   useDocumentMetadata(props);
@@ -16,6 +19,29 @@ afterEach(() => {
 });
 
 describe("useDocumentMetadata", () => {
+  it("creates route-specific album and error metadata", () => {
+    expect(getProfileDocumentMetadata({
+      profileName: "Taylor",
+      viewName: "Library",
+      path: "/taylor/albums/1",
+      album: { name: "Blue", artist: "Joni Mitchell" },
+    }).title).toBe("Blue by Joni Mitchell | Taylor | Albumary");
+
+    expect(getProfileDocumentMetadata({
+      profileName: "Taylor",
+      viewName: "Library",
+      path: "/missing/library",
+      profileMissing: true,
+    }).title).toBe("Profile not found | Albumary");
+
+    expect(getProfileDocumentMetadata({
+      profileName: "Taylor",
+      viewName: "Library",
+      path: "/taylor/albums/404",
+      albumMissing: true,
+    }).title).toBe("Album not found | Albumary");
+  });
+
   it("sets a branded title and share metadata for a public profile route", () => {
     render(
       <MetadataProbe

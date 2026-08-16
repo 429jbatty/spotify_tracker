@@ -37,7 +37,10 @@ import {
   PROFILE_ROUTES,
   profilePath,
 } from "./routing";
-import { useDocumentMetadata } from "./components/utils/useDocumentMetadata";
+import {
+  getProfileDocumentMetadata,
+  useDocumentMetadata,
+} from "./components/utils/useDocumentMetadata";
 
 function LoadingState() {
   return (
@@ -185,11 +188,16 @@ function UserRoute({ view }) {
     [PROFILE_ROUTES.releases]: "Releases",
     [PROFILE_ROUTES.connections]: "Connections",
   }[view] || "Profile";
-  useDocumentMetadata({
-    title: `${profileName}'s ${viewName} | Albumary`,
-    description: `Explore ${profileName}'s album listening history on Albumary.`,
+  const metadataAlbum = albumId ? data?.completed_albums?.[albumId] : null;
+  useDocumentMetadata(getProfileDocumentMetadata({
+    profileName,
+    viewName,
     path: window.location.pathname,
-  });
+    album: metadataAlbum,
+    albumMissing: Boolean(albumId && data && !metadataAlbum),
+    hasError: Boolean(error || loadError),
+    profileMissing: usersLoaded && !selectedUser,
+  }));
 
   useEffect(() => {
     fetchCurrentAccount()

@@ -2,6 +2,54 @@ import { useEffect } from "react";
 
 const SITE_NAME = "Albumary";
 
+export function getProfileDocumentMetadata({
+  profileName,
+  viewName,
+  path,
+  album,
+  albumMissing = false,
+  hasError = false,
+  profileMissing = false,
+}) {
+  if (hasError) {
+    return {
+      title: "Unable to load profile | Albumary",
+      description: "Albumary could not load this profile.",
+      path,
+    };
+  }
+
+  if (profileMissing) {
+    return {
+      title: "Profile not found | Albumary",
+      description: "The Albumary profile you requested is unavailable.",
+      path,
+    };
+  }
+
+  if (albumMissing) {
+    return {
+      title: "Album not found | Albumary",
+      description: "The Albumary album you requested is unavailable.",
+      path,
+    };
+  }
+
+  if (album) {
+    return {
+      title: `${album.name} by ${album.artist} | ${profileName} | Albumary`,
+      description: `View ${album.name} by ${album.artist} in ${profileName}'s Albumary listening history.`,
+      path,
+    };
+  }
+
+  return {
+    title: `${profileName}'s ${viewName} | Albumary`,
+    description: `Explore ${profileName}'s album listening history on Albumary.`,
+    path,
+  };
+}
+
 function upsertMeta(attribute, name, content) {
   let element = document.head.querySelector(`meta[${attribute}="${name}"]`);
   if (!element) {
