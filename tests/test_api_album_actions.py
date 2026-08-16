@@ -308,6 +308,50 @@ class ApiAlbumActionTests(unittest.TestCase):
         self.assertIn("Input Artist - Input Album", state["completed_albums"])
         self.assertNotIn("Canonical Artist - Canonical Album", state["completed_albums"])
 
+    def test_retry_reuses_manual_album_after_metadata_refresh_renames_it(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, _, _ = self._client(temp_dir)
+            payload = {
+                "artist": "Input Artist",
+                "name": "Input Album",
+                "listen_date": "2026-04-02T10:00:00.000Z",
+            }
+            canonical_metadata = {
+                "artist": "Canonical Artist",
+                "name": "Canonical Album",
+                "source": "musicbrainz",
+                "_musicbrainz_match": {"confidence": 100},
+            }
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                created = client.post("/api/albums", json=payload)
+
+            with patch(
+                "backend.app.routers.albums.metadata_refresh_service.refresh_album_record",
+                return_value=canonical_metadata,
+            ):
+                refreshed = client.post(
+                    f"/api/albums/{created.json()['id']}/refresh-metadata"
+                )
+
+            with patch(
+                "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
+                return_value={},
+            ):
+                retried = client.post("/api/albums", json=payload)
+
+            state = client.get("/api/album-state").json()
+
+        self.assertEqual(created.status_code, 201)
+        self.assertEqual(refreshed.status_code, 200)
+        self.assertEqual(retried.status_code, 201)
+        self.assertEqual(created.json()["id"], retried.json()["id"])
+        self.assertIn("Canonical Artist - Canonical Album", state["completed_albums"])
+        self.assertNotIn("Input Artist - Input Album", state["completed_albums"])
+
     def test_manual_creation_skips_metadata_when_workers_are_busy(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)

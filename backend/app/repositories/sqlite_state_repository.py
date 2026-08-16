@@ -292,6 +292,7 @@ class SqliteStateRepository:
         album = self.session.scalars(_album_lookup_statement(target_key)).first()
         if album is None:
             raise KeyError(f"Album key not found: {target_key}")
+        refreshed_record = self._preserve_manual_input_identity(album, refreshed_record)
 
         normalized_record = _normalize_completed_albums(
             {
@@ -342,6 +343,7 @@ class SqliteStateRepository:
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
 
+        refreshed_record = self._preserve_manual_input_identity(album, refreshed_record)
         self._apply_completed_album_record(album, refreshed_record)
         self._rebuild_credit_facts([album.id])
         self.session.commit()
@@ -356,6 +358,7 @@ class SqliteStateRepository:
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
         self.require_user_album(album.id)
+        refreshed_record = self._preserve_manual_input_identity(album, refreshed_record)
 
         normalized_record = _normalize_completed_albums(
             {
@@ -958,6 +961,18 @@ class SqliteStateRepository:
 
     def _normalized_identity(self, record: dict[str, Any]) -> str:
         return normalized_artist_title_identity(record.get("artist"), record.get("name"))
+
+    def _preserve_manual_input_identity(
+        self,
+        album: Album,
+        record: dict[str, Any],
+    ) -> dict[str, Any]:
+        manual_input_identity = _safe_album_metadata(album).get(
+            "_manual_input_identity"
+        )
+        if not manual_input_identity or record.get("_manual_input_identity"):
+            return record
+        return {**record, "_manual_input_identity": manual_input_identity}
 
     def _resolve_manual_input_identity(self, record: dict[str, Any]) -> Album | None:
         manual_input_identity = record.get("_manual_input_identity")
