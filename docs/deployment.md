@@ -77,7 +77,8 @@ sudo make deploy
 ```
 
 The deploy script performs a fast-forward pull, backend dependency sync,
-frontend install/build, API restart, and local health check.
+frontend install/build, local artwork optimization without remote downloads,
+API restart, and local health check.
 
 ## Checks
 

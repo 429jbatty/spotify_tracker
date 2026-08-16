@@ -78,6 +78,7 @@ The deploy script performs:
 - backend dependency sync
 - `npm ci`
 - `npm run build`
+- local artwork optimization (no remote downloads)
 - API restart
 - local health check
 
