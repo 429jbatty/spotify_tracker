@@ -4,7 +4,7 @@ import AlbumCardVertical from "./AlbumCardVertical";
 import AlbumPanelSheet from "./AlbumPanelSheet";
 import DiscoveryMetricRail from "./discovery/DiscoveryMetricRail";
 import DiscoveryQualityCard from "./discovery/DiscoveryQualityCard";
-import NewVsReplayTrend from "./discovery/NewVsReplayTrend";
+import NewToYouTrend from "./discovery/NewToYouTrend";
 import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { buildDiscoveryFeed } from "./utils/discoveryFeed";
 import { aggregateDiscoveryInsights } from "./utils/discoveryInsights";
@@ -15,19 +15,24 @@ const TIME_RANGES = {
   "7d": 7,
   "30d": 30,
   "1y": 365,
-  all: Infinity,
 };
 
-function getDiscoveryRate(summary) {
+const TIME_RANGE_LABELS = {
+  "7d": "7D",
+  "30d": "30D",
+  "1y": "1Y",
+};
+
+function getNewToYouListeningShare(summary) {
   return summary.totalListens === 0
     ? 0
-    : (summary.newAlbums / summary.totalListens) * 100;
+    : (summary.newToYou / summary.totalListens) * 100;
 }
 
-function getReplayRate(summary) {
+function getCatalogListeningShare(summary) {
   return summary.totalListens === 0
     ? 0
-    : (summary.relistens / summary.totalListens) * 100;
+    : (summary.catalog / summary.totalListens) * 100;
 }
 
 function getDelta(current, previous, kind) {
@@ -38,8 +43,7 @@ function getDelta(current, previous, kind) {
 function getComparisonLabel(timeRange) {
   if (timeRange === "7d") return "previous 7 days";
   if (timeRange === "30d") return "previous 30 days";
-  if (timeRange === "1y") return "previous 365 days";
-  return null;
+  return "previous 365 days";
 }
 
 function buildDiscoveryListenRecords(albums) {
@@ -82,11 +86,11 @@ export default function Discovery({
     () => buildDiscoveryFeed(allAlbumsArray, timeRange, { now: analysisNow }),
     [allAlbumsArray, analysisNow, timeRange]
   );
-  const discoveryRate = getDiscoveryRate(discoveryInsights.summary);
-  const previousDiscoveryRate = discoveryInsights.previousPeriod
-    ? getDiscoveryRate(discoveryInsights.previousPeriod.summary)
+  const newToYouListeningShare = getNewToYouListeningShare(discoveryInsights.summary);
+  const previousNewToYouListeningShare = discoveryInsights.previousPeriod
+    ? getNewToYouListeningShare(discoveryInsights.previousPeriod.summary)
     : null;
-  const replayRate = getReplayRate(discoveryInsights.summary);
+  const catalogListeningShare = getCatalogListeningShare(discoveryInsights.summary);
   const comparisonLabel = getComparisonLabel(timeRange);
   const metricRail = [
     {
@@ -103,14 +107,14 @@ export default function Discovery({
     },
     {
       comparisonLabel,
-      delta: getDelta(discoveryRate, previousDiscoveryRate, "points"),
-      discoveryRate,
-      label: "Discovery mix",
-      replayRate,
+      delta: getDelta(newToYouListeningShare, previousNewToYouListeningShare, "points"),
+      newToYouListeningShare,
+      label: "New-to-you listening",
+      catalogListeningShare,
       tooltip:
-        "First-time album listens versus relistens in the selected range. These two percentages are the two sides of the same listen mix.",
+        "The share of listens in this range to albums you first heard during this same range. The rest is catalog listening.",
       type: "mix",
-      value: `${discoveryRate.toFixed(0)}% new`,
+      value: `${newToYouListeningShare.toFixed(0)}% new`,
     },
     {
       comparisonLabel,
@@ -179,13 +183,7 @@ export default function Discovery({
               <TabsList aria-label="Discovery activity range">
                 {Object.keys(TIME_RANGES).map((rangeKey) => (
                   <TabsTrigger key={rangeKey} value={rangeKey}>
-                    {rangeKey === "7d"
-                      ? "7D"
-                      : rangeKey === "30d"
-                        ? "30D"
-                        : rangeKey === "1y"
-                          ? "1Y"
-                          : "All"}
+                    {TIME_RANGE_LABELS[rangeKey]}
                   </TabsTrigger>
                 ))}
               </TabsList>
@@ -197,7 +195,7 @@ export default function Discovery({
         </div>}
 
         {allAlbumsArray.length > 0 && <>
-        <div className="px-6"><NewVsReplayTrend series={discoveryInsights.trendSeries} /></div>
+        <div className="px-6"><NewToYouTrend series={discoveryInsights.trendSeries} /></div>
 
         <div className="px-6"><DiscoveryQualityCard listens={listenRecords} selectedRange={timeRange} /></div>
 

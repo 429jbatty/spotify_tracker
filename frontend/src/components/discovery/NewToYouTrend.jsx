@@ -20,7 +20,7 @@ function LegendItem({ color, label }) {
   );
 }
 
-export default function NewVsReplayTrend({ series }) {
+export default function NewToYouTrend({ series }) {
   const hasActivity = series.some((point) => point.total > 0);
   const data = useMemo(
     () => ({
@@ -29,14 +29,14 @@ export default function NewVsReplayTrend({ series }) {
         {
           backgroundColor: getChartColor("--chart-3"),
           borderSkipped: false,
-          data: series.map((point) => point.discoveries),
-          label: "New discoveries",
+          data: series.map((point) => point.newToYou),
+          label: "New-to-you listening",
         },
         {
           backgroundColor: getChartColor("--chart-1"),
           borderSkipped: false,
-          data: series.map((point) => point.replays),
-          label: "Replays",
+          data: series.map((point) => point.catalog),
+          label: "Catalog listening",
         },
       ],
     }),
@@ -94,22 +94,22 @@ export default function NewVsReplayTrend({ series }) {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-xl font-semibold tracking-tight text-foreground">
-            New vs replay trend
+            New-to-you listening trend
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">
-            How much of each period came from exploration versus revisiting.
+            How much of each period was spent with new discoveries versus your catalog.
           </p>
         </div>
         <div className="flex flex-wrap gap-4">
-          <LegendItem color={getChartColor("--chart-3")} label="New discoveries" />
-          <LegendItem color={getChartColor("--chart-1")} label="Replays" />
+          <LegendItem color={getChartColor("--chart-3")} label="New to you" />
+          <LegendItem color={getChartColor("--chart-1")} label="Catalog" />
         </div>
       </div>
 
       {hasActivity ? (
         <div className="mt-4 h-60">
           <Bar
-            aria-label="New discoveries compared with replay listens over time"
+            aria-label="New-to-you listening compared with catalog listening over time"
             data={data}
             options={options}
             role="img"
@@ -117,7 +117,7 @@ export default function NewVsReplayTrend({ series }) {
         </div>
       ) : (
         <div className="mt-4 flex h-60 items-center justify-center text-sm text-muted-foreground">
-          Discovery and replay trends will appear after dated listens are available.
+          New-to-you listening trends will appear after dated listens are available.
         </div>
       )}
     </section>

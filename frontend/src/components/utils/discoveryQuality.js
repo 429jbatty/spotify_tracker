@@ -17,8 +17,6 @@ function startOfDay(value) {
 }
 
 function getWindowStart(selectedRange, now) {
-  if (selectedRange === "all") return new Date(0);
-
   const days = RANGE_DAYS[selectedRange] || RANGE_DAYS["7d"];
   return addDays(startOfDay(now), -(days - 1));
 }

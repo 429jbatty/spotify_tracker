@@ -143,7 +143,6 @@ class SplashFeaturedUser(BaseModel):
     recent_album_covers: list[str] = Field(default_factory=list)
     total_albums: int
     total_listens: int
-    discovery_rate: float | None = None
     replay_rate_30d: float | None = None
     top_artist: str | None = None
     top_artist_listen_count: int | None = None

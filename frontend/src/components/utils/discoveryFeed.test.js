@@ -67,7 +67,7 @@ describe("buildDiscoveryFeed", () => {
     expect(result[0].latestInRangeListen).toBe(localDate(5, 19, 20));
   });
 
-  it("marks first-time listens as new discoveries", () => {
+  it("marks an album discovered in range as new to you", () => {
     const result = buildDiscoveryFeed(
       [
         album({
@@ -87,7 +87,7 @@ describe("buildDiscoveryFeed", () => {
     });
   });
 
-  it("highlights a fresh discovery even when the latest in-range listen is a replay", () => {
+  it("highlights an in-range discovery even when the latest listen is a repeat", () => {
     const result = buildDiscoveryFeed(
       [
         album({
@@ -108,7 +108,7 @@ describe("buildDiscoveryFeed", () => {
     });
   });
 
-  it("shows older discoveries in broad ranges without the strong highlight", () => {
+  it("highlights older discoveries when they are still inside a broad range", () => {
     const result = buildDiscoveryFeed(
       [
         album({
@@ -123,7 +123,7 @@ describe("buildDiscoveryFeed", () => {
     expect(result[0]).toMatchObject({
       discoveredInRange: true,
       discoveryLabel: "Discovered Sep 20, 2025",
-      highlightDiscovery: false,
+      highlightDiscovery: true,
       inRangeListenCount: 2,
       latestInRangeListen: localDate(5, 20),
     });

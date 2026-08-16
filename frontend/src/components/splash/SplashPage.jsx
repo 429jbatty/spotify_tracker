@@ -75,7 +75,6 @@ const HERO_SNAPSHOT = {
     title: "Returned to “Homogenic”",
     subtitle: "Björk · a favorite worth revisiting",
   },
-  discoveryRate: "33%",
   mostListenedEra: "2010s",
 };
 
@@ -429,10 +428,6 @@ function HeroAlbumPreview() {
             </p>
           </div>
           <HeroReplayMoment moment={HERO_SNAPSHOT.returnMoment} />
-          <HeroStat
-            label="Discovery Rate"
-            value={HERO_SNAPSHOT.discoveryRate}
-          />
           <HeroStat label="Most-listened Era" value={HERO_SNAPSHOT.mostListenedEra} />
         </div>
       </div>
@@ -655,11 +650,6 @@ function ProfileRow({ user, onOpenProfile }) {
               label="Top album"
               value={user.top_album?.title || "Not enough data"}
               secondary={user.top_album?.artist}
-            />
-            <ProfileMetric
-              label="Discovery rate"
-              value={formatPercent(user.discovery_rate) || "Not enough data"}
-              secondary="First-time listens"
             />
             <ProfileMetric
               label="Most-listened era"
@@ -899,11 +889,6 @@ function CoverTile({ src, index, className = "", loading = false, small = false,
       {content}
     </div>
   );
-}
-
-function formatPercent(value) {
-  if (typeof value !== "number") return null;
-  return `${Math.round(value * 100)}%`;
 }
 
 function formatNumber(value) {
