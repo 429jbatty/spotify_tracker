@@ -4,6 +4,7 @@ import AlbumColumnFilter from "./AlbumColumnFilter";
 import AlbumRow from "./AlbumRow";
 import AlbumPanelSheet from "./AlbumPanelSheet";
 import AlbumMobileList from "./AlbumMobileList";
+import LibraryPagination, { LIBRARY_PAGE_SIZE } from "./library/LibraryPagination";
 import { getSourceLabel } from "./utils/sourceLabels";
 import { formatLibrarySortParam, parseLibrarySortParam } from "@/routing";
 import {
@@ -66,6 +67,7 @@ function AlbumTable({
   const [selectedAlbum, setSelectedAlbum] = useState(null);
   const [panelOpen, setPanelOpen] = useState(false);
   const [columnFilters, setColumnFilters] = useState({});
+  const [page, setPage] = useState(0);
 
   const albumArray = useMemo(
     () =>
@@ -128,11 +130,18 @@ function AlbumTable({
       ? String(aValue).localeCompare(String(bValue))
       : String(bValue).localeCompare(String(aValue));
   });
+  const pageCount = Math.max(1, Math.ceil(sortedAlbums.length / LIBRARY_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount - 1);
+  const paginatedAlbums = sortedAlbums.slice(
+    currentPage * LIBRARY_PAGE_SIZE,
+    (currentPage + 1) * LIBRARY_PAGE_SIZE
+  );
 
   const handleSort = (key) => {
     const nextAscending = sortBy === key ? !ascending : true;
     setSortBy(key);
     setAscending(nextAscending);
+    setPage(0);
     if (syncSortWithUrl) {
       setSearchParams((current) => {
         const next = new URLSearchParams(current);
@@ -145,6 +154,7 @@ function AlbumTable({
   const handleMobileSort = (key, nextAscending) => {
     setSortBy(key);
     setAscending(nextAscending);
+    setPage(0);
     if (syncSortWithUrl) {
       setSearchParams((current) => {
         const next = new URLSearchParams(current);
@@ -173,6 +183,7 @@ function AlbumTable({
   };
 
   const updateColumnFilter = (key, values) => {
+    setPage(0);
     setColumnFilters((current) => {
       const next = { ...current };
       if (values === null) delete next[key];
@@ -184,8 +195,7 @@ function AlbumTable({
   return (
     <>
       <AlbumMobileList
-        key={`${sortBy}:${ascending}:${sortedAlbums.map((album) => album.id).join(",")}`}
-        albums={sortedAlbums}
+        albums={paginatedAlbums}
         sortBy={sortBy}
         ascending={ascending}
         onSortChange={handleMobileSort}
@@ -235,7 +245,7 @@ function AlbumTable({
           </TableHeader>
 
           <TableBody className="bg-muted">
-            {sortedAlbums.map((album) => (
+            {paginatedAlbums.map((album) => (
               <AlbumRow
                 key={album.id}
                 albumId={album.id}
@@ -246,6 +256,12 @@ function AlbumTable({
           </TableBody>
         </Table>
       </div>
+
+      <LibraryPagination
+        page={currentPage}
+        totalItems={sortedAlbums.length}
+        onPageChange={setPage}
+      />
 
       {!onOpenAlbum && (
         <AlbumPanelSheet

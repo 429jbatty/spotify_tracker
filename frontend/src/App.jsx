@@ -37,6 +37,7 @@ import {
   PROFILE_ROUTES,
   profilePath,
 } from "./routing";
+import { useDocumentMetadata } from "./components/utils/useDocumentMetadata";
 
 function LoadingState() {
   return (
@@ -113,6 +114,11 @@ function RootRoute() {
   const openCreateProfileAfterSignIn = searchParams.get("create_profile") === "1";
   const hasMultipleProfiles = searchParams.get("ownership_error") === "multiple_profiles";
   const authError = searchParams.get("auth_error");
+  useDocumentMetadata({
+    title: "Albumary | Your album listening history",
+    description: "Track album listens, revisit favorites, and explore the stories in your music library.",
+    path: "/",
+  });
 
   const startGoogleSignIn = async () => {
     const { authorize_url } = await beginGoogleSignIn();
@@ -172,6 +178,18 @@ function UserRoute({ view }) {
     [userSlug, users]
   );
   const isOwner = Boolean(selectedUser && ownedProfileSlugs.includes(selectedUser.slug));
+  const profileName = selectedUser?.display_name || userSlug;
+  const viewName = {
+    [PROFILE_ROUTES.discovery]: "Discovery",
+    [PROFILE_ROUTES.library]: "Library",
+    [PROFILE_ROUTES.releases]: "Releases",
+    [PROFILE_ROUTES.connections]: "Connections",
+  }[view] || "Profile";
+  useDocumentMetadata({
+    title: `${profileName}'s ${viewName} | Albumary`,
+    description: `Explore ${profileName}'s album listening history on Albumary.`,
+    path: window.location.pathname,
+  });
 
   useEffect(() => {
     fetchCurrentAccount()
@@ -438,6 +456,7 @@ function UserRoute({ view }) {
         )}
         {!routeAlbumMissing && view === PROFILE_ROUTES.library && (
           <AlbumTable
+            key={visibleAlbums.map((album) => album.id).join(",")}
             albums={filteredAlbums}
             searchTerm={searchTerm}
             onFilterSelect={handleFilterSelect}
@@ -487,6 +506,10 @@ function UserRoute({ view }) {
 
 function AppNotFound() {
   const navigate = useNavigate();
+  useDocumentMetadata({
+    title: "Page not found | Albumary",
+    description: "The Albumary page you requested is unavailable.",
+  });
   return <NotFound onBackHome={() => navigate("/")} />;
 }
 

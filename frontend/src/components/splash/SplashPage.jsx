@@ -69,8 +69,8 @@ const HERO_SNAPSHOT = {
     "/splash-artwork/homogenic.jpg",
     "/splash-artwork/blonde.jpg",
   ],
-  profileTitle: "Jacob’s Albumary",
-  profileSummary: "1,224 albums tracked",
+  profileTitle: "Example Albumary profile",
+  profileSummary: "Illustrative listening history",
   returnMoment: {
     title: "Returned to “Homogenic”",
     subtitle: "Björk · a favorite worth revisiting",

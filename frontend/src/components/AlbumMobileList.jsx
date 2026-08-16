@@ -1,9 +1,5 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import AlbumColumnFilter from "./AlbumColumnFilter";
 import { getSourceLabel } from "./utils/sourceLabels";
-
-const PAGE_SIZE = 50;
 
 function formatDate(isoString) {
   if (!isoString) return "Unknown";
@@ -23,11 +19,6 @@ function AlbumMobileList({
   columnFilters = {},
   onFilterChange,
 }) {
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-
-  const visibleAlbums = albums.slice(0, visibleCount);
-  const hasMore = visibleAlbums.length < albums.length;
-
   return (
     <section className="md:hidden" aria-label="Album library">
       <details className="mb-3 rounded-lg border border-border bg-card">
@@ -86,7 +77,7 @@ function AlbumMobileList({
       </label>
 
       <div className="space-y-3">
-        {visibleAlbums.map((album) => (
+        {albums.map((album) => (
           <button
             key={album.id}
             type="button"
@@ -124,16 +115,6 @@ function AlbumMobileList({
         </p>
       )}
 
-      {hasMore && (
-        <div className="mt-4 text-center">
-          <p className="mb-2 text-xs text-muted-foreground">
-            Showing {visibleAlbums.length} of {albums.length} albums
-          </p>
-          <Button type="button" variant="outline" className="min-h-11" onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}>
-            Load 50 more albums
-          </Button>
-        </div>
-      )}
     </section>
   );
 }
