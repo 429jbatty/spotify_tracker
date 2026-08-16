@@ -8,7 +8,6 @@ import {
   Library,
   Music2,
   RefreshCw,
-  Search,
   Sparkles,
 } from "lucide-react";
 
@@ -17,11 +16,12 @@ import { fetchCurrentAccount, fetchSplashData, signOut } from "@/services/albumA
 import CreateProfileDialog from "@/components/CreateProfileDialog";
 import LoginDialog from "@/components/LoginDialog";
 import { accountProfileLabel } from "@/components/utils/accountProfileLabel";
+import SplashProductStory from "@/components/splash/SplashProductStory";
 
 const TRACKED_FEATURES = [
   {
-    title: "Discoveries",
-    description: "Find what newly entered your rotation.",
+    title: "First listens",
+    description: "See which albums entered your history for the first time.",
     icon: Sparkles,
   },
   {
@@ -30,8 +30,8 @@ const TRACKED_FEATURES = [
     icon: RefreshCw,
   },
   {
-    title: "Trends",
-    description: "Watch taste change over time.",
+    title: "Listening trends",
+    description: "Watch your listening change across months and years.",
     icon: BarChart3,
   },
   {
@@ -45,8 +45,8 @@ const TRACKED_FEATURES = [
     icon: Music2,
   },
   {
-    title: "Favorites",
-    description: "Surface the albums you keep returning to.",
+    title: "Ratings and notes",
+    description: "Remember what an album meant to you at the time.",
     icon: History,
   },
 ];
@@ -59,25 +59,6 @@ const SAMPLE_COVERS = [
   "linear-gradient(135deg, oklch(0.8 0.1 95), oklch(0.58 0.13 80))",
   "linear-gradient(135deg, oklch(0.68 0.07 290), oklch(0.35 0.08 315))",
 ];
-
-const HERO_SNAPSHOT = {
-  covers: [
-    "/splash-artwork/titanic-rising.jpg",
-    "/splash-artwork/bitches-brew.jpg",
-    "/splash-artwork/wish-you-were-here.jpg",
-    "/splash-artwork/madvillainy.jpg",
-    "/splash-artwork/homogenic.jpg",
-    "/splash-artwork/blonde.jpg",
-  ],
-  profileTitle: "Example Albumary profile",
-  profileSummary: "Illustrative listening history",
-  returnMoment: {
-    title: "Returned to “Homogenic”",
-    subtitle: "Björk · a favorite worth revisiting",
-  },
-  discoveryRate: "33%",
-  mostListenedEra: "2010s",
-};
 
 const EMPTY_ARRAY = [];
 
@@ -148,7 +129,7 @@ function SplashPage({
   };
 
   const handleAbout = () => {
-    const target = document.getElementById("tracks");
+    const target = document.getElementById("how-it-works");
     target?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -213,17 +194,13 @@ function SplashPage({
         {profileSetupIncomplete && (
           <ProfileSetupPrompt onFinishSetup={handleCreateProfile} />
         )}
-        <section className="flex flex-col gap-6">
-          <div className="grid min-h-[450px] items-center gap-8 lg:min-h-[520px] lg:grid-cols-[minmax(0,0.95fr)_minmax(440px,1fr)]">
-            <SplashHero
-              onExplore={handleExplore}
-              onCreateProfile={canCreateProfile ? handleCreateProfile : undefined}
-              profileSetupIncomplete={profileSetupIncomplete}
-            />
-            <HeroAlbumPreview />
-          </div>
-          <HeroConnectionPreview />
-        </section>
+        <SplashProductStory
+          onExplore={handleExplore}
+          onCreateProfile={canCreateProfile ? handleCreateProfile : undefined}
+          profileSetupIncomplete={profileSetupIncomplete}
+        />
+
+        <TrackedFeatures />
 
         <FeaturedProfiles
           users={featuredUsers}
@@ -233,13 +210,14 @@ function SplashPage({
           onOpenProfile={onOpenProfile}
         />
 
+        <HeroConnectionPreview />
+
         <RecentActivity
           activity={recentActivity}
           status={status}
           onOpenProfile={onOpenProfile}
         />
 
-        <TrackedFeatures />
       </div>
       {canCreateProfile && (
         <CreateProfileDialog
@@ -257,42 +235,43 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticat
   const profileLabel = accountProfileLabel(authenticatedAccount);
   return (
     <header className="sticky top-0 z-20 border-b border-border/70 bg-background/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-5 py-4 sm:gap-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3" aria-label="Albumary home">
           <span className="flex size-10 items-center justify-center rounded-md border border-primary/20 bg-primary/10 text-primary">
             <Library className="size-5" />
           </span>
           <span className="text-lg font-semibold tracking-tight">Albumary</span>
         </div>
-        <nav className="flex items-center gap-4 text-sm font-medium text-muted-foreground">
+        <nav className="flex items-center gap-2 text-sm font-medium text-muted-foreground sm:gap-4">
           <button
             type="button"
             onClick={onBrowse}
-            className="transition-colors hover:text-foreground"
+            className="hidden transition-colors hover:text-foreground md:inline-flex"
           >
             Browse Profiles
           </button>
           <button
             type="button"
             onClick={onAbout}
-            className="transition-colors hover:text-foreground"
+            className="hidden transition-colors hover:text-foreground md:inline-flex"
           >
-            About
+            How it works
           </button>
           {authenticatedAccount ? (
             <div className="flex items-center gap-2">
-              <div className="rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-foreground" title={`Signed in as ${profileLabel}`}>
-                <span className="hidden text-xs sm:inline">Signed in as {profileLabel}</span>
-                <span className="text-xs sm:hidden">Signed in</span>
+              <div className="hidden rounded-full border border-primary/20 bg-primary/5 px-2.5 py-1.5 text-foreground lg:block" title={`Signed in as ${profileLabel}`}>
+                <span className="text-xs">Signed in as {profileLabel}</span>
               </div>
               {authenticatedAccount.profiles?.[0] && (
                 <Button
                   type="button"
                   size="sm"
                   variant="outline"
+                  aria-label="Open your profile"
                   onClick={() => onOpenProfile(authenticatedAccount.profiles[0].slug)}
                 >
-                  Open your profile
+                  <span className="sm:hidden">Profile</span>
+                  <span className="hidden sm:inline">Open your profile</span>
                 </Button>
               )}
               <Button type="button" size="sm" variant="ghost" onClick={onSignOut}>
@@ -308,33 +287,6 @@ function SplashHeader({ onBrowse, onAbout, onCreateProfile, onLogin, authenticat
         </nav>
       </div>
     </header>
-  );
-}
-
-function SplashHero({ onExplore, onCreateProfile, profileSetupIncomplete = false }) {
-  return (
-    <div className="flex flex-col gap-7">
-      <div className="flex flex-col gap-5">
-        <h1 className="max-w-2xl text-5xl font-semibold leading-[1.02] tracking-tight text-foreground sm:text-6xl lg:text-7xl">
-          Your music taste, mapped over time.
-        </h1>
-        <p className="max-w-xl text-lg leading-8 text-muted-foreground">
-          Albumary turns album listening into public profiles of discoveries,
-          returns, eras, artists, and how taste changes over time.
-        </p>
-      </div>
-      <div className="flex flex-col gap-3 sm:flex-row">
-        <Button type="button" onClick={onExplore} className="sm:w-auto">
-          <Search data-icon="inline-start" />
-          Explore profiles
-        </Button>
-        {onCreateProfile && (
-          <Button type="button" variant="outline" onClick={onCreateProfile} className="sm:w-auto">
-            {profileSetupIncomplete ? "Finish setting up your profile" : "Create your profile"}
-          </Button>
-        )}
-      </div>
-    </div>
   );
 }
 
@@ -398,45 +350,6 @@ function MultipleProfileOwnershipNotice() {
         This Google account is linked to more than one profile. Contact the app owner to resolve it.
       </p>
     </section>
-  );
-}
-
-function HeroAlbumPreview() {
-  return (
-    <div className="relative flex items-center justify-center overflow-hidden rounded-lg sm:overflow-visible lg:min-h-[460px]">
-      <div className="absolute inset-0 rounded-lg bg-[linear-gradient(135deg,rgba(236,201,75,0.18),rgba(114,160,193,0.12)_46%,rgba(255,255,255,0))]" />
-      <div className="relative grid w-full max-w-xl grid-cols-1 gap-4 sm:grid-cols-[1fr_0.9fr]">
-        <div className="grid grid-cols-3 gap-2 self-center sm:grid-cols-2 sm:gap-3">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <CoverTile
-              key={index}
-              src={HERO_SNAPSHOT.covers[index]}
-              index={index}
-              className={index % 3 === 0 ? "translate-y-5" : ""}
-            />
-          ))}
-        </div>
-        <div className="flex flex-col justify-center gap-3">
-          <div className="rounded-lg border border-border/80 bg-background/88 p-4 shadow-sm backdrop-blur">
-            <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-              Profile preview
-            </p>
-            <p className="mt-2 text-xl font-semibold tracking-tight text-foreground">
-              {HERO_SNAPSHOT.profileTitle}
-            </p>
-            <p className="mt-1 text-sm leading-5 text-muted-foreground">
-              {HERO_SNAPSHOT.profileSummary}
-            </p>
-          </div>
-          <HeroReplayMoment moment={HERO_SNAPSHOT.returnMoment} />
-          <HeroStat
-            label="Discovery Rate"
-            value={HERO_SNAPSHOT.discoveryRate}
-          />
-          <HeroStat label="Most-listened Era" value={HERO_SNAPSHOT.mostListenedEra} />
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -524,40 +437,6 @@ function ConnectionContributor({ name, role }) {
         {name}
       </span>
       <span className="hidden text-[9px] text-muted-foreground sm:block">{role}</span>
-    </div>
-  );
-}
-
-function HeroReplayMoment({ moment }) {
-  const Icon = moment?.type === "activity" ? History : RefreshCw;
-
-  return (
-    <div className="rounded-lg border border-primary/25 bg-background/92 p-4 shadow-md backdrop-blur">
-      <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        <Icon className="size-4 text-primary" />
-        Return moment
-      </div>
-      <p className="mt-3 text-2xl font-semibold leading-tight tracking-tight text-foreground">
-        {moment?.title || "Returned albums surface here"}
-      </p>
-      {moment?.subtitle && (
-        <p className="mt-2 text-sm leading-5 text-muted-foreground">
-          {moment.subtitle}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function HeroStat({ label, value }) {
-  return (
-    <div className="rounded-lg border border-border/80 bg-background/88 p-4 shadow-sm backdrop-blur">
-      <p className="text-xs font-medium uppercase tracking-[0.14em] text-muted-foreground">
-        {label}
-      </p>
-      <p className="mt-2 text-3xl font-semibold tracking-tight text-foreground">
-        {value}
-      </p>
     </div>
   );
 }
@@ -799,8 +678,11 @@ function ActivityItem({ item, onOpenProfile }) {
 function TrackedFeatures() {
   return (
     <section id="tracks" className="scroll-mt-24">
-      <SectionHeading title="What Albumary tracks" compact />
-      <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+      <SectionHeading
+        title="See the patterns behind the albums"
+        description="As your history grows, Albumary reveals the artists, eras, habits, and creative connections within it."
+      />
+      <div className="mt-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
         {TRACKED_FEATURES.map((feature) => {
           const Icon = feature.icon;
           return (
