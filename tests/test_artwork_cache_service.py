@@ -1,14 +1,27 @@
 import tempfile
 import unittest
+from io import BytesIO
 from pathlib import Path
+from unittest.mock import patch
 
+from PIL import Image
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
 from backend.app.models import Album
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.services.artwork_cache_service import ArtworkCacheService
+from backend.app.services.artwork_cache_service import (
+    MAX_ARTWORK_BYTES,
+    ArtworkCacheService,
+    download_url,
+)
+
+
+def image_bytes(format="JPEG", size=(900, 900)):
+    output = BytesIO()
+    Image.new("RGB", size, color=(40, 80, 120)).save(output, format=format)
+    return output.getvalue()
 
 
 def sample_album_state():
@@ -44,7 +57,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
             session, repository = self._repository(temp_dir)
             service = ArtworkCacheService(
                 media_dir=temp_dir,
-                downloader=lambda url: (b"image-bytes", "image/jpeg"),
+                downloader=lambda url: (image_bytes(size=(300, 500)), "image/jpeg"),
             )
 
             try:
@@ -55,11 +68,19 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
                 self.assertEqual(len(results), 1)
                 self.assertTrue(results[0].cached)
-                self.assertEqual(
+                self.assertRegex(
                     album["local_image_path"],
-                    "artwork/release-group-mbid.jpg",
+                    r"^artwork/release-group-mbid-sha256-[0-9a-f]{12}\.jpg$",
                 )
-                self.assertEqual(output_path.read_bytes(), b"image-bytes")
+                self.assertTrue(output_path.exists())
+                for width in (240, 640):
+                    variant_path = output_path.with_name(
+                        f"{output_path.stem}-{width}.webp"
+                    )
+                    self.assertTrue(variant_path.exists())
+                    with Image.open(variant_path) as variant:
+                        self.assertEqual(variant.format, "WEBP")
+                        self.assertEqual(variant.size, (width, width))
             finally:
                 session.close()
 
@@ -68,7 +89,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
             media_dir = Path(temp_dir)
             artwork_path = media_dir / "artwork" / "release-group-mbid.jpg"
             artwork_path.parent.mkdir(parents=True)
-            artwork_path.write_bytes(b"existing-image")
+            artwork_path.write_bytes(image_bytes())
 
             def fail_if_called(url):
                 raise AssertionError("downloader should not be called")
@@ -85,11 +106,15 @@ class ArtworkCacheServiceTests(unittest.TestCase):
                 album = loaded["completed_albums"]["Artist - Album"]
 
                 self.assertTrue(results[0].cached)
-                self.assertEqual(
+                self.assertRegex(
                     album["local_image_path"],
-                    "artwork/release-group-mbid.jpg",
+                    r"^artwork/release-group-mbid-sha256-[0-9a-f]{12}\.jpg$",
                 )
-                self.assertEqual(artwork_path.read_bytes(), b"existing-image")
+                optimized_path = media_dir / album["local_image_path"]
+                self.assertTrue(optimized_path.exists())
+                self.assertTrue(
+                    optimized_path.with_name(f"{optimized_path.stem}-240.webp").exists()
+                )
             finally:
                 session.close()
 
@@ -127,7 +152,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
                 service = ArtworkCacheService(
                     media_dir=temp_dir,
-                    downloader=lambda url: (b"image-bytes", "image/png"),
+                    downloader=lambda url: (image_bytes(format="PNG"), "image/png"),
                 )
                 results = service.cache_missing_artwork(repository)
                 loaded = repository.load_album_state()
@@ -137,7 +162,76 @@ class ArtworkCacheServiceTests(unittest.TestCase):
             album = loaded["completed_albums"]["Artist - Album"]
 
         self.assertTrue(results[0].cached)
-        self.assertRegex(album["local_image_path"], r"^artwork/album-\d+\.jpg$")
+        self.assertRegex(
+            album["local_image_path"],
+            r"^artwork/album-\d+-sha256-[0-9a-f]{12}\.jpg$",
+        )
+
+    def test_invalid_download_is_not_cached(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session, repository = self._repository(temp_dir)
+            service = ArtworkCacheService(
+                media_dir=temp_dir,
+                downloader=lambda url: (b"not-an-image", "image/jpeg"),
+            )
+
+            try:
+                results = service.cache_missing_artwork(repository)
+                loaded = repository.load_album_state()
+            finally:
+                session.close()
+
+        self.assertFalse(results[0].cached)
+        self.assertEqual(
+            results[0].error,
+            "Downloaded artwork was not a valid image.",
+        )
+        self.assertIsNone(
+            loaded["completed_albums"]["Artist - Album"]["local_image_path"]
+        )
+
+    def test_oversized_image_dimensions_are_rejected(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session, repository = self._repository(temp_dir)
+            service = ArtworkCacheService(
+                media_dir=temp_dir,
+                downloader=lambda url: (image_bytes(size=(20, 20)), "image/jpeg"),
+            )
+
+            try:
+                with patch(
+                    "backend.app.services.artwork_cache_service.MAX_ARTWORK_PIXELS",
+                    100,
+                ):
+                    results = service.cache_missing_artwork(repository)
+            finally:
+                session.close()
+
+        self.assertFalse(results[0].cached)
+        self.assertEqual(
+            results[0].error,
+            "Downloaded artwork was not a valid image.",
+        )
+
+    def test_download_rejects_declared_content_over_byte_limit(self):
+        class OversizedResponse:
+            headers = {
+                "Content-Type": "image/jpeg",
+                "Content-Length": str(MAX_ARTWORK_BYTES + 1),
+            }
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        with patch(
+            "backend.app.services.artwork_cache_service.urlopen",
+            return_value=OversizedResponse(),
+        ):
+            with self.assertRaisesRegex(ValueError, "size limit"):
+                download_url("https://example.test/cover.jpg")
 
 
 if __name__ == "__main__":

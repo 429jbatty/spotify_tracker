@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import ResponsiveAlbumImage from "../ResponsiveAlbumImage";
 
 function groupAlbumsByYear(albums) {
   const groups = {};
@@ -21,8 +22,6 @@ function groupAlbumsByYear(albums) {
 }
 
 function AlbumTile({ album, onClick }) {
-  const BASE = import.meta.env.BASE_URL;
-
   return (
     <button
       type="button"
@@ -30,14 +29,10 @@ function AlbumTile({ album, onClick }) {
       className="group grid grid-cols-[3.5rem_1fr] gap-3 rounded-lg border border-border p-2 text-left transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <div className="aspect-square overflow-hidden rounded-md bg-card">
-        <img
-          loading="lazy"
-          src={album.image_url || `${BASE}placeholder_art.png`}
+        <ResponsiveAlbumImage
+          src={album.image_url}
+          sizes="56px"
           alt={album.name}
-          onError={(event) => {
-            event.currentTarget.onerror = null;
-            event.currentTarget.src = `${BASE}placeholder_art.png`;
-          }}
           className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>

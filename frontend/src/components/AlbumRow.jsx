@@ -1,10 +1,9 @@
 import { TableRow, TableCell } from "@/components/ui/table";
 import AlbumSearchMatches from "./search/AlbumSearchMatches";
+import ResponsiveAlbumImage from "./ResponsiveAlbumImage";
 import { getSourceLabel } from "./utils/sourceLabels";
 
 function AlbumRow({ albumId, album, onRowClick }) {
-  const BASE = import.meta.env.BASE_URL;
-
   const formatDate = (isoString) => {
     if (!isoString) return "Unknown";
     const date = new Date(isoString);
@@ -22,13 +21,9 @@ function AlbumRow({ albumId, album, onRowClick }) {
     >
       <TableCell className="py-3 w-[72px]">
         <div className="relative overflow-hidden rounded-md border border-border w-12 h-12 bg-card shadow-sm">
-          <img
-            loading="lazy"
-            src={album.image_url || `${BASE}placeholder_art.png`}
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = `${BASE}placeholder_art.png`;
-            }}
+          <ResponsiveAlbumImage
+            src={album.image_url}
+            sizes="48px"
             className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-125"
             alt={album.name}
           />
