@@ -118,6 +118,66 @@ class ArtworkCacheServiceTests(unittest.TestCase):
             finally:
                 session.close()
 
+    def test_existing_only_optimizes_local_artwork_without_remote_downloads(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            media_dir = Path(temp_dir)
+            artwork_path = media_dir / "artwork" / "release-group-mbid.jpg"
+            artwork_path.parent.mkdir(parents=True)
+            artwork_path.write_bytes(image_bytes())
+
+            session, repository = self._repository(temp_dir)
+            album = session.scalars(select(Album)).one()
+            album.image_url = None
+            album.remote_image_url = None
+            session.commit()
+            repository.update_album_local_image_path(
+                album.id,
+                "artwork/release-group-mbid.jpg",
+            )
+
+            service = ArtworkCacheService(
+                media_dir=temp_dir,
+                downloader=lambda url: (_ for _ in ()).throw(
+                    AssertionError("downloader should not be called")
+                ),
+            )
+
+            try:
+                results = service.optimize_existing_artwork(repository)
+                optimized_path = media_dir / results[0].local_image_path
+                variant_path = optimized_path.with_name(
+                    f"{optimized_path.stem}-240.webp"
+                )
+                initial_mtime = variant_path.stat().st_mtime_ns
+
+                repeated_results = service.optimize_existing_artwork(repository)
+                repeated_mtime = variant_path.stat().st_mtime_ns
+            finally:
+                session.close()
+
+        self.assertEqual(len(results), 1)
+        self.assertTrue(results[0].optimized)
+        self.assertIn("-sha256-", results[0].local_image_path)
+        self.assertEqual(len(repeated_results), 1)
+        self.assertEqual(repeated_mtime, initial_mtime)
+
+    def test_existing_only_skips_remote_artwork_without_a_local_file(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session, repository = self._repository(temp_dir)
+            service = ArtworkCacheService(
+                media_dir=temp_dir,
+                downloader=lambda url: (_ for _ in ()).throw(
+                    AssertionError("downloader should not be called")
+                ),
+            )
+
+            try:
+                results = service.optimize_existing_artwork(repository)
+            finally:
+                session.close()
+
+        self.assertEqual(results, [])
+
     def test_failed_download_preserves_remote_url_and_local_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session, repository = self._repository(temp_dir)

@@ -50,6 +50,9 @@ run_as_repo_owner "cd frontend && npm ci"
 echo "==> Building frontend"
 run_as_repo_owner "cd frontend && npm run build"
 
+echo "==> Optimizing existing album artwork"
+run_as_repo_owner "./.venv/bin/python -m one_time_scripts._cache_artwork --existing-only"
+
 echo "==> Restarting API"
 restart_service
 

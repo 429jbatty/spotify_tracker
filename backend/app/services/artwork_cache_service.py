@@ -27,6 +27,7 @@ class ArtworkCacheResult:
     cached: bool
     local_image_path: str | None = None
     error: str | None = None
+    optimized: bool = False
 
 
 def download_url(url: str, timeout: int = 30) -> tuple[bytes, str | None]:
@@ -56,20 +57,28 @@ class ArtworkCacheService:
         album_key = album["album_key"]
         remote_url = album.get("remote_image_url") or album.get("image_url")
 
+        existing_path = album.get("local_image_path")
+        if existing_path and (self.media_dir / existing_path).exists():
+            if self._has_complete_variants(existing_path):
+                return ArtworkCacheResult(
+                    album_id=album_id,
+                    album_key=album_key,
+                    cached=True,
+                    local_image_path=existing_path,
+                    optimized=True,
+                )
+            return self._reuse_or_upgrade_local_artwork(
+                album,
+                remote_url or existing_path,
+                existing_path,
+            )
+
         if not remote_url:
             return ArtworkCacheResult(
                 album_id=album_id,
                 album_key=album_key,
                 cached=False,
                 error="No remote artwork URL.",
-            )
-
-        existing_path = album.get("local_image_path")
-        if existing_path and (self.media_dir / existing_path).exists():
-            return self._reuse_or_upgrade_local_artwork(
-                album,
-                remote_url,
-                existing_path,
             )
 
         legacy_path = self._legacy_local_image_path(album, remote_url)
@@ -135,6 +144,7 @@ class ArtworkCacheService:
             album_key=album_key,
             cached=True,
             local_image_path=local_image_path,
+            optimized=True,
         )
 
     def cache_missing_artwork(self, repository) -> list[ArtworkCacheResult]:
@@ -144,6 +154,29 @@ class ArtworkCacheService:
             results.append(result)
 
             if result.cached and result.local_image_path:
+                repository.update_album_local_image_path(
+                    result.album_id,
+                    result.local_image_path,
+                )
+
+        return results
+
+    def optimize_existing_artwork(self, repository) -> list[ArtworkCacheResult]:
+        results = []
+        for album in repository.albums_for_artwork_cache():
+            local_image_path = album.get("local_image_path")
+            if not local_image_path:
+                continue
+            if not (self.media_dir / local_image_path).exists():
+                continue
+
+            result = self.cache_album_artwork(album)
+            results.append(result)
+            if (
+                result.cached
+                and result.local_image_path
+                and result.local_image_path != local_image_path
+            ):
                 repository.update_album_local_image_path(
                     result.album_id,
                     result.local_image_path,
@@ -185,6 +218,13 @@ class ArtworkCacheService:
         with Image.open(BytesIO(image_bytes)) as source:
             return ImageOps.exif_transpose(source).convert("RGB")
 
+    def _has_complete_variants(self, local_image_path: str) -> bool:
+        original_path = self.media_dir / local_image_path
+        return "-sha256-" in original_path.stem and all(
+            artwork_variant_path(original_path, width).exists()
+            for width in ARTWORK_VARIANT_WIDTHS
+        )
+
     def _reuse_or_upgrade_local_artwork(
         self,
         album: dict,
@@ -212,12 +252,19 @@ class ArtworkCacheService:
                 exc,
             )
             upgraded_path = existing_path
+            error = f"Artwork was preserved but not optimized: {exc}"
+            optimized = False
+        else:
+            error = None
+            optimized = True
 
         return ArtworkCacheResult(
             album_id=album["id"],
             album_key=album["album_key"],
             cached=True,
             local_image_path=upgraded_path,
+            error=error,
+            optimized=optimized,
         )
 
     def _write_variants(self, image: Image.Image, output_path: Path) -> None:
