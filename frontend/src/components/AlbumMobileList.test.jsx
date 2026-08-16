@@ -22,11 +22,10 @@ function albums(count) {
 afterEach(() => cleanup());
 
 describe("AlbumMobileList", () => {
-  it("keeps a large library bounded until the listener requests more albums", async () => {
-    const user = userEvent.setup();
+  it("renders the current library page supplied by the shared paginator", () => {
     render(
       <AlbumMobileList
-        albums={albums(51)}
+        albums={albums(50)}
         sortBy="latestListen"
         ascending={false}
         onSortChange={vi.fn()}
@@ -34,11 +33,8 @@ describe("AlbumMobileList", () => {
       />,
     );
 
-    expect(screen.getByText("Showing 50 of 51 albums")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Album 50/i })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /Album 51/i })).not.toBeInTheDocument();
-
-    await user.click(screen.getByRole("button", { name: "Load 50 more albums" }));
-    expect(screen.getByRole("button", { name: /Album 51/i })).toBeInTheDocument();
   });
 
   it("uses an accessible sort control and opens a card on click", async () => {

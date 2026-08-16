@@ -37,6 +37,10 @@ import {
   PROFILE_ROUTES,
   profilePath,
 } from "./routing";
+import {
+  getProfileDocumentMetadata,
+  useDocumentMetadata,
+} from "./components/utils/useDocumentMetadata";
 
 function LoadingState() {
   return (
@@ -113,6 +117,11 @@ function RootRoute() {
   const openCreateProfileAfterSignIn = searchParams.get("create_profile") === "1";
   const hasMultipleProfiles = searchParams.get("ownership_error") === "multiple_profiles";
   const authError = searchParams.get("auth_error");
+  useDocumentMetadata({
+    title: "Albumary | Your album listening history",
+    description: "Track album listens, revisit favorites, and explore the stories in your music library.",
+    path: "/",
+  });
 
   const startGoogleSignIn = async () => {
     const { authorize_url } = await beginGoogleSignIn();
@@ -172,6 +181,23 @@ function UserRoute({ view }) {
     [userSlug, users]
   );
   const isOwner = Boolean(selectedUser && ownedProfileSlugs.includes(selectedUser.slug));
+  const profileName = selectedUser?.display_name || userSlug;
+  const viewName = {
+    [PROFILE_ROUTES.discovery]: "Discovery",
+    [PROFILE_ROUTES.library]: "Library",
+    [PROFILE_ROUTES.releases]: "Releases",
+    [PROFILE_ROUTES.connections]: "Connections",
+  }[view] || "Profile";
+  const metadataAlbum = albumId ? data?.completed_albums?.[albumId] : null;
+  useDocumentMetadata(getProfileDocumentMetadata({
+    profileName,
+    viewName,
+    path: window.location.pathname,
+    album: metadataAlbum,
+    albumMissing: Boolean(albumId && data && !metadataAlbum),
+    hasError: Boolean(error || loadError),
+    profileMissing: usersLoaded && !selectedUser,
+  }));
 
   useEffect(() => {
     fetchCurrentAccount()
@@ -438,6 +464,7 @@ function UserRoute({ view }) {
         )}
         {!routeAlbumMissing && view === PROFILE_ROUTES.library && (
           <AlbumTable
+            key={visibleAlbums.map((album) => album.id).join(",")}
             albums={filteredAlbums}
             searchTerm={searchTerm}
             onFilterSelect={handleFilterSelect}
@@ -487,6 +514,10 @@ function UserRoute({ view }) {
 
 function AppNotFound() {
   const navigate = useNavigate();
+  useDocumentMetadata({
+    title: "Page not found | Albumary",
+    description: "The Albumary page you requested is unavailable.",
+  });
   return <NotFound onBackHome={() => navigate("/")} />;
 }
 
