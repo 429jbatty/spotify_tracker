@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 
 import "@testing-library/jest-dom/vitest";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PageDiscovery from "./PageDiscovery";
@@ -53,5 +53,34 @@ describe("PageDiscovery", () => {
     expect(screen.getAllByTestId("discovery-album")[0]).toHaveTextContent("Album 10");
     expect(screen.getByText("Album 1")).toBeVisible();
     expect(screen.queryByRole("button", { name: /View all listens/i })).not.toBeInTheDocument();
+  });
+
+  it("guides an empty owned profile to each supported first-listen path", () => {
+    const onAddAlbum = vi.fn();
+    const onImport = vi.fn();
+    const onConnectSpotify = vi.fn();
+
+    render(
+      <MemoryRouter>
+        <PageDiscovery
+          albums={[]}
+          allAlbums={[]}
+          onAddAlbum={onAddAlbum}
+          onImport={onImport}
+          onConnectSpotify={onConnectSpotify}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText("Turn album listens into a map of your taste.")).toBeVisible();
+    fireEvent.click(screen.getByRole("button", { name: "Add your first album" }));
+    fireEvent.click(screen.getByRole("button", { name: "Import Last.fm" }));
+    fireEvent.click(screen.getByRole("button", { name: "Upload Spotify ZIP" }));
+    fireEvent.click(screen.getByRole("button", { name: "Connect Spotify" }));
+
+    expect(onAddAlbum).toHaveBeenCalledOnce();
+    expect(onImport).toHaveBeenNthCalledWith(1, "lastfm");
+    expect(onImport).toHaveBeenNthCalledWith(2, "spotify_import");
+    expect(onConnectSpotify).toHaveBeenCalledOnce();
   });
 });

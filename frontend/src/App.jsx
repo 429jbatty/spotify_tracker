@@ -13,6 +13,7 @@ import AlbumSearch from "./components/AlbumSearch";
 import {
   fetchAlbumState,
   fetchSpotifyStatus,
+  spotifyConnectUrl,
   fetchUsers,
   createUser,
   beginGoogleSignIn,
@@ -31,6 +32,7 @@ import SplashPage from "./components/splash/SplashPage";
 import { Toaster } from "./components/Toaster";
 import ImportHistoryDialog from "./components/ImportHistoryDialog";
 import AlbumPanelSheet from "./components/AlbumPanelSheet";
+import EmptyLibraryState from "./components/onboarding/EmptyLibraryState";
 import {
   albumPath,
   legacyRedirectPath,
@@ -173,6 +175,8 @@ function UserRoute({ view }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilters, setActiveFilters] = useState([]);
   const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importDialogSource, setImportDialogSource] = useState("lastfm");
+  const [albumCreateOpen, setAlbumCreateOpen] = useState(false);
   const [inlineAlbumSelection, setInlineAlbumSelection] = useState(null);
   const [ownedProfileSlugs, setOwnedProfileSlugs] = useState(getOwnedProfileSlugs);
   const [authenticatedAccount, setAuthenticatedAccount] = useState(null);
@@ -391,6 +395,24 @@ function UserRoute({ view }) {
     navigate("/", { replace: true });
   };
 
+  const handleImport = (source) => {
+    setImportDialogSource(source);
+    setImportDialogOpen(true);
+  };
+
+  const handleConnectSpotify = async () => {
+    const authorizeUrl = await spotifyConnectUrl(selectedUser.slug);
+    if (authorizeUrl) window.location.assign(authorizeUrl);
+  };
+
+  const onboardingActions = isOwner
+    ? {
+      onAddAlbum: () => setAlbumCreateOpen(true),
+      onImport: handleImport,
+      onConnectSpotify: handleConnectSpotify,
+    }
+    : null;
+
   return (
     <>
       <div className="min-h-screen space-y-10 ">
@@ -412,6 +434,8 @@ function UserRoute({ view }) {
             onSwitchUser={handleSwitchUser}
             importDialogOpen={importDialogOpen}
             onImportDialogOpenChange={setImportDialogOpen}
+            albumCreateOpen={albumCreateOpen}
+            onAlbumCreateOpenChange={setAlbumCreateOpen}
           />
 
           {[PROFILE_ROUTES.library, PROFILE_ROUTES.releases].includes(view) && (
@@ -460,25 +484,34 @@ function UserRoute({ view }) {
             onDataChanged={loadAlbumState}
             onOpenAlbum={handleOpenAlbum}
             syncSortWithUrl
+            {...onboardingActions}
           />
         )}
         {!routeAlbumMissing && view === PROFILE_ROUTES.library && (
-          <AlbumTable
-            key={visibleAlbums.map((album) => album.id).join(",")}
-            albums={filteredAlbums}
-            searchTerm={searchTerm}
-            onFilterSelect={handleFilterSelect}
-            onDataChanged={loadAlbumState}
-            onOpenAlbum={handleOpenAlbum}
-          />
+          processedAlbums.length === 0 && isOwner ? (
+            <EmptyLibraryState view="library" {...onboardingActions} />
+          ) : (
+            <AlbumTable
+              key={visibleAlbums.map((album) => album.id).join(",")}
+              albums={filteredAlbums}
+              searchTerm={searchTerm}
+              onFilterSelect={handleFilterSelect}
+              onDataChanged={loadAlbumState}
+              onOpenAlbum={handleOpenAlbum}
+            />
+          )
         )}
         {!routeAlbumMissing && view === PROFILE_ROUTES.releases && (
-          <AlbumTimeView
-            albums={filteredAlbums}
-            onFilterSelect={handleFilterSelect}
-            onDataChanged={loadAlbumState}
-            onOpenAlbum={handleOpenAlbum}
-          />
+          processedAlbums.length === 0 && isOwner ? (
+            <EmptyLibraryState view="releases" {...onboardingActions} />
+          ) : (
+            <AlbumTimeView
+              albums={filteredAlbums}
+              onFilterSelect={handleFilterSelect}
+              onDataChanged={loadAlbumState}
+              onOpenAlbum={handleOpenAlbum}
+            />
+          )
         )}
         {!routeAlbumMissing && view === PROFILE_ROUTES.connections && (
           <PageConnections
@@ -496,6 +529,7 @@ function UserRoute({ view }) {
         open={isOwner && importDialogOpen}
         onOpenChange={setImportDialogOpen}
         hideTrigger
+        initialSource={importDialogSource}
       />
       <AlbumPanelSheet
         open={Boolean(panelAlbum)}

@@ -61,6 +61,9 @@ function AlbumCreateDialog({
   onDataChanged,
   triggerClassName,
   variant = "default",
+  open: controlledOpen,
+  onOpenChange,
+  hideTrigger = false,
 }) {
   const { toast } = useToast();
   const initialForm = useMemo(
@@ -71,7 +74,8 @@ function AlbumCreateDialog({
     }),
     []
   );
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+  const open = controlledOpen ?? internalOpen;
   const [mode, setMode] = useState("listen");
   const [form, setForm] = useState(initialForm);
   const [listenForm, setListenForm] = useState({
@@ -128,7 +132,8 @@ function AlbumCreateDialog({
   };
 
   const handleOpenChange = (nextOpen) => {
-    setOpen(nextOpen);
+    if (controlledOpen === undefined) setInternalOpen(nextOpen);
+    onOpenChange?.(nextOpen);
     if (!nextOpen) resetState();
   };
 
@@ -151,7 +156,7 @@ function AlbumCreateDialog({
         listen_date: textOrUndefined(form.listen_date),
       });
       await refreshAlbumState(onDataChanged);
-      setOpen(false);
+      handleOpenChange(false);
       if (createdAlbum?.source === "manual") {
         toast({
           title: "Album added without automatic metadata",
@@ -179,7 +184,7 @@ function AlbumCreateDialog({
     try {
       await addAlbumListen(selectedAlbum.id, listenForm.listen_date);
       await onDataChanged?.();
-      setOpen(false);
+      handleOpenChange(false);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -189,12 +194,14 @@ function AlbumCreateDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant={variant} size="sm" className={triggerClassName}>
-          <Plus className="size-4" />
-          Add
-        </Button>
-      </DialogTrigger>
+      {!hideTrigger && (
+        <DialogTrigger asChild>
+          <Button variant={variant} size="sm" className={triggerClassName}>
+            <Plus className="size-4" />
+            Add
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Add or log</DialogTitle>

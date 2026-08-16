@@ -9,6 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "./ui/tabs";
 import { buildDiscoveryFeed } from "./utils/discoveryFeed";
 import { aggregateDiscoveryInsights } from "./utils/discoveryInsights";
 import { normalizeDiscoveryRange } from "@/routing";
+import EmptyLibraryState from "@/components/onboarding/EmptyLibraryState";
 
 const TIME_RANGES = {
   "7d": 7,
@@ -56,6 +57,9 @@ export default function Discovery({
   onFilterSelect,
   onDataChanged,
   onOpenAlbum,
+  onAddAlbum,
+  onImport,
+  onConnectSpotify,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const timeRange = normalizeDiscoveryRange(
@@ -150,7 +154,16 @@ export default function Discovery({
 
   return (
     <>
-      <div className="space-y-7 p-6">
+      <div className="space-y-7 py-6">
+        {allAlbumsArray.length === 0 && onAddAlbum && (
+          <EmptyLibraryState
+            view="discovery"
+            onAddAlbum={onAddAlbum}
+            onImport={onImport}
+            onConnectSpotify={onConnectSpotify}
+          />
+        )}
+        {allAlbumsArray.length > 0 && <div className="px-6">
         <section className="space-y-5">
           <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <div>
@@ -181,12 +194,14 @@ export default function Discovery({
 
           <DiscoveryMetricRail metrics={metricRail} />
         </section>
+        </div>}
 
-        <NewVsReplayTrend series={discoveryInsights.trendSeries} />
+        {allAlbumsArray.length > 0 && <>
+        <div className="px-6"><NewVsReplayTrend series={discoveryInsights.trendSeries} /></div>
 
-        <DiscoveryQualityCard listens={listenRecords} selectedRange={timeRange} />
+        <div className="px-6"><DiscoveryQualityCard listens={listenRecords} selectedRange={timeRange} /></div>
 
-        <section className="space-y-4">
+        <section className="space-y-4 px-6">
           <div className="flex items-center justify-between gap-4">
             <h2 className="text-2xl font-semibold tracking-tight text-foreground">
               Listens in this range
@@ -216,6 +231,7 @@ export default function Discovery({
             </div>
           )}
         </section>
+        </>}
       </div>
 
       {!onOpenAlbum && (
