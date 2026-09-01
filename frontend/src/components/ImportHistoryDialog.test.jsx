@@ -82,6 +82,26 @@ function importFor(id, detail) {
 }
 
 describe("ImportHistoryDialog", () => {
+  it("shows source-specific instructions, including the Spotify privacy link", async () => {
+    api.fetchImportHistory.mockResolvedValue([]);
+    api.fetchImportReview.mockResolvedValue([]);
+    const user = userEvent.setup();
+
+    render(<DialogHarness />);
+
+    expect(await screen.findByText(/All you need is a public Last\.fm username/i)).toBeInTheDocument();
+    expect(screen.getByText(/Find the username in your Last\.fm profile URL/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "Spotify ZIP" }));
+
+    expect(screen.getByText(/Request Extended Streaming History/i)).toBeInTheDocument();
+    expect(screen.getByText(/without extracting or changing it/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Open Spotify Account Privacy/i })).toHaveAttribute(
+      "href",
+      "https://www.spotify.com/account/privacy/"
+    );
+  });
+
   it("keeps persisted active-import status visible while reopening refreshes", async () => {
     const user = userEvent.setup();
     const activeImport = activeSpotifyImport();
