@@ -48,6 +48,7 @@ class SpotifyConnectResponse(BaseModel):
 
 class SpotifyStatus(BaseModel):
     connected: bool
+    spotify_sync_eligible: bool = False
     spotify_user_id: str | None = None
     connected_at: str | None = None
     last_successful_sync_at: str | None = None

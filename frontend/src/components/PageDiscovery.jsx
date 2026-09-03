@@ -60,6 +60,7 @@ export default function Discovery({
   onAddAlbum,
   onImport,
   onConnectSpotify,
+  spotifySyncEligible = false,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const timeRange = normalizeDiscoveryRange(
@@ -161,6 +162,7 @@ export default function Discovery({
             onAddAlbum={onAddAlbum}
             onImport={onImport}
             onConnectSpotify={onConnectSpotify}
+            spotifySyncEligible={spotifySyncEligible}
           />
         )}
         {allAlbumsArray.length > 0 && <div className="px-6">

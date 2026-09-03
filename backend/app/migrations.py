@@ -963,7 +963,46 @@ def migrate_single_profile_ownership(engine: Engine) -> None:
         )
 
 
+def migrate_spotify_sync_eligibility(engine: Engine) -> None:
+    """Grandfather the profiles pre-authorized for Spotify's limited user slots.
+
+    This is intentionally a one-time backfill from the existing pre-bind audit
+    records. Later pre-bound profiles must be granted access explicitly rather
+    than gaining it simply by being pre-bound.
+    """
+    if not _is_sqlite_engine(engine) or not _table_exists(engine, "users"):
+        return
+
+    columns = _table_columns(engine, "users")
+    if "spotify_sync_enabled" in columns:
+        return
+
+    with engine.begin() as connection:
+        connection.execute(
+            text(
+                "ALTER TABLE users ADD COLUMN spotify_sync_enabled "
+                "BOOLEAN NOT NULL DEFAULT 0"
+            )
+        )
+        if _table_exists(engine, "profile_ownership_assignments"):
+            connection.execute(
+                text(
+                    """
+                    UPDATE users
+                    SET spotify_sync_enabled = 1
+                    WHERE id IN (
+                        SELECT user_id
+                        FROM profile_ownership_assignments
+                        WHERE assigned_by = 'operator_prebind'
+                    )
+                    """
+                )
+            )
+
+
 def run_sqlite_migrations(engine: Engine) -> None:
+    # This column is read through the ORM by older migrations below.
+    migrate_spotify_sync_eligibility(engine)
     migrate_default_user(engine)
     migrate_album_artwork_columns(engine)
     migrate_user_app_state(engine)

@@ -57,7 +57,7 @@ describe("profile creation route", () => {
     createUser.mockResolvedValue({ slug: "returned-slug" });
     fetchUsers.mockResolvedValue([{ slug: "returned-slug", display_name: "New Listener" }]);
     fetchAlbumState.mockResolvedValue({ completed_albums: {} });
-    fetchSpotifyStatus.mockResolvedValue({ connected: false });
+    fetchSpotifyStatus.mockResolvedValue({ connected: false, spotify_sync_eligible: false });
     render(
       <MemoryRouter initialEntries={["/"]}>
         <App />
@@ -122,7 +122,7 @@ describe("profile creation route", () => {
     fetchUsers.mockResolvedValue([{ slug: "owner", display_name: "Owner" }]);
     fetchCurrentAccount.mockResolvedValue({ profile_slugs: ["owner"] });
     fetchAlbumState.mockResolvedValue({ completed_albums: {} });
-    fetchSpotifyStatus.mockResolvedValue({ connected: false });
+    fetchSpotifyStatus.mockResolvedValue({ connected: false, spotify_sync_eligible: true });
     spotifyConnectUrl.mockResolvedValue(null);
 
     render(

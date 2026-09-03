@@ -244,6 +244,32 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
             self.assertEqual(response.status_code, 401)
         self.assertFalse((Path(temp_dir) / "import_uploads").exists())
 
+    def test_ineligible_owner_cannot_start_or_run_spotify_sync(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            headers = self._create_profile(
+                client, slug="owner", email="owner@example.com"
+            )
+
+            spotify_status = client.get("/api/users/owner/spotify/status", headers=headers)
+            spotify_connect = client.post("/api/users/owner/spotify/connect", headers=headers)
+            spotify_sync = client.post("/api/users/owner/spotify/sync", headers=headers)
+
+        self.assertEqual(spotify_status.status_code, 200)
+        self.assertEqual(
+            spotify_status.json(),
+            {
+                "connected": False,
+                "spotify_sync_eligible": False,
+                "spotify_user_id": None,
+                "connected_at": None,
+                "last_successful_sync_at": None,
+                "last_sync_error": None,
+            },
+        )
+        self.assertEqual(spotify_connect.status_code, 403)
+        self.assertEqual(spotify_sync.status_code, 403)
+
     def test_owner_cannot_mutate_albums_outside_profile(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)

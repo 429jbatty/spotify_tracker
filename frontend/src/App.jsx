@@ -169,7 +169,10 @@ function UserRoute({ view }) {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [dataUserSlug, setDataUserSlug] = useState(null);
-  const [spotifyStatus, setSpotifyStatus] = useState({ connected: false });
+  const [spotifyStatus, setSpotifyStatus] = useState({
+    connected: false,
+    spotify_sync_eligible: false,
+  });
   const [spotifyStatusUserSlug, setSpotifyStatusUserSlug] = useState(null);
   const [loadError, setLoadError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -282,7 +285,11 @@ function UserRoute({ view }) {
       if (err?.name !== "TypeError") {
         console.error(err);
       }
-      setSpotifyStatus({ connected: false, last_sync_error: err.message });
+      setSpotifyStatus({
+        connected: false,
+        spotify_sync_eligible: false,
+        last_sync_error: err.message,
+      });
     });
     return () => controller.abort();
   }, [isOwner, loadSpotifyStatus, selectedUser]);
@@ -291,7 +298,7 @@ function UserRoute({ view }) {
     setSelectedUserSlug(null);
     setData(null);
     setDataUserSlug(null);
-    setSpotifyStatus({ connected: false });
+    setSpotifyStatus({ connected: false, spotify_sync_eligible: false });
     setSpotifyStatusUserSlug(null);
     setInlineAlbumSelection(null);
     navigate("/");
@@ -400,7 +407,12 @@ function UserRoute({ view }) {
     setImportDialogOpen(true);
   };
 
+  const currentSpotifyStatus = spotifyStatusUserSlug === selectedUser.slug
+    ? spotifyStatus
+    : { connected: false, spotify_sync_eligible: false };
+
   const handleConnectSpotify = async () => {
+    if (!currentSpotifyStatus.spotify_sync_eligible) return;
     const authorizeUrl = await spotifyConnectUrl(selectedUser.slug);
     if (authorizeUrl) window.location.assign(authorizeUrl);
   };
@@ -410,6 +422,7 @@ function UserRoute({ view }) {
       onAddAlbum: () => setAlbumCreateOpen(true),
       onImport: handleImport,
       onConnectSpotify: handleConnectSpotify,
+      spotifySyncEligible: currentSpotifyStatus.spotify_sync_eligible,
     }
     : null;
 
@@ -425,11 +438,7 @@ function UserRoute({ view }) {
             isOwner={isOwner}
             authenticatedAccount={authenticatedAccount}
             onSignOut={handleSignOut}
-            spotifyStatus={
-              spotifyStatusUserSlug === selectedUser.slug
-                ? spotifyStatus
-                : { connected: false }
-            }
+            spotifyStatus={currentSpotifyStatus}
             onSpotifyStatusChanged={loadSpotifyStatus}
             onSwitchUser={handleSwitchUser}
             importDialogOpen={importDialogOpen}
