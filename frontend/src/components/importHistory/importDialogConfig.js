@@ -1,11 +1,26 @@
 export const IMPORT_GUIDES = {
   lastfm: {
     title: "Last.fm import",
-    intro: "Enter a public Last.fm username. Completed album listens are added after matching.",
+    intro: "All you need is a public Last.fm username—no download or account connection required.",
+    steps: [
+      "Find the username in your Last.fm profile URL (last.fm/user/your-username).",
+      "Enter it below, preview the matches, then start the import.",
+    ],
   },
   spotify_import: {
     title: "Spotify ZIP import",
-    intro: "Upload Spotify's Extended Streaming History ZIP without extracting it.",
+    intro: "Request Spotify's Extended Streaming History once, then upload the ZIP they send you.",
+    steps: [
+      "Open Spotify Account Privacy and select Download your data.",
+      "Request Extended Streaming History (not the standard Streaming History download).",
+      "When Spotify emails your download, save the ZIP without extracting or changing it.",
+      "Return here, choose that ZIP, and start the import.",
+    ],
+    link: {
+      href: "https://www.spotify.com/account/privacy/",
+      label: "Open Spotify Account Privacy",
+    },
+    note: "The extended export includes your full account history; Spotify's standard history download only covers a limited period.",
   },
 };
 

@@ -16,7 +16,10 @@ class SpotifyCredentialsRepository:
             self.session.scalars(
                 select(User)
                 .join(UserSpotifyCredentials)
-                .where(User.is_active.is_(True))
+                .where(
+                    User.is_active.is_(True),
+                    User.spotify_sync_enabled.is_(True),
+                )
                 .order_by(User.display_name, User.slug)
             )
         )

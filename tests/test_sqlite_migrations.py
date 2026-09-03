@@ -8,6 +8,94 @@ from backend.app.database import create_schema
 
 
 class SqliteMigrationTests(unittest.TestCase):
+    def test_spotify_sync_eligibility_backfills_existing_prebound_profiles_once(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_engine(database_url)
+
+            with engine.begin() as connection:
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE accounts (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            email VARCHAR NOT NULL,
+                            password_hash VARCHAR NOT NULL,
+                            google_subject VARCHAR,
+                            created_at VARCHAR NOT NULL
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE profile_ownership_assignments (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            user_id INTEGER NOT NULL,
+                            account_id INTEGER NOT NULL,
+                            assigned_at VARCHAR NOT NULL,
+                            assigned_by VARCHAR NOT NULL
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        CREATE TABLE users (
+                            id INTEGER NOT NULL PRIMARY KEY,
+                            slug VARCHAR NOT NULL,
+                            display_name VARCHAR NOT NULL,
+                            is_active BOOLEAN NOT NULL,
+                            owner_account_id INTEGER
+                        )
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO accounts (id, email, password_hash, google_subject, created_at)
+                        VALUES
+                            (1, 'prebound@example.com', 'disabled', NULL, '2026-01-01'),
+                            (2, 'signed-in@example.com', 'disabled', 'google-subject', '2026-01-01')
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO profile_ownership_assignments (
+                            id, user_id, account_id, assigned_at, assigned_by
+                        )
+                        VALUES (1, 1, 1, '2026-01-01', 'operator_prebind')
+                        """
+                    )
+                )
+                connection.execute(
+                    text(
+                        """
+                        INSERT INTO users (id, slug, display_name, is_active, owner_account_id)
+                        VALUES
+                            (1, 'prebound', 'Prebound', 1, 1),
+                            (2, 'signed-in', 'Signed in', 1, 2)
+                        """
+                    )
+                )
+
+            migrated_engine = create_schema(database_url)
+            create_schema(database_url)
+            with migrated_engine.connect() as connection:
+                rows = connection.execute(
+                    text(
+                        "SELECT slug, spotify_sync_enabled FROM users "
+                        "WHERE id IN (1, 2) ORDER BY id"
+                    )
+                ).all()
+
+        self.assertEqual(rows, [("prebound", 1), ("signed-in", 0)])
+
     def test_create_schema_adds_artwork_columns_to_existing_albums_table(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

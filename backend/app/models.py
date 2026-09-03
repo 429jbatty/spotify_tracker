@@ -107,6 +107,11 @@ class User(Base):
         index=True,
         unique=True,
     )
+    spotify_sync_enabled: Mapped[bool] = mapped_column(
+        Boolean,
+        default=False,
+        server_default="0",
+    )
 
     owner_account: Mapped["Account | None"] = relationship(back_populates="profiles")
 
