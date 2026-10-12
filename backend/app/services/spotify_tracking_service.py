@@ -13,6 +13,7 @@ from backend.app.repositories.spotify_credentials_repository import (
 )
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
+from backend.app.services.spotify_access_service import require_spotify_sync_access
 from spotify_manager import SpotifyAPI
 
 
@@ -51,6 +52,7 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
     session_factory = _session_factory()
     with session_factory() as session:
         user = UserRepository(session).require_user_by_slug(user_slug)
+        require_spotify_sync_access(user)
         credentials = _credentials_for_user(
             session,
             user.id,
