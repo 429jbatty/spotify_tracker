@@ -11,3 +11,4 @@ sqlalchemy
 python-multipart
 ijson
 google-auth
+Pillow

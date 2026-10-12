@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { fetchCurrentAccount, fetchSplashData, signOut } from "@/services/albumApi";
 import CreateProfileDialog from "@/components/CreateProfileDialog";
 import LoginDialog from "@/components/LoginDialog";
+import ResponsiveAlbumImage from "@/components/ResponsiveAlbumImage";
 import { accountProfileLabel } from "@/components/utils/accountProfileLabel";
 import SplashProductStory from "@/components/splash/SplashProductStory";
 
@@ -754,14 +755,12 @@ function EmptyPanel({ message, compact = false }) {
 function CoverTile({ src, index, className = "", loading = false, small = false, square = false }) {
   const sizeClass = square ? "size-12" : small ? "size-16 sm:size-20" : "aspect-square w-full";
   const content = src ? (
-    <img
+    <ResponsiveAlbumImage
       src={src}
       alt=""
+      sizes={square ? "48px" : small ? "80px" : "240px"}
       className="h-full w-full object-cover"
-      loading="lazy"
-      onError={(event) => {
-        event.currentTarget.style.display = "none";
-      }}
+      hideOnError
     />
   ) : (
     <div

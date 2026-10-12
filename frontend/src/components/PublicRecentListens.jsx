@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { fetchPublicRecentListens } from "@/services/albumApi";
+import ResponsiveAlbumImage from "./ResponsiveAlbumImage";
 
 function PublicRecentListens() {
   const [listens, setListens] = useState([]);
@@ -67,7 +68,6 @@ function PublicRecentListens() {
 }
 
 function RecentListenCard({ listen }) {
-  const fallbackImage = `${import.meta.env.BASE_URL}placeholder_art.png`;
   const activityText = `${formatListenDate(listen.listened_at)}, ${listen.listener_display_name} listened to:`;
 
   return (
@@ -78,15 +78,11 @@ function RecentListenCard({ listen }) {
         </p>
       </div>
       <div className="aspect-square overflow-hidden bg-muted">
-        <img
-          src={listen.image_url || fallbackImage}
+        <ResponsiveAlbumImage
+          src={listen.image_url}
           alt={listen.name}
+          sizes="(max-width: 640px) 100vw, 320px"
           className="h-full w-full object-cover"
-          loading="lazy"
-          onError={(event) => {
-            event.currentTarget.onerror = null;
-            event.currentTarget.src = fallbackImage;
-          }}
         />
       </div>
       <div className="space-y-1 p-3">

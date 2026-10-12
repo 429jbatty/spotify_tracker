@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { artworkVariantUrl } from "@/lib/artworkSources";
 import {
   formatCount,
   formatRoleLabel,
@@ -415,7 +416,7 @@ function GraphNode({
             clipPath={`url(#${clipId(node.id)})`}
             className="transition-all duration-200 ease-out motion-reduce:transition-none"
             height={albumSize}
-            href={node.image_url}
+            href={artworkVariantUrl(node.image_url, 240)}
             opacity={dimmed ? 0.18 : 1}
             preserveAspectRatio="xMidYMid slice"
             width={albumSize}
