@@ -55,14 +55,14 @@ describe("buildDiscoveryQuality", () => {
     expect(result.buckets.find((bucket) => bucket.score === 8).count).toBe(1);
   });
 
-  it("uses score aliases and supports all-time discovery quality", () => {
+  it("uses score aliases for discoveries in a bounded range", () => {
     const result = buildDiscoveryQuality(
       [
-        listen(date(0, 1), { album_key: "score", score: 8 }),
-        listen(date(1, 1), { album_key: "user-score", user_score: 6 }),
-        listen(date(2, 1), { album_key: "ranking", ranking: 5 }),
+        listen(date(5, 1), { album_key: "score", score: 8 }),
+        listen(date(5, 2), { album_key: "user-score", user_score: 6 }),
+        listen(date(5, 3), { album_key: "ranking", ranking: 5 }),
       ],
-      "all",
+      "30d",
       { now: NOW }
     );
 

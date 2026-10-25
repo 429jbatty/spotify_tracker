@@ -536,11 +536,6 @@ function ProfileRow({ user, onOpenProfile }) {
               secondary={user.top_album?.artist}
             />
             <ProfileMetric
-              label="Discovery rate"
-              value={formatPercent(user.discovery_rate) || "Not enough data"}
-              secondary="First-time listens"
-            />
-            <ProfileMetric
               label="Most-listened era"
               value={user.most_listened_era?.label || "Not enough data"}
               secondary={formatListenCount(user.most_listened_era?.listen_count)}
@@ -781,11 +776,6 @@ function CoverTile({ src, index, className = "", loading = false, small = false,
       {content}
     </div>
   );
-}
-
-function formatPercent(value) {
-  if (typeof value !== "number") return null;
-  return `${Math.round(value * 100)}%`;
 }
 
 function formatNumber(value) {

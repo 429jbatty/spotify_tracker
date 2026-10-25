@@ -18,7 +18,7 @@ function album({ key, artist, artistMbid, listens }) {
 }
 
 describe("aggregateDiscoveryInsights", () => {
-  it("classifies discovery and relistens chronologically regardless of album order", () => {
+  it("counts every listen to an album discovered in the selected range as new to you", () => {
     const albums = {
       third: album({
         key: "artist two - debut",
@@ -40,9 +40,8 @@ describe("aggregateDiscoveryInsights", () => {
     const result = aggregateDiscoveryInsights(albums, "7d", { now: NOW });
 
     expect(result.summary).toEqual({
-      newArtists: 2,
-      newAlbums: 3,
-      relistens: 1,
+      newToYou: 4,
+      catalog: 0,
       totalListens: 4,
     });
     expect(result.buckets).toHaveLength(7);
@@ -51,7 +50,7 @@ describe("aggregateDiscoveryInsights", () => {
     ]);
   });
 
-  it("classifies an in-window listen as a relisten when discovery predates the window", () => {
+  it("counts an in-window listen as catalog listening when discovery predates the window", () => {
     const albums = {
       known: album({
         key: "known - album",
@@ -64,14 +63,33 @@ describe("aggregateDiscoveryInsights", () => {
 
     expect(result.baseline).toEqual({ albums: 1, artists: 1 });
     expect(result.summary).toEqual({
-      newArtists: 0,
-      newAlbums: 0,
-      relistens: 1,
+      newToYou: 0,
+      catalog: 1,
       totalListens: 1,
     });
   });
 
-  it("uses artist MBIDs or normalized artist names and resolves equal timestamps deterministically", () => {
+  it("counts ten listens to an album discovered this week as new to you", () => {
+    const result = aggregateDiscoveryInsights(
+      {
+        newAlbum: album({
+          key: "artist - new album",
+          artist: "Artist",
+          listens: Array.from({ length: 10 }, (_, index) => localDate(5, 14, index)),
+        }),
+      },
+      "7d",
+      { now: NOW }
+    );
+
+    expect(result.summary).toEqual({
+      newToYou: 10,
+      catalog: 0,
+      totalListens: 10,
+    });
+  });
+
+  it("counts albums discovered at equal timestamps as new to you", () => {
     const sameTime = localDate(5, 19);
     const albums = {
       z: album({
@@ -101,12 +119,11 @@ describe("aggregateDiscoveryInsights", () => {
     const result = aggregateDiscoveryInsights(albums, "7d", { now: NOW });
     const populated = result.buckets.find((bucket) => bucket.total === 4);
 
-    expect(populated.newArtist).toBe(2);
-    expect(populated.newAlbum).toBe(2);
-    expect(populated.relisten).toBe(0);
+    expect(populated.newToYou).toBe(4);
+    expect(populated.catalog).toBe(0);
   });
 
-  it("creates daily, weekly, and monthly buckets including empty periods", () => {
+  it("creates daily and weekly buckets including empty periods", () => {
     const albums = {
       one: album({
         key: "artist - album",
@@ -118,14 +135,11 @@ describe("aggregateDiscoveryInsights", () => {
     const daily = aggregateDiscoveryInsights(albums, "7d", { now: NOW });
     const dailyMonth = aggregateDiscoveryInsights(albums, "30d", { now: NOW });
     const weekly = aggregateDiscoveryInsights(albums, "1y", { now: NOW });
-    const monthly = aggregateDiscoveryInsights(albums, "all", { now: NOW });
 
     expect(daily.buckets).toHaveLength(7);
     expect(dailyMonth.buckets).toHaveLength(30);
     expect(weekly.buckets).toHaveLength(53);
     expect(weekly.buckets.every((bucket) => bucket.start.getDay() === 1)).toBe(true);
-    expect(monthly.buckets).toHaveLength(3);
-    expect(monthly.buckets.map((bucket) => bucket.total)).toEqual([1, 0, 1]);
   });
 
   it("returns percentages that sum to 100 and cumulative catalog growth with a baseline", () => {
@@ -178,9 +192,8 @@ describe("aggregateDiscoveryInsights", () => {
     expect(empty.summary.totalListens).toBe(0);
     expect(empty.totalLifetimeListens).toBe(0);
     expect(mixed.summary).toEqual({
-      newArtists: 1,
-      newAlbums: 1,
-      relistens: 0,
+      newToYou: 1,
+      catalog: 0,
       totalListens: 1,
     });
   });
@@ -237,21 +250,19 @@ describe("aggregateDiscoveryInsights", () => {
     const result = aggregateDiscoveryInsights(albums, "7d", { now: NOW });
 
     expect(result.summary).toEqual({
-      newArtists: 1,
-      newAlbums: 1,
-      relistens: 1,
+      newToYou: 2,
+      catalog: 0,
       totalListens: 2,
     });
     expect(result.previousPeriod.summary).toEqual({
-      newArtists: 1,
-      newAlbums: 1,
-      relistens: 1,
+      newToYou: 2,
+      catalog: 0,
       totalListens: 2,
     });
     expect(result.previousPeriod.concentration.overallShare).toBe(100);
   });
 
-  it("exposes new-vs-replay trend series and suppresses all-time prior periods", () => {
+  it("exposes new-to-you and catalog trend series", () => {
     const albums = {
       one: album({
         key: "artist - album",
@@ -262,13 +273,51 @@ describe("aggregateDiscoveryInsights", () => {
 
     const weekly = aggregateDiscoveryInsights(albums, "7d", { now: NOW });
     const populated = weekly.trendSeries.find((point) => point.total === 2);
-    const allTime = aggregateDiscoveryInsights(albums, "all", { now: NOW });
-
     expect(populated).toMatchObject({
-      discoveries: 1,
-      replays: 1,
+      newToYou: 2,
+      catalog: 0,
       total: 2,
     });
-    expect(allTime.previousPeriod).toBeNull();
+  });
+
+  it("keeps repeats new to you across buckets when the album was discovered in the selected year", () => {
+    const result = aggregateDiscoveryInsights(
+      {
+        one: album({
+          key: "artist - album",
+          artist: "Artist",
+          listens: ["2025-09-25T12:00:00.000Z", localDate(5, 18)],
+        }),
+      },
+      "1y",
+      { now: NOW }
+    );
+
+    expect(result.summary).toEqual({
+      newToYou: 2,
+      catalog: 0,
+      totalListens: 2,
+    });
+    expect(result.buckets.filter((bucket) => bucket.total > 0)).toHaveLength(2);
+  });
+
+  it("treats the first listen exactly at the window boundary as new to you", () => {
+    const result = aggregateDiscoveryInsights(
+      {
+        one: album({
+          key: "artist - album",
+          artist: "Artist",
+          listens: [localDate(5, 14, 0), localDate(5, 20)],
+        }),
+      },
+      "7d",
+      { now: NOW }
+    );
+
+    expect(result.summary).toEqual({
+      newToYou: 2,
+      catalog: 0,
+      totalListens: 2,
+    });
   });
 });

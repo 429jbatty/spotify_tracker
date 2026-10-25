@@ -12,7 +12,7 @@ vi.mock("./AlbumCardVertical", () => ({
 
 vi.mock("./discovery/DiscoveryMetricRail", () => ({ default: () => null }));
 vi.mock("./discovery/DiscoveryQualityCard", () => ({ default: () => null }));
-vi.mock("./discovery/NewVsReplayTrend", () => ({ default: () => null }));
+vi.mock("./discovery/NewToYouTrend", () => ({ default: () => null }));
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -53,6 +53,20 @@ describe("PageDiscovery", () => {
     expect(screen.getAllByTestId("discovery-album")[0]).toHaveTextContent("Album 10");
     expect(screen.getByText("Album 1")).toBeVisible();
     expect(screen.queryByRole("button", { name: /View all listens/i })).not.toBeInTheDocument();
+  });
+
+  it("offers only bounded ranges and normalizes the obsolete all-time range", () => {
+    render(
+      <MemoryRouter initialEntries={["/listener/discovery?range=all"]}>
+        <PageDiscovery albums={[album(1)]} allAlbums={[album(1)]} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("tab", { name: "1Y" })).toHaveAttribute(
+      "data-state",
+      "active"
+    );
+    expect(screen.queryByRole("tab", { name: "All" })).not.toBeInTheDocument();
   });
 
   it("guides an empty owned profile to each supported first-listen path", () => {

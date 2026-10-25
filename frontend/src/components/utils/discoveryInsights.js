@@ -38,21 +38,9 @@ function startOfWeek(value) {
   return date;
 }
 
-function startOfMonth(value) {
-  const date = startOfDay(value);
-  date.setDate(1);
-  return date;
-}
-
 function addDays(value, days) {
   const date = new Date(value);
   date.setDate(date.getDate() + days);
-  return date;
-}
-
-function addMonths(value, months) {
-  const date = new Date(value);
-  date.setMonth(date.getMonth() + months);
   return date;
 }
 
@@ -72,18 +60,12 @@ function formatShortDate(date, includeYear = false) {
   });
 }
 
-function getWindowStart(timeRange, now, events) {
-  if (timeRange === "all") {
-    return events.length > 0 ? startOfMonth(events[0].date) : startOfMonth(now);
-  }
-
+function getWindowStart(timeRange, now) {
   const days = RANGE_DAYS[timeRange] || RANGE_DAYS["7d"];
   return addDays(startOfDay(now), -(days - 1));
 }
 
 function getPreviousWindow(timeRange, windowStart) {
-  if (timeRange === "all") return null;
-
   const days = RANGE_DAYS[timeRange];
   if (!days) return null;
 
@@ -98,23 +80,26 @@ function getBucketConfig(timeRange) {
     return { start: startOfDay, next: (date) => addDays(date, 1) };
   }
 
-  if (timeRange === "all") {
-    return { start: startOfMonth, next: (date) => addMonths(date, 1) };
-  }
-
   return { start: startOfWeek, next: (date) => addDays(date, 7) };
 }
 
-function summarizeEvents(events) {
+function summarizeEvents(events, windowStart, windowEndExclusive) {
   return events.reduce(
     (totals, event) => ({
-      newArtists: totals.newArtists + (event.category === "newArtist" ? 1 : 0),
-      newAlbums:
-        totals.newAlbums + (event.category === "relisten" ? 0 : 1),
-      relistens: totals.relistens + (event.category === "relisten" ? 1 : 0),
+      newToYou:
+        totals.newToYou +
+        (event.firstAlbumListenAt >= windowStart.getTime() &&
+        event.firstAlbumListenAt < windowEndExclusive.getTime()
+          ? 1
+          : 0),
+      catalog: totals.catalog +
+        (event.firstAlbumListenAt >= windowStart.getTime() &&
+        event.firstAlbumListenAt < windowEndExclusive.getTime()
+          ? 0
+          : 1),
       totalListens: totals.totalListens + 1,
     }),
-    { newArtists: 0, newAlbums: 0, relistens: 0, totalListens: 0 }
+    { newToYou: 0, catalog: 0, totalListens: 0 }
   );
 }
 
@@ -157,22 +142,24 @@ function collectListenEvents(albumRecords) {
       left.albumKey.localeCompare(right.albumKey)
   );
 
+  const firstAlbumListenAt = new Map();
   const seenAlbums = new Set();
   const seenArtists = new Set();
 
   return events.map((event) => {
-    let category = "relisten";
-
-    if (!seenArtists.has(event.artistKey)) {
-      category = "newArtist";
-    } else if (!seenAlbums.has(event.albumKey)) {
-      category = "newAlbum";
-    }
+    const isFirstArtistListen = !seenArtists.has(event.artistKey);
+    const isFirstAlbumListen = !seenAlbums.has(event.albumKey);
+    if (isFirstAlbumListen) firstAlbumListenAt.set(event.albumKey, event.timestamp);
 
     seenArtists.add(event.artistKey);
     seenAlbums.add(event.albumKey);
 
-    return { ...event, category };
+    return {
+      ...event,
+      firstAlbumListenAt: firstAlbumListenAt.get(event.albumKey),
+      isFirstAlbumListen,
+      isFirstArtistListen,
+    };
   });
 }
 
@@ -190,11 +177,8 @@ function createBuckets(timeRange, windowStart, now) {
     const followingStart = next(bucketStart);
     const displayStart = maxDate(bucketStart, windowStart);
     const displayEnd = minDate(addDays(followingStart, -1), startOfDay(now));
-    const includeYear =
-      timeRange === "all" || displayStart.getFullYear() !== now.getFullYear();
-    const label = timeRange === "all"
-      ? displayStart.toLocaleDateString("en-US", { month: "short", year: "numeric" })
-      : formatShortDate(displayStart, includeYear);
+    const includeYear = displayStart.getFullYear() !== now.getFullYear();
+    const label = formatShortDate(displayStart, includeYear);
     const rangeLabel = displayStart.getTime() === displayEnd.getTime()
       ? formatShortDate(displayStart, true)
       : `${formatShortDate(displayStart, true)} – ${formatShortDate(displayEnd, true)}`;
@@ -204,11 +188,10 @@ function createBuckets(timeRange, windowStart, now) {
       endExclusive: followingStart,
       label,
       rangeLabel,
-      newArtist: 0,
-      newAlbum: 0,
-      relisten: 0,
+      newToYou: 0,
+      catalog: 0,
       total: 0,
-      percentages: { newArtist: 0, newAlbum: 0, relisten: 0 },
+      percentages: { newToYou: 0, catalog: 0 },
       catalogAlbums: 0,
       catalogArtists: 0,
       albumGrowth: 0,
@@ -287,10 +270,10 @@ function buildArtistMap(events) {
 
 function buildTrendSeries(buckets) {
   return buckets.map((bucket) => ({
-    discoveries: bucket.newArtist + bucket.newAlbum,
+    newToYou: bucket.newToYou,
     label: bucket.label,
     rangeLabel: bucket.rangeLabel,
-    replays: bucket.relisten,
+    catalog: bucket.catalog,
     total: bucket.total,
   }));
 }
@@ -303,7 +286,7 @@ export function aggregateDiscoveryInsights(
   const now = new Date(nowValue);
   const albumRecords = collectAlbumRecords(albums);
   const events = collectListenEvents(albumRecords);
-  const windowStart = getWindowStart(timeRange, now, events);
+  const windowStart = getWindowStart(timeRange, now);
   const windowEndExclusive = new Date(now.getTime() + 1);
   const buckets = createBuckets(timeRange, windowStart, now);
   const catalogAlbums = new Set();
@@ -333,10 +316,13 @@ export function aggregateDiscoveryInsights(
       const event = events[eventIndex];
 
       if (event.date.getTime() >= windowStart.getTime()) {
-        bucket[event.category] += 1;
+        const isNewToYou =
+          event.firstAlbumListenAt >= windowStart.getTime() &&
+          event.firstAlbumListenAt < windowEndExclusive.getTime();
+        bucket[isNewToYou ? "newToYou" : "catalog"] += 1;
         bucket.total += 1;
-        if (event.category !== "relisten") bucket.albumGrowth += 1;
-        if (event.category === "newArtist") bucket.artistGrowth += 1;
+        if (event.isFirstAlbumListen) bucket.albumGrowth += 1;
+        if (event.isFirstArtistListen) bucket.artistGrowth += 1;
       }
 
       catalogAlbums.add(event.albumKey);
@@ -349,21 +335,19 @@ export function aggregateDiscoveryInsights(
 
     if (bucket.total > 0) {
       bucket.percentages = {
-        newArtist: (bucket.newArtist / bucket.total) * 100,
-        newAlbum: (bucket.newAlbum / bucket.total) * 100,
-        relisten: (bucket.relisten / bucket.total) * 100,
+        newToYou: (bucket.newToYou / bucket.total) * 100,
+        catalog: (bucket.catalog / bucket.total) * 100,
       };
     }
   });
 
   const summary = buckets.reduce(
     (totals, bucket) => ({
-      newArtists: totals.newArtists + bucket.newArtist,
-      newAlbums: totals.newAlbums + bucket.newArtist + bucket.newAlbum,
-      relistens: totals.relistens + bucket.relisten,
+      newToYou: totals.newToYou + bucket.newToYou,
+      catalog: totals.catalog + bucket.catalog,
       totalListens: totals.totalListens + bucket.total,
     }),
-    { newArtists: 0, newAlbums: 0, relistens: 0, totalListens: 0 }
+    { newToYou: 0, catalog: 0, totalListens: 0 }
   );
   const windowEvents = events.filter(
     (event) =>
@@ -401,7 +385,11 @@ export function aggregateDiscoveryInsights(
           concentration: {
             overallShare: getTopFiveShare(previousEvents),
           },
-          summary: summarizeEvents(previousEvents),
+          summary: summarizeEvents(
+            previousEvents,
+            previousWindow.start,
+            previousWindow.endExclusive
+          ),
           windowStart: previousWindow.start,
           windowEndExclusive: previousWindow.endExclusive,
         }

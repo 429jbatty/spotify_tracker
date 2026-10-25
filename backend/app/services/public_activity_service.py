@@ -156,7 +156,6 @@ def _featured_users(session: Session, limit: int) -> list[dict]:
     for user, total_albums, total_listens, last_updated in rows:
         total_album_count = int(total_albums or 0)
         total_listen_count = int(total_listens or 0)
-        discovery_rate = _user_discovery_rate(session, user.id)
         replay_rate_30d = _user_replay_rate_30d(session, user.id)
         top_artist = _top_artist_metric(session, user.id)
         payloads.append({
@@ -167,7 +166,6 @@ def _featured_users(session: Session, limit: int) -> list[dict]:
             "recent_album_covers": _recent_album_covers(session, user.id),
             "total_albums": total_album_count,
             "total_listens": total_listen_count,
-            "discovery_rate": discovery_rate,
             "replay_rate_30d": replay_rate_30d,
             "top_artist": top_artist["name"] if top_artist else None,
             "top_artist_listen_count": top_artist["listen_count"] if top_artist else None,
@@ -198,16 +196,6 @@ def _recent_album_covers(session: Session, user_id: int, limit: int = 5) -> list
         if display_image_url:
             covers.append(display_image_url)
     return covers
-
-
-def _user_discovery_rate(session: Session, user_id: int) -> float | None:
-    listen_rows = session.execute(
-        select(AlbumListen.album_id, AlbumListen.listened_at)
-        .where(AlbumListen.user_id == user_id)
-    ).all()
-    return _discovery_rate_for_listens(
-        ((album_id, listened_at) for album_id, listened_at in listen_rows)
-    )
 
 
 def _user_replay_rate_30d(session: Session, user_id: int) -> float | None:
@@ -400,22 +388,6 @@ def _most_replayed_recently(
         "replay_count": top_replay["replay_count"],
         "window_days": top_replay["window_days"],
     }
-
-
-def _discovery_rate_for_listens(listen_rows) -> float | None:
-    discovered_album_keys = set()
-    total_valid_listens = 0
-    for album_key, listened_at in listen_rows:
-        parsed_date = _parse_datetime(listened_at)
-        if parsed_date is None:
-            continue
-        total_valid_listens += 1
-        discovered_album_keys.add(album_key)
-
-    if total_valid_listens == 0:
-        return None
-
-    return round(len(discovered_album_keys) / total_valid_listens, 2)
 
 
 def _recent_listen_activity_payload(
