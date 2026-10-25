@@ -12,7 +12,7 @@ vi.mock("./AlbumCardVertical", () => ({
 
 vi.mock("./discovery/DiscoveryMetricRail", () => ({ default: () => null }));
 vi.mock("./discovery/DiscoveryQualityCard", () => ({ default: () => null }));
-vi.mock("./discovery/NewVsReplayTrend", () => ({ default: () => null }));
+vi.mock("./discovery/NewToYouTrend", () => ({ default: () => null }));
 
 beforeEach(() => {
   vi.useFakeTimers();
@@ -55,6 +55,20 @@ describe("PageDiscovery", () => {
     expect(screen.queryByRole("button", { name: /View all listens/i })).not.toBeInTheDocument();
   });
 
+  it("offers only bounded ranges and normalizes the obsolete all-time range", () => {
+    render(
+      <MemoryRouter initialEntries={["/listener/discovery?range=all"]}>
+        <PageDiscovery albums={[album(1)]} allAlbums={[album(1)]} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("tab", { name: "1Y" })).toHaveAttribute(
+      "data-state",
+      "active"
+    );
+    expect(screen.queryByRole("tab", { name: "All" })).not.toBeInTheDocument();
+  });
+
   it("guides an empty owned profile to each supported first-listen path", () => {
     const onAddAlbum = vi.fn();
     const onImport = vi.fn();
@@ -68,6 +82,7 @@ describe("PageDiscovery", () => {
           onAddAlbum={onAddAlbum}
           onImport={onImport}
           onConnectSpotify={onConnectSpotify}
+          spotifySyncEligible
         />
       </MemoryRouter>
     );
@@ -82,5 +97,22 @@ describe("PageDiscovery", () => {
     expect(onImport).toHaveBeenNthCalledWith(1, "lastfm");
     expect(onImport).toHaveBeenNthCalledWith(2, "spotify_import");
     expect(onConnectSpotify).toHaveBeenCalledOnce();
+  });
+
+  it("keeps Connect Spotify visible but disabled when sync access is unavailable", () => {
+    render(
+      <MemoryRouter>
+        <PageDiscovery
+          albums={[]}
+          allAlbums={[]}
+          onAddAlbum={vi.fn()}
+          onImport={vi.fn()}
+          onConnectSpotify={vi.fn()}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("button", { name: "Connect Spotify" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Upload Spotify ZIP" })).toBeEnabled();
   });
 });

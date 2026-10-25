@@ -12,6 +12,7 @@ export default function EmptyLibraryState({
   onAddAlbum,
   onImport,
   onConnectSpotify,
+  spotifySyncEligible = false,
 }) {
   const isDiscovery = view === "discovery";
 
@@ -32,19 +33,19 @@ export default function EmptyLibraryState({
         {IMPORT_ACTIONS.map((action) => (
           <ActionCard key={action.id} {...action} onClick={() => onImport?.(action.id)} />
         ))}
-        <ActionCard icon={<FileArchive className="size-5 text-primary" aria-hidden="true" />} label="Connect Spotify" description="Sync future listens from Spotify." onClick={onConnectSpotify} />
+        <ActionCard icon={<FileArchive className="size-5 text-primary" aria-hidden="true" />} label="Connect Spotify" description="Sync future listens from Spotify." onClick={onConnectSpotify} disabled={!spotifySyncEligible} />
       </div>
     </section>
   );
 }
 
-function ActionCard({ icon, label, description, onClick, primary = false }) {
+function ActionCard({ icon, label, description, onClick, primary = false, disabled = false }) {
   return (
     <div className="rounded-lg border border-border/80 bg-card p-4 shadow-sm">
       {icon}
       <h2 className="mt-3 font-semibold text-foreground">{label}</h2>
       <p className="mt-1 min-h-10 text-sm leading-5 text-muted-foreground">{description}</p>
-      <Button type="button" className="mt-4 w-full" variant={primary ? "default" : "outline"} onClick={onClick}>
+      <Button type="button" className="mt-4 w-full" variant={primary ? "default" : "outline"} onClick={onClick} disabled={disabled}>
         {label}
       </Button>
     </div>

@@ -48,6 +48,7 @@ class SpotifyConnectResponse(BaseModel):
 
 class SpotifyStatus(BaseModel):
     connected: bool
+    spotify_sync_eligible: bool = False
     spotify_user_id: str | None = None
     connected_at: str | None = None
     last_successful_sync_at: str | None = None
@@ -143,7 +144,6 @@ class SplashFeaturedUser(BaseModel):
     recent_album_covers: list[str] = Field(default_factory=list)
     total_albums: int
     total_listens: int
-    discovery_rate: float | None = None
     replay_rate_30d: float | None = None
     top_artist: str | None = None
     top_artist_listen_count: int | None = None

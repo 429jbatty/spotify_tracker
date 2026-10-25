@@ -4,8 +4,6 @@ const TIME_RANGE_DAYS = {
   "1y": 365,
 };
 
-const FRESH_DISCOVERY_DAYS = 30;
-
 function addDays(value, days) {
   const date = new Date(value);
   date.setDate(date.getDate() + days);
@@ -19,8 +17,6 @@ function startOfDay(value) {
 }
 
 function getRangeStart(timeRange, now) {
-  if (timeRange === "all") return new Date(0);
-
   const days = TIME_RANGE_DAYS[timeRange] || TIME_RANGE_DAYS["7d"];
   return addDays(startOfDay(now), -(days - 1));
 }
@@ -43,7 +39,6 @@ function formatDiscoveryDate(value) {
 export function buildDiscoveryFeed(albums, timeRange, { now: nowValue = new Date() } = {}) {
   const now = new Date(nowValue);
   const rangeStart = getRangeStart(timeRange, now);
-  const freshDiscoveryStart = addDays(startOfDay(now), -(FRESH_DISCOVERY_DAYS - 1));
 
   return Object.values(albums || {})
     .map((album) => {
@@ -63,10 +58,7 @@ export function buildDiscoveryFeed(albums, timeRange, { now: nowValue = new Date
         firstListen != null &&
         latestInRangeListen != null &&
         firstListen.getTime() === latestInRangeListen.getTime();
-      const highlightDiscovery =
-        latestIsDiscovery ||
-        (discoveredInRange &&
-          firstListen.getTime() >= freshDiscoveryStart.getTime());
+      const highlightDiscovery = discoveredInRange;
 
       return {
         ...album,

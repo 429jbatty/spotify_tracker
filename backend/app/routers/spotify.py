@@ -10,7 +10,11 @@ from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
 from backend.app.schemas import SpotifyConnectResponse, SpotifyStatus
-from backend.app.services import auth_service, spotify_oauth_service
+from backend.app.services import (
+    auth_service,
+    spotify_access_service,
+    spotify_oauth_service,
+)
 from backend.app.services.spotify_tracking_service import run_tracking_for_user
 
 router = APIRouter(tags=["spotify"])
@@ -35,6 +39,7 @@ def connect_spotify(
                 user_slug=user_slug,
                 authorization=authorization,
             )
+            spotify_access_service.require_spotify_sync_access(user)
             response = SpotifyConnectResponse(
                 authorize_url=spotify_oauth_service.authorize_url(
                     session,
@@ -46,6 +51,8 @@ def connect_spotify(
             return response
         except (KeyError, LookupError) as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+        except spotify_access_service.SpotifySyncAccessUnavailable as exc:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
 
 
 @router.get("/users/{user_slug}/spotify/status", response_model=SpotifyStatus)
@@ -66,10 +73,14 @@ def spotify_status(
 
         credentials = SpotifyCredentialsRepository(session).get_for_user(user.id)
         if credentials is None:
-            return SpotifyStatus(connected=False)
+            return SpotifyStatus(
+                connected=False,
+                spotify_sync_eligible=user.spotify_sync_enabled,
+            )
 
         return SpotifyStatus(
             connected=True,
+            spotify_sync_eligible=user.spotify_sync_enabled,
             spotify_user_id=credentials.spotify_user_id,
             connected_at=credentials.connected_at,
             last_successful_sync_at=credentials.last_successful_sync_at,
@@ -85,16 +96,19 @@ def sync_spotify_now(
     try:
         session_factory = _session_factory()
         with session_factory() as session:
-            auth_service.require_profile_owner(
+            user = auth_service.require_profile_owner(
                 session,
                 user_slug=user_slug,
                 authorization=authorization,
             )
+            spotify_access_service.require_spotify_sync_access(user)
         return run_tracking_for_user(user_slug)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     except LookupError as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
+    except spotify_access_service.SpotifySyncAccessUnavailable as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
 
 
 @router.delete("/users/{user_slug}/spotify", status_code=status.HTTP_204_NO_CONTENT)
@@ -131,6 +145,8 @@ def spotify_callback(code: str | None = None, state: str | None = None) -> Redir
             )
     except (KeyError, LookupError) as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
+    except spotify_access_service.SpotifySyncAccessUnavailable as exc:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
 
     redirect_url = _frontend_redirect(
         {

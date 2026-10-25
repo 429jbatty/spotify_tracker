@@ -1,7 +1,6 @@
 import { Info } from "lucide-react";
 
 function formatDelta(delta, comparisonLabel) {
-  if (!comparisonLabel) return "No comparison for all time";
   if (!delta || delta.value == null) return `No ${comparisonLabel}`;
   if (delta.value === 0) return `No change vs ${comparisonLabel}`;
 
@@ -42,16 +41,16 @@ function MetricLabel({ label, tooltip }) {
   );
 }
 
-function DiscoveryMixBar({ discoveryRate, replayRate }) {
+function DiscoveryMixBar({ newToYouListeningShare, catalogListeningShare }) {
   return (
     <div className="mx-auto mt-3 flex h-2 max-w-44 overflow-hidden rounded-full bg-chart-1/60">
       <div
         className="h-full bg-chart-3"
-        style={{ width: `${Math.max(0, Math.min(100, discoveryRate))}%` }}
+        style={{ width: `${Math.max(0, Math.min(100, newToYouListeningShare))}%` }}
       />
       <div
         className="h-full bg-chart-1"
-        style={{ width: `${Math.max(0, Math.min(100, replayRate))}%` }}
+        style={{ width: `${Math.max(0, Math.min(100, catalogListeningShare))}%` }}
       />
     </div>
   );
@@ -60,9 +59,9 @@ function DiscoveryMixBar({ discoveryRate, replayRate }) {
 function Metric({
   comparisonLabel,
   delta,
-  discoveryRate,
+  newToYouListeningShare,
   label,
-  replayRate,
+  catalogListeningShare,
   tooltip,
   type,
   value,
@@ -83,11 +82,11 @@ function Metric({
       {type === "mix" ? (
         <>
           <p className="mt-1 text-sm font-medium text-muted-foreground">
-            {replayRate.toFixed(0)}% replay
+            {catalogListeningShare.toFixed(0)}% catalog
           </p>
           <DiscoveryMixBar
-            discoveryRate={discoveryRate}
-            replayRate={replayRate}
+            newToYouListeningShare={newToYouListeningShare}
+            catalogListeningShare={catalogListeningShare}
           />
         </>
       ) : null}
