@@ -1,4 +1,5 @@
 import AlbumColumnFilter from "./AlbumColumnFilter";
+import ResponsiveAlbumImage from "./ResponsiveAlbumImage";
 import { getSourceLabel } from "./utils/sourceLabels";
 
 function formatDate(isoString) {
@@ -84,13 +85,9 @@ function AlbumMobileList({
             onClick={() => onOpenAlbum(album)}
             className="grid w-full grid-cols-[4rem_minmax(0,1fr)] gap-3 rounded-lg border border-border bg-card p-3 text-left shadow-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            <img
-              loading="lazy"
-              src={album.image_url || `${import.meta.env.BASE_URL}placeholder_art.png`}
-              onError={(event) => {
-                event.currentTarget.onerror = null;
-                event.currentTarget.src = `${import.meta.env.BASE_URL}placeholder_art.png`;
-              }}
+            <ResponsiveAlbumImage
+              src={album.image_url}
+              sizes="64px"
               className="size-16 rounded-md border border-border object-cover"
               alt=""
             />

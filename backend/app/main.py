@@ -2,10 +2,10 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 
 from backend.app.config import get_settings
 from backend.app.database import create_schema
+from backend.app.services.artwork_static_files import ArtworkStaticFiles
 from backend.app.routers import (
     album_state,
     albums,
@@ -44,7 +44,7 @@ def create_app() -> FastAPI:
     artwork_dir.mkdir(parents=True, exist_ok=True)
     app.mount(
         "/media/artwork",
-        StaticFiles(directory=str(artwork_dir)),
+        ArtworkStaticFiles(directory=str(artwork_dir)),
         name="artwork",
     )
 
