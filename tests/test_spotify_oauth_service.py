@@ -70,6 +70,7 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
                     owner_account_id=account.id,
                 )
                 user_id = user.id
+                user.spotify_sync_enabled = True
                 session.add(
                     SpotifyOAuthState(
                         user_id=user.id,
@@ -95,6 +96,52 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
         self.assertEqual(credentials.spotify_user_id, "spotify-user-id")
         self.assertEqual(credentials.scope, "user-read-recently-played")
 
+    def test_callback_rejects_ineligible_profile_without_calling_spotify(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            engine = create_schema(database_url)
+            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+            with session_factory() as session:
+                account = auth_service.create_account(
+                    session,
+                    email="ineligible@example.com",
+                    password="correct-horse-battery-staple",
+                )
+                user = UserRepository(session).create_user(
+                    slug="ineligible",
+                    display_name="Ineligible",
+                    owner_account_id=account.id,
+                )
+                user_id = user.id
+                session.add(
+                    SpotifyOAuthState(
+                        user_id=user.id,
+                        account_id=account.id,
+                        state_hash=spotify_oauth_service._state_hash("ineligible-state"),
+                        created_at=datetime.now(timezone.utc).isoformat(),
+                    )
+                )
+                session.commit()
+
+            with session_factory() as session:
+                with patch.object(spotify_oauth_service, "_oauth") as oauth:
+                    with self.assertRaises(PermissionError):
+                        spotify_oauth_service.connect_user_from_callback(
+                            session,
+                            code="callback-code",
+                            state="ineligible-state",
+                        )
+                self.assertFalse(oauth.called)
+                self.assertIsNone(
+                    session.query(SpotifyOAuthState).filter_by(
+                        state_hash=spotify_oauth_service._state_hash("ineligible-state")
+                    ).one_or_none()
+                )
+                self.assertIsNone(
+                    SpotifyCredentialsRepository(session).get_for_user(user_id)
+                )
+
     def test_callback_returns_friendly_error_for_unregistered_spotify_user(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
@@ -116,6 +163,7 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
                     display_name="Friend",
                     owner_account_id=account.id,
                 )
+                user.spotify_sync_enabled = True
                 session.add(
                     SpotifyOAuthState(
                         user_id=user.id,

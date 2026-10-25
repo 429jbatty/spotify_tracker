@@ -82,6 +82,7 @@ describe("PageDiscovery", () => {
           onAddAlbum={onAddAlbum}
           onImport={onImport}
           onConnectSpotify={onConnectSpotify}
+          spotifySyncEligible
         />
       </MemoryRouter>
     );
@@ -96,5 +97,22 @@ describe("PageDiscovery", () => {
     expect(onImport).toHaveBeenNthCalledWith(1, "lastfm");
     expect(onImport).toHaveBeenNthCalledWith(2, "spotify_import");
     expect(onConnectSpotify).toHaveBeenCalledOnce();
+  });
+
+  it("keeps Connect Spotify visible but disabled when sync access is unavailable", () => {
+    render(
+      <MemoryRouter>
+        <PageDiscovery
+          albums={[]}
+          allAlbums={[]}
+          onAddAlbum={vi.fn()}
+          onImport={vi.fn()}
+          onConnectSpotify={vi.fn()}
+        />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByRole("button", { name: "Connect Spotify" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Upload Spotify ZIP" })).toBeEnabled();
   });
 });

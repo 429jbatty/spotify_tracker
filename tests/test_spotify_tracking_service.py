@@ -57,6 +57,7 @@ class SpotifyTrackingServiceTests(unittest.TestCase):
                     slug="friend",
                     display_name="Friend",
                 )
+                user.spotify_sync_enabled = True
                 user_id = user.id
                 SpotifyCredentialsRepository(session).upsert_credentials(
                     user_id=user_id,

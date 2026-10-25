@@ -10,6 +10,7 @@ from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
 from backend.app.models import SpotifyOAuthState, User
+from backend.app.services.spotify_access_service import require_spotify_sync_access
 
 
 SCOPES = ["user-read-recently-played"]
@@ -44,6 +45,12 @@ def connect_user_from_callback(session, *, code: str, state: str) -> str:
     user = session.get(User, oauth_state.user_id)
     if user is None or user.owner_account_id != oauth_state.account_id:
         raise KeyError("Spotify authorization state does not belong to an active profile.")
+    try:
+        require_spotify_sync_access(user)
+    except PermissionError:
+        session.delete(oauth_state)
+        session.commit()
+        raise
     try:
         token_info = _oauth().get_access_token(
             code=code,

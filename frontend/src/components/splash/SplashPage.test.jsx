@@ -17,6 +17,27 @@ vi.mock("@/services/albumApi", () => ({
 afterEach(() => cleanup());
 
 describe("SplashPage", () => {
+  it("explains the product and the ways to add listening history", async () => {
+    fetchSplashData.mockResolvedValue({ featured_users: [], recent_activity: [] });
+    fetchCurrentAccount.mockRejectedValue(new Error("No active session"));
+
+    render(
+      <SplashPage
+        onCreateProfile={vi.fn()}
+        onOpenProfile={vi.fn()}
+        onLogin={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Keep a history of the albums you listen to." }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Connect Spotify")).toBeInTheDocument();
+    expect(screen.getByText("Import Last.fm")).toBeInTheDocument();
+    expect(screen.getByText("Upload Spotify history")).toBeInTheDocument();
+    expect(screen.getByText("Log an album yourself")).toBeInTheDocument();
+  });
+
   it("hides profile creation for an account that already owns a profile", async () => {
     fetchSplashData.mockResolvedValue({ featured_users: [], recent_activity: [] });
     fetchCurrentAccount.mockResolvedValue({

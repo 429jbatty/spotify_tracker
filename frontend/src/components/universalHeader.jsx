@@ -258,7 +258,9 @@ function ProfileToolsMenu({
               <MenuItem onSelect={onDisconnectSpotify}>Disconnect Spotify</MenuItem>
             </>
           ) : (
-            <MenuItem onSelect={onConnectSpotify}>Connect Spotify</MenuItem>
+            <MenuItem onSelect={onConnectSpotify} disabled={!spotifyStatus?.spotify_sync_eligible}>
+              Connect Spotify
+            </MenuItem>
           )}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
