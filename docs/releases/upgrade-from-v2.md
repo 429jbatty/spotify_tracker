@@ -10,6 +10,22 @@ are not established by this document.
   additional code changes, review those changes too; do not treat moving `main`
   as a fixed release target.
 
+## Retrying the original v3 rollout
+
+The original `v3` tag has a migration-order defect: canonical identity migration
+loads the User model before its ownership column exists. Use a corrected commit
+containing the migration fix; do not retry the original tag or move that tag.
+The correction also resumes identity reconciliation when a failed attempt left
+`albums.normalized_identity` present but unfilled. The two added columns reported
+by the failed rollout do not need to be dropped. Reconfirm the actual database
+state and backups before retrying; the successful ownership migration will still
+clear legacy Spotify credentials as described below.
+
+Canonical consolidation now moves all profiles' associations in one transaction.
+When one profile owns both records, tags and distinct notes are combined; an
+existing target rating wins a conflict, otherwise the source rating is retained.
+The normal user-facing merge remains scoped to the current profile.
+
 ## What changes
 
 - Google sign-in, explicit profile ownership, one profile per account, and owner
