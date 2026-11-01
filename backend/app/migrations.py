@@ -485,8 +485,8 @@ def migrate_album_canonical_identity(engine: Engine) -> None:
 
     from backend.app.album_identity import normalized_artist_title_identity
 
-    # The repository merge preserves per-user fields and moves raw import
-    # provenance.  Import lazily to avoid the database module import cycle.
+    # The migration helper preserves all profiles' fields and raw import
+    # provenance. Import lazily to avoid the database module import cycle.
     with engine.connect() as connection:
         raw_rows = connection.execute(
             text("SELECT id, artist, name, release_group_mbid, metadata_json FROM albums")
@@ -511,11 +511,10 @@ def migrate_album_canonical_identity(engine: Engine) -> None:
 
     from sqlalchemy.orm import sessionmaker
     from backend.app.models import Album
-    from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+    from backend.app.repositories.album_identity_migration import merge_shared_album
 
     session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
     with session_factory() as session:
-        repository = SqliteStateRepository(session)
         remaining = list(session.scalars(select(Album).order_by(Album.id)))
         if identity_column_added or not identity_index_exists:
             by_text_identity: dict[str, list[Album]] = {}
@@ -532,7 +531,7 @@ def migrate_album_canonical_identity(engine: Engine) -> None:
                         != duplicate.release_group_mbid.casefold()
                     ):
                         continue
-                    repository.merge_completed_album_listens(duplicate.id, target.id)
+                    merge_shared_album(session, duplicate, target)
 
         # A matching release-group MBID is authoritative and safe even where
         # display text changed between sources.
@@ -544,7 +543,7 @@ def migrate_album_canonical_identity(engine: Engine) -> None:
         for group in by_release_group.values():
             target = group[0]
             for duplicate in group[1:]:
-                repository.merge_completed_album_listens(duplicate.id, target.id)
+                merge_shared_album(session, duplicate, target)
         for album in session.scalars(select(Album)):
             album.normalized_identity = normalized_artist_title_identity(album.artist, album.name)
         session.commit()
@@ -1018,8 +1017,8 @@ def run_sqlite_migrations(engine: Engine) -> None:
     migrate_user_album_tags(engine)
     migrate_user_album_feedback(engine)
     migrate_album_entry_source(engine)
-    # Canonical identity reconciliation constructs a repository, which loads
-    # the full User ORM model. Legacy profiles need ownership columns first.
+    # Complete profile/account schema before reconciling shared identities and
+    # their per-profile associations.
     migrate_profile_ownership(engine)
     migrate_google_account_identity(engine)
     migrate_album_canonical_identity(engine)

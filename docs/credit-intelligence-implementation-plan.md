@@ -3132,6 +3132,20 @@ Resolved now:
 - Use explicit rebuild/update logic before trying to synchronously maintain
   projections during every metadata refresh.
 
+## 2026-10-31: Upgrade reconciliation across profiles
+
+- Canonical migration now uses a dedicated global helper instead of a merge
+  scoped to the default profile. It preserves per-profile associations and
+  rebuilds the surviving album's credit facts from retained metadata.
+- Consolidation and projection updates share the migration transaction; a
+  projection failure rolls back the album/reference moves.
+- Validation: populated v2 fresh/retry tests cover 18 ownership/identity
+  combinations, repeat startup, and projection-failure rollback. Production
+  data has not been exercised; operators should validate against their backup.
+- Next: review the corrected migration and rehearse it on a production backup;
+  check Connections for source-owned albums after consolidation. No graph UX
+  or contributor eligibility rules change.
+
 ## Recommended Next Step
 
 Implement Phase 12A next, then validate the rendered page before continuing to

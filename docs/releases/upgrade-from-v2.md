@@ -21,6 +21,11 @@ by the failed rollout do not need to be dropped. Reconfirm the actual database
 state and backups before retrying; the successful ownership migration will still
 clear legacy Spotify credentials as described below.
 
+Canonical consolidation now moves all profiles' associations in one transaction.
+When one profile owns both records, tags and distinct notes are combined; an
+existing target rating wins a conflict, otherwise the source rating is retained.
+The normal user-facing merge remains scoped to the current profile.
+
 ## What changes
 
 - Google sign-in, explicit profile ownership, one profile per account, and owner
