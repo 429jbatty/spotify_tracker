@@ -1,0 +1,22 @@
+loki.source.journal "api" {
+  matches = "_SYSTEMD_UNIT=spotify-tracker-api.service"
+  max_age = "72h"
+  labels = { app = "albumary", environment = "production", service = "api" }
+  forward_to = [loki.relabel.clean.receiver]
+}
+loki.source.journal "worker" {
+  matches = "_SYSTEMD_UNIT=spotify-tracker-worker.service"
+  max_age = "72h"
+  labels = { app = "albumary", environment = "production", service = "worker" }
+  forward_to = [loki.relabel.clean.receiver]
+}
+loki.relabel "clean" {
+  forward_to = [loki.write.shared.receiver]
+  rule {
+    action = "labeldrop"
+    regex = "job"
+  }
+}
+loki.write "shared" {
+  endpoint { url = sys.env("LOKI_URL") }
+}

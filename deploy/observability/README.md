@@ -1,0 +1,122 @@
+# Albumary log infrastructure
+
+A standalone Debian LXC runs Loki and Grafana as native systemd services. Nginx
+restricts the LAN-facing ports; Loki and Grafana listen only on loopback behind
+it. Alloy on the application host reads only the two Albumary systemd journals.
+This setup is independent of the API and worker and does not change their units.
+
+Runtime IP addresses, credentials, log files, and state are not stored in Git.
+The example proxy allowlist must be adapted to the actual LAN and clients. IP
+allowlists are not authentication or encryption: use a trusted LAN, protect
+routing, and do not port-forward these services to the internet. Grafana has its
+own login; Loki has no login and must remain restricted to trusted clients.
+
+## Observability host
+
+Create an unprivileged Debian 12 LXC with systemd, nesting, persistent local
+storage, LAN IP, boot enabled, and initial resources of 1.5 GiB RAM and 20 GiB
+disk. Follow the local Proxmox inventory and IP allocation policies. Run these
+commands as root from a checkout, with `OBSERVABILITY_IP`, `ALBUMARY_IP`, and
+`DEVELOPMENT_IP` replaced with actual addresses:
+
+```sh
+apt-get update && apt-get install -y curl ca-certificates nginx
+install -d -m 755 /etc/apt/keyrings
+curl -fsSL https://apt.grafana.com/gpg-full.key -o /etc/apt/keyrings/grafana.asc
+chmod 644 /etc/apt/keyrings/grafana.asc
+echo 'deb [signed-by=/etc/apt/keyrings/grafana.asc] https://apt.grafana.com stable main' > /etc/apt/sources.list.d/grafana.list
+apt-get update && apt-get install -y grafana loki
+# The Loki package may start its default public listener during installation.
+# Install on an isolated network or firewall port 3100 before this step.
+systemctl stop loki nginx
+groupadd -f loki && usermod -g loki loki
+install -d -o loki -g loki /var/lib/loki
+install -d /etc/loki
+install -m 644 deploy/observability/loki.yaml /etc/loki/loki.yaml
+install -m 644 deploy/observability/systemd/loki.service /etc/systemd/system/loki.service
+install -m 644 deploy/observability/grafana/loki.yaml /etc/grafana/provisioning/datasources/albumary-loki.yaml
+install -d -m 700 /etc/albumary-observability
+# Create /etc/albumary-observability/grafana.env as root, mode 600:
+# GF_SECURITY_ADMIN_USER=admin
+# GF_SECURITY_ADMIN_PASSWORD=<unique-secret>
+# GF_SERVER_HTTP_ADDR=127.0.0.1
+# GF_SERVER_HTTP_PORT=3001
+install -d /etc/systemd/system/grafana-server.service.d /etc/systemd/system/nginx.service.d
+install -m 644 deploy/observability/systemd/grafana.conf /etc/systemd/system/grafana-server.service.d/albumary.conf
+install -m 644 deploy/observability/systemd/nginx-restart.conf /etc/systemd/system/nginx.service.d/albumary.conf
+# Copy nginx.conf.example to /etc/nginx/sites-available/albumary-observability,
+# replace its IP placeholders and LAN CIDR, then enable it:
+ln -s /etc/nginx/sites-available/albumary-observability /etc/nginx/sites-enabled/
+rm -f /etc/nginx/sites-enabled/default
+nginx -t
+loki -config.file=/etc/loki/loki.yaml -verify-config
+systemctl daemon-reload
+systemctl enable --now loki grafana-server nginx
+```
+
+The initial Grafana password is applied only when its database is first created;
+changing the env file later does not change an existing account password. Use
+Grafana's documented password reset mechanism when needed. Grafana's datasource
+uses the loopback Loki endpoint. The 30-day default and 3-day development rule
+are enforced asynchronously by Loki's Compactor with 24-hour TSDB index periods.
+Disk-full protection and off-host backups are not provided.
+
+## Production collector
+
+Install Alloy from the Grafana APT repository as above (`apt-get install alloy`).
+Before enabling it, set the production endpoint in a local systemd drop-in and
+install the config (replace the address):
+
+```sh
+install -m 644 deploy/observability/alloy-production.alloy /etc/alloy/config.alloy
+install -d /etc/systemd/system/alloy.service.d /etc/systemd/journald.conf.d
+cat > /etc/systemd/system/alloy.service.d/albumary.conf <<'UNIT'
+[Service]
+Environment=LOKI_URL=http://OBSERVABILITY_IP:3100/loki/api/v1/push
+UNIT
+install -m 644 deploy/observability/systemd/journald.conf /etc/systemd/journald.conf.d/albumary-observability.conf
+install -d -m 2755 -o root -g systemd-journal /var/log/journal
+usermod -aG adm,systemd-journal alloy
+alloy validate /etc/alloy/config.alloy
+systemctl daemon-reload
+systemctl restart systemd-journald
+journalctl --flush
+systemctl enable --now alloy
+```
+
+The package stores Alloy state under `/var/lib/alloy`. The journal limit is
+512 MiB with 1 GiB of free-space reservation; tune it for host capacity. The
+collector reads at most 72 hours of old journal on startup and delivery after
+an outage is best effort, not guaranteed. Protect the collector and Loki from
+untrusted clients and don't place secrets in log messages.
+
+## Optional local development
+
+Install a standalone Alloy binary from Grafana's official release page or use
+`brew install grafana/grafana/alloy`. The collector is optional and runs only
+when explicitly started. Configure the Loki proxy to allow the machine's current
+IP; update its allowlist if the address changes.
+
+```sh
+export ALBUMARY_LOG_DIR="$HOME/.local/state/albumary-logs"
+export LOKI_URL="http://OBSERVABILITY_IP:3100/loki/api/v1/push"
+mkdir -p "$ALBUMARY_LOG_DIR" "$HOME/.local/state/albumary-alloy"
+touch "$ALBUMARY_LOG_DIR/api.log" "$ALBUMARY_LOG_DIR/worker.log"
+alloy run --storage.path="$HOME/.local/state/albumary-alloy" deploy/observability/alloy-development.alloy
+```
+
+In another terminal, start `make backend 2>&1 | tee -a "$ALBUMARY_LOG_DIR/api.log"`
+or `make track-all 2>&1 | tee -a "$ALBUMARY_LOG_DIR/worker.log"` after exporting
+the same `ALBUMARY_LOG_DIR`. Stop Alloy with Ctrl-C. Local log files have no
+automatic rotation; delete or rotate them as needed. These files can contain
+sensitive application output and should remain outside the repository.
+
+## Verify and update
+
+- `systemctl is-enabled loki grafana-server nginx` and `systemctl is-active loki grafana-server nginx` on the observability host; check `alloy` on the app host.
+- `curl http://127.0.0.1:3101/ready` on the observability host; Loki may take a short time to become ready.
+- Log into Grafana at `http://OBSERVABILITY_IP:3000`, choose Explore and `Albumary Loki`, and query `{app="albumary",environment="production",service="api"}` or `service="worker"`. Replace the environment with `development` for local output.
+- Confirm unauthorized clients receive HTTP 403 from port 3100 and Grafana requires login. Check `ss -ltn` to ensure backend ports 3001 and 3101 bind only to loopback.
+- Restart Alloy and Loki individually, check the app API and timer remain healthy, and verify fresh messages arrive. Reboot the observability guest during an appropriate window to verify autostart and persistence. Journal retention and finite retry buffers limit outage recovery.
+- Inspect `journalctl -u alloy`, `journalctl -u loki`, `journalctl -u grafana-server`, `df -h`, and memory use. Review Loki Compactor logs and metrics; retention deletion is delayed and does not immediately reclaim disk.
+- Update packages manually with APT, review release notes and config changes, validate the configs, and restart affected services. Reapply repository-managed config and local allowlist changes when updating. Back up or export Grafana settings separately if they become valuable; log history is not backed up by this setup.

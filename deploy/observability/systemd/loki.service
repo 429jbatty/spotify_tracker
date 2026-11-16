@@ -1,0 +1,15 @@
+[Unit]
+Description=Grafana Loki log storage
+After=network.target
+[Service]
+User=loki
+Group=loki
+ExecStart=/usr/bin/loki -config.file=/etc/loki/loki.yaml
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/loki
+[Install]
+WantedBy=multi-user.target

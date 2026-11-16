@@ -1,0 +1,41 @@
+auth_enabled: false
+server:
+  http_listen_address: 127.0.0.1
+  http_listen_port: 3101
+  grpc_listen_address: 127.0.0.1
+common:
+  instance_addr: 127.0.0.1
+  path_prefix: /var/lib/loki
+  replication_factor: 1
+  ring:
+    kvstore:
+      store: inmemory
+  storage:
+    filesystem:
+      chunks_directory: /var/lib/loki/chunks
+      rules_directory: /var/lib/loki/rules
+schema_config:
+  configs:
+    - from: 2024-01-01
+      store: tsdb
+      object_store: filesystem
+      schema: v13
+      index:
+        prefix: index_
+        period: 24h
+storage_config:
+  tsdb_shipper:
+    active_index_directory: /var/lib/loki/index
+    cache_location: /var/lib/loki/index-cache
+compactor:
+  working_directory: /var/lib/loki/compactor
+  retention_enabled: true
+  delete_request_store: filesystem
+limits_config:
+  discover_service_name: []
+  discover_log_levels: false
+  retention_period: 720h
+  retention_stream:
+    - selector: '{environment="development"}'
+      priority: 1
+      period: 72h
