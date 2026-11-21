@@ -1,7 +1,7 @@
 {
   "uid": "albumary-operations",
   "title": "Albumary Operations",
-  "description": "Operational overview from structured Albumary logs. Select development to inspect test events. Older plain-text and undeployed production logs do not populate structured panels.",
+  "description": "Operational overview from structured Albumary logs. Select development to inspect test events. Older plain-text logs do not populate structured panels.",
   "tags": [
     "albumary",
     "logs"
@@ -54,7 +54,7 @@
       },
       "options": {
         "mode": "markdown",
-        "content": "**Counts show structured log events in the selected time range, not live service health.** Production needs the structured logging release; development may contain simulated validation failures."
+        "content": "**Counts show structured log events in the selected time range, not live service health.** Earlier plain-text logs are excluded; development may contain simulated validation failures."
       },
       "transparent": true
     },
