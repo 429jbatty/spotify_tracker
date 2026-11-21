@@ -5,6 +5,7 @@ import datetime
 
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy import Spotify
+import structlog
 from spotipy.exceptions import SpotifyException
 
 
@@ -126,8 +127,18 @@ class SpotifyAPI:
         """
         results = self.sp.current_user_recently_played(limit=50)
 
+        items = results["items"]
+        # A full page entirely newer than the watermark may have older, unseen
+        # plays beyond this single page; it does not prove any plays were lost.
+        if len(items) >= 50 and (
+            not after_timestamp
+            or all(item["played_at"] > after_timestamp for item in items)
+        ):
+            structlog.get_logger(__name__).warning(
+                "spotify_recent_plays_page_full", raw_play_count=len(items), page_limit=50
+            )
         tracks = []
-        for item in results["items"]:
+        for item in items:
             played_at = item["played_at"]
 
             if after_timestamp and played_at <= after_timestamp:

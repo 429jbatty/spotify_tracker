@@ -1,0 +1,20 @@
+local.file_match "albumary" {
+  path_targets = [
+    { __path__ = sys.env("ALBUMARY_LOG_DIR") + "/api.log", app = "albumary", environment = "development", service = "api" },
+    { __path__ = sys.env("ALBUMARY_LOG_DIR") + "/worker.log", app = "albumary", environment = "development", service = "worker" },
+  ]
+}
+loki.source.file "albumary" {
+  targets = local.file_match.albumary.targets
+  forward_to = [loki.relabel.clean.receiver]
+}
+loki.relabel "clean" {
+  forward_to = [loki.write.shared.receiver]
+  rule {
+    action = "labeldrop"
+    regex = "filename|job"
+  }
+}
+loki.write "shared" {
+  endpoint { url = sys.env("LOKI_URL") }
+}

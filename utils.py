@@ -1,4 +1,5 @@
 import os
+import logging
 from contextlib import contextmanager
 from dotenv import load_dotenv
 
@@ -85,31 +86,11 @@ def merge_completed_albums_with_priority(start_state, **album_dicts):
             existing_priority = SOURCE_PRIORITY_BY_PARAM.get(existing_source, -1)
 
             if incoming_priority > existing_priority:
-                print(
-                    f"[OVERWRITE] {key} | "
-                    f"{param_name} ({incoming_priority}) "
-                    f"overrode {existing_source} ({existing_priority})"
-                )
                 merged[key] = record
                 stats["overwritten"] += 1
-
-            elif incoming_priority == existing_priority:
-                print(
-                    f"[EQUAL PRIORITY] {key} | "
-                    f"{param_name} ({incoming_priority}) "
-                    f"tied with {existing_source} ({existing_priority}) - keeping existing"
-                )
-                stats["skipped_lower_priority"] += 1
-
             else:
-                print(
-                    f"[SKIP] {key} | "
-                    f"{param_name} ({incoming_priority}) "
-                    f"lost to {existing_source} ({existing_priority})"
-                )
                 stats["skipped_lower_priority"] += 1
 
-    print("MERGE STATS:", stats)
-    print("FINAL TOTAL:", len(merged))
+    logging.getLogger(__name__).debug("Album merge summary: %s, total=%s", stats, len(merged))
 
     return merged

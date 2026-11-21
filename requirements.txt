@@ -12,3 +12,4 @@ python-multipart
 ijson
 google-auth
 Pillow
+structlog>=24,<27
