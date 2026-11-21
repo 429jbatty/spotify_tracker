@@ -1,4 +1,8 @@
-import logging
+import time
+import uuid
+
+import structlog
+from structlog.contextvars import bind_contextvars, bound_contextvars
 from datetime import datetime, timezone
 
 from sqlalchemy.orm import sessionmaker
@@ -19,7 +23,7 @@ from spotify_manager import SpotifyAPI
 
 STALE_HOURS = 48
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def run_tracking_for_default_user() -> dict[str, int]:
@@ -39,7 +43,6 @@ def run_tracking_for_all_users() -> dict[str, dict[str, int | str]]:
         try:
             results[user_slug] = run_tracking_for_user(user_slug)
         except Exception as exc:
-            logger.exception("Spotify tracking failed for user %s", user_slug)
             _record_sync_error(user_slug, str(exc))
             results[user_slug] = {"error": str(exc)}
 
@@ -47,11 +50,23 @@ def run_tracking_for_all_users() -> dict[str, dict[str, int | str]]:
 
 
 def run_tracking_for_user(user_slug: str) -> dict[str, int]:
-    logger.info("=== Album tracking run started for user %s ===", user_slug)
+    started = time.perf_counter()
+    with bound_contextvars(sync_run_id=uuid.uuid4().hex, user_id=None):
+        try:
+            result = _run_tracking_for_user(user_slug)
+            logger.info("spotify_sync_completed", duration_ms=round((time.perf_counter() - started) * 1000, 3), **result)
+            return result
+        except Exception:
+            logger.exception("spotify_sync_failed", duration_ms=round((time.perf_counter() - started) * 1000, 3))
+            raise
 
+
+def _run_tracking_for_user(user_slug: str) -> dict[str, int]:
     session_factory = _session_factory()
     with session_factory() as session:
         user = UserRepository(session).require_user_by_slug(user_slug)
+        bind_contextvars(user_id=user.id)
+        logger.info("spotify_sync_started")
         require_spotify_sync_access(user)
         credentials = _credentials_for_user(
             session,
@@ -61,11 +76,9 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
         start_state = repository.load_album_state()
 
         starting_completed_count = len(start_state.get("completed_albums", {}))
-        logger.info("Starting completed albums: %s", starting_completed_count)
 
         spotify = SpotifyAPI(credentials)
         tracks = spotify.fetch_recent_tracks(start_state["last_checked"])
-        logger.info("Fetched %s recent tracks from Spotify", len(tracks))
 
         clean_up_state = tracking.cleanup_stale_albums(
             start_state,
@@ -80,7 +93,6 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
             updated_tracks_state,
             threshold=ALBUM_COMPLETION_THRESHOLD,
         )
-        logger.info("Newly completed albums from Spotify: %s", len(completed_album_ids))
 
         newly_completed_albums = {}
         for album_id in completed_album_ids:
@@ -110,8 +122,6 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
         )
 
         final_completed_count = len(end_state["completed_albums"])
-        logger.info("Final completed albums after merge: %s", final_completed_count)
-        logger.info("=== Album tracking run completed for user %s ===", user_slug)
 
         return {
             "tracks_fetched": len(tracks),

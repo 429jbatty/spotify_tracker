@@ -126,6 +126,7 @@ the review queue instead of being silently dropped.
   upload, raw event storage, album-session derivation, and safety limits.
 - [Testing](docs/testing.md): test commands, coverage map, and expectations.
 - [Deployment](docs/deployment.md): native LXC/systemd/Caddy deployment notes.
+- [Logging and observability](docs/logging.md): log collection and application logging practices.
 - [Agent Guide](AGENTS.md): AI-agent and maintainer implementation guidance.
 
 ## Deployment

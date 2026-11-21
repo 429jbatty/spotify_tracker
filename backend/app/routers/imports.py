@@ -1,5 +1,8 @@
 import threading
 import logging
+
+import structlog
+from structlog.contextvars import bound_contextvars
 import uuid
 from pathlib import Path
 
@@ -42,11 +45,13 @@ def _session_factory():
 
 def _run_import_background_worker(import_session_id: int) -> None:
     session_factory = _session_factory()
-    try:
-        with session_factory() as session:
-            import_service.run_import_session(session, import_session_id)
-    except Exception:
-        logger.exception("Import session %s failed.", import_session_id)
+    with bound_contextvars(import_session_id=import_session_id):
+        try:
+            with session_factory() as session:
+                import_service.run_import_session(session, import_session_id)
+        except Exception as exc:
+            if not getattr(exc, "_albumary_import_logged", False):
+                structlog.get_logger(__name__).exception("import_failed")
 
 
 def _start_import_background_worker(import_session_id: int) -> None:

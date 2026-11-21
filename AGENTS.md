@@ -50,6 +50,10 @@ and app state are user-scoped.
   `components/dataQuality/`, `components/importHistory/`, `components/search/`,
   `components/splash/`, and `components/timeline/` for feature-specific UI.
 
+## Logging
+
+- Read `docs/logging.md` before adding or changing application logs. It describes the logging infrastructure and application conventions.
+
 ## Backend Standards
 
 - Keep FastAPI routers small: validate input, load dependencies, call services

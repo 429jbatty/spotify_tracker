@@ -37,6 +37,9 @@ candidate sessions, and send uncertain but plausible sessions to review.
 
 import hashlib
 import logging
+
+import structlog
+from structlog.contextvars import bound_contextvars
 import os
 import re
 import time
@@ -242,7 +245,7 @@ class ImportStageTimer:
         self.finish()
         self.active_stage = stage
         self.active_started_at = time.perf_counter()
-        logger.info("import_session=%s stage=%s started", self.import_session_id, stage)
+        structlog.get_logger(__name__).info("import_stage_started", import_session_id=self.import_session_id, stage=stage)
 
     def finish(self) -> None:
         if self.active_stage is None or self.active_started_at is None:
@@ -251,11 +254,9 @@ class ImportStageTimer:
         timings = dict(self.summary.stage_timings or {})
         timings[self.active_stage] = round(timings.get(self.active_stage, 0.0) + elapsed, 3)
         self.summary.stage_timings = timings
-        logger.info(
-            "import_session=%s stage=%s completed elapsed_s=%.3f",
-            self.import_session_id,
-            self.active_stage,
-            elapsed,
+        structlog.get_logger(__name__).info(
+            "import_stage_completed", import_session_id=self.import_session_id,
+            stage=self.active_stage, duration_ms=round(elapsed * 1000, 3),
         )
         self.active_stage = None
         self.active_started_at = None
@@ -290,13 +291,8 @@ def _append_import_log(
             metadata_json=metadata or {},
         )
     )
-    logger.info(
-        "import_session=%s stage=%s level=%s message=%s",
-        import_session.id,
-        stage,
-        level,
-        message,
-    )
+    # User-facing progress is persisted above; avoid duplicating arbitrary
+    # message text and per-item progress in the operational log.
 
 
 def _set_import_progress(
@@ -505,37 +501,45 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
     if import_session is None:
         raise KeyError(f"Import session not found: {import_session_id}")
 
-    repository = SqliteStateRepository(session, user_slug=import_session.user.slug)
-    try:
-        if import_session.source == "lastfm":
-            _run_lastfm_import_session(session, repository, import_session)
-        elif import_session.source == SPOTIFY_IMPORT_SOURCE:
-            _run_spotify_import_session(session, repository, import_session)
-        else:
-            raise ValueError(f"Unsupported import source: {import_session.source}")
-        _run_post_import_artwork_backfill(session, repository, import_session)
-    except Exception:
-        summary = _session_summary(import_session)
-        import_session.status = "failed"
-        import_session.completed_at = _utc_now()
-        _append_import_log(
-            session,
-            import_session,
-            level="error",
-            stage=summary.progress_label,
-            message="Import failed. Check server logs for traceback.",
-        )
-        _set_import_progress(
-            import_session,
-            summary,
-            label="Failed",
-            current=summary.progress_current,
-            total=summary.progress_total,
-        )
-        session.commit()
-        raise
+    with bound_contextvars(user_id=import_session.user_id, import_session_id=import_session_id):
+        structlog.get_logger(__name__).info("import_started", source=import_session.source)
+        repository = SqliteStateRepository(session, user_slug=import_session.user.slug)
+        try:
+            if import_session.source == "lastfm":
+                _run_lastfm_import_session(session, repository, import_session)
+            elif import_session.source == SPOTIFY_IMPORT_SOURCE:
+                _run_spotify_import_session(session, repository, import_session)
+            else:
+                raise ValueError(f"Unsupported import source: {import_session.source}")
+            _run_post_import_artwork_backfill(session, repository, import_session)
+        except Exception as exc:
+            structlog.get_logger(__name__).exception("import_failed")
+            try:
+                setattr(exc, "_albumary_import_logged", True)
+            except (AttributeError, TypeError):
+                pass
+            summary = _session_summary(import_session)
+            import_session.status = "failed"
+            import_session.completed_at = _utc_now()
+            _append_import_log(
+                session,
+                import_session,
+                level="error",
+                stage=summary.progress_label,
+                message="Import failed. Check server logs for traceback.",
+            )
+            _set_import_progress(
+                import_session,
+                summary,
+                label="Failed",
+                current=summary.progress_current,
+                total=summary.progress_total,
+            )
+            session.commit()
+            raise
 
-    return _build_import_session_summary(import_session)
+        structlog.get_logger(__name__).info("import_finished", status=import_session.status)
+        return _build_import_session_summary(import_session)
 
 
 def _run_post_import_artwork_backfill(

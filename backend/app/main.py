@@ -3,6 +3,8 @@ from pathlib import Path
 
 from fastapi import FastAPI
 
+from backend.app.logging_config import configure_logging
+from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.config import get_settings
 from backend.app.database import create_schema
 from backend.app.services.artwork_static_files import ArtworkStaticFiles
@@ -20,6 +22,7 @@ from backend.app.routers import users
 
 
 def create_app() -> FastAPI:
+    configure_logging()
     settings = get_settings()
     create_schema(settings.database_url)
 
@@ -29,6 +32,7 @@ def create_app() -> FastAPI:
         yield
 
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
+    app.add_middleware(RequestLoggingMiddleware)
 
     app.include_router(health.router, prefix=settings.api_prefix)
     app.include_router(album_state.router, prefix=settings.api_prefix)
