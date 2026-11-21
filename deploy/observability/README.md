@@ -35,6 +35,9 @@ install -d /etc/loki
 install -m 644 deploy/observability/loki.yaml /etc/loki/loki.yaml
 install -m 644 deploy/observability/systemd/loki.service /etc/systemd/system/loki.service
 install -m 644 deploy/observability/grafana/loki.yaml /etc/grafana/provisioning/datasources/albumary-loki.yaml
+install -d -m 755 /var/lib/grafana/albumary-dashboards
+install -m 644 deploy/observability/grafana/dashboards/albumary-operations.json /var/lib/grafana/albumary-dashboards/albumary-operations.json
+install -m 644 deploy/observability/grafana/dashboard-provider.yaml /etc/grafana/provisioning/dashboards/albumary.yaml
 install -d -m 700 /etc/albumary-observability
 # Create /etc/albumary-observability/grafana.env as root, mode 600:
 # GF_SECURITY_ADMIN_USER=admin
@@ -110,6 +113,38 @@ or `make track-all 2>&1 | tee -a "$ALBUMARY_LOG_DIR/worker.log"` after exporting
 the same `ALBUMARY_LOG_DIR`. Stop Alloy with Ctrl-C. Local log files have no
 automatic rotation; delete or rotate them as needed. These files can contain
 sensitive application output and should remain outside the repository.
+
+## Operations dashboard
+
+Grafana provisions the [Albumary Operations dashboard](grafana/dashboards/albumary-operations.json)
+from `/var/lib/grafana/albumary-dashboards/` using
+[dashboard-provider.yaml](grafana/dashboard-provider.yaml). The dashboard UID
+and URL remain `albumary-operations`. Grafana is configured to prevent saving
+edits to this provisioned dashboard in the UI and to retain the database copy
+if its file disappears. To experiment in Grafana, save a separate copy; export
+its JSON and review it into the repository when ready to keep the changes.
+
+After updating the repository JSON, copy it to the observability container from
+a checkout with SSH access to the Proxmox host as root:
+
+```sh
+./deploy/observability/update-dashboard.sh PROXMOX_SSH_HOST OBSERVABILITY_CT_ID
+```
+
+For this homelab, the arguments are `nuc 109`. The script validates the JSON
+and dashboard UID, then atomically replaces the Grafana-readable file. Grafana
+polls for changes every 30 seconds; refresh the dashboard to verify. The script
+does not modify application services or require an Albumary release. To roll
+back, restore an earlier dashboard JSON in the checkout and rerun the command.
+An initial provider installation or provider-configuration change requires a
+Grafana restart; changing only the dashboard JSON does not.
+
+Choose **Environment** to switch between production and development. Counters
+show structured events in the selected time range, not current service health;
+legacy plain-text logs do not populate these panels. Production panels need the
+structured application logging changes deployed. Development validation can
+produce simulated failures; test data follows the three-day retention policy.
+Use Explore for full event details and tracebacks.
 
 ## Verify and update
 
