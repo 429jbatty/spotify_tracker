@@ -39,11 +39,11 @@ import hashlib
 import logging
 
 import structlog
-from structlog.contextvars import bound_contextvars
+from structlog.contextvars import bind_contextvars, bound_contextvars, get_contextvars
 import os
 import re
 import time
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Any
@@ -501,7 +501,11 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
     if import_session is None:
         raise KeyError(f"Import session not found: {import_session_id}")
 
-    with bound_contextvars(user_id=import_session.user_id, import_session_id=import_session_id):
+    started = time.perf_counter()
+    with bound_contextvars(
+        user_id=import_session.user_id, import_session_id=import_session_id,
+        candidate_summary_scope="full_import",
+    ):
         structlog.get_logger(__name__).info("import_started", source=import_session.source)
         repository = SqliteStateRepository(session, user_slug=import_session.user.slug)
         try:
@@ -513,7 +517,10 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
                 raise ValueError(f"Unsupported import source: {import_session.source}")
             _run_post_import_artwork_backfill(session, repository, import_session)
         except Exception as exc:
-            structlog.get_logger(__name__).exception("import_failed")
+            structlog.get_logger(__name__).exception(
+                "import_failed", stage=getattr(import_session, "status", "unknown"),
+                duration_ms=round((time.perf_counter() - started) * 1000, 3),
+            )
             try:
                 setattr(exc, "_albumary_import_logged", True)
             except (AttributeError, TypeError):
@@ -538,7 +545,33 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
             session.commit()
             raise
 
-        structlog.get_logger(__name__).info("import_finished", status=import_session.status)
+        summary = _session_summary(import_session)
+        fields = {
+            "source": import_session.source,
+            "status": import_session.status,
+            "duration_ms": round((time.perf_counter() - started) * 1000, 3),
+            "source_rows_reported": summary.total_rows,
+            "new_source_rows": summary.new_event_rows,
+            "candidate_summary_scope": get_contextvars()["candidate_summary_scope"],
+            "album_session_candidates": summary.distinct_album_candidates,
+            "matched_existing_candidates": summary.matched_existing_rows,
+            "new_album_candidates": summary.new_album_rows,
+            "derived_album_listens": summary.derived_album_listens,
+            "review_candidates": summary.review_candidates,
+            "pending_metadata_candidates": summary.pending_metadata_candidates,
+            "metadata_cache_hits": summary.metadata_cache_hits,
+            "metadata_cache_misses": summary.metadata_cache_misses,
+            "musicbrainz_requests": summary.musicbrainz_requests,
+        }
+        if import_session.source == SPOTIFY_IMPORT_SOURCE:
+            fields.update(
+                duplicate_source_rows=summary.duplicate_rows,
+                invalid_source_rows=summary.failed_rows,
+                catalog_resolved_track_ids=summary.spotify_catalog_resolved_tracks,
+                catalog_unresolved_track_ids=summary.spotify_catalog_unresolved_tracks,
+                catalog_fallback_source_rows=summary.spotify_catalog_fallback_rows,
+            )
+        structlog.get_logger(__name__).info("import_finished", **fields)
         return _build_import_session_summary(import_session)
 
 
@@ -1232,6 +1265,11 @@ def create_spotify_import_session(
             },
         )
     session.commit()
+    if duplicate_session_id is not None:
+        structlog.get_logger(__name__).warning(
+            "spotify_import_duplicate_archive", user_id=repository.user.id,
+            import_session_id=import_session.id, duplicate_of_session_id=duplicate_session_id,
+        )
 
     return ImportCommitResponse(
         import_session_id=import_session.id,
@@ -1258,6 +1296,9 @@ def _run_lastfm_import_session(
     if import_session.status in {"fetching_metadata", "finalizing"}:
         pending_rows = _pending_metadata_rows(session, repository, import_session)
         if pending_rows:
+            # Resumed summaries cover pending candidates, not the entire import.
+            bind_contextvars(candidate_summary_scope="resume_subset")
+            structlog.get_logger(__name__).info("import_resumed", source="lastfm", previous_status=import_session.status)
             _resume_lastfm_metadata_import(session, repository, import_session, pending_rows)
             return
 
@@ -1366,7 +1407,6 @@ def _run_lastfm_import_session(
         current=0,
         total=0,
     )
-    timer.start("grouping_album_sessions")
     _append_import_log(
         session,
         import_session,
@@ -1376,9 +1416,8 @@ def _run_lastfm_import_session(
     session.commit()
 
     candidate_rows = [row for row in raw_rows if row.match_status == "raw_imported"]
-
-    timer.finish()
     import_session.status = "matching_cached_albums"
+    # Candidate construction combines grouping and cached matching in one pass.
     timer.start("matching_cached_albums")
     _append_import_log(
         session,
@@ -1490,6 +1529,7 @@ def _run_lastfm_import_session(
 
     timer.finish()
     _apply_lastfm_candidate_summary(summary, final_candidates)
+    _log_candidate_outcomes(final_candidates, scope="full_import")
     _apply_metadata_stats(summary, metadata_stats)
     import_session.status = "completed"
     import_session.completed_at = _utc_now()
@@ -1523,6 +1563,9 @@ def _run_spotify_import_session(
         or import_session.status in {"fetching_metadata", "finalizing"}
         or existing_import_rows
     ):
+        # Resumed summaries may exclude candidates processed before interruption.
+        bind_contextvars(candidate_summary_scope="resume_subset")
+        structlog.get_logger(__name__).info("import_resumed", source=SPOTIFY_IMPORT_SOURCE, previous_status=import_session.status)
         _resume_spotify_import_session(session, repository, import_session)
         return
     if not artifact_path:
@@ -1573,7 +1616,8 @@ def _run_spotify_import_session(
             total=len(history_entries),
         )
         import_session.status = "parsing_spotify_history"
-        timer.start("parsing_spotify_history")
+        # This stage only prepares files; streaming JSON parsing happens during storage.
+        timer.start("preparing_spotify_history")
         _append_import_log(
             session,
             import_session,
@@ -1673,7 +1717,6 @@ def _run_spotify_import_session(
             current=0,
             total=0,
         )
-        timer.start("grouping_album_sessions")
         _append_import_log(
             session,
             import_session,
@@ -1682,8 +1725,8 @@ def _run_spotify_import_session(
         )
         session.commit()
 
-        timer.finish()
         import_session.status = "matching_cached_albums"
+        # Candidate construction combines grouping and cached matching in one pass.
         timer.start("matching_cached_albums")
         _append_import_log(
             session,
@@ -1798,6 +1841,7 @@ def _run_spotify_import_session(
 
         timer.finish()
         _apply_lastfm_candidate_summary(summary, final_candidates)
+        _log_candidate_outcomes(final_candidates, scope="full_import")
         _apply_metadata_stats(summary, metadata_stats)
         import_session.status = "completed"
         import_session.completed_at = _utc_now()
@@ -1851,6 +1895,7 @@ def _resume_lastfm_metadata_import(
     )
     timer.finish()
     _apply_lastfm_candidate_summary(summary, remote_candidates)
+    _log_candidate_outcomes(remote_candidates, scope="resume_subset")
     _apply_metadata_stats(summary, metadata_stats)
     import_session.status = "finalizing"
     _set_import_progress(
@@ -2205,6 +2250,12 @@ def _resolve_spotify_catalog_for_import(
             repository,
             import_session,
         )
+        if summary.spotify_catalog_fallback_rows:
+            # No URIs remain to look up; earlier attempts may still need fallback.
+            structlog.get_logger(__name__).info(
+                "spotify_catalog_fallback", reason="no_unresolved_track_uris",
+                unique_track_ids=0, fallback_source_rows=summary.spotify_catalog_fallback_rows,
+            )
         return
 
     try:
@@ -2214,6 +2265,10 @@ def _resolve_spotify_catalog_for_import(
             session,
             repository,
             import_session,
+        )
+        structlog.get_logger(__name__).warning(
+            "spotify_catalog_fallback", reason="catalog_unavailable",
+            unique_track_ids=len(track_uris), fallback_source_rows=summary.spotify_catalog_fallback_rows,
         )
         _append_import_log(
             session,
@@ -2498,6 +2553,7 @@ def _finalize_spotify_resume_or_repair(
     import_session.status = "finalizing"
     timer.start("finalizing")
     _apply_lastfm_candidate_summary(summary, final_candidates)
+    _log_candidate_outcomes(final_candidates, scope="resume_or_repair_subset")
     _apply_metadata_stats(summary, metadata_stats)
     _set_import_progress(
         import_session,
@@ -3039,6 +3095,15 @@ def _lastfm_raw_import_summary(
     summary.review_candidates = 0
     summary.unresolved_rows = 0
     return summary
+
+
+def _log_candidate_outcomes(candidates: list[LastfmCandidate], *, scope: str) -> None:
+    # Candidate outcomes are album sessions, not raw plays or unique albums.
+    counts = dict(Counter(candidate.status for candidate in candidates))
+    structlog.get_logger(__name__).info(
+        "import_candidate_outcomes", candidate_scope=scope,
+        album_session_candidates=len(candidates), status_counts=counts,
+    )
 
 
 def _apply_lastfm_candidate_summary(

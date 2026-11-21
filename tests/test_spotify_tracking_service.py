@@ -43,6 +43,53 @@ class FakeSpotifyAPI:
 
 
 class SpotifyTrackingServiceTests(unittest.TestCase):
+    def test_spotify_client_failure_reports_initialization_phase(self):
+        from structlog.contextvars import get_contextvars
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            session_factory = sessionmaker(bind=create_schema(database_url))
+            with session_factory() as session:
+                user = UserRepository(session).create_user(slug="friend", display_name="Friend")
+                user.spotify_sync_enabled = True
+                SpotifyCredentialsRepository(session).upsert_credentials(
+                    user_id=user.id, refresh_token="refresh-token"
+                )
+            contexts = []
+            with patch.dict("os.environ", {"DATABASE_URL": database_url}), \
+                 patch.object(spotify_tracking_service, "SpotifyAPI", side_effect=RuntimeError("offline")), \
+                 patch.object(spotify_tracking_service.logger, "exception", side_effect=lambda *a, **kw: contexts.append(get_contextvars().copy())):
+                with self.assertRaises(RuntimeError):
+                    spotify_tracking_service.run_tracking_for_user("friend")
+            self.assertEqual(contexts[0]["sync_phase"], "initialize_spotify_client")
+            self.assertFalse(contexts[0]["album_state_saved"])
+
+    def test_sync_failure_reports_phase_after_state_is_saved(self):
+        from structlog.contextvars import get_contextvars
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
+            session_factory = sessionmaker(bind=create_schema(database_url))
+            with session_factory() as session:
+                user = UserRepository(session).create_user(slug="friend", display_name="Friend")
+                user.spotify_sync_enabled = True
+                SpotifyCredentialsRepository(session).upsert_credentials(
+                    user_id=user.id, refresh_token="refresh-token"
+                )
+            contexts = []
+            with patch.dict("os.environ", {"DATABASE_URL": database_url}), \
+                 patch.object(spotify_tracking_service, "SpotifyAPI", FakeSpotifyAPI), \
+                 patch("tracking.meta.get_album_metadata", return_value={"artist": "Artist", "name": "Completed Album", "source": "musicbrainz"}), \
+                 patch.object(SpotifyCredentialsRepository, "record_sync_success", side_effect=RuntimeError("failure")), \
+                 patch.object(spotify_tracking_service.logger, "exception", side_effect=lambda *a, **kw: contexts.append(get_contextvars().copy())):
+                with self.assertRaises(RuntimeError):
+                    spotify_tracking_service.run_tracking_for_user("friend")
+            self.assertEqual(contexts[0]["sync_phase"], "record_sync_success")
+            self.assertTrue(contexts[0]["album_state_saved"])
+            with session_factory() as session:
+                state = SqliteStateRepository(session, user_slug="friend").load_album_state()
+                self.assertIn("Artist - Completed Album", state["completed_albums"])
+
     def test_run_tracking_for_user_updates_user_scoped_state(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

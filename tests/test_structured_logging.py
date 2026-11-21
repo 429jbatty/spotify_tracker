@@ -104,7 +104,7 @@ class StructuredLoggingTests(unittest.TestCase):
             from backend.app.logging_config import configure_logging
             from backend.app.services.import_service import run_import_session
             configure_logging()
-            item = SimpleNamespace(user_id=42, user=SimpleNamespace(slug='test'), source='lastfm')
+            item = SimpleNamespace(user_id=42, user=SimpleNamespace(slug='test'), source='lastfm', status='fetching_metadata')
             session = Mock(); session.get.return_value = item
             summary = SimpleNamespace(progress_label='fetch', progress_current=1, progress_total=2)
             with patch('backend.app.services.import_service.SqliteStateRepository'), patch('backend.app.services.import_service._run_lastfm_import_session', side_effect=ValueError('failed')), patch('backend.app.services.import_service._session_summary', return_value=summary), patch('backend.app.services.import_service._append_import_log'), patch('backend.app.services.import_service._set_import_progress'):
@@ -114,6 +114,8 @@ class StructuredLoggingTests(unittest.TestCase):
         failure = next(e for e in events if e['event'] == 'import_failed')
         self.assertEqual(failure['user_id'], 42)
         self.assertEqual(failure['import_session_id'], 99)
+        self.assertEqual(failure['stage'], 'fetching_metadata')
+        self.assertGreaterEqual(failure['duration_ms'], 0)
 
     def test_async_context_isolation(self):
         events = self.run_script("""

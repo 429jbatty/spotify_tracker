@@ -2124,12 +2124,16 @@ class ApiImportTests(unittest.TestCase):
                 import_session_id = import_session.id
                 session.commit()
 
-                import_service.run_import_session(session, import_session_id)
+                from structlog.testing import capture_logs
+                with capture_logs() as events:
+                    import_service.run_import_session(session, import_session_id)
 
             with session_factory() as session:
                 finished = session.get(ImportSession, import_session_id)
                 listen_count = session.query(AlbumListen).count()
 
+        completed = next(event for event in events if event["event"] == "import_finished")
+        self.assertEqual(completed["candidate_summary_scope"], "resume_subset")
         self.assertEqual(finished.status, "completed")
         self.assertEqual(listen_count, 2)
 

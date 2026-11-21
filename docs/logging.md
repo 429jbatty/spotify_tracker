@@ -54,6 +54,29 @@ layer. Expected validation failures do not automatically need error tracebacks.
 Persistent import status and user-facing progress belong in the application
 data model, not exclusively in logs.
 
+Choose events by the question they answer: record boundaries, significant
+branch decisions, fallbacks, and outcomes that help diagnose failures or explain
+why data changed. Prefer one summary with measured counts over repeated progress
+messages. Use `warning` for degraded behavior such as a catalog fallback or a
+possibly truncated Spotify page; use `error` for an operation that failed, and
+`info` for expected outcomes and resumptions. Do not promote normal partial
+listens or review candidates to errors. Include the failing stage and elapsed
+time when known; emit a traceback once at the owning boundary.
+
+Name counts for their actual units: source rows, unique track IDs, album-session
+candidates, or persisted listens. Do not imply a job marked `completed` created
+a listen for every play. Last.fm's current duplicate summary can include invalid
+rows, so do not report it as a pure duplicate count. Candidate-outcome events and `import_finished.candidate_summary_scope`
+identify when candidate counts cover only a resumed or repaired subset. Timers must bracket
+actual work: `preparing_spotify_history` covers file preparation, JSON parsing is
+included in `storing_streaming_events`, and `matching_cached_albums` includes
+grouping and matching. A full 50-item Spotify page whose oldest play is newer than the watermark
+indicates possible—not confirmed—truncation; the initial sync has no watermark.
+`source_rows_reported` reflects the import summary and, for Last.fm, can be
+the source-reported available count rather than the number fetched. Sync failure context includes the phase and whether the
+album-state save completed; it does not claim a failed save could not partially
+commit. Treat historical logs emitted before these changes accordingly.
+
 ## Bind context to a unit of work
 
 Structlog's `merge_contextvars` processor and a context manager attach identifiers to compatible log events

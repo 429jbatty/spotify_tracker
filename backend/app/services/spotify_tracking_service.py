@@ -51,7 +51,7 @@ def run_tracking_for_all_users() -> dict[str, dict[str, int | str]]:
 
 def run_tracking_for_user(user_slug: str) -> dict[str, int]:
     started = time.perf_counter()
-    with bound_contextvars(sync_run_id=uuid.uuid4().hex, user_id=None):
+    with bound_contextvars(sync_run_id=uuid.uuid4().hex, user_id=None, sync_phase="initialize", album_state_saved=False):
         try:
             result = _run_tracking_for_user(user_slug)
             logger.info("spotify_sync_completed", duration_ms=round((time.perf_counter() - started) * 1000, 3), **result)
@@ -67,19 +67,24 @@ def _run_tracking_for_user(user_slug: str) -> dict[str, int]:
         user = UserRepository(session).require_user_by_slug(user_slug)
         bind_contextvars(user_id=user.id)
         logger.info("spotify_sync_started")
+        bind_contextvars(sync_phase="credentials")
         require_spotify_sync_access(user)
         credentials = _credentials_for_user(
             session,
             user.id,
         )
         repository = SqliteStateRepository(session, user_slug=user_slug)
+        bind_contextvars(sync_phase="load_state")
         start_state = repository.load_album_state()
 
         starting_completed_count = len(start_state.get("completed_albums", {}))
 
+        bind_contextvars(sync_phase="initialize_spotify_client")
         spotify = SpotifyAPI(credentials)
+        bind_contextvars(sync_phase="fetch_recent_tracks")
         tracks = spotify.fetch_recent_tracks(start_state["last_checked"])
 
+        bind_contextvars(sync_phase="derive_listens")
         clean_up_state = tracking.cleanup_stale_albums(
             start_state,
             max_age_hours=STALE_HOURS,
@@ -115,7 +120,10 @@ def _run_tracking_for_user(user_slug: str) -> dict[str, int]:
             num=10,
         )
 
+        bind_contextvars(sync_phase="save_album_state")
         repository.save_album_state(end_state)
+        # The state save commits separately from the sync-success update below.
+        bind_contextvars(sync_phase="record_sync_success", album_state_saved=True)
         SpotifyCredentialsRepository(session).record_sync_success(
             user_id=user.id,
             synced_at=_utc_now(),
