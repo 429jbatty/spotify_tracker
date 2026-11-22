@@ -4,6 +4,7 @@ import socket
 import time
 import musicbrainzngs
 import threading
+import structlog
 
 # ---------------------------
 # Config
@@ -24,6 +25,8 @@ REQUEST_DELAY = 1.1
 REQUEST_TIMEOUT_SECONDS = 20
 
 socket.setdefaulttimeout(REQUEST_TIMEOUT_SECONDS)
+
+logger = structlog.get_logger(__name__)
 
 _rate_lock = threading.Lock()
 _last_request_time = 0
@@ -50,6 +53,7 @@ def _with_retries(func, *args, **kwargs):
 
         except musicbrainzngs.NetworkError:
             if attempt == MAX_RETRIES - 1:
+                logger.warning("musicbrainz_request_failed", reason="network_error", attempts=MAX_RETRIES, operation=getattr(func, "__name__", "unknown"))
                 raise
             time.sleep(3)
 
@@ -230,8 +234,7 @@ def search_release_by_spotify_url(spotify_url: str):
                 return release_list[0]
             return None
         except musicbrainzngs.NetworkError:
-            print(
-                f"NetworkError searching for Spotify URL {spotify_url}, attempt {attempt+1}"
-            )
-            time.sleep(3)
+            if attempt < MAX_RETRIES - 1:
+                time.sleep(3)
+    logger.warning("musicbrainz_lookup_fallback", reason="network_error", attempts=MAX_RETRIES, operation="spotify_url_search")
     return None

@@ -1,11 +1,14 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import sessionmaker
 
-import metadata_refresh_service
+from backend.app.services import metadata_refresh_logging
 from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.services.manual_album_service import create_manual_album
+from backend.app.services.manual_album_service import (
+    add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
+    update_manual_album_feedback, update_manual_album_tags,
+)
 from backend.app.services import auth_service
 from backend.app.schemas import (
     AlbumListenCreate,
@@ -80,15 +83,8 @@ def refresh_album_metadata(
 ) -> dict:
     session, repository = _repository()
     try:
-        existing = repository.get_completed_album_record_by_id(album_id)
-        refreshed = metadata_refresh_service.refresh_album_record(
-            existing,
-            spotify_url=request.spotify_url if request else None,
-        )
-        refreshed.pop("_refresh_warnings", None)
-        return repository.replace_completed_album_metadata_by_id_or_merge_duplicate(
-            album_id,
-            refreshed,
+        return metadata_refresh_logging.refresh_album(
+            repository, album_id, spotify_url=request.spotify_url if request else None,
         )
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -132,7 +128,7 @@ def update_album(album_id: int, request: AlbumMetadataUpdate) -> dict:
 def add_album_listen(album_id: int, request: AlbumListenCreate) -> dict:
     session, repository = _repository()
     try:
-        return repository.add_album_listen(album_id, request.listened_at)
+        return add_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:
@@ -143,7 +139,7 @@ def add_album_listen(album_id: int, request: AlbumListenCreate) -> dict:
 def delete_album_listen(album_id: int, request: AlbumListenDelete) -> dict:
     session, repository = _repository()
     try:
-        return repository.delete_album_listen(album_id, request.listened_at)
+        return delete_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:
@@ -170,7 +166,7 @@ def merge_album(album_id: int, request: AlbumMergeRequest) -> dict:
 def delete_album(album_id: int) -> None:
     session, repository = _repository()
     try:
-        repository.delete_completed_album(album_id)
+        delete_manual_album(repository, album_id)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:
@@ -181,7 +177,7 @@ def delete_album(album_id: int) -> None:
 def update_album_user_tags(album_id: int, request: UserAlbumTagsUpdate) -> dict:
     session, repository = _repository()
     try:
-        return repository.update_user_album_tags(album_id, request.your_tags)
+        return update_manual_album_tags(repository, album_id, request.your_tags)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     except ValueError as exc:
@@ -194,7 +190,8 @@ def update_album_user_tags(album_id: int, request: UserAlbumTagsUpdate) -> dict:
 def update_album_user_feedback(album_id: int, request: UserAlbumFeedbackUpdate) -> dict:
     session, repository = _repository()
     try:
-        return repository.update_user_album_feedback(
+        return update_manual_album_feedback(
+            repository,
             album_id,
             rating=request.rating,
             notes=request.notes,

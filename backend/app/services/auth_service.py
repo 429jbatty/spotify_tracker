@@ -8,6 +8,7 @@ from datetime import datetime, timedelta, timezone
 from urllib.parse import urlencode
 
 import httpx
+import structlog
 from fastapi import HTTPException, status
 from google.auth.transport.requests import Request as GoogleRequest
 from google.oauth2 import id_token
@@ -16,6 +17,8 @@ from sqlalchemy.orm import Session
 
 from backend.app.config import Settings
 from backend.app.models import Account, AccountSession, GoogleOAuthState, ProfileOwnershipAssignment, User
+
+logger = structlog.get_logger(__name__)
 
 GOOGLE_AUTHORIZATION_ENDPOINT = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_ENDPOINT = "https://oauth2.googleapis.com/token"
@@ -130,7 +133,9 @@ def require_profile_owner(session: Session, *, user_slug: str, authorization: st
     user = session.scalars(select(User).where(User.slug == user_slug.strip().casefold())).first()
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User not found: {user_slug}")
-    if user.owner_account_id != require_account(session, authorization=authorization).id:
+    account = require_account(session, authorization=authorization)
+    if user.owner_account_id != account.id:
+        logger.warning("profile_access_denied", user_id=user.id, actor_account_id=account.id, reason="not_owner")
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="You do not own this profile.")
     return user
 

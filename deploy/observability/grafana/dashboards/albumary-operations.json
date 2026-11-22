@@ -1,595 +1,2055 @@
 {
-  "uid": "albumary-operations",
-  "title": "Albumary Operations",
-  "description": "Operational overview from structured Albumary logs. Select development to inspect test events. Older plain-text logs do not populate structured panels.",
-  "tags": [
-    "albumary",
-    "logs"
-  ],
-  "timezone": "browser",
-  "schemaVersion": 40,
-  "version": 1,
-  "editable": true,
-  "refresh": "1m",
-  "time": {
-    "from": "now-24h",
-    "to": "now"
+  "apiVersion": "dashboard.grafana.app/v2",
+  "kind": "Dashboard",
+  "metadata": {
+    "name": "albumary-operations"
   },
-  "templating": {
-    "list": [
+  "spec": {
+    "annotations": [
       {
-        "name": "environment",
-        "label": "Environment",
-        "type": "custom",
-        "query": "production,development",
-        "current": {
-          "text": "production",
-          "value": "production"
-        },
-        "options": [
-          {
-            "text": "production",
-            "value": "production",
-            "selected": true
-          },
-          {
-            "text": "development",
-            "value": "development",
-            "selected": false
-          }
-        ]
-      }
-    ]
-  },
-  "panels": [
-    {
-      "id": 11,
-      "type": "text",
-      "title": "",
-      "gridPos": {
-        "x": 0,
-        "y": 0,
-        "w": 24,
-        "h": 2
-      },
-      "options": {
-        "mode": "markdown",
-        "content": "**Counts show structured log events in the selected time range, not live service health.** Earlier plain-text logs are excluded; development may contain simulated validation failures."
-      },
-      "transparent": true
-    },
-    {
-      "id": 1,
-      "title": "Syncs completed",
-      "description": "Completed per-user syncs during the selected time range.",
-      "type": "stat",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 0,
-        "y": 2,
-        "w": 6,
-        "h": 4
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"spotify_sync_completed\" [$__range])) or vector(0)",
-          "queryType": "instant",
-          "instant": true,
-          "legendFormat": "{{stage}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "green"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      }
-    },
-    {
-      "id": 2,
-      "title": "Sync failures",
-      "description": "Failed per-user sync attempts during the selected time range.",
-      "type": "stat",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 6,
-        "y": 2,
-        "w": 6,
-        "h": 4
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"spotify_sync_failed\" [$__range])) or vector(0)",
-          "queryType": "instant",
-          "instant": true,
-          "legendFormat": "{{stage}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "red"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      }
-    },
-    {
-      "id": 3,
-      "title": "Imports completed",
-      "description": "Completed jobs may still contain partial or review candidates.",
-      "type": "stat",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 12,
-        "y": 2,
-        "w": 6,
-        "h": 4
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"import_finished\" | status=\"completed\" [$__range])) or vector(0)",
-          "queryType": "instant",
-          "instant": true,
-          "legendFormat": "{{stage}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "green"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      }
-    },
-    {
-      "id": 4,
-      "title": "Import failures",
-      "description": "Failed import attempts; a later resume may succeed.",
-      "type": "stat",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 18,
-        "y": 2,
-        "w": 6,
-        "h": 4
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"import_failed\" [$__range])) or vector(0)",
-          "queryType": "instant",
-          "instant": true,
-          "legendFormat": "{{stage}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "red"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "colorMode": "value",
-        "graphMode": "none",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "textMode": "auto"
-      }
-    },
-    {
-      "id": 5,
-      "title": "Import stage totals",
-      "description": "Total elapsed stage time in the selected range. Matching includes grouping; stages may overlap across concurrent imports.",
-      "type": "table",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 0,
-        "y": 6,
-        "w": 12,
-        "h": 8
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "sum by (stage) (sum_over_time({app=\"albumary\",environment=\"$environment\"} | json | event=\"import_stage_completed\" | unwrap duration_ms | __error__=\"\" [$__range]))",
-          "queryType": "instant",
-          "instant": true,
-          "legendFormat": "{{stage}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "ms",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
-          },
-          "noValue": "\u2014",
-          "custom": {
-            "align": "auto"
-          }
-        },
-        "overrides": []
-      },
-      "options": {
-        "showHeader": true,
-        "cellHeight": "sm",
-        "footer": {
-          "show": false
-        }
-      },
-      "transformations": [
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true
+        "kind": "AnnotationQuery",
+        "spec": {
+          "query": {
+            "kind": "DataQuery",
+            "group": "grafana",
+            "version": "v0",
+            "datasource": {
+              "name": "-- Grafana --"
             },
-            "renameByName": {
-              "Value": "Total time",
-              "stage": "Stage",
-              "Value #A": "Total time"
+            "spec": {}
+          },
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "builtIn": true,
+          "legacyOptions": {
+            "type": "dashboard"
+          }
+        }
+      }
+    ],
+    "cursorSync": "Off",
+    "description": "Albumary operations, user activity, and diagnostics in one dashboard.",
+    "editable": true,
+    "elements": {
+      "panel-1": {
+        "kind": "Panel",
+        "spec": {
+          "id": 1,
+          "title": "Syncs completed",
+          "description": "Completed per-user syncs during the selected time range.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"spotify_sync_completed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "green"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
             }
           }
         }
-      ]
-    },
-    {
-      "id": 6,
-      "title": "Warnings and failures",
-      "description": "Structured warning and error events for the selected environment. Development validation failures are simulated.",
-      "type": "logs",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
       },
-      "gridPos": {
-        "x": 12,
-        "y": 6,
-        "w": 12,
-        "h": 8
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
+      "panel-10": {
+        "kind": "Panel",
+        "spec": {
+          "id": 10,
+          "title": "Recent requests",
+          "description": "Matched route templates only; raw URLs and query strings are excluded.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"http_request_completed\" | line_format `{{.method}} {{.route}}  status={{.status_code}}  duration={{.duration_ms}}ms`",
+                        "instant": false,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
           },
-          "editorMode": "code",
-          "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | level=~\"warn|warning|error|critical\" | line_format `{{.event}}{{if .stage}}  stage={{.stage}}{{end}}{{if .reason}}  reason={{.reason}}{{end}}`",
-          "queryType": "range",
-          "instant": false,
-          "legendFormat": "{{stage}}"
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
         }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
       },
-      "options": {
-        "showTime": true,
-        "showLabels": false,
-        "wrapLogMessage": true,
-        "sortOrder": "Descending",
-        "enableLogDetails": true,
-        "showCommonLabels": false,
-        "prettifyLogMessage": false
+      "panel-11": {
+        "kind": "Panel",
+        "spec": {
+          "id": 11,
+          "title": "",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "text",
+            "version": "",
+            "spec": {
+              "options": {
+                "content": "**Counts show structured log events in the selected time range, not live service health.** Earlier plain-text logs are excluded; development may contain simulated validation failures.",
+                "mode": "markdown"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          },
+          "transparent": true
+        }
+      },
+      "panel-2": {
+        "kind": "Panel",
+        "spec": {
+          "id": 2,
+          "title": "Sync failures",
+          "description": "Failed per-user sync attempts during the selected time range.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"spotify_sync_failed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "red"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-3": {
+        "kind": "Panel",
+        "spec": {
+          "id": 3,
+          "title": "Imports completed",
+          "description": "Completed jobs may still contain partial or review candidates.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"import_finished\" | status=\"completed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "green"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-4": {
+        "kind": "Panel",
+        "spec": {
+          "id": 4,
+          "title": "Import failures",
+          "description": "Failed import attempts; a later resume may succeed.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"import_failed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "red"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-5": {
+        "kind": "Panel",
+        "spec": {
+          "id": 5,
+          "title": "Import stage totals",
+          "description": "Total elapsed stage time in the selected range. Matching includes grouping; stages may overlap across concurrent imports.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (stage) (sum_over_time({app=\"albumary\",environment=\"$environment\"} | json | event=\"import_stage_completed\" | unwrap duration_ms | __error__=\"\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "organize",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "Time": true
+                      },
+                      "renameByName": {
+                        "Value": "Total time",
+                        "Value #A": "Total time",
+                        "stage": "Stage"
+                      }
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "table",
+            "version": "",
+            "spec": {
+              "options": {
+                "cellHeight": "sm",
+                "footer": {
+                  "show": false
+                },
+                "showHeader": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "ms",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—",
+                  "custom": {
+                    "align": "auto"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-6": {
+        "kind": "Panel",
+        "spec": {
+          "id": 6,
+          "title": "Warnings and failures",
+          "description": "Broad catch-all for structured warnings and errors, including events outside the diagnostic categories below.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | level=~\"warn|warning|error|critical\" | line_format `{{.event}}{{if .stage}}  stage={{.stage}}{{end}}{{if .reason}}  reason={{.reason}}{{end}}`",
+                        "instant": false,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-7": {
+        "kind": "Panel",
+        "spec": {
+          "id": 7,
+          "title": "Recent Spotify syncs",
+          "description": "Open an event to inspect run ID, phase, counts, and duration.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=~\"spotify_sync_(completed|failed)|spotify_recent_plays_page_full\" | line_format `{{.event}}{{if .user_id}}  user={{.user_id}}{{end}}{{if .tracks_fetched}}  tracks={{.tracks_fetched}}{{end}}{{if .completed_albums}}  albums={{.completed_albums}}{{end}}{{if .sync_phase}}  phase={{.sync_phase}}{{end}}{{if .failure_category}}  category={{.failure_category}}{{end}}{{if .status_code}}  status={{.status_code}}{{end}}`",
+                        "instant": false,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-8": {
+        "kind": "Panel",
+        "spec": {
+          "id": 8,
+          "title": "Recent imports and outcomes",
+          "description": "Candidate scope identifies resume subsets. A completed job may still have review or partial candidates.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=~\"import_(finished|failed|resumed|candidate_outcomes)|spotify_catalog_fallback|spotify_import_duplicate_archive\" | line_format `{{.event}}{{if .import_session_id}}  import={{.import_session_id}}{{end}}{{if .source}}  source={{.source}}{{end}}{{if .status}}  status={{.status}}{{end}}{{if .candidate_summary_scope}}  scope={{.candidate_summary_scope}}{{end}}`",
+                        "instant": false,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-9": {
+        "kind": "Panel",
+        "spec": {
+          "id": 9,
+          "title": "API response status",
+          "description": "Request events grouped by HTTP status. Counts depend on the selected interval.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (status_code) (count_over_time({app=\"albumary\",environment=\"$environment\"} | json | event=\"http_request_completed\" | __error__=\"\" [$__interval]))",
+                        "instant": false,
+                        "legendFormat": "{{stage}}",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "timeseries",
+            "version": "",
+            "spec": {
+              "options": {
+                "legend": {
+                  "displayMode": "list",
+                  "placement": "bottom"
+                },
+                "tooltip": {
+                  "mode": "multi"
+                }
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-12": {
+        "kind": "Panel",
+        "spec": {
+          "id": 12,
+          "title": "User activity",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "text",
+            "version": "",
+            "spec": {
+              "options": {
+                "content": "**Observed changes, not an audit trail or a count of distinct people.** Production logs are retained for 30 days; development logs for 3 days. Profile names and album titles are historical snapshots. Filter by a validation run ID to isolate simulated activity.",
+                "mode": "markdown"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          },
+          "transparent": true
+        }
+      },
+      "panel-13": {
+        "kind": "Panel",
+        "spec": {
+          "id": 13,
+          "title": "Activity by event",
+          "description": "Number of observed user actions by event type in the selected time range.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum by (event) (count_over_time({app=\"albumary\",environment=\"$environment\",service=\"api\"} |= `${activity_filter}` | json | __error__=\"\" | event=~\"album_manually_added|album_removed|album_listen_added|album_listen_removed|album_rating_changed|album_rating_removed|album_note_changed|album_note_removed|album_tags_changed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "{{event}}",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [
+                {
+                  "kind": "Transformation",
+                  "group": "organize",
+                  "spec": {
+                    "options": {
+                      "excludeByName": {
+                        "Time": true
+                      },
+                      "renameByName": {
+                        "Value": "Observed actions",
+                        "Value #A": "Observed actions",
+                        "event": "Event"
+                      }
+                    }
+                  }
+                }
+              ],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "table",
+            "version": "",
+            "spec": {
+              "options": {
+                "cellHeight": "sm",
+                "footer": {
+                  "show": false
+                },
+                "showHeader": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—",
+                  "custom": {
+                    "align": "auto"
+                  }
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-14": {
+        "kind": "Panel",
+        "spec": {
+          "id": 14,
+          "title": "Recent user activity",
+          "description": "Observed changes with profile and album snapshots, rating, tags, and validation marker. Expand a line for its raw fields. Note text is never logged.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\",service=\"api\"} |= `${activity_filter}` | json | __error__=\"\" | event=~\"album_manually_added|album_removed|album_listen_added|album_listen_removed|album_rating_changed|album_rating_removed|album_note_changed|album_note_removed|album_tags_changed\" | json added_tags=\"added_tags\", removed_tags=\"removed_tags\" | line_format `{{.event}}  profile={{.profile_slug}} ({{.user_id}})  album={{.album_artist}} - {{.album_title}}{{if .rating}}  rating={{.rating}}{{end}}{{if .change}}  change={{.change}}{{end}}{{if .listened_at}}  listened_at={{.listened_at}}{{end}}{{if .added_tags}}  added={{.added_tags}}{{end}}{{if .removed_tags}}  removed={{.removed_tags}}{{end}}{{if .validation_run_id}}  [{{.validation_run_id}}]{{end}}`",
+                        "instant": false,
+                        "legendFormat": "",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-15": {
+        "kind": "Panel",
+        "spec": {
+          "id": 15,
+          "title": "Diagnostics",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "text",
+            "version": "",
+            "spec": {
+              "options": {
+                "content": "**Investigate what went wrong.** Counts are observed events in the selected time range, not a live health check. Select an environment above; use the diagnostic filter to isolate a validation run. Standalone maintenance commands are not collected by default.",
+                "mode": "markdown"
+              },
+              "fieldConfig": {
+                "defaults": {},
+                "overrides": []
+              }
+            }
+          },
+          "transparent": true
+        }
+      },
+      "panel-16": {
+        "kind": "Panel",
+        "spec": {
+          "id": 16,
+          "title": "External services",
+          "description": "Exhausted requests and Spotify catalog fallbacks. Sync failures remain in Recent Spotify syncs. Counts event records, not unique incidents.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | event=~\"musicbrainz_request_failed|musicbrainz_lookup_fallback|lastfm_request_failed|spotify_catalog_fallback\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      },
+                      {
+                        "value": 1,
+                        "color": "orange"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-17": {
+        "kind": "Panel",
+        "spec": {
+          "id": 17,
+          "title": "Metadata & artwork",
+          "description": "Manual lookup fallbacks, failed refreshes, and artwork failures. Counts event records, not unique incidents.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | event=~\"manual_metadata_fallback|album_metadata_refresh_failed|artwork_cache_failed|artwork_lookup_failed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      },
+                      {
+                        "value": 1,
+                        "color": "orange"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-18": {
+        "kind": "Panel",
+        "spec": {
+          "id": 18,
+          "title": "Database & jobs",
+          "description": "Database errors and failed maintenance observed in collected streams; standalone commands are not collected by default. Counts event records, not unique incidents.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | (event=~\"database_migrations_failed|artwork_backfill_failed|credit_facts_rebuild_failed|artwork_cache_batch_failed|post_import_artwork_backfill_failed|post_import_artwork_warning_record_failed\" or database_error_type=~\".+\") [$__range]))",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      },
+                      {
+                        "value": 1,
+                        "color": "orange"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-19": {
+        "kind": "Panel",
+        "spec": {
+          "id": 19,
+          "title": "Access & connections",
+          "description": "Sign-in, ownership, and Spotify connection failures. No email addresses or tokens are shown. Counts event records, not unique incidents.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "sum(count_over_time({app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | event=~\"sign_in_failed|profile_access_denied|spotify_connection_failed\" [$__range]))",
+                        "instant": true,
+                        "legendFormat": "",
+                        "queryType": "instant"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "stat",
+            "version": "",
+            "spec": {
+              "options": {
+                "colorMode": "value",
+                "graphMode": "none",
+                "justifyMode": "auto",
+                "orientation": "auto",
+                "reduceOptions": {
+                  "calcs": [
+                    "lastNotNull"
+                  ],
+                  "fields": "",
+                  "values": false
+                },
+                "textMode": "auto"
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "thresholds": {
+                    "mode": "absolute",
+                    "steps": [
+                      {
+                        "value": null,
+                        "color": "text"
+                      },
+                      {
+                        "value": 1,
+                        "color": "orange"
+                      }
+                    ]
+                  },
+                  "color": {
+                    "mode": "thresholds"
+                  },
+                  "noValue": "0"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-20": {
+        "kind": "Panel",
+        "spec": {
+          "id": 20,
+          "title": "External services · recent",
+          "description": "Exhausted requests and Spotify catalog fallbacks. Sync failures remain in Recent Spotify syncs.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | event=~\"musicbrainz_request_failed|musicbrainz_lookup_fallback|lastfm_request_failed|spotify_catalog_fallback\" | line_format `{{if eq .event \"musicbrainz_request_failed\"}}MusicBrainz request failed{{else if eq .event \"musicbrainz_lookup_fallback\"}}MusicBrainz fallback{{else if eq .event \"lastfm_request_failed\"}}Last.fm request failed{{else if eq .event \"spotify_catalog_fallback\"}}Spotify catalog fallback{{else}}{{.event}}{{end}}{{if .reason}} · {{.reason}}{{end}}{{if .failure_category}} · {{.failure_category}}{{end}}{{if .database_reason}} · {{.database_reason}}{{end}}{{if .database_error_type}} · {{.database_error_type}}{{else if .error_type}} · {{.error_type}}{{end}}{{if .sqlite_error_name}} · {{.sqlite_error_name}}{{end}}{{if .database_location}} · {{.database_location}}{{end}}{{if .stage}} · stage {{.stage}}{{end}}{{if .operation}} · {{.operation}}{{end}}{{if .album_id}} · album {{.album_id}}{{end}}{{if .album_artist}} · {{.album_artist}} — {{.album_title}}{{end}}{{if .user_id}} · profile {{.user_id}}{{end}}{{if .actor_account_id}} · account {{.actor_account_id}}{{end}}{{if .status_code}} · HTTP {{.status_code}}{{end}}{{if .attempts}} · attempts {{.attempts}}{{end}}{{if .processed}} · processed {{.processed}}{{end}}{{if eq .partial_commits_possible \"true\"}} · partial writes possible{{end}}{{if .validation_run_id}} · [test]{{end}}`",
+                        "instant": false,
+                        "legendFormat": "",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-21": {
+        "kind": "Panel",
+        "spec": {
+          "id": 21,
+          "title": "Metadata & artwork · recent",
+          "description": "Manual lookup fallbacks, failed refreshes, and artwork failures.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | event=~\"manual_metadata_fallback|album_metadata_refresh_failed|artwork_cache_failed|artwork_lookup_failed\" | line_format `{{if eq .event \"manual_metadata_fallback\"}}Manual metadata fallback{{else if eq .event \"album_metadata_refresh_failed\"}}Metadata refresh failed{{else if eq .event \"artwork_cache_failed\"}}Artwork cache failed{{else if eq .event \"artwork_lookup_failed\"}}Artwork lookup failed{{else}}{{.event}}{{end}}{{if .reason}} · {{.reason}}{{end}}{{if .failure_category}} · {{.failure_category}}{{end}}{{if .database_reason}} · {{.database_reason}}{{end}}{{if .database_error_type}} · {{.database_error_type}}{{else if .error_type}} · {{.error_type}}{{end}}{{if .sqlite_error_name}} · {{.sqlite_error_name}}{{end}}{{if .database_location}} · {{.database_location}}{{end}}{{if .stage}} · stage {{.stage}}{{end}}{{if .operation}} · {{.operation}}{{end}}{{if .album_id}} · album {{.album_id}}{{end}}{{if .album_artist}} · {{.album_artist}} — {{.album_title}}{{end}}{{if .user_id}} · profile {{.user_id}}{{end}}{{if .actor_account_id}} · account {{.actor_account_id}}{{end}}{{if .status_code}} · HTTP {{.status_code}}{{end}}{{if .attempts}} · attempts {{.attempts}}{{end}}{{if .processed}} · processed {{.processed}}{{end}}{{if eq .partial_commits_possible \"true\"}} · partial writes possible{{end}}{{if .validation_run_id}} · [test]{{end}}`",
+                        "instant": false,
+                        "legendFormat": "",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-22": {
+        "kind": "Panel",
+        "spec": {
+          "id": 22,
+          "title": "Database & maintenance · recent",
+          "description": "Database errors and failed maintenance observed in collected streams; standalone commands are not collected by default.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | (event=~\"database_migrations_failed|artwork_backfill_failed|credit_facts_rebuild_failed|artwork_cache_batch_failed|post_import_artwork_backfill_failed|post_import_artwork_warning_record_failed\" or database_error_type=~\".+\") | line_format `{{if eq .event \"database_migrations_failed\"}}Migration failed{{else if eq .event \"artwork_backfill_failed\"}}Artwork backfill failed{{else if eq .event \"post_import_artwork_backfill_failed\"}}Import artwork backfill failed{{else if eq .event \"post_import_artwork_warning_record_failed\"}}Artwork warning could not be saved{{else if eq .event \"credit_facts_rebuild_failed\"}}Credit rebuild failed{{else if eq .event \"artwork_cache_batch_failed\"}}Artwork cache batch failed{{else if eq .event \"http_request_failed\"}}Database error in request{{else if eq .event \"import_failed\"}}Database error in import{{else if eq .event \"spotify_sync_failed\"}}Database error in sync{{else}}{{.event}}{{end}}{{if .reason}} · {{.reason}}{{end}}{{if .failure_category}} · {{.failure_category}}{{end}}{{if .database_reason}} · {{.database_reason}}{{end}}{{if .database_error_type}} · {{.database_error_type}}{{else if .error_type}} · {{.error_type}}{{end}}{{if .sqlite_error_name}} · {{.sqlite_error_name}}{{end}}{{if .database_location}} · {{.database_location}}{{end}}{{if .stage}} · stage {{.stage}}{{end}}{{if .operation}} · {{.operation}}{{end}}{{if .album_id}} · album {{.album_id}}{{end}}{{if .album_artist}} · {{.album_artist}} — {{.album_title}}{{end}}{{if .user_id}} · profile {{.user_id}}{{end}}{{if .actor_account_id}} · account {{.actor_account_id}}{{end}}{{if .status_code}} · HTTP {{.status_code}}{{end}}{{if .attempts}} · attempts {{.attempts}}{{end}}{{if .processed}} · processed {{.processed}}{{end}}{{if eq .partial_commits_possible \"true\"}} · partial writes possible{{end}}{{if .validation_run_id}} · [test]{{end}}`",
+                        "instant": false,
+                        "legendFormat": "",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
+      },
+      "panel-23": {
+        "kind": "Panel",
+        "spec": {
+          "id": 23,
+          "title": "Access & connections · recent",
+          "description": "Sign-in, ownership, and Spotify connection failures. No email addresses or tokens are shown.",
+          "links": [],
+          "data": {
+            "kind": "QueryGroup",
+            "spec": {
+              "queries": [
+                {
+                  "kind": "PanelQuery",
+                  "spec": {
+                    "query": {
+                      "kind": "DataQuery",
+                      "group": "loki",
+                      "version": "v0",
+                      "datasource": {
+                        "name": "albumary-loki"
+                      },
+                      "spec": {
+                        "editorMode": "code",
+                        "expr": "{app=\"albumary\",environment=\"$environment\"} |= `${diagnostic_filter}` | json | __error__=\"\" | event=~\"sign_in_failed|profile_access_denied|spotify_connection_failed\" | line_format `{{if eq .event \"sign_in_failed\"}}Sign-in failed{{else if eq .event \"profile_access_denied\"}}Profile access denied{{else if eq .event \"spotify_connection_failed\"}}Spotify connection failed{{else}}{{.event}}{{end}}{{if .reason}} · {{.reason}}{{end}}{{if .failure_category}} · {{.failure_category}}{{end}}{{if .database_reason}} · {{.database_reason}}{{end}}{{if .database_error_type}} · {{.database_error_type}}{{else if .error_type}} · {{.error_type}}{{end}}{{if .sqlite_error_name}} · {{.sqlite_error_name}}{{end}}{{if .database_location}} · {{.database_location}}{{end}}{{if .stage}} · stage {{.stage}}{{end}}{{if .operation}} · {{.operation}}{{end}}{{if .album_id}} · album {{.album_id}}{{end}}{{if .album_artist}} · {{.album_artist}} — {{.album_title}}{{end}}{{if .user_id}} · profile {{.user_id}}{{end}}{{if .actor_account_id}} · account {{.actor_account_id}}{{end}}{{if .status_code}} · HTTP {{.status_code}}{{end}}{{if .attempts}} · attempts {{.attempts}}{{end}}{{if .processed}} · processed {{.processed}}{{end}}{{if eq .partial_commits_possible \"true\"}} · partial writes possible{{end}}{{if .validation_run_id}} · [test]{{end}}`",
+                        "instant": false,
+                        "legendFormat": "",
+                        "queryType": "range"
+                      }
+                    },
+                    "refId": "A",
+                    "hidden": false
+                  }
+                }
+              ],
+              "transformations": [],
+              "queryOptions": {}
+            }
+          },
+          "vizConfig": {
+            "kind": "VizConfig",
+            "group": "logs",
+            "version": "",
+            "spec": {
+              "options": {
+                "enableLogDetails": true,
+                "prettifyLogMessage": false,
+                "showCommonLabels": false,
+                "showLabels": false,
+                "showTime": true,
+                "sortOrder": "Descending",
+                "wrapLogMessage": true
+              },
+              "fieldConfig": {
+                "defaults": {
+                  "unit": "short",
+                  "color": {
+                    "mode": "fixed",
+                    "fixedColor": "blue"
+                  },
+                  "noValue": "—"
+                },
+                "overrides": []
+              }
+            }
+          }
+        }
       }
     },
-    {
-      "id": 7,
-      "title": "Recent Spotify syncs",
-      "description": "Open an event to inspect run ID, phase, counts, and duration.",
-      "type": "logs",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 0,
-        "y": 14,
-        "w": 12,
-        "h": 9
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
+    "layout": {
+      "kind": "TabsLayout",
+      "spec": {
+        "tabs": [
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "title": "Overview",
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 2,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-11"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 2,
+                        "width": 6,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-1"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 6,
+                        "y": 2,
+                        "width": 6,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-2"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 2,
+                        "width": 6,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-3"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 18,
+                        "y": 2,
+                        "width": 6,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-4"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 5,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-5"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 5,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-6"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 11,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-7"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 11,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-8"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 17,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-9"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 17,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-10"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
           },
-          "editorMode": "code",
-          "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=~\"spotify_sync_(completed|failed)|spotify_recent_plays_page_full\" | line_format `{{.event}}{{if .user_id}}  user={{.user_id}}{{end}}{{if .tracks_fetched}}  tracks={{.tracks_fetched}}{{end}}{{if .completed_albums}}  albums={{.completed_albums}}{{end}}{{if .sync_phase}}  phase={{.sync_phase}}{{end}}`",
-          "queryType": "range",
-          "instant": false,
-          "legendFormat": "{{stage}}"
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "title": "User activity",
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-12"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 3,
+                        "width": 10,
+                        "height": 10,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-13"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 10,
+                        "y": 3,
+                        "width": 14,
+                        "height": 10,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-14"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "variables": [
+                {
+                  "kind": "TextVariable",
+                  "spec": {
+                    "name": "activity_filter",
+                    "current": {
+                      "text": "",
+                      "value": ""
+                    },
+                    "query": "",
+                    "label": "Search activity",
+                    "hide": "dontHide",
+                    "skipUrlSync": false
+                  }
+                }
+              ]
+            }
           },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "showTime": true,
-        "showLabels": false,
-        "wrapLogMessage": true,
-        "sortOrder": "Descending",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false
+          {
+            "kind": "TabsLayoutTab",
+            "spec": {
+              "title": "Diagnostics",
+              "layout": {
+                "kind": "GridLayout",
+                "spec": {
+                  "items": [
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 0,
+                        "width": 24,
+                        "height": 3,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-15"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 3,
+                        "width": 6,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-16"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 6,
+                        "y": 3,
+                        "width": 6,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-17"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 3,
+                        "width": 6,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-18"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 18,
+                        "y": 3,
+                        "width": 6,
+                        "height": 4,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-19"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 7,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-20"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 7,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-21"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 0,
+                        "y": 13,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-22"
+                        }
+                      }
+                    },
+                    {
+                      "kind": "GridLayoutItem",
+                      "spec": {
+                        "x": 12,
+                        "y": 13,
+                        "width": 12,
+                        "height": 6,
+                        "element": {
+                          "kind": "ElementReference",
+                          "name": "panel-23"
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "variables": [
+                {
+                  "kind": "TextVariable",
+                  "spec": {
+                    "name": "diagnostic_filter",
+                    "current": {
+                      "text": "",
+                      "value": ""
+                    },
+                    "query": "",
+                    "label": "Search diagnostics",
+                    "hide": "dontHide",
+                    "skipUrlSync": false
+                  }
+                }
+              ]
+            }
+          }
+        ]
       }
     },
-    {
-      "id": 8,
-      "title": "Recent imports and outcomes",
-      "description": "Candidate scope identifies resume subsets. A completed job may still have review or partial candidates.",
-      "type": "logs",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 12,
-        "y": 14,
-        "w": 12,
-        "h": 9
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=~\"import_(finished|failed|resumed|candidate_outcomes)|spotify_catalog_fallback|spotify_import_duplicate_archive\" | line_format `{{.event}}{{if .import_session_id}}  import={{.import_session_id}}{{end}}{{if .source}}  source={{.source}}{{end}}{{if .status}}  status={{.status}}{{end}}{{if .candidate_summary_scope}}  scope={{.candidate_summary_scope}}{{end}}`",
-          "queryType": "range",
-          "instant": false,
-          "legendFormat": "{{stage}}"
-        }
+    "links": [],
+    "liveNow": false,
+    "preload": false,
+    "tags": [
+      "albumary",
+      "logs"
+    ],
+    "timeSettings": {
+      "timezone": "browser",
+      "from": "now-24h",
+      "to": "now",
+      "autoRefresh": "1m",
+      "autoRefreshIntervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
       ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "showTime": true,
-        "showLabels": false,
-        "wrapLogMessage": true,
-        "sortOrder": "Descending",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false
-      }
+      "hideTimepicker": false,
+      "fiscalYearStartMonth": 0
     },
-    {
-      "id": 9,
-      "title": "API response status",
-      "description": "Request events grouped by HTTP status. Counts depend on the selected interval.",
-      "type": "timeseries",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 0,
-        "y": 23,
-        "w": 12,
-        "h": 8
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
+    "title": "Albumary Operations",
+    "variables": [
+      {
+        "kind": "CustomVariable",
+        "spec": {
+          "name": "environment",
+          "query": "production,development",
+          "current": {
+            "text": "production",
+            "value": "production"
           },
-          "editorMode": "code",
-          "expr": "sum by (status_code) (count_over_time({app=\"albumary\",environment=\"$environment\"} | json | event=\"http_request_completed\" | __error__=\"\" [$__interval]))",
-          "queryType": "range",
-          "instant": false,
-          "legendFormat": "{{stage}}"
+          "options": [
+            {
+              "selected": true,
+              "text": "production",
+              "value": "production"
+            },
+            {
+              "selected": false,
+              "text": "development",
+              "value": "development"
+            }
+          ],
+          "multi": false,
+          "includeAll": false,
+          "label": "Environment",
+          "hide": "dontHide",
+          "skipUrlSync": false,
+          "allowCustomValue": true
         }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
       },
-      "options": {
-        "legend": {
-          "displayMode": "list",
-          "placement": "bottom"
+      {
+        "kind": "AdhocVariable",
+        "group": "loki",
+        "datasource": {
+          "name": "albumary-loki"
         },
-        "tooltip": {
-          "mode": "multi"
+        "spec": {
+          "name": "Filters",
+          "baseFilters": [],
+          "filters": [],
+          "defaultKeys": [],
+          "hide": "dontHide",
+          "skipUrlSync": false,
+          "allowCustomValue": true
         }
       }
-    },
-    {
-      "id": 10,
-      "title": "Recent requests",
-      "description": "Matched route templates only; raw URLs and query strings are excluded.",
-      "type": "logs",
-      "datasource": {
-        "type": "loki",
-        "uid": "albumary-loki"
-      },
-      "gridPos": {
-        "x": 12,
-        "y": 23,
-        "w": 12,
-        "h": 8
-      },
-      "targets": [
-        {
-          "refId": "A",
-          "datasource": {
-            "type": "loki",
-            "uid": "albumary-loki"
-          },
-          "editorMode": "code",
-          "expr": "{app=\"albumary\",environment=\"$environment\"} | json | __error__=\"\" | event=\"http_request_completed\" | line_format `{{.method}} {{.route}}  status={{.status_code}}  duration={{.duration_ms}}ms`",
-          "queryType": "range",
-          "instant": false,
-          "legendFormat": "{{stage}}"
+    ],
+    "preferences": {
+      "layout": {
+        "kind": "GridLayout",
+        "spec": {
+          "items": []
         }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "color": {
-            "mode": "fixed",
-            "fixedColor": "blue"
-          },
-          "noValue": "\u2014"
-        },
-        "overrides": []
-      },
-      "options": {
-        "showTime": true,
-        "showLabels": false,
-        "wrapLogMessage": true,
-        "sortOrder": "Descending",
-        "enableLogDetails": true,
-        "prettifyLogMessage": false
       }
     }
-  ]
+  }
 }

@@ -295,7 +295,7 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
             )
 
             with patch(
-                "backend.app.routers.users.metadata_refresh_service.refresh_album_record"
+                "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record"
             ) as refresh:
                 refresh_response = client.post(
                     f"/api/users/alice/albums/{bob_album_id}/refresh-metadata",

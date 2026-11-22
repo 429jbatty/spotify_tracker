@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Any, Callable
 
 import httpx
+import structlog
 
 from backend.app.services.import_parsers import (
     NormalizedImportEvent,
@@ -12,6 +13,8 @@ from backend.app.services.import_parsers import (
     parse_int,
 )
 
+
+logger = structlog.get_logger(__name__)
 
 LASTFM_FETCH_RETRIES = 3
 LASTFM_RETRY_SECONDS = 1.0
@@ -137,11 +140,13 @@ def _fetch_lastfm_page(
 
     if isinstance(last_error, httpx.HTTPStatusError):
         status_code = last_error.response.status_code
+        logger.warning("lastfm_request_failed", reason="rate_limited" if status_code == 429 else "http_error", status_code=status_code, attempts=attempt, page=page)
         raise ValueError(
             f"Last.fm failed while fetching page {page} with HTTP {status_code}. "
             "No import rows were saved. Try again later."
         ) from None
 
+    logger.warning("lastfm_request_failed", reason="timeout" if isinstance(last_error, httpx.TimeoutException) else "network_error", attempts=attempt, page=page)
     raise ValueError(
         f"Last.fm failed while fetching page {page}. No import rows were saved. Try again later."
     ) from None

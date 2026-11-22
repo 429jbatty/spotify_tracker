@@ -12,6 +12,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from backend.app.config import get_settings
 from backend.app.database import create_schema
+from backend.app.logging_config import configure_logging
 from backend.app.models import AlbumCreditFact
 from backend.app.services.credit_fact_service import (
     preview_credit_facts,
@@ -83,6 +84,7 @@ def main() -> int:
     parser.add_argument("--apply", action="store_true", help="Write rebuilt facts.")
     args = parser.parse_args()
 
+    configure_logging()
     database_url = args.database_url or get_settings().database_url
     engine = create_schema(database_url)
     session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)

@@ -1,5 +1,7 @@
 from urllib.parse import urlencode
 
+import structlog
+
 from fastapi import APIRouter, Header, HTTPException, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import sessionmaker
@@ -18,6 +20,7 @@ from backend.app.services import (
 from backend.app.services.spotify_tracking_service import run_tracking_for_user
 
 router = APIRouter(tags=["spotify"])
+logger = structlog.get_logger(__name__)
 
 
 def _session_factory():
@@ -130,6 +133,7 @@ def disconnect_spotify(
 @router.get("/spotify/callback")
 def spotify_callback(code: str | None = None, state: str | None = None) -> RedirectResponse:
     if not code or not state:
+        logger.warning("spotify_connection_failed", reason="invalid_request")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Spotify callback is missing code or state.",
@@ -144,8 +148,10 @@ def spotify_callback(code: str | None = None, state: str | None = None) -> Redir
                 state=state,
             )
     except (KeyError, LookupError) as exc:
+        logger.warning("spotify_connection_failed", reason="invalid_state" if isinstance(exc, KeyError) else "provider_unavailable")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc))
     except spotify_access_service.SpotifySyncAccessUnavailable as exc:
+        logger.warning("spotify_connection_failed", reason="access_denied")
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(exc))
 
     redirect_url = _frontend_redirect(

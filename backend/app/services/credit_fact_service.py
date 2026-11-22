@@ -6,11 +6,17 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Iterable
 
+import structlog
+
+from backend.app.persistence_logging import database_error_fields
+
 from sqlalchemy import LargeBinary, cast, delete, select
 from sqlalchemy.orm import Session
 
 from backend.app.models import Album, AlbumCreditFact
 
+
+logger = structlog.get_logger(__name__)
 
 LEGACY_CREDIT_INGESTION_VERSION = "legacy_tuple_credit_v1"
 UNKNOWN_SCOPE = "unknown"
@@ -76,36 +82,47 @@ def rebuild_credit_facts(
     album_ids: Iterable[int] | None = None,
     commit: bool = True,
 ) -> RebuildResult:
-    sources = load_album_credit_sources(session, album_ids=album_ids)
-    source_ids = [source.album_id for source in sources]
-    if not source_ids:
-        return RebuildResult(album_ids=[], deleted_count=0, inserted_count=0)
-
-    deleted_count = session.execute(
-        delete(AlbumCreditFact).where(AlbumCreditFact.album_id.in_(source_ids))
-    ).rowcount or 0
-
-    now = datetime.now(timezone.utc).isoformat()
-    facts = []
-    skipped_parse_errors = 0
-    for source in sources:
-        if source.metadata_parse_error:
-            skipped_parse_errors += 1
-            continue
-        facts.extend(_facts_for_album(source, now=now))
-
-    session.add_all(facts)
+    stage = "load"
+    try:
+        sources = load_album_credit_sources(session, album_ids=album_ids)
+        source_ids = [source.album_id for source in sources]
+        if not source_ids:
+            result = RebuildResult(album_ids=[], deleted_count=0, inserted_count=0)
+        else:
+            stage = "rebuild"
+            deleted_count = session.execute(
+                delete(AlbumCreditFact).where(AlbumCreditFact.album_id.in_(source_ids))
+            ).rowcount or 0
+            now = datetime.now(timezone.utc).isoformat()
+            facts = []
+            skipped_parse_errors = 0
+            for source in sources:
+                if source.metadata_parse_error:
+                    skipped_parse_errors += 1
+                    continue
+                facts.extend(_facts_for_album(source, now=now))
+            session.add_all(facts)
+            stage = "commit" if commit else "flush"
+            if commit:
+                session.commit()
+            else:
+                session.flush()
+            result = RebuildResult(
+                album_ids=source_ids, deleted_count=deleted_count,
+                inserted_count=len(facts), skipped_parse_error_count=skipped_parse_errors,
+            )
+    except Exception as exc:
+        if commit:
+            logger.error("credit_facts_rebuild_failed", stage=stage, error_type=type(exc).__name__, **database_error_fields(exc))
+        raise
+    # An outer transaction may still roll back a flush-only rebuild.
     if commit:
-        session.commit()
-    else:
-        session.flush()
+        logger.info(
+            "credit_facts_rebuilt", albums=len(result.album_ids), deleted=result.deleted_count,
+            inserted=result.inserted_count, skipped_parse_errors=result.skipped_parse_error_count,
+        )
+    return result
 
-    return RebuildResult(
-        album_ids=source_ids,
-        deleted_count=deleted_count,
-        inserted_count=len(facts),
-        skipped_parse_error_count=skipped_parse_errors,
-    )
 
 
 def preview_credit_facts(
