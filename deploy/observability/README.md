@@ -114,37 +114,36 @@ the same `ALBUMARY_LOG_DIR`. Stop Alloy with Ctrl-C. Local log files have no
 automatic rotation; delete or rotate them as needed. These files can contain
 sensitive application output and should remain outside the repository.
 
-## Operations dashboard
+## Grafana dashboard
 
 Grafana provisions the [Albumary Operations dashboard](grafana/dashboards/albumary-operations.json)
-from `/var/lib/grafana/albumary-dashboards/` using
-[dashboard-provider.yaml](grafana/dashboard-provider.yaml). The dashboard UID
-and URL remain `albumary-operations`. Grafana is configured to prevent saving
-edits to this provisioned dashboard in the UI and to retain the database copy
-if its file disappears. To experiment in Grafana, save a separate copy; export
-its JSON and review it into the repository when ready to keep the changes.
+with native **Overview**, **User activity**, and **Diagnostics** tabs. The
+existing `albumary-operations` UID and URL are unchanged. Environment, time
+range, and optional Grafana filters are shared; the activity and diagnostic text
+filters are scoped to their respective tabs.
 
-After updating the repository JSON, copy it to the observability container from
-a checkout with SSH access to the Proxmox host as root:
+The dashboard uses Grafana's v2 resource format and requires Grafana 13 or newer.
+The existing file provider reads it from `/var/lib/grafana/albumary-dashboards/`,
+prevents UI saves, and retains the database copy if the file disappears.
+
+Update the file from a checkout with SSH access to the Proxmox host:
 
 ```sh
 ./deploy/observability/update-dashboard.sh PROXMOX_SSH_HOST OBSERVABILITY_CT_ID
 ```
 
-For this homelab, the arguments are `nuc 109`. The script validates the JSON
-and dashboard UID, then atomically replaces the Grafana-readable file. Grafana
-polls for changes every 30 seconds; refresh the dashboard to verify. The script
-does not modify application services or require an Albumary release. To roll
-back, restore an earlier dashboard JSON in the checkout and rerun the command.
-An initial provider installation or provider-configuration change requires a
-Grafana restart; changing only the dashboard JSON does not.
+For this homelab, the arguments are `nuc 109`. The script validates the v2
+resource and UID, then replaces the file atomically. Grafana polls for updates
+every 30 seconds. This changes the dashboard independently of application
+releases; initial provider installation or configuration changes still require
+a Grafana restart. To roll back, restore an earlier dashboard file in the
+checkout and rerun the matching update method for that file's format.
 
-Choose **Environment** to switch between production and development. Counters
-show structured events in the selected time range, not current service health;
-legacy plain-text logs do not populate these panels. Production panels need the
-structured application logging changes deployed. Development validation can
-produce simulated failures; test data follows the three-day retention policy.
-Use Explore for full event details and tracebacks.
+Select **Environment** and a time range to inspect events. Counts represent
+observed log events, not live health, unique incidents, or guaranteed audit
+records. Production logs retain 30 days; development logs retain three days and
+can contain simulated validation events. Use Explore for full event details.
+Standalone maintenance command output is not collected by default.
 
 ## Verify and update
 

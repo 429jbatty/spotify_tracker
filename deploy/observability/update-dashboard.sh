@@ -13,8 +13,8 @@ case "$ct_id" in ''|*[!0-9]*) echo "Container ID must be numeric" >&2; exit 2 ;;
 
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 dashboard="$script_dir/grafana/dashboards/albumary-operations.json"
-# Validate before replacing the file Grafana watches.
-python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d.get("uid") == "albumary-operations", "unexpected dashboard UID"' "$dashboard"
+# Grafana v2 dashboards use a resource envelope; metadata.name is the UID.
+python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); assert d.get("apiVersion") == "dashboard.grafana.app/v2" and d.get("kind") == "Dashboard" and d.get("metadata", {}).get("name") == "albumary-operations", "unexpected dashboard resource"' "$dashboard"
 
 # Write on the same filesystem and rename atomically, so Grafana never reads a
 # partially transferred dashboard. This updates only the dashboard, not the app.
