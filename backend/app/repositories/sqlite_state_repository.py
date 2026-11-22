@@ -1,5 +1,6 @@
 import json
 import logging
+from dataclasses import dataclass
 from typing import Any
 
 from sqlalchemy import LargeBinary, Select, cast, delete, func, select
@@ -25,6 +26,16 @@ from backend.app.repositories.state_utils import (
 from backend.app.repositories.user_repository import UserRepository
 from backend.app.services.credit_fact_service import rebuild_credit_facts
 from backend.app.user_tags import normalize_user_tags
+
+
+@dataclass(frozen=True)
+class AlbumChange:
+    """Committed collection change facts, independent of the caller's intent."""
+    album_id: int
+    artist: str
+    title: str
+    membership_added: bool = False
+    listens_added: tuple[str, ...] = ()
 
 
 STATE_LAST_CHECKED = "last_checked"
@@ -459,12 +470,12 @@ class SqliteStateRepository:
         self.session.commit()
         return self._album_record(target_album)
 
-    def delete_completed_album(self, album_id: int) -> None:
+    def delete_completed_album(self, album_id: int) -> AlbumChange:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
         self.require_user_album(album.id)
-
+        change = AlbumChange(album.id, album.artist, album.name)
         self.session.execute(
             delete(AlbumListen).where(
                 AlbumListen.user_id == self.user.id,
@@ -480,57 +491,51 @@ class SqliteStateRepository:
         self.session.flush()
         self._delete_unowned_albums([album.id])
         self.session.commit()
+        return change
 
     def create_completed_album(
-        self,
-        record: dict[str, Any],
-        listen_date: str | None = None,
+        self, record: dict[str, Any], listen_date: str | None = None,
     ) -> dict[str, Any]:
+        result, _ = self.create_completed_album_with_changes(record, listen_date)
+        return result
+
+    def create_completed_album_with_changes(
+        self, record: dict[str, Any], listen_date: str | None = None,
+    ) -> tuple[dict[str, Any], AlbumChange]:
         normalized_record = _normalize_completed_albums(
             {_album_key(record.get("artist", ""), record.get("name", "")): record}
         )
         album_key, normalized = next(iter(normalized_record.items()))
-
-        existing_album = self._resolve_manual_input_identity(normalized)
-        if existing_album is None:
-            existing_album = self._resolve_album_identity(normalized)
-        if existing_album is not None:
+        album = self._resolve_manual_input_identity(normalized)
+        if album is None:
+            album = self._resolve_album_identity(normalized)
+        if album is not None:
             self._apply_completed_album_record(
-                existing_album,
-                self._merged_completed_album_record(existing_album, normalized),
+                album, self._merged_completed_album_record(album, normalized),
             )
-            self._add_user_album(existing_album.id)
-            if listen_date:
-                self._add_listen(existing_album, listen_date)
-            for listened_at in normalized.get("listen_history") or []:
-                self._add_listen(existing_album, listened_at)
-            self._rebuild_credit_facts([existing_album.id])
-            self.session.commit()
-            return self._album_record(existing_album)
-
-        album = Album(
-            album_key=self._new_album_key(normalized, album_key),
-            artist=normalized["artist"],
-            name=normalized["name"],
-            normalized_identity=self._normalized_identity(normalized),
-        )
-        self.session.add(album)
-        self._apply_completed_album_record(
-            album,
-            normalized,
-            album_key=album.album_key,
-        )
-        self.session.flush()
-        self._add_user_album(album.id)
-
+        else:
+            album = Album(
+                album_key=self._new_album_key(normalized, album_key),
+                artist=normalized["artist"], name=normalized["name"],
+                normalized_identity=self._normalized_identity(normalized),
+            )
+            self.session.add(album)
+            self._apply_completed_album_record(album, normalized, album_key=album.album_key)
+            self.session.flush()
+        membership_added = self._add_user_album(album.id)
+        listens_added = []
         if listen_date:
-            self._add_listen(album, listen_date)
+            _, added = self._add_listen(album, listen_date)
+            if added:
+                listens_added.append(listen_date)
         for listened_at in normalized.get("listen_history") or []:
-            self._add_listen(album, listened_at)
-
+            _, added = self._add_listen(album, listened_at)
+            if added:
+                listens_added.append(listened_at)
         self._rebuild_credit_facts([album.id])
+        change = AlbumChange(album.id, album.artist, album.name, membership_added, tuple(listens_added))
         self.session.commit()
-        return self._album_record(album)
+        return self._album_record(album), change
 
     def update_completed_album_fields(
         self,
@@ -553,13 +558,22 @@ class SqliteStateRepository:
         return self._album_record(album)
 
     def add_album_listen(self, album_id: int, listened_at: str) -> dict[str, Any]:
+        result, _ = self.add_album_listen_with_changes(album_id, listened_at)
+        return result
+
+    def add_album_listen_with_changes(
+        self, album_id: int, listened_at: str,
+    ) -> tuple[dict[str, Any], AlbumChange]:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
-
-        self._add_listen(album, listened_at)
+        membership_added, added = self._add_listen(album, listened_at)
+        change = AlbumChange(
+            album.id, album.artist, album.name, membership_added,
+            (listened_at,) if added else (),
+        )
         self.session.commit()
-        return self._album_record(album)
+        return self._album_record(album), change
 
     def update_user_album_tags(self, album_id: int, your_tags: list[str]) -> dict[str, Any]:
         album = self.session.get(Album, album_id)
@@ -594,7 +608,9 @@ class SqliteStateRepository:
         self.session.commit()
         return self._album_record(album)
 
-    def delete_album_listen(self, album_id: int, listened_at: str) -> dict[str, Any]:
+    def delete_album_listen(
+        self, album_id: int, listened_at: str,
+    ) -> tuple[dict[str, Any], AlbumChange]:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
@@ -609,9 +625,10 @@ class SqliteStateRepository:
         if listen is None:
             raise KeyError(f"Listen not found: {listened_at}")
 
+        change = AlbumChange(album.id, album.artist, album.name)
         self.session.delete(listen)
         self.session.commit()
-        return self._album_record(album)
+        return self._album_record(album), change
 
     def _set_app_state(self, key: str, value: str | None) -> None:
         app_state = self.session.scalars(
@@ -1033,9 +1050,10 @@ class SqliteStateRepository:
         album: Album,
         listened_at: str,
         user_id: int | None = None,
-    ) -> None:
+    ) -> tuple[bool, bool]:
+        """Return whether membership and listen were added, respectively."""
         target_user_id = user_id or self.user.id
-        self._add_user_album(album.id, user_id=target_user_id)
+        membership_added = self._add_user_album(album.id, user_id=target_user_id)
         existing = self.session.scalars(
             select(AlbumListen).where(
                 AlbumListen.user_id == target_user_id,
@@ -1044,7 +1062,7 @@ class SqliteStateRepository:
             )
         ).first()
         if existing is not None:
-            return
+            return membership_added, False
         self.session.add(
             AlbumListen(
                 user_id=target_user_id,
@@ -1053,6 +1071,7 @@ class SqliteStateRepository:
                 source=album.source,
             )
         )
+        return membership_added, True
 
     def _load_albums_in_progress(self) -> dict[str, Any]:
         albums_in_progress = {}
@@ -1088,7 +1107,8 @@ class SqliteStateRepository:
         )
         return [row[0] for row in rows]
 
-    def _add_user_album(self, album_id: int, user_id: int | None = None) -> UserAlbum:
+    def _add_user_album(self, album_id: int, user_id: int | None = None) -> bool:
+        """Ensure membership exists and report whether this call added it."""
         target_user_id = user_id or self.user.id
         for pending in self.session.new:
             if (
@@ -1096,10 +1116,10 @@ class SqliteStateRepository:
                 and pending.user_id == target_user_id
                 and pending.album_id == album_id
             ):
-                return pending
+                return False
         existing = self._user_album_membership(album_id, user_id=target_user_id)
         if existing is not None:
-            return existing
+            return False
         membership = UserAlbum(
             user_id=target_user_id,
             album_id=album_id,
@@ -1108,7 +1128,7 @@ class SqliteStateRepository:
             notes=None,
         )
         self.session.add(membership)
-        return membership
+        return True
 
     def _user_has_album(self, album_id: int, user_id: int | None = None) -> bool:
         return self._user_album_membership(album_id, user_id=user_id) is not None

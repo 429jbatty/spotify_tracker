@@ -7,7 +7,9 @@ from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.repositories.user_repository import UserRepository
-from backend.app.services.manual_album_service import create_manual_album
+from backend.app.services.manual_album_service import (
+    add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
+)
 from backend.app.schemas import (
     AlbumListenCreate,
     AlbumListenDelete,
@@ -146,7 +148,7 @@ def add_user_album_listen(
         try:
             _require_owner(session, user_slug, authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
-            return repository.add_album_listen(album_id, request.listened_at)
+            return add_manual_album_listen(repository, album_id, request.listened_at)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
@@ -163,7 +165,7 @@ def delete_user_album_listen(
         try:
             _require_owner(session, user_slug, authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
-            return repository.delete_album_listen(album_id, request.listened_at)
+            return delete_manual_album_listen(repository, album_id, request.listened_at)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
@@ -290,6 +292,6 @@ def delete_user_album(
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
-            SqliteStateRepository(session, user_slug=user_slug).delete_completed_album(album_id)
+            delete_manual_album(SqliteStateRepository(session, user_slug=user_slug), album_id)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))

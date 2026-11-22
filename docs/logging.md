@@ -3,6 +3,8 @@
 This is the application logging guide for contributors and agents. For setup,
 service management, access, and recovery, see the
 [observability runbook](../deploy/observability/README.md).
+The [implementation plan](logging-implementation-plan.md) lists proposed
+events and areas for future coverage.
 
 ## Status and infrastructure
 

@@ -5,7 +5,9 @@ import metadata_refresh_service
 from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.services.manual_album_service import create_manual_album
+from backend.app.services.manual_album_service import (
+    add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
+)
 from backend.app.services import auth_service
 from backend.app.schemas import (
     AlbumListenCreate,
@@ -132,7 +134,7 @@ def update_album(album_id: int, request: AlbumMetadataUpdate) -> dict:
 def add_album_listen(album_id: int, request: AlbumListenCreate) -> dict:
     session, repository = _repository()
     try:
-        return repository.add_album_listen(album_id, request.listened_at)
+        return add_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:
@@ -143,7 +145,7 @@ def add_album_listen(album_id: int, request: AlbumListenCreate) -> dict:
 def delete_album_listen(album_id: int, request: AlbumListenDelete) -> dict:
     session, repository = _repository()
     try:
-        return repository.delete_album_listen(album_id, request.listened_at)
+        return delete_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:
@@ -170,7 +172,7 @@ def merge_album(album_id: int, request: AlbumMergeRequest) -> dict:
 def delete_album(album_id: int) -> None:
     session, repository = _repository()
     try:
-        repository.delete_completed_album(album_id)
+        delete_manual_album(repository, album_id)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     finally:

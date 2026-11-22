@@ -127,6 +127,7 @@ the review queue instead of being silently dropped.
 - [Testing](docs/testing.md): test commands, coverage map, and expectations.
 - [Deployment](docs/deployment.md): native LXC/systemd/Caddy deployment notes.
 - [Logging and observability](docs/logging.md): log collection and application logging practices.
+- [Logging implementation plan](docs/logging-implementation-plan.md): proposed user-action events and future coverage.
 - [Agent Guide](AGENTS.md): AI-agent and maintainer implementation guidance.
 
 ## Deployment
