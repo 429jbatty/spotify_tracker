@@ -75,14 +75,6 @@ def spotify_zip_member_count(artifact_path: str) -> int:
         raise ValueError("Uploaded file is not a valid ZIP archive.") from exc
 
 
-def iter_spotify_history_events(
-    artifact_path: str,
-    filename: str,
-) -> Iterable[NormalizedSpotifyStreamingEvent]:
-    for item in iter_spotify_history_events_with_provenance(artifact_path, filename):
-        yield item.event
-
-
 def iter_spotify_history_events_with_provenance(
     artifact_path: str,
     filename: str,
@@ -101,13 +93,6 @@ def iter_spotify_history_events_with_provenance(
         raise ValueError("Uploaded file is not a valid ZIP archive.") from exc
     except (ijson.JSONError, ValueError) as exc:
         raise ValueError(f"Spotify history file is invalid JSON: {filename}") from exc
-
-
-def parse_spotify_history_entry(
-    artifact_path: str,
-    filename: str,
-) -> list[NormalizedSpotifyStreamingEvent]:
-    return list(iter_spotify_history_events(artifact_path, filename))
 
 
 def spotify_streaming_fingerprint(event: NormalizedSpotifyStreamingEvent) -> str:

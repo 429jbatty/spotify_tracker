@@ -31,6 +31,7 @@ python3 -m venv .venv
 cd frontend
 npm ci
 npm run build
+cd ..
 ```
 
 Copy and edit environment settings:
@@ -59,6 +60,47 @@ Install Caddy config:
 ```bash
 sudo cp deploy/Caddyfile /etc/caddy/Caddyfile
 sudo systemctl reload caddy
+```
+
+## Existing profile ownership and Spotify sync
+
+Run these commands from the checkout with the API service's database settings.
+Set `PROFILE_SLUG` and `GOOGLE_EMAIL` to the confirmed profile and owner.
+To reserve an existing profile before the owner's first verified Google sign-in, run
+
+```bash
+./.venv/bin/python -m one_time_scripts.prebind_profile_owner "$PROFILE_SLUG" "$GOOGLE_EMAIL"
+```
+
+For an account that has already signed in, run
+
+```bash
+./.venv/bin/python -m one_time_scripts.bind_profile_owner "$PROFILE_SLUG" "$GOOGLE_EMAIL"
+```
+
+Each Google account can own one profile. Sign-in requires `GOOGLE_CLIENT_ID`,
+`GOOGLE_CLIENT_SECRET`, and the registered `GOOGLE_REDIRECT_URI` (normally
+`/api/auth/google/callback` on the public origin). Set `FRONTEND_ORIGIN` to
+the public frontend.
+
+Spotify live sync requires a separate grant. For an approved Spotify user with
+access to the Spotify app, enable the confirmed profile, then have the owner
+connect Spotify from that profile.
+
+```bash
+./.venv/bin/python - "${PROFILE_SLUG:?set PROFILE_SLUG}" <<'PY'
+import sys
+from sqlalchemy import update
+from backend.app.database import get_engine
+from backend.app.models import User
+
+with get_engine().begin() as connection:
+    granted = connection.execute(
+        update(User).where(User.slug == sys.argv[1]).values(spotify_sync_enabled=True)
+    )
+    if granted.rowcount != 1:
+        raise RuntimeError("Expected one existing profile")
+PY
 ```
 
 ## Updates

@@ -28,8 +28,8 @@ and app state are user-scoped.
   handlers thin.
 - Backend business logic: use `backend/app/services/` or the existing root
   service modules when the behavior already lives there.
-- Persistence: change `backend/app/models.py`, `backend/app/migrations.py`, and
-  `backend/app/repositories/` together. Do not bypass repository behavior for
+- Persistence: change `backend/app/models.py`, schema initialization, and
+  `backend/app/repositories/` as needed. Do not bypass repository behavior for
   normal app writes.
 - Spotify tracking: start in `backend/app/services/spotify_tracking_service.py`,
   `backend/app/jobs/`, and `tracking.py`.
@@ -47,7 +47,7 @@ and app state are user-scoped.
 - Frontend views: page-level components live in `frontend/src/components/`;
   shared UI primitives live in `frontend/src/components/ui/`.
 - Frontend feature folders: use `components/discovery/`,
-  `components/dataQuality/`, `components/importHistory/`, `components/search/`,
+  `components/albumEditor/`, `components/importHistory/`, `components/search/`,
   `components/splash/`, and `components/timeline/` for feature-specific UI.
 
 ## Logging
@@ -64,8 +64,8 @@ and app state are user-scoped.
 - Preserve shared album identity. `albums.album_key` is the canonical
   artist/title key, while MusicBrainz IDs and cached artwork are shared
   metadata.
-- Keep migrations idempotent. `create_schema()` is used by app startup and
-  tests, so schema changes must tolerate existing databases.
+- Keep schema initialization idempotent; `create_schema()` runs at startup and
+  in tests. Plan an explicit upgrade when a future change affects deployed data.
 - Do not make ad hoc MusicBrainz calls from route handlers or frontend code.
 - Import flows should store raw source events first, derive album-listen
   candidates second, and send uncertain but plausible candidates to review

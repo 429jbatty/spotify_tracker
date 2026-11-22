@@ -262,13 +262,6 @@ class AlbumInProgress(Base):
     user: Mapped[User] = relationship(back_populates="albums_in_progress")
 
 
-class AppState(Base):
-    __tablename__ = "app_state"
-
-    key: Mapped[str] = mapped_column(String, primary_key=True)
-    value: Mapped[str | None] = mapped_column(Text, nullable=True)
-
-
 class UserAppState(Base):
     __tablename__ = "user_app_state"
     __table_args__ = (

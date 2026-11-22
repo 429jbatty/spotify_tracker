@@ -6,6 +6,8 @@ from unittest.mock import patch
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
+from backend.app.models import Album, UserAlbum
+from backend.app.repositories.user_repository import UserRepository
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from one_time_scripts import _dedupe_albums as dedupe
 
@@ -142,6 +144,53 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
             ),
             near_pairs,
         )
+
+    def test_apply_preserves_conflicting_release_groups_with_matching_text(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            factory = self._session_factory(temp_dir)
+            with factory() as session:
+                repository = SqliteStateRepository(session)
+                for artist, mbid in [("Beyonce", "group-one"), ("Beyoncé", "group-two")]:
+                    repository.create_completed_album(
+                        {"artist": artist, "name": "Record", "release_group_mbid": mbid},
+                        listen_date="2026-04-01",
+                    )
+                before = repository.load_album_state()
+                groups = dedupe.find_duplicate_groups(session)
+                group = next(group for group in groups if group.reason == "exact_normalized_artist_album")
+                self.assertFalse(group.safe_to_apply)
+                self.assertEqual(dedupe.apply_duplicate_groups(repository, groups), [])
+                self.assertEqual(repository.load_album_state(), before)
+
+    def test_apply_checks_membership_before_merging_any_album_in_group(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            factory = self._session_factory(temp_dir)
+            with factory() as session:
+                repository = SqliteStateRepository(session)
+                other = UserRepository(session).create_user(slug="other", display_name="Other")
+                # Older rows can have distinct keys for the same normalized identity.
+                copies = []
+                for title, owner in [("Pressing", repository.user), ("PRESSING", repository.user), ("pressing", other)]:
+                    album = Album(album_key=f"A - {title}", artist="A", name=title)
+                    session.add(album)
+                    session.flush()
+                    session.add(UserAlbum(user_id=owner.id, album_id=album.id))
+                    copies.append(album)
+                session.commit()
+                groups = dedupe.find_duplicate_groups(session)
+                before = repository.load_album_state()
+                actions = dedupe.apply_duplicate_groups(repository, groups)
+                self.assertEqual(len(actions), 1)
+                self.assertIn("skipped", actions[0])
+                self.assertEqual(repository.load_album_state(), before)
+
+                session.add(UserAlbum(user_id=repository.user.id, album_id=copies[2].id))
+                session.commit()
+                other_repository = SqliteStateRepository(session, user_slug="other")
+                other_before = other_repository.load_album_state()
+                actions = dedupe.apply_duplicate_groups(repository, dedupe.find_duplicate_groups(session))
+                self.assertEqual(len([action for action in actions if action.startswith("merged")]), 2)
+                self.assertEqual(other_repository.load_album_state(), other_before)
 
     def test_dry_run_detection_does_not_mutate_albums(self):
         with tempfile.TemporaryDirectory() as temp_dir:

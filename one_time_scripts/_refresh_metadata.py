@@ -8,7 +8,7 @@ import metadata_refresh_service as refresh_service
 from backend.app.config import get_settings
 
 # Edit these values, then run:
-# ./.venv/bin/python refresh_metadata.py
+# ./.venv/bin/python -m one_time_scripts._refresh_metadata
 
 REFRESH_ALL = True
 

@@ -14,6 +14,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 import metadata_refresh_service
+from backend.app.album_identity import normalized_artist_title_identity, release_group_identity
 from backend.app.config import get_settings
 from backend.app.database import create_schema
 from backend.app.models import Album, AlbumListen, UserAlbum
@@ -46,13 +47,18 @@ class DuplicateGroup:
 
     @property
     def safe_to_apply(self) -> bool:
-        return self.reason in SAFE_REASONS
+        mbids = {release_group_identity(album.release_group_mbid) for album in self.albums}
+        mbids.discard(None)
+        if self.reason not in SAFE_REASONS or len(mbids) > 1:
+            return False
+        if self.reason == "same_release_group_mbid":
+            return True
+        identities = {normalized_artist_title_identity(album.artist, album.name) for album in self.albums}
+        return len(identities) == 1
 
 
 def _normalized_identity(album: AlbumSummary) -> str:
-    artist = normalize(album.artist)
-    name = normalize(album.name)
-    return f"{artist} - {name}"
+    return f"{normalize(album.artist)} - {normalize(album.name)}"
 
 
 def _near_text(value: str) -> str:
@@ -134,7 +140,7 @@ def find_duplicate_groups(session) -> list[DuplicateGroup]:
     groups: list[DuplicateGroup] = []
     grouped_ids: set[frozenset[int]] = set()
 
-    for _, group in _group_by(albums, lambda album: album.release_group_mbid):
+    for _, group in _group_by(albums, lambda album: release_group_identity(album.release_group_mbid)):
         ids = frozenset(album.id for album in group)
         grouped_ids.add(ids)
         groups.append(
@@ -210,6 +216,14 @@ def apply_duplicate_groups(repository: SqliteStateRepository, groups: list[Dupli
             albums=tuple(active_albums),
             score=group.score,
         )
+        # The report spans all profiles. Validate the entire group before the
+        # first merge, since each merge commits its profile-scoped changes.
+        try:
+            for album in active_albums:
+                repository.require_user_album(album.id)
+        except KeyError as exc:
+            actions.append(f"skipped {active_group.reason}: {exc.args[0]}")
+            continue
         target = _merge_target(active_group)
         for source in active_albums:
             if source.id == target.id:

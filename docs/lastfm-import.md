@@ -88,78 +88,13 @@ This means a famous album can still land in review if the importer cannot load
 the tracklist. It also means a famous album can be correctly identified but
 still become `partial_listen` if only a few tracks were scrobbled.
 
-## jbatty429 Test Findings
+## Metadata matching and negative cache
 
-The live `jbatty429` import into user `test` completed successfully, but left a
-small review queue:
-
-- `3059` Last.fm scrobbles were stored.
-- `70` album listens were derived.
-- `9` review candidate sessions remained.
-- `0` candidates were left pending metadata.
-
-The review rows represented session-level candidates, not duplicate raw import
-failures. In that run, the duplicate-looking review entries came from separate
-48-hour sessions for the same album:
-
-| Album | Review sessions | Why it repeated |
-| --- | ---: | --- |
-| `Aerosmith - Aerosmith` | 2 | Two distinct listen windows. |
-| `Ed Sheeran - ÷ (Deluxe)` | 3 | Three distinct listen windows. |
-| `Bob Marley & The Wailers - Legend (The Definitive Remasters)` | 1 | One listen window spanning two calendar days but under 48 hours. |
-
-The API/review UI should group candidate-review items by album identity when
-the product goal is "show albums needing review." Resolving a grouped review
-item should resolve all candidate sessions for that source user, artist, and
-album while creating one listen per candidate session.
-
-## Purple Rain Failure Mode
-
-`Prince - Purple Rain` is the useful example because MusicBrainz can find the
-real album, but the current ranking can still pick the wrong release group.
-
-Observed behavior:
-
-- The Last.fm session had three unique tracks: `Let's Go Crazy`,
-  `Purple Rain`, and `When Doves Cry`.
-- MusicBrainz search returned both `Purple Rain Debut` and the actual
-  `Purple Rain` soundtrack release group.
-- The current fuzzy scoring uses token-set matching, so `Purple Rain Debut`
-  can score like an exact title match for `Purple Rain`.
-- Because the wrong release group was chosen first and did not produce a usable
-  release/tracklist, the importer wrote a `not_found` cache row for
-  `Prince / Purple Rain`.
-- Later import passes saw the negative cache row and did not retry MusicBrainz,
-  so the candidate stayed in review with "Could not load album tracklist."
-
-With a correct `Purple Rain` tracklist, that specific session would probably
-not become a completed album listen anyway: three matched tracks out of a
-nine-track album is below the 90% completion threshold. The bug is that the
-review reason is misleading and caused by bad metadata ranking/cache state, not
-that Last.fm failed to name the album.
-
-## MusicBrainz Ranking Implications
-
-Fixes should focus on `album_metadata_service.py` before changing Last.fm
-grouping rules:
-
-- Prefer exact normalized album-title matches over subset matches.
-- Penalize extra title words when the requested title is exact and shorter.
-- Deprioritize `Live`, `Compilation`, `Remix`, and `Single` results for import
-  matching unless the requested album title or existing local album clearly
-  indicates those forms.
-- Use MusicBrainz search score as an input alongside local fuzzy scoring.
-- If the chosen release group cannot produce a usable release/tracklist, try
-  the next high-confidence candidate before writing `album_metadata_cache` as
-  `not_found`.
-- Keep the album-type guard: new Last.fm-derived album listens should still
-  require a MusicBrainz release group whose primary type is `Album`.
-
-When retesting after a matcher fix, clear affected `album_metadata_cache`
-negative rows or delete/reprocess the scoped `test` import session. Browser
-refresh alone cannot fix persisted `not_found` cache rows. Rerunning the import
-without cleanup may also do nothing because `_event_exists` treats already
-stored scrobbles as duplicates.
+The resolver favors exact normalized titles and penalizes extra title words.
+It can try additional candidates when a release lacks a usable tracklist. A
+negative `album_metadata_cache` entry can persist from an earlier lookup, so a
+matcher improvement alone does not automatically repair existing cache rows.
+Investigate the relevant cache and import session before any scoped reprocessing.
 
 ## Persistence
 
@@ -185,28 +120,30 @@ stored scrobbles as duplicates.
 
 ## Safe Debug Queries
 
-Use these against the dev SQLite DB:
+Set `TRACKER_DB` to the dev database file. Use the first query to identify the
+test import, then set `SESSION_ID` to its numeric ID.
 
 ```bash
-sqlite3 /Users/jacobbattenberg/Documents/github/data/spotify_tracker_data/spotify_tracker.sqlite \
+sqlite3 -readonly "${TRACKER_DB:?set TRACKER_DB}" \
   "select s.id, s.source_user_id, s.status, s.session_name, json_extract(s.summary_json,'$.progress_label'), json_extract(s.summary_json,'$.progress_current'), json_extract(s.summary_json,'$.progress_total') from import_sessions s join users u on u.id=s.user_id where u.slug='test' order by s.id desc limit 5;"
 ```
 
 ```bash
-sqlite3 /Users/jacobbattenberg/Documents/github/data/spotify_tracker_data/spotify_tracker.sqlite \
-  "select match_status, count(*) from imported_listening_events where import_session_id=<SESSION_ID> group by match_status order by match_status;"
+sqlite3 -readonly "${TRACKER_DB:?set TRACKER_DB}" \
+  "select match_status, count(*) from imported_listening_events where import_session_id=${SESSION_ID:?set SESSION_ID} group by match_status order by match_status;"
 ```
 
 ```bash
-sqlite3 /Users/jacobbattenberg/Documents/github/data/spotify_tracker_data/spotify_tracker.sqlite \
+sqlite3 -readonly "${TRACKER_DB:?set TRACKER_DB}" \
   "select artist, album, status, json_extract(metadata_json,'$.primary_type'), json_array_length(json_extract(metadata_json,'$.tracklist')) from album_metadata_cache order by updated_at desc limit 20;"
 ```
 
 Only delete imports for `test` during validation unless the user explicitly
-approves another user:
+approves another user. Set `ALBUMARY_TOKEN` to the profile owner’s session token:
 
 ```bash
-curl -X DELETE http://127.0.0.1:8000/api/users/test/imports/<SESSION_ID>
+curl -X DELETE -H "Authorization: Bearer $ALBUMARY_TOKEN" \
+  "http://127.0.0.1:8000/api/users/test/imports/${SESSION_ID:?set SESSION_ID}"
 ```
 
 ## Verification

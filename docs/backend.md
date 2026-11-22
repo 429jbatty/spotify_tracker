@@ -43,8 +43,8 @@ validation, response shaping, and expected error translation.
 
 - `make track`: runs `main.py`, a compatibility wrapper for default-user
   tracking.
-- `make track-all`: runs `backend.app.jobs.track_all_users` for every user with
-  connected Spotify credentials.
+- `make track-all`: runs `backend.app.jobs.track_all_users` for active, sync-enabled
+  profiles with Spotify credentials.
 - `make refresh-metadata`: runs the targeted refresh script in
   `one_time_scripts/_refresh_metadata.py`.
 - `make cache-artwork`: downloads and stores artwork through the artwork cache
@@ -53,6 +53,13 @@ validation, response shaping, and expected error translation.
 - `one_time_scripts/_dedupe_albums.py`: reports and optionally merges safe
   duplicate album records.
 
+For Connections maintenance, inspect stored credit coverage for a profile with
+`./.venv/bin/python -m one_time_scripts._audit_credit_facts --user-slug "$PROFILE_SLUG"`.
+Preview a rebuild from stored metadata with
+`./.venv/bin/python -m one_time_scripts._rebuild_credit_facts`.
+Use `--album-id ID` to limit the preview and add `--apply` to write the same selection.
+The rebuild reads both tuple credits and enriched credit objects.
+
 ## Standards
 
 - Keep route handlers thin and deterministic.
@@ -60,8 +67,8 @@ validation, response shaping, and expected error translation.
 - Do not call Spotify or MusicBrainz directly from routers.
 - Do not bypass import review behavior when a source session is plausible but
   below confidence thresholds.
-- Keep migrations idempotent because app startup calls schema creation.
+- Keep schema initialization idempotent because app startup calls it.
 - Treat `tracking.py`, `album_metadata_service.py`, and
   `metadata_refresh_service.py` as active backend modules, not archival files.
 - Add tests for route behavior, service behavior, repository persistence, and
-  migration compatibility when changing those surfaces.
+  schema changes when changing those surfaces.

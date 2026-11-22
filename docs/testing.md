@@ -1,7 +1,6 @@
 # Testing
 
-Backend tests use Python `unittest`. Frontend verification uses Vite build and
-ESLint scripts.
+Backend tests use Python `unittest`. Frontend verification uses Vitest, Vite build, and ESLint scripts.
 
 ## Commands
 
@@ -11,11 +10,12 @@ make test
 
 ```bash
 cd frontend
+npm run test
 npm run build
 npm run lint
 ```
 
-`npm run lint` should pass without warnings before opening a PR.
+Lint should pass; existing shadcn/Radix fast-refresh warnings may appear.
 
 ## Coverage Map
 
@@ -26,7 +26,7 @@ npm run lint
   failure behavior.
 - `tests/test_sqlite_state_repository.py`: SQLite state round trips and album
   mutations.
-- `tests/test_sqlite_migrations.py`: schema/migration compatibility.
+- `tests/test_database_schema.py`: current schema creation and idempotency.
 - `tests/test_api_album_state.py`: album-state API behavior.
 - `tests/test_api_album_actions.py`: manual album, listen, refresh, merge,
   tag, feedback, and delete actions.
@@ -44,7 +44,7 @@ npm run lint
 ## Expectations
 
 - Mock Spotify, MusicBrainz, and network-bound artwork calls.
-- Add migration tests for any model/table changes.
+- Add schema and upgrade tests for future changes that affect deployed data.
 - Add API tests for any changed request/response contract.
 - Add repository tests for persistence behavior and user scoping.
 - Add frontend build/lint verification for meaningful frontend changes.

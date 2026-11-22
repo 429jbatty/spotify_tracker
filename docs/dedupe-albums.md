@@ -4,7 +4,7 @@ Use `one_time_scripts/_dedupe_albums.py` to find and safely merge duplicate
 album records in the SQLite database.
 
 The script is conservative by default. Running it with no flags only reports
-candidate duplicate groups and does not mutate the database.
+candidate duplicate groups after normal schema initialization.
 
 ## Basic Usage
 
@@ -74,6 +74,11 @@ Each album row includes:
 - `exact_normalized_artist_album`: albums normalize to the exact same
   artist/title identity.
 
+Text groups must also match the repository's canonical artist/title identity.
+Groups containing distinct known release-group MBIDs remain review-only.
+The report covers all profiles. Apply skips a group if any member is outside
+the default profile's library.
+
 The target album is chosen by preferring:
 
 1. albums with a MusicBrainz release-group MBID
@@ -83,8 +88,9 @@ The target album is chosen by preferring:
 5. lower album ID as a stable tiebreaker
 
 Merging uses `SqliteStateRepository.merge_completed_album_listens(...)`, which
-preserves listen history and user album membership data. Source albums are
-deleted after their listens and user data are moved.
+moves the default profile's listens and combines its membership fields.
+Other profiles keep their memberships and listens. A source album can be
+deleted once it has no remaining owners.
 
 ## Review-Only Matches
 
@@ -104,14 +110,15 @@ variants, punctuation differences, or near-identical titles. It should not repor
 separate albums by the same artist merely because they share the artist name or
 belong to the same series.
 
-To resolve a review-only group, inspect the album IDs in the app's Data Quality
-view or database, then use the existing manual merge flow if the records are
-really duplicates.
+To resolve a review-only group, inspect the two records in the library. When an edit
+would give the album an existing album key, the editor offers a merge.
 
 ## Refresh Candidates
 
 `--refresh-candidates` attempts metadata refresh for every album currently in a
-reported duplicate group, then recomputes the report.
+reported duplicate group, then recomputes the report. This option writes
+successful refreshes immediately and can merge matching records even without
+`--apply`.
 
 This is useful when duplicates do not currently share a canonical key but would
 collapse after MusicBrainz metadata refresh.
@@ -127,7 +134,7 @@ skipped action and leaves that album unchanged.
 
    ```bash
    ./.venv/bin/python one_time_scripts/_dedupe_albums.py \
-     --database-url sqlite:///path/to/production.sqlite
+     --database-url sqlite:////path/to/production.sqlite
    ```
 
 3. Review every `[safe]` group and spot-check a few `[review]` groups.
@@ -135,7 +142,7 @@ skipped action and leaves that album unchanged.
 
    ```bash
    ./.venv/bin/python one_time_scripts/_dedupe_albums.py \
-     --database-url sqlite:///path/to/production.sqlite \
+     --database-url sqlite:////path/to/production.sqlite \
      --refresh-candidates
    ```
 
@@ -143,7 +150,7 @@ skipped action and leaves that album unchanged.
 
    ```bash
    ./.venv/bin/python one_time_scripts/_dedupe_albums.py \
-     --database-url sqlite:///path/to/production.sqlite \
+     --database-url sqlite:////path/to/production.sqlite \
      --apply
    ```
 

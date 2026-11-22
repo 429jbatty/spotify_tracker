@@ -28,15 +28,15 @@ state from Spotify.
 
 - `backend/app/main.py`: FastAPI app factory and router registration.
 - `backend/app/routers/`: HTTP endpoints for health, album state, album
-  actions, users, and Spotify OAuth/sync.
+  actions, users, imports, authentication, credit intelligence, and Spotify OAuth/sync.
 - `backend/app/services/`: backend services for user admin, Spotify tracking,
-  Spotify OAuth, and artwork caching.
+  Spotify OAuth, imports, credit intelligence, and artwork caching.
 - `backend/app/repositories/`: SQLite-backed persistence.
 - `backend/app/models.py`: SQLAlchemy table definitions.
 - `backend/app/schemas.py`: Pydantic request and response contracts.
 - `backend/app/jobs/`: command-line worker entrypoints.
 - Root modules such as `tracking.py`, `album_metadata_service.py`,
-  `metadata_refresh_service.py`, and `musicbrainz_client.py`: active legacy
+  `metadata_refresh_service.py`, and `musicbrainz_client.py`: active root-level
   service modules used by jobs, services, and one-time scripts.
 - `frontend/src/`: React app, API client, hooks, components, and UI primitives.
 - `one_time_scripts/`: operational scripts for targeted metadata refreshes,
@@ -45,7 +45,8 @@ state from Spotify.
 
 ## User Model
 
-The app supports multiple no-password users. Album metadata is shared, but each
+The app supports multiple profiles, with Google account ownership for protected
+actions. Album metadata is shared, but each
 user has independent completed listens, in-progress Spotify tracking state,
 Spotify credentials, `last_checked` cursor, tags, ratings, and notes.
 

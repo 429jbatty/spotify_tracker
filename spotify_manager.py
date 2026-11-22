@@ -1,39 +1,13 @@
-import base64
-import os
-import json
-import datetime
-
 from spotipy.oauth2 import SpotifyOAuth
 from spotipy import Spotify
 import structlog
-from spotipy.exceptions import SpotifyException
 
 
 class CredentialsManager:
-    """Manages credentials, handling local files and Google Secret Manager."""
-
-    def __init__(self):
-        pass
-
-    def get_spotify_credentials(self, local_credentials: dict = None, scopes=None):
-        # use local credentials file
-        # if local_credentials:
-        #     credentials = local_credentials
-        # else:
-        #     # Use GCP secrets
-        #     credentials = json.loads(self.get_secret_value("spotify_credentials"))
-        credentials = local_credentials
-        if all(
-            key in credentials for key in ["client_id", "client_secret", "redirect_uri"]
-        ):
-            return credentials
-        else:
-            raise ValueError(
-                "Missing required Spotify credentials in local_credentials"
-            )
-
     def get_spotify_client(self, scopes, local_credentials):
-        credentials = self.get_spotify_credentials(local_credentials, scopes)
+        credentials = local_credentials
+        if not all(key in credentials for key in ("client_id", "client_secret", "redirect_uri")):
+            raise ValueError("Missing required Spotify credentials in local_credentials")
 
         sp_oauth = SpotifyOAuth(
             client_id=credentials["client_id"],
@@ -49,12 +23,7 @@ class CredentialsManager:
 
 
 class SpotifyAPI:
-    """
-    A class for interacting with the Spotify API.
-
-    Handles authentication and provides methods for searching albums, creating playlists,
-    and updating the AOTW playlist.
-    """
+    """Read recent plays and their album metadata for tracking."""
 
     SCOPES = ["user-read-recently-played"]
 
@@ -65,60 +34,6 @@ class SpotifyAPI:
         self.sp = CredentialsManager().get_spotify_client(
             self.SCOPES, local_credentials
         )
-
-    def search_album(self, artist_name, album_name):
-        """
-        Searches for an album on Spotify by artist and album name, prioritizing the most popular result.
-
-        Args:
-            artist_name: The name of the artist.
-            album_name: The name of the album.
-
-        Returns:
-            The URI of the most popular matching album, or None if no match is found.
-
-        Raises:
-            Exception: If Spotify client is not authenticated.
-        """
-
-        if not self.sp:
-            raise Exception("Spotify client not authenticated")
-
-        query = f"{artist_name} {album_name} -deluxe"
-        results = self.sp.search(q=query, type="album")
-
-        albums = results["albums"]["items"]
-
-        if not albums:
-            return None
-
-        return albums[0]["uri"]
-
-    def overwrite_playlist_with_album(self, playlist_id, album_uri):
-        """
-        Overwrites an existing playlist with the tracks of a given album.
-
-        Args:
-            playlist_id: The ID of the playlist to update.
-            album_uri: The URI of the album to add to the playlist.
-
-        Raises:
-            Exception: If Spotify client is not authenticated or an error occurs.
-        """
-
-        if not self.sp:
-            raise Exception("Spotify client not authenticated")
-
-        # Clear the existing playlist
-        self.sp.playlist_replace_items(playlist_id, [])
-
-        # Get the album's track URIs
-        album_tracks = self.sp.album_tracks(album_uri)
-        track_uris = [track["uri"] for track in album_tracks["items"]]
-
-        # Add the tracks to the playlist
-        self.sp.playlist_add_items(playlist_id, track_uris)
-        print(f"Playlist '{playlist_id}' updated with album '{album_uri}'")
 
     def fetch_recent_tracks(self, after_timestamp=None):
         """

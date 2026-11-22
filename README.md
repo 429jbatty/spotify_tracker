@@ -3,7 +3,7 @@
 Spotify Tracker is a personal album-listening tracker. It pulls recent Spotify
 plays, marks albums complete when enough tracks were heard, enriches albums
 with MusicBrainz metadata and cover art, stores the runtime state in SQLite,
-and serves a React/Vite frontend through FastAPI.
+and provides a FastAPI backend for a React/Vite frontend.
 
 ## Quick Start
 
@@ -17,8 +17,7 @@ python3 -m venv .venv
 Install frontend dependencies:
 
 ```bash
-cd frontend
-npm install
+npm --prefix frontend ci
 ```
 
 Run the local development environment:
@@ -40,7 +39,7 @@ make api               # start FastAPI on http://127.0.0.1:8000
 make dev               # start backend and frontend on localhost only
 make dev-home          # start frontend for same-Wi-Fi home network access
 make track             # run Spotify tracking for the default user
-make track-all         # run Spotify tracking for all connected users
+make track-all         # run Spotify tracking for eligible connected profiles
 make refresh-metadata  # refresh configured album metadata
 make cache-artwork     # cache remote artwork under DATA_DIR media storage
 make backfill-artwork  # find missing artwork from stored MusicBrainz IDs
@@ -112,7 +111,7 @@ the review queue instead of being silently dropped.
 ## Documentation
 
 - [Architecture](docs/architecture.md): application flow and source layout.
-- [Data Layer](docs/data-layer.md): SQLite tables, repositories, migrations,
+- [Data Layer](docs/data-layer.md): SQLite tables, repositories, schema initialization,
   and media storage.
 - [Backend](docs/backend.md): FastAPI, services, jobs, config, and backend
   standards.
@@ -127,7 +126,6 @@ the review queue instead of being silently dropped.
 - [Testing](docs/testing.md): test commands, coverage map, and expectations.
 - [Deployment](docs/deployment.md): native LXC/systemd/Caddy deployment notes.
 - [Logging and observability](docs/logging.md): log collection and application logging practices.
-- [Logging implementation plan](docs/logging-implementation-plan.md): proposed user-action events and future coverage.
 - [Agent Guide](AGENTS.md): AI-agent and maintainer implementation guidance.
 
 ## Deployment

@@ -94,7 +94,6 @@ from backend.app.services.artwork_backfill_service import ArtworkBackfillService
 from backend.app.services.lastfm_import_client import fetch_lastfm_recent_tracks
 from backend.app.services import spotify_catalog_service
 from backend.app.services.spotify_import_parser import (
-    iter_spotify_history_events,
     iter_spotify_history_events_with_provenance,
     spotify_history_entries_from_zip,
     spotify_streaming_fingerprint,
@@ -4070,15 +4069,6 @@ def _import_candidate_key(
         ]
     )
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
-
-
-def _lastfm_candidate_key(
-    source_user_id: str | None,
-    artist: str,
-    album: str,
-    events: list[NormalizedImportEvent],
-) -> str:
-    return _import_candidate_key("lastfm", source_user_id, artist, album, events)
 
 
 def _empty_summary() -> ImportPreviewSummary:

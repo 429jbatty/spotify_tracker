@@ -345,21 +345,6 @@ class SqliteStateRepository:
         self.session.commit()
         return new_key
 
-    def replace_completed_album_metadata_by_id(
-        self,
-        album_id: int,
-        refreshed_record: dict[str, Any],
-    ) -> dict[str, Any]:
-        album = self.session.get(Album, album_id)
-        if album is None:
-            raise KeyError(f"Album id not found: {album_id}")
-
-        refreshed_record = self._preserve_manual_input_identity(album, refreshed_record)
-        self._apply_completed_album_record(album, refreshed_record)
-        self._rebuild_credit_facts([album.id])
-        self.session.commit()
-        return self._album_record(album)
-
     def replace_completed_album_metadata_by_id_or_merge_duplicate(
         self,
         album_id: int,
@@ -694,20 +679,19 @@ class SqliteStateRepository:
         )
         stale_album_ids = list(existing_ids - incoming_existing_ids)
         if stale_album_ids:
-            if stale_album_ids:
-                self.session.execute(
-                    delete(AlbumListen).where(
-                        AlbumListen.user_id == self.user.id,
-                        AlbumListen.album_id.in_(stale_album_ids),
-                    )
+            self.session.execute(
+                delete(AlbumListen).where(
+                    AlbumListen.user_id == self.user.id,
+                    AlbumListen.album_id.in_(stale_album_ids),
                 )
-                self.session.execute(
-                    delete(UserAlbum).where(
-                        UserAlbum.user_id == self.user.id,
-                        UserAlbum.album_id.in_(stale_album_ids),
-                    )
+            )
+            self.session.execute(
+                delete(UserAlbum).where(
+                    UserAlbum.user_id == self.user.id,
+                    UserAlbum.album_id.in_(stale_album_ids),
                 )
-                self._delete_unowned_albums(stale_album_ids)
+            )
+            self._delete_unowned_albums(stale_album_ids)
             self.session.flush()
 
         album_ids = []

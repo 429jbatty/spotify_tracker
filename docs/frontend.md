@@ -12,10 +12,11 @@ Tailwind CSS, and focused components for album views and editing workflows.
 - `frontend/src/services/albumNormalizer.jsx`: normalizes backend album state
   before components consume it.
 - `frontend/src/components/`: page and feature components.
+- `frontend/src/components/connections/`: contributor and album connection views.
 - `frontend/src/components/discovery/`: discovery metrics, trends, and quality
   cards used by the discovery page.
-- `frontend/src/components/dataQuality/`: album edit, listen edit, and
-  data-quality action forms.
+- `frontend/src/components/albumEditor/`: album metadata and listen editors, including
+  the duplicate-key merge prompt.
 - `frontend/src/components/importHistory/`: import dialog fields, status
   sections, and import-source UI configuration.
 - `frontend/src/components/search/`: search-result rendering and album match
@@ -30,7 +31,7 @@ Tailwind CSS, and focused components for album views and editing workflows.
 
 ## Data Flow
 
-The app starts at the user picker. Once a user is selected, `App.jsx` loads the
+The app provides a public splash page and profile routes. On a profile route, `App.jsx` loads the
 user-scoped album state through `albumApi.js`, normalizes it, computes display
 fields such as total listens and latest listen, then passes data into page
 components.

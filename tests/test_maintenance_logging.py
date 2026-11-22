@@ -10,7 +10,7 @@ from structlog.testing import capture_logs
 
 import metadata_refresh_service
 
-from backend.app import migrations
+from backend.app.database import create_schema
 from backend.app.persistence_logging import database_error_fields
 from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.services import import_service
@@ -19,20 +19,15 @@ from backend.app.services.credit_fact_service import AlbumCreditSource, rebuild_
 
 
 class MaintenanceLoggingTests(unittest.TestCase):
-    def test_migration_failure_reports_completed_stages_without_claiming_rollback(self):
-        def succeeds(engine):
-            pass
-        def migrate_default_user(engine):
-            raise RuntimeError('fixture')
-        with patch.object(migrations, 'migrate_spotify_sync_eligibility', succeeds), \
-             patch.object(migrations, 'migrate_default_user', migrate_default_user), \
-             capture_logs() as events:
-            with self.assertRaises(RuntimeError):
-                migrations.run_sqlite_migrations(Mock())
-        self.assertEqual(events[0]['event'], 'database_migrations_failed')
-        self.assertEqual(events[0]['stage'], 'migrate_default_user')
-        self.assertEqual(events[0]['stages_completed'], 1)
-        self.assertNotIn('rolled_back', events[0])
+    def test_schema_failure_is_queryable_without_statement_or_parameters(self):
+        exc = IntegrityError("INSERT INTO secrets VALUES (?)", ("private-token",), sqlite3.IntegrityError("constraint failed"))
+        with patch("backend.app.database.Base.metadata.create_all", side_effect=exc), capture_logs() as events:
+            with self.assertRaises(IntegrityError):
+                create_schema("sqlite:///:memory:")
+        self.assertEqual(events[0]["event"], "database_schema_initialization_failed")
+        self.assertEqual(events[0]["database_reason"], "constraint")
+        self.assertNotIn("private-token", repr(events))
+        self.assertNotIn("INSERT INTO", repr(events))
 
     def test_database_error_fields_never_include_statement_or_values(self):
         exc = IntegrityError('INSERT INTO secret (password) VALUES (?)', ('private-token',), Exception('error'))
