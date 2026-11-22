@@ -143,6 +143,89 @@ class ManualActivityLoggingTests(unittest.TestCase):
         with self.sessions() as session:
             self.assertIsNotNone(session.get(Album, response.json()["id"]))
 
+    def test_feedback_events_follow_replacement_semantics_without_note_text(self):
+        album_id = self.create_album().json()["id"]
+        self.events.clear()
+        path = f"/api/users/jacob/albums/{album_id}/your-feedback"
+        self.assertEqual(self.client.put(path, json={"rating": 7, "notes": " private note "}).status_code, 200)
+        self.assertEqual([e["event"] for e in self.events], ["album_rating_changed", "album_note_changed"])
+        self.assertEqual([(e["change"], e.get("rating")) for e in self.events], [("added", 7), ("added", None)])
+        self.assertNotIn("private note", repr(self.events))
+        self.events.clear()
+        self.assertEqual(self.client.put(path, json={"rating": 7, "notes": "private note"}).status_code, 200)
+        self.assertEqual(self.events, [])
+        self.assertEqual(self.client.put(path, json={"rating": 8, "notes": "different"}).status_code, 200)
+        self.assertEqual([e["change"] for e in self.events], ["updated", "updated"])
+        self.events.clear()
+        self.assertEqual(self.client.put(f"/api/albums/{album_id}/your-feedback", json={}).status_code, 200)
+        self.assertEqual([e["event"] for e in self.events], ["album_rating_removed", "album_note_removed"])
+        self.events.clear()
+        self.assertEqual(self.client.put(path, json={"rating": 11}).status_code, 422)
+        self.assertEqual(self.events, [])
+
+    def test_tag_events_report_normalized_changes_and_ignore_reordering(self):
+        album_id = self.create_album().json()["id"]
+        self.events.clear()
+        path = f"/api/users/jacob/albums/{album_id}/your-tags"
+        self.assertEqual(self.client.put(path, json={"your_tags": [" raw ", "lush", "raw"]}).status_code, 200)
+        self.assertEqual(len(self.events), 1)
+        self.assertEqual((self.events[0]["added_tags"], self.events[0]["removed_tags"]), (["lush", "raw"], []))
+        self.events.clear()
+        self.assertEqual(self.client.put(path, json={"your_tags": ["lush", "raw"]}).status_code, 200)
+        self.assertEqual(self.events, [])
+        self.assertEqual(self.client.put(f"/api/albums/{album_id}/your-tags", json={"your_tags": ["lush", "noisy"]}).status_code, 200)
+        self.assertEqual((self.events[0]["added_tags"], self.events[0]["removed_tags"]), (["noisy"], ["raw"]))
+        self.events.clear()
+        self.assertEqual(self.client.put(path, json={"your_tags": ["invalid"]}).status_code, 422)
+        self.assertEqual(self.events, [])
+
+    def test_feedback_and_tag_failures_do_not_emit_or_commit(self):
+        album_id = self.create_album().json()["id"]
+        self.events.clear()
+        for update in (
+            lambda repo: manual_album_service.update_manual_album_feedback(repo, album_id, rating=8, notes="secret"),
+            lambda repo: manual_album_service.update_manual_album_tags(repo, album_id, ["lush"]),
+        ):
+            with self.sessions() as session:
+                repository = SqliteStateRepository(session)
+                with patch.object(session, "commit", side_effect=RuntimeError("commit failed")):
+                    with self.assertRaises(RuntimeError):
+                        update(repository)
+                session.rollback()
+            self.assertEqual(self.events, [])
+        with self.sessions() as session:
+            membership = session.scalar(select(UserAlbum).where(UserAlbum.user_id == self.user_id, UserAlbum.album_id == album_id))
+            self.assertIsNone(membership.rating)
+            self.assertIsNone(membership.notes)
+            self.assertEqual(membership.your_tags, [])
+
+    def test_concurrent_identical_feedback_and_tags_emit_once(self):
+        album_id = self.create_album().json()["id"]
+        self.events.clear()
+        for update in (
+            lambda repo: manual_album_service.update_manual_album_feedback(repo, album_id, rating=8, notes=None),
+            lambda repo: manual_album_service.update_manual_album_tags(repo, album_id, ["lush"]),
+        ):
+            ready = threading.Barrier(2)
+            def run():
+                with self.sessions() as session:
+                    repo = SqliteStateRepository(session)
+                    ready.wait(timeout=5)
+                    update(repo)
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                futures = [pool.submit(run) for _ in range(2)]
+                for future in futures:
+                    future.result(timeout=15)
+        self.assertEqual([e["event"] for e in self.events], ["album_rating_changed", "album_tags_changed"])
+
+    def test_import_feedback_does_not_emit_manual_activity(self):
+        with self.sessions() as session:
+            repository = SqliteStateRepository(session)
+            album_id = repository.create_completed_album({"artist": "Import", "name": "Album"})["id"]
+            repository.update_user_album_feedback(album_id, rating=8, notes="imported")
+            repository.update_user_album_tags(album_id, ["lush"])
+        self.assertEqual(self.events, [])
+
     def test_import_listen_does_not_repeat_membership_lookup_for_change_facts(self):
         with self.sessions() as session:
             repository = SqliteStateRepository(session)

@@ -4,9 +4,9 @@
 | --- | --- | --- |
 | 0 | Logging infrastructure, request logs, Spotify sync and import events | Implemented; coverage can be refined |
 | 1 | Manual album and listen actions | Implemented and validated |
-| 2 | Ratings and notes | Not started |
-| 3 | Tags | Not started |
-| 4 | User-activity dashboard and validation | Not started |
+| 2 | Ratings and notes | Implemented and validated |
+| 3 | Tags | Implemented and validated |
+| 4 | User-activity dashboard and validation | Implemented and validated in development |
 | 5 | Metadata matching, refresh, and artwork | Not started; some existing warnings |
 | 6 | External-service reliability | Not started; some existing fallback events |
 | 7 | Authentication and Spotify connections | Not started |
@@ -47,7 +47,7 @@ user isolation across FastAPI sync/async boundaries. IDs, titles, and tag names
 belong in event fields rather than indexed Loki labels.
 
 These are best-effort logs, not an audit trail or mutation source of truth.
-**The agreed MVP retention is 30 days.** Dashboard counts represent recent,
+**The agreed production MVP retention is 30 days; development logs retain three days.** Dashboard counts represent recent,
 observed profile activity, not exact counts of distinct people. Any durable
 analytics or explicit user notice is a separate decision. Never log note text,
 credentials, tokens, request bodies, or full external payloads.

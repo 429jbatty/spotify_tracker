@@ -13,9 +13,9 @@ class AlbumActivity:
     album_title: str
 
 
-def emit_manual_activity(activity: AlbumActivity, events: list[tuple[str, str | None]]) -> None:
+def emit_activity(activity: AlbumActivity, events: list[tuple[str, dict]]) -> None:
     """Do not let an observability failure change a committed user action."""
-    for event, listened_at in events:
+    for event, details in events:
         fields = {
             "user_id": activity.user_id,
             "profile_slug": activity.profile_slug,
@@ -24,8 +24,7 @@ def emit_manual_activity(activity: AlbumActivity, events: list[tuple[str, str | 
             "album_title": activity.album_title,
             "action_source": "manual",
         }
-        if listened_at is not None:
-            fields["listened_at"] = listened_at
+        fields.update(details)
         try:
             structlog.get_logger(__name__).info(event, **fields)
         except Exception:

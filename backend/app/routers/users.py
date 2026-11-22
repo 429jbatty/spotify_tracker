@@ -9,6 +9,7 @@ from backend.app.repositories.sqlite_state_repository import SqliteStateReposito
 from backend.app.repositories.user_repository import UserRepository
 from backend.app.services.manual_album_service import (
     add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
+    update_manual_album_feedback, update_manual_album_tags,
 )
 from backend.app.schemas import (
     AlbumListenCreate,
@@ -182,7 +183,7 @@ def update_user_album_tags(
         try:
             _require_owner(session, user_slug, authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
-            return repository.update_user_album_tags(album_id, request.your_tags)
+            return update_manual_album_tags(repository, album_id, request.your_tags)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
         except ValueError as exc:
@@ -201,7 +202,8 @@ def update_user_album_feedback(
         try:
             _require_owner(session, user_slug, authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
-            return repository.update_user_album_feedback(
+            return update_manual_album_feedback(
+                repository,
                 album_id,
                 rating=request.rating,
                 notes=request.notes,

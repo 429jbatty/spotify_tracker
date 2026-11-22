@@ -38,6 +38,23 @@
             "selected": false
           }
         ]
+      },
+      {
+        "name": "activity_filter",
+        "label": "Activity text / validation run ID",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
+        },
+        "options": [
+          {
+            "text": "",
+            "value": "",
+            "selected": true
+          }
+        ]
       }
     ]
   },
@@ -94,7 +111,7 @@
             "mode": "fixed",
             "fixedColor": "green"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -149,7 +166,7 @@
             "mode": "fixed",
             "fixedColor": "red"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -204,7 +221,7 @@
             "mode": "fixed",
             "fixedColor": "green"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -259,7 +276,7 @@
             "mode": "fixed",
             "fixedColor": "red"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -314,7 +331,7 @@
             "mode": "fixed",
             "fixedColor": "blue"
           },
-          "noValue": "\u2014",
+          "noValue": "—",
           "custom": {
             "align": "auto"
           }
@@ -380,7 +397,7 @@
             "mode": "fixed",
             "fixedColor": "blue"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -430,7 +447,7 @@
             "mode": "fixed",
             "fixedColor": "blue"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -479,7 +496,7 @@
             "mode": "fixed",
             "fixedColor": "blue"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -528,7 +545,7 @@
             "mode": "fixed",
             "fixedColor": "blue"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -578,7 +595,7 @@
             "mode": "fixed",
             "fixedColor": "blue"
           },
-          "noValue": "\u2014"
+          "noValue": "—"
         },
         "overrides": []
       },
@@ -588,6 +605,138 @@
         "wrapLogMessage": true,
         "sortOrder": "Descending",
         "enableLogDetails": true,
+        "prettifyLogMessage": false
+      }
+    },
+    {
+      "id": 12,
+      "type": "text",
+      "title": "User activity",
+      "gridPos": {
+        "x": 0,
+        "y": 31,
+        "w": 24,
+        "h": 3
+      },
+      "options": {
+        "mode": "markdown",
+        "content": "**Observed changes, not an audit trail or a count of distinct people.** Production logs are retained for 30 days; development logs for 3 days. Profile names and album titles are historical snapshots. Filter by a validation run ID to isolate simulated activity."
+      },
+      "transparent": true
+    },
+    {
+      "id": 13,
+      "title": "Activity by event",
+      "description": "Number of observed user actions by event type in the selected time range.",
+      "type": "table",
+      "datasource": {
+        "type": "loki",
+        "uid": "albumary-loki"
+      },
+      "gridPos": {
+        "x": 0,
+        "y": 34,
+        "w": 10,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "albumary-loki"
+          },
+          "editorMode": "code",
+          "expr": "sum by (event) (count_over_time({app=\"albumary\",environment=\"$environment\",service=\"api\"} |= `${activity_filter}` | json | __error__=\"\" | event=~\"album_manually_added|album_removed|album_listen_added|album_listen_removed|album_rating_changed|album_rating_removed|album_note_changed|album_note_removed|album_tags_changed\" [$__range]))",
+          "queryType": "instant",
+          "instant": true,
+          "legendFormat": "{{event}}"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          },
+          "noValue": "—",
+          "custom": {
+            "align": "auto"
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showHeader": true,
+        "cellHeight": "sm",
+        "footer": {
+          "show": false
+        }
+      },
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true
+            },
+            "renameByName": {
+              "event": "Event",
+              "Value": "Observed actions",
+              "Value #A": "Observed actions"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": 14,
+      "title": "Recent user activity",
+      "description": "Observed changes with profile and album snapshots, rating, tags, and validation marker. Expand a line for its raw fields. Note text is never logged.",
+      "type": "logs",
+      "datasource": {
+        "type": "loki",
+        "uid": "albumary-loki"
+      },
+      "gridPos": {
+        "x": 10,
+        "y": 34,
+        "w": 14,
+        "h": 10
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "loki",
+            "uid": "albumary-loki"
+          },
+          "editorMode": "code",
+          "expr": "{app=\"albumary\",environment=\"$environment\",service=\"api\"} |= `${activity_filter}` | json | __error__=\"\" | event=~\"album_manually_added|album_removed|album_listen_added|album_listen_removed|album_rating_changed|album_rating_removed|album_note_changed|album_note_removed|album_tags_changed\" | json added_tags=\"added_tags\", removed_tags=\"removed_tags\" | line_format `{{.event}}  profile={{.profile_slug}} ({{.user_id}})  album={{.album_artist}} - {{.album_title}}{{if .rating}}  rating={{.rating}}{{end}}{{if .change}}  change={{.change}}{{end}}{{if .listened_at}}  listened_at={{.listened_at}}{{end}}{{if .added_tags}}  added={{.added_tags}}{{end}}{{if .removed_tags}}  removed={{.removed_tags}}{{end}}{{if .validation_run_id}}  [{{.validation_run_id}}]{{end}}`",
+          "queryType": "range",
+          "instant": false,
+          "legendFormat": ""
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "color": {
+            "mode": "fixed",
+            "fixedColor": "blue"
+          },
+          "noValue": "—"
+        },
+        "overrides": []
+      },
+      "options": {
+        "showTime": true,
+        "showLabels": false,
+        "wrapLogMessage": true,
+        "sortOrder": "Descending",
+        "enableLogDetails": true,
+        "showCommonLabels": false,
         "prettifyLogMessage": false
       }
     }

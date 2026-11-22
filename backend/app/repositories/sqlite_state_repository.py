@@ -576,17 +576,26 @@ class SqliteStateRepository:
         return self._album_record(album), change
 
     def update_user_album_tags(self, album_id: int, your_tags: list[str]) -> dict[str, Any]:
+        result, _, _, _ = self.update_user_album_tags_with_changes(album_id, your_tags)
+        return result
+
+    def update_user_album_tags_with_changes(
+        self, album_id: int, your_tags: list[str],
+    ) -> tuple[dict[str, Any], AlbumChange, list[str], list[str]]:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
-
         membership = self._user_album_membership(album.id)
         if membership is None:
             raise KeyError(f"Album is not available for user: {album_id}")
-
-        membership.your_tags = normalize_user_tags(your_tags)
+        # Accept removal of legacy tags even if they are no longer allowed.
+        before = {str(tag or "").strip() for tag in membership.your_tags or []} - {""}
+        normalized = normalize_user_tags(your_tags)
+        after = set(normalized)
+        membership.your_tags = normalized
+        change = AlbumChange(album.id, album.artist, album.name)
         self.session.commit()
-        return self._album_record(album)
+        return self._album_record(album), change, sorted(after - before), sorted(before - after)
 
     def update_user_album_feedback(
         self,
@@ -595,18 +604,32 @@ class SqliteStateRepository:
         rating: int | None,
         notes: str | None,
     ) -> dict[str, Any]:
+        result, _, _, _ = self.update_user_album_feedback_with_changes(album_id, rating=rating, notes=notes)
+        return result
+
+    def update_user_album_feedback_with_changes(
+        self, album_id: int, *, rating: int | None, notes: str | None,
+    ) -> tuple[dict[str, Any], AlbumChange, str | None, str | None]:
         album = self.session.get(Album, album_id)
         if album is None:
             raise KeyError(f"Album id not found: {album_id}")
-
         membership = self._user_album_membership(album.id)
         if membership is None:
             raise KeyError(f"Album is not available for user: {album_id}")
-
+        normalized_notes = notes.strip() if isinstance(notes, str) else None
+        def change_type(before, after):
+            if before == after:
+                return None
+            if after is None:
+                return "removed"
+            return "added" if before is None else "updated"
+        rating_change = change_type(membership.rating, rating)
+        note_change = change_type(membership.notes, normalized_notes)
         membership.rating = rating
-        membership.notes = notes.strip() if isinstance(notes, str) else None
+        membership.notes = normalized_notes
+        change = AlbumChange(album.id, album.artist, album.name)
         self.session.commit()
-        return self._album_record(album)
+        return self._album_record(album), change, rating_change, note_change
 
     def delete_album_listen(
         self, album_id: int, listened_at: str,
