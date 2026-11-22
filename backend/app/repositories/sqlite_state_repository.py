@@ -767,10 +767,10 @@ class SqliteStateRepository:
                 album_ids=unique_album_ids,
                 commit=False,
             )
-        except Exception:
-            logger.exception(
-                "Failed to rebuild credit facts for persisted album metadata: %s",
-                unique_album_ids,
+        except Exception as exc:
+            logger.error(
+                "Credit fact rebuild failed for %d albums (%s)",
+                len(unique_album_ids), type(exc).__name__,
             )
             raise
 

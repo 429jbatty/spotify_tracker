@@ -7,10 +7,10 @@
 | 2 | Ratings and notes | Implemented and validated |
 | 3 | Tags | Implemented and validated |
 | 4 | User-activity dashboard and validation | Implemented and validated in development |
-| 5 | Metadata matching, refresh, and artwork | Not started; some existing warnings |
-| 6 | External-service reliability | Not started; some existing fallback events |
-| 7 | Authentication and Spotify connections | Not started |
-| 8 | Persistence and maintenance | Not started; some existing warnings |
+| 5 | Metadata matching, refresh, and artwork | Implemented; representative events validated |
+| 6 | External-service reliability | Implemented; representative events validated |
+| 7 | Authentication and Spotify connections | Implemented; representative events validated |
+| 8 | Persistence and maintenance | Implemented; representative events validated |
 
 Implement and review each phase separately. Phases 1–4 form the user-activity
 MVP; prioritize later phases based on actual diagnostic needs. Event names and
@@ -192,14 +192,27 @@ paths can run in the API or worker.
 Record useful sign-in and connection success/failure categories and access
 denials without tokens, email addresses, authorization headers, or request
 bodies. Decide actor/profile identification and retention before implementation.
-These are API events.
+These are API events. Successful Google sign-in records only the internal
+`account_id`; an ownership denial records the resolved profile `user_id` and
+`actor_account_id`. Spotify connection success records the resolved profile ID
+and slug. Failure events use categories without identity when it is unverified.
+These identifiers follow the same 30-day production retention and access rules
+as the other activity events; they are not Loki labels.
 
 ## Phase 8: Persistence and maintenance
 
 Summarize failed writes, migrations, artwork backfills, credit rebuilds, and
 batch outcomes with stage and counts. Do not claim rollback if partial commits
-are possible. Check how each command is run and whether its output is actually
-collected; it may run in the API, worker, or a separate command.
+are possible. Migration checks run during schema setup; their count is the number
+of stages checked, not the number of changes applied. The API and worker streams
+are collected. Standalone backfill, cache, and credit-rebuild commands emit JSON
+to their own stderr and human-readable summaries to stdout; Alloy does not
+collect these commands by default. Capture or route their output explicitly if
+central visibility is required. SQL failure classifications omit statements and
+parameters, and include a safe source location plus SQLite error codes or known
+failure categories where available; `unknown` operation does not mean a write
+failed. Metadata lookup events include the input album artist and title snapshot
+and inherit request context across the manual lookup thread.
 
 ## Validation for each phase
 

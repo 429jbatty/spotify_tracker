@@ -1,11 +1,11 @@
-import logging
-from dataclasses import dataclass
+import structlog
+from dataclasses import asdict, dataclass
 from typing import Callable
 
 import musicbrainz_client
 from backend.app.services.artwork_cache_service import ArtworkCacheService
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 @dataclass
@@ -53,23 +53,36 @@ class ArtworkBackfillService:
         album_ids: list[int] | None = None,
         cache_local: bool = True,
     ) -> tuple[ArtworkBackfillSummary, list[ArtworkBackfillResult]]:
-        albums = repository.albums_for_artwork_backfill(
-            album_ids=album_ids,
-            limit=limit,
-        )
         results: list[ArtworkBackfillResult] = []
-        summary = ArtworkBackfillSummary(total=len(albums))
-
-        for album in albums:
-            result = self._backfill_album(
-                repository,
-                album,
-                apply=apply,
-                cache_local=cache_local,
+        summary = ArtworkBackfillSummary()
+        stage = "select"
+        try:
+            albums = repository.albums_for_artwork_backfill(
+                album_ids=album_ids,
+                limit=limit,
             )
-            results.append(result)
-            _apply_result_to_summary(summary, result)
-
+            summary.total = len(albums)
+            stage = "process"
+            for album in albums:
+                result = self._backfill_album(
+                    repository,
+                    album,
+                    apply=apply,
+                    cache_local=cache_local,
+                )
+                results.append(result)
+                _apply_result_to_summary(summary, result)
+        except Exception as exc:
+            logger.error(
+                "artwork_backfill_failed", mode="apply" if apply else "preview",
+                stage=stage, processed=len(results), error_type=type(exc).__name__,
+                partial_commits_possible=apply and stage == "process", **asdict(summary),
+            )
+            raise
+        logger.info(
+            "artwork_backfill_completed", mode="apply" if apply else "preview",
+            processed=len(results), **asdict(summary),
+        )
         return summary, results
 
     def _backfill_album(
@@ -103,7 +116,7 @@ class ArtworkBackfillService:
         try:
             remote_image_url = self.cover_art_lookup(release_mbid, release_group_mbid)
         except Exception as exc:
-            logger.warning("Artwork lookup failed for %s: %s", album_key, exc)
+            logger.warning("artwork_lookup_failed", album_id=album_id, error_type=type(exc).__name__)
             return ArtworkBackfillResult(
                 album_id=album_id,
                 album_key=album_key,
@@ -143,11 +156,6 @@ class ArtworkBackfillService:
                 )
                 local_image_path = cache_result.local_image_path
             elif cache_result.error:
-                logger.warning(
-                    "Artwork cache failed for %s after backfill: %s",
-                    album_key,
-                    cache_result.error,
-                )
                 return ArtworkBackfillResult(
                     album_id=album_id,
                     album_key=album_key,

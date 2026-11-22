@@ -1,8 +1,8 @@
 import argparse
-import logging
 
 import utils
 from backend.app.config import get_settings
+from backend.app.logging_config import configure_logging
 from backend.app.services.artwork_backfill_service import ArtworkBackfillService
 
 
@@ -47,10 +47,7 @@ def _parser() -> argparse.ArgumentParser:
 
 def main() -> None:
     args = _parser().parse_args()
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-    )
+    configure_logging()
 
     settings = get_settings()
     service = ArtworkBackfillService(media_dir=settings.media_dir)

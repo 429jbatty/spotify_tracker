@@ -2,6 +2,8 @@ from datetime import datetime, timedelta, timezone
 import hashlib
 import secrets
 
+import structlog
+
 from spotipy import Spotify
 from spotipy.exceptions import SpotifyException
 from spotipy.oauth2 import SpotifyOAuth
@@ -12,6 +14,8 @@ from backend.app.repositories.spotify_credentials_repository import (
 from backend.app.models import SpotifyOAuthState, User
 from backend.app.services.spotify_access_service import require_spotify_sync_access
 
+
+logger = structlog.get_logger(__name__)
 
 SCOPES = ["user-read-recently-played"]
 OAUTH_STATE_TTL = timedelta(minutes=10)
@@ -77,9 +81,11 @@ def connect_user_from_callback(session, *, code: str, state: str) -> str:
         scope=token_info.get("scope"),
         connected_at=datetime.now(timezone.utc).isoformat(),
     )
+    user_id, user_slug = user.id, user.slug
     session.delete(oauth_state)
     session.commit()
-    return user.slug
+    logger.info("spotify_connection_succeeded", user_id=user_id, profile_slug=user_slug)
+    return user_slug
 
 
 def _oauth() -> SpotifyOAuth:

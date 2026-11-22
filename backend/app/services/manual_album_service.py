@@ -1,6 +1,7 @@
-import logging
+import structlog
 import threading
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
+from contextvars import copy_context
 from typing import Any
 
 import album_metadata_service
@@ -8,7 +9,7 @@ from backend.app.repositories.sqlite_state_repository import AlbumChange, Sqlite
 from backend.app.services.user_activity_logging import AlbumActivity, emit_activity
 from backend.app.schemas import ManualAlbumCreate
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 # Manual creation is a foreground first-use flow.  Metadata is useful, but it
 # must never keep a user's own album and listen from being saved.
@@ -27,12 +28,13 @@ def _manual_record(request: ManualAlbumCreate) -> dict[str, Any]:
 
 def _metadata_record(request: ManualAlbumCreate) -> dict[str, Any] | None:
     if not _metadata_slots.acquire(blocking=False):
-        logger.info("Skipping manual album metadata lookup while workers are busy")
+        logger.info("manual_metadata_fallback", reason="workers_busy")
         return None
 
     try:
+        # ThreadPoolExecutor does not propagate request context automatically.
         future = _metadata_executor.submit(
-            album_metadata_service.get_album_metadata,
+            copy_context().run, album_metadata_service.get_album_metadata,
             request.artist,
             request.name,
             spotify_url=request.spotify_url,
@@ -46,26 +48,18 @@ def _metadata_record(request: ManualAlbumCreate) -> dict[str, Any] | None:
     except TimeoutError:
         # The lookup can continue harmlessly in the bounded executor, but the
         # request must return so the manually supplied album is persisted.
-        logger.warning(
-            "Manual album metadata lookup timed out for %s - %s after %ss",
-            request.artist,
-            request.name,
-            MANUAL_METADATA_TIMEOUT_SECONDS,
-        )
+        logger.warning("manual_metadata_fallback", reason="timeout", timeout_seconds=MANUAL_METADATA_TIMEOUT_SECONDS)
         return None
     except Exception as exc:
-        logger.warning(
-            "Manual album metadata lookup failed for %s - %s: %s",
-            request.artist,
-            request.name,
-            exc,
-        )
+        logger.warning("manual_metadata_fallback", reason="lookup_failed", error_type=type(exc).__name__)
         return None
 
     confidence = album_metadata_service.metadata_match_confidence(metadata)
     if confidence < album_metadata_service.CANONICAL_AUTO_APPLY_CONFIDENCE:
+        logger.info("manual_metadata_fallback", reason="low_confidence" if metadata else "no_match")
         return None
 
+    logger.info("manual_metadata_accepted", match_confidence=confidence)
     metadata["entry_source"] = "manual"
     metadata["_manual_input_identity"] = f"{request.artist}\0{request.name}".casefold()
     return metadata

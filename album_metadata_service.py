@@ -4,6 +4,7 @@ from datetime import datetime
 from rapidfuzz import fuzz
 
 import logging
+import structlog
 from collections import Counter
 
 from musicbrainz_resolver import (
@@ -23,6 +24,7 @@ from musicbrainz_resolver import (
 )
 
 logger = logging.getLogger(__name__)
+metadata_logger = structlog.get_logger(__name__)
 
 ENRICHED_CREDIT_INGESTION_VERSION = "musicbrainz_credit_v2"
 
@@ -314,6 +316,7 @@ def _album_record_from_candidate(candidate, lookup_intent: str) -> dict:
 
 def get_album_metadata(artist: str, album: str, spotify_url: str | None = None):
     candidate = resolve_spotify_candidate(spotify_url, "canonical")
+    source = "spotify_url" if candidate is not None else "musicbrainz_search"
     if candidate is None:
         candidate = resolve_musicbrainz_candidate(
             artist,
@@ -323,16 +326,11 @@ def get_album_metadata(artist: str, album: str, spotify_url: str | None = None):
         )
 
     if not candidate:
-        logging.warning(f"No metadata found for {artist} - {album}")
+        metadata_logger.info("metadata_lookup_completed", source=source, outcome="no_match", intent="canonical", album_artist=artist, album_title=album)
         return {}
 
     album_record = _album_record_from_candidate(candidate, "canonical")
-
-    # log any null values from metadata pull
-    for key, value in album_record.items():
-        if value is None:
-            logging.warning(f"Null value for {key} in {artist} - {album}")
-
+    metadata_logger.info("metadata_lookup_completed", source=source, outcome="matched", intent="canonical", confidence=metadata_match_confidence(album_record), album_artist=artist, album_title=album)
     return album_record
 
 
@@ -345,10 +343,12 @@ def get_album_metadata_for_import_matching(artist: str, album: str):
     )
 
     if not candidate:
-        logging.warning(f"No metadata found for {artist} - {album}")
+        metadata_logger.debug("metadata_lookup_completed", source="musicbrainz_search", outcome="no_match", intent="import_matching", album_artist=artist, album_title=album)
         return {}
 
-    return _album_record_from_candidate(candidate, "import_matching")
+    record = _album_record_from_candidate(candidate, "import_matching")
+    metadata_logger.debug("metadata_lookup_completed", source="musicbrainz_search", outcome="matched", intent="import_matching", confidence=metadata_match_confidence(record), album_artist=artist, album_title=album)
+    return record
 
 
 def _build_album_record(release_group, release, image_url=None):

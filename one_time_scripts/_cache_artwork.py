@@ -1,9 +1,13 @@
 import argparse
-import logging
+
+import structlog
 
 import utils
 from backend.app.config import get_settings
+from backend.app.logging_config import configure_logging
 from backend.app.services.artwork_cache_service import ArtworkCacheService
+
+logger = structlog.get_logger(__name__)
 
 
 def cache_artwork(*, existing_only: bool = False) -> list:
@@ -25,16 +29,18 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-    )
-    results = cache_artwork(existing_only=args.existing_only)
+    configure_logging()
+    try:
+        results = cache_artwork(existing_only=args.existing_only)
+    except Exception as exc:
+        logger.error("artwork_cache_batch_failed", mode="optimize" if args.existing_only else "cache", error_type=type(exc).__name__, partial_commits_possible=True)
+        raise
     cached = [result for result in results if result.cached]
     optimized = [result for result in results if result.optimized]
     preserved = [result for result in cached if not result.optimized]
     failed = [result for result in results if not result.cached]
 
+    logger.info("artwork_cache_batch_completed", mode="optimize" if args.existing_only else "cache", total=len(results), cached=len(cached), optimized=len(optimized), preserved=len(preserved), failed=len(failed))
     print(f"Cached locally: {len(cached)}")
     print(f"Optimized: {len(optimized)}")
     print(f"Preserved without optimization: {len(preserved)}")

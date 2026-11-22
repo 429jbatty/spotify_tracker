@@ -2,6 +2,8 @@ import time
 import uuid
 
 import structlog
+from requests.exceptions import Timeout as RequestsTimeout
+from spotipy.exceptions import SpotifyException
 from structlog.contextvars import bind_contextvars, bound_contextvars
 from datetime import datetime, timezone
 
@@ -11,6 +13,7 @@ import tracking
 import utils as util
 from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
 from backend.app.config import get_settings
+from backend.app.persistence_logging import database_error_fields
 from backend.app.database import create_schema
 from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
@@ -56,8 +59,12 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
             result = _run_tracking_for_user(user_slug)
             logger.info("spotify_sync_completed", duration_ms=round((time.perf_counter() - started) * 1000, 3), **result)
             return result
-        except Exception:
-            logger.exception("spotify_sync_failed", duration_ms=round((time.perf_counter() - started) * 1000, 3))
+        except Exception as exc:
+            status_code = exc.http_status if isinstance(exc, SpotifyException) else None
+            category = "rate_limited" if status_code == 429 else "timeout" if isinstance(exc, (TimeoutError, RequestsTimeout)) else "other"
+            database_fields = database_error_fields(exc)
+            log_failure = logger.error if database_fields else logger.exception
+            log_failure("spotify_sync_failed", duration_ms=round((time.perf_counter() - started) * 1000, 3), failure_category=category, status_code=status_code, **database_fields)
             raise
 
 

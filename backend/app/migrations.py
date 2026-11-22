@@ -1,6 +1,13 @@
 import json
+import time
+
+import structlog
+
+from backend.app.persistence_logging import database_error_fields
 
 from sqlalchemy import Engine, select, text
+
+logger = structlog.get_logger(__name__)
 
 DEFAULT_USER_SLUG = "jacob"
 DEFAULT_USER_DISPLAY_NAME = "Jacob"
@@ -1006,28 +1013,47 @@ def migrate_spotify_sync_eligibility(engine: Engine) -> None:
 
 
 def run_sqlite_migrations(engine: Engine) -> None:
-    # This column is read through the ORM by older migrations below.
-    migrate_spotify_sync_eligibility(engine)
-    migrate_default_user(engine)
-    migrate_album_artwork_columns(engine)
-    migrate_user_app_state(engine)
-    migrate_user_albums(engine)
-    migrate_album_listens_user_scope(engine)
-    migrate_albums_in_progress_user_scope(engine)
-    migrate_user_album_tags(engine)
-    migrate_user_album_feedback(engine)
-    migrate_album_entry_source(engine)
-    # Complete profile/account schema before reconciling shared identities and
-    # their per-profile associations.
-    migrate_profile_ownership(engine)
-    migrate_google_account_identity(engine)
-    migrate_album_canonical_identity(engine)
-    cleanup_default_user_cross_user_album_memberships(engine)
-    migrate_imported_event_candidate_key(engine)
-    migrate_album_metadata_cache(engine)
-    migrate_import_sessions_artifact_path(engine)
-    migrate_import_session_source_metadata(engine)
-    migrate_spotify_streaming_events(engine)
-    migrate_import_session_logs(engine)
-    migrate_album_credit_facts(engine)
-    migrate_single_profile_ownership(engine)
+    # Order matters: identity reconciliation requires the profile/account schema.
+    migrations = (
+        migrate_spotify_sync_eligibility,
+        migrate_default_user,
+        migrate_album_artwork_columns,
+        migrate_user_app_state,
+        migrate_user_albums,
+        migrate_album_listens_user_scope,
+        migrate_albums_in_progress_user_scope,
+        migrate_user_album_tags,
+        migrate_user_album_feedback,
+        migrate_album_entry_source,
+        migrate_profile_ownership,
+        migrate_google_account_identity,
+        migrate_album_canonical_identity,
+        cleanup_default_user_cross_user_album_memberships,
+        migrate_imported_event_candidate_key,
+        migrate_album_metadata_cache,
+        migrate_import_sessions_artifact_path,
+        migrate_import_session_source_metadata,
+        migrate_spotify_streaming_events,
+        migrate_import_session_logs,
+        migrate_album_credit_facts,
+        migrate_single_profile_ownership,
+    )
+    started = time.perf_counter()
+    completed = 0
+    for migration in migrations:
+        try:
+            migration(engine)
+        except Exception as exc:
+            # Individual migrations may have committed before this failure.
+            logger.error(
+                "database_migrations_failed", stage=migration.__name__,
+                stages_completed=completed, stages_total=len(migrations),
+                error_type=type(exc).__name__, **database_error_fields(exc),
+                duration_ms=round((time.perf_counter() - started) * 1000, 3),
+            )
+            raise
+        completed += 1
+    logger.info(
+        "database_migrations_checked", stages_checked=completed,
+        duration_ms=round((time.perf_counter() - started) * 1000, 3),
+    )

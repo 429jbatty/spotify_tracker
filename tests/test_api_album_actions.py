@@ -65,7 +65,7 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             with patch(
-                "backend.app.routers.albums.metadata_refresh_service.refresh_album_record",
+                "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
                 return_value={
                     "artist": "Artist",
                     "name": "Canonical Title",
@@ -86,7 +86,7 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             with patch(
-                "backend.app.routers.albums.metadata_refresh_service.refresh_album_record",
+                "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
                 side_effect=LookupError("No metadata returned."),
             ):
                 response = client.post(f"/api/albums/{album_id}/refresh-metadata")
@@ -330,7 +330,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 created = client.post("/api/albums", json=payload)
 
             with patch(
-                "backend.app.routers.albums.metadata_refresh_service.refresh_album_record",
+                "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
                 return_value=canonical_metadata,
             ):
                 refreshed = client.post(
@@ -617,7 +617,7 @@ class ApiAlbumActionTests(unittest.TestCase):
             ]["id"]
 
             with patch(
-                "backend.app.routers.albums.metadata_refresh_service.refresh_album_record",
+                "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
                 return_value={
                     "artist": "The Jimi Hendrix Experience",
                     "name": "Electric Ladyland",

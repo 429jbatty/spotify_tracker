@@ -1,4 +1,3 @@
-import logging
 import re
 from dataclasses import dataclass, field
 
@@ -8,7 +7,6 @@ import musicbrainzngs
 
 import musicbrainz_client as mb
 
-logger = logging.getLogger(__name__)
 
 MATCH_ALGORITHM_VERSION = "musicbrainz-resolver-v2"
 CANONICAL_AUTO_APPLY_CONFIDENCE = 70
@@ -365,12 +363,8 @@ def _release_track_titles(release):
 def _safe_cover_art_url(release_mbid: str, release_group_mbid: str | None = None):
     try:
         return mb.get_cover_art_url(release_mbid, release_group_mbid)
-    except musicbrainzngs.NetworkError as exc:
-        logger.warning(
-            "Cover art lookup failed for release %s: %s",
-            release_mbid,
-            exc,
-        )
+    except musicbrainzngs.NetworkError:
+        # The client logs the exhausted request; this caller supplies the fallback.
         return None
 
 

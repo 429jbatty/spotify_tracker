@@ -1,4 +1,4 @@
-import logging
+import structlog
 import mimetypes
 import re
 import tempfile
@@ -12,7 +12,7 @@ from urllib.request import Request, urlopen
 
 from PIL import Image, ImageOps
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 ARTWORK_VARIANT_WIDTHS = (240, 640)
 ARTWORK_WEBP_QUALITY = 82
@@ -60,6 +60,7 @@ class ArtworkCacheService:
         existing_path = album.get("local_image_path")
         if existing_path and (self.media_dir / existing_path).exists():
             if self._has_complete_variants(existing_path):
+                logger.debug("artwork_cache_hit", album_id=album_id)
                 return ArtworkCacheResult(
                     album_id=album_id,
                     album_key=album_key,
@@ -74,6 +75,7 @@ class ArtworkCacheService:
             )
 
         if not remote_url:
+            logger.debug("artwork_unavailable", album_id=album_id, reason="no_remote_url")
             return ArtworkCacheResult(
                 album_id=album_id,
                 album_key=album_key,
@@ -92,7 +94,7 @@ class ArtworkCacheService:
         try:
             image_bytes, content_type = self.downloader(remote_url)
         except (OSError, URLError, TimeoutError, ValueError) as exc:
-            logger.warning("Failed to download artwork for %s: %s", album_key, exc)
+            logger.warning("artwork_cache_failed", album_id=album_id, stage="download", error_type=type(exc).__name__)
             return ArtworkCacheResult(
                 album_id=album_id,
                 album_key=album_key,
@@ -101,6 +103,7 @@ class ArtworkCacheService:
             )
 
         if not image_bytes:
+            logger.warning("artwork_cache_failed", album_id=album_id, stage="download", reason="empty_response")
             return ArtworkCacheResult(
                 album_id=album_id,
                 album_key=album_key,
@@ -111,7 +114,7 @@ class ArtworkCacheService:
         try:
             image = self._decode_image(image_bytes)
         except (OSError, ValueError, Image.DecompressionBombError) as exc:
-            logger.warning("Downloaded artwork was invalid for %s: %s", album_key, exc)
+            logger.warning("artwork_cache_failed", album_id=album_id, stage="decode", error_type=type(exc).__name__)
             return ArtworkCacheResult(
                 album_id=album_id,
                 album_key=album_key,
@@ -131,7 +134,7 @@ class ArtworkCacheService:
             self._write_bytes_atomic(output_path, image_bytes)
             self._write_variants(image, output_path)
         except OSError as exc:
-            logger.warning("Failed to store artwork for %s: %s", album_key, exc)
+            logger.warning("artwork_cache_failed", album_id=album_id, stage="store", error_type=type(exc).__name__)
             return ArtworkCacheResult(
                 album_id=album_id,
                 album_key=album_key,
@@ -139,6 +142,7 @@ class ArtworkCacheService:
                 error=str(exc),
             )
 
+        logger.debug("artwork_cached", album_id=album_id)
         return ArtworkCacheResult(
             album_id=album_id,
             album_key=album_key,
@@ -246,11 +250,7 @@ class ArtworkCacheService:
                 self._write_bytes_atomic(output_path, image_bytes)
             self._write_variants(image, output_path)
         except (OSError, ValueError, Image.DecompressionBombError) as exc:
-            logger.warning(
-                "Could not optimize existing artwork for %s: %s",
-                album["album_key"],
-                exc,
-            )
+            logger.warning("artwork_cache_failed", album_id=album["id"], stage="optimize", error_type=type(exc).__name__, fallback="existing_artwork")
             upgraded_path = existing_path
             error = f"Artwork was preserved but not optimized: {exc}"
             optimized = False

@@ -1,5 +1,7 @@
 from urllib.parse import urlencode
 
+import structlog
+
 from fastapi import APIRouter, Header, HTTPException, Query, Response, status
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import sessionmaker
@@ -10,6 +12,7 @@ from backend.app.schemas import AuthenticatedAccount, GoogleAuthorizeResponse
 from backend.app.services import auth_service
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+logger = structlog.get_logger(__name__)
 
 
 def _session_factory():
@@ -49,8 +52,10 @@ def google_callback(
         if error:
             auth_service.cancel_google_sign_in(session, state=state)
             session.commit()
+            logger.info("sign_in_failed", provider="google", reason="cancelled")
             return _frontend_auth_error_redirect(settings.frontend_origin, "cancelled")
         if not code or not state:
+            logger.warning("sign_in_failed", provider="google", reason="invalid_request")
             return _frontend_auth_error_redirect(settings.frontend_origin, "invalid_request")
         try:
             account, session_token = auth_service.complete_google_sign_in(
@@ -62,10 +67,10 @@ def google_callback(
             session.commit()
         except HTTPException as exc:
             session.commit()
-            return _frontend_auth_error_redirect(
-                settings.frontend_origin,
-                _auth_error_code(exc),
-            )
+            reason = _auth_error_code(exc)
+            logger.warning("sign_in_failed", provider="google", reason=reason)
+            return _frontend_auth_error_redirect(settings.frontend_origin, reason)
+        logger.info("sign_in_succeeded", provider="google", account_id=account.id)
         fragment = urlencode({"session_token": session_token, "email": account.email})
     return RedirectResponse(url=f"{settings.frontend_origin.rstrip('/')}/auth/callback#{fragment}", status_code=status.HTTP_303_SEE_OTHER)
 

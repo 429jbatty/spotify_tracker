@@ -56,6 +56,7 @@ from sqlalchemy.orm import Session
 import album_metadata_service
 import metadata_refresh_service
 from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
+from backend.app.persistence_logging import database_error_fields
 from backend.app.config import get_settings
 from backend.app.models import (
     Album,
@@ -517,9 +518,12 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
                 raise ValueError(f"Unsupported import source: {import_session.source}")
             _run_post_import_artwork_backfill(session, repository, import_session)
         except Exception as exc:
-            structlog.get_logger(__name__).exception(
+            database_fields = database_error_fields(exc)
+            log_failure = structlog.get_logger(__name__).error if database_fields else structlog.get_logger(__name__).exception
+            log_failure(
                 "import_failed", stage=getattr(import_session, "status", "unknown"),
                 duration_ms=round((time.perf_counter() - started) * 1000, 3),
+                **database_fields,
             )
             try:
                 setattr(exc, "_albumary_import_logged", True)
@@ -618,11 +622,11 @@ def _run_post_import_artwork_backfill(
         )
         session.commit()
     except Exception as exc:
-        logger.warning(
-            "Post-import artwork backfill failed for import session %s: %s",
-            import_session.id,
-            exc,
-            exc_info=True,
+        # SQLAlchemy exceptions can embed statement parameters and credentials.
+        error_fields = database_error_fields(exc)
+        structlog.get_logger(__name__).warning(
+            "post_import_artwork_backfill_failed", error_type=type(exc).__name__,
+            **error_fields,
         )
         try:
             _append_import_log(
@@ -631,14 +635,13 @@ def _run_post_import_artwork_backfill(
                 level="warning",
                 stage="artwork_backfill",
                 message="Artwork backfill failed; import remains completed.",
-                metadata={"error": str(exc)},
+                metadata={"error_type": type(exc).__name__, **error_fields},
             )
             session.commit()
-        except Exception:
-            logger.warning(
-                "Failed to record artwork backfill warning for import session %s.",
-                import_session.id,
-                exc_info=True,
+        except Exception as warning_exc:
+            structlog.get_logger(__name__).warning(
+                "post_import_artwork_warning_record_failed",
+                error_type=type(warning_exc).__name__, **database_error_fields(warning_exc),
             )
 
 
@@ -2266,8 +2269,11 @@ def _resolve_spotify_catalog_for_import(
             repository,
             import_session,
         )
+        status_code = getattr(exc.__cause__, "http_status", None)
         structlog.get_logger(__name__).warning(
             "spotify_catalog_fallback", reason="catalog_unavailable",
+            failure_category="rate_limited" if status_code == 429 else "unavailable",
+            status_code=status_code,
             unique_track_ids=len(track_uris), fallback_source_rows=summary.spotify_catalog_fallback_rows,
         )
         _append_import_log(

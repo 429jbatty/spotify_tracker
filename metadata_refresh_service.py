@@ -1,14 +1,16 @@
 import copy
-import logging
+import structlog
 from dataclasses import dataclass, field
 
 import musicbrainzngs
+
+from backend.app.persistence_logging import database_error_fields
 
 import album_metadata_service as metadata_service
 import tracking
 import utils
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 PRESERVED_FIELDS = {
     "listen_history",
@@ -58,16 +60,12 @@ def classify_refresh_error(exc: Exception) -> str:
 
 def _log_refresh_error(key: str, exc: Exception) -> str:
     status = classify_refresh_error(exc)
-    if status == "failed":
-        logger.exception("Failed to refresh metadata for %s", key)
-    else:
-        logger.warning(
-            "Skipped metadata refresh for %s [%s]: %s",
-            key,
-            status,
-            exc,
-        )
-        logger.debug("Refresh skip details for %s", key, exc_info=True)
+    database_fields = database_error_fields(exc)
+    logger.warning(
+        "album_metadata_refresh_failed", album_key=key, reason=status,
+        error_type=type(exc).__name__, exc_info=status == "failed" and not database_fields,
+        **database_fields,
+    )
     return status
 
 
@@ -253,6 +251,8 @@ def _refresh_album_in_sqlite_repository(
         target_key,
         refreshed_record,
     )
+
+    logger.info("album_metadata_refreshed", album_id=existing_record.get("id"), warning_count=len(warnings))
 
     return RefreshResult(
         key=new_key,

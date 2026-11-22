@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 from sqlalchemy.orm import sessionmaker
 
-import metadata_refresh_service
+from backend.app.services import metadata_refresh_logging
 from backend.app.config import get_settings
 from backend.app.database import get_engine
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
@@ -83,15 +83,8 @@ def refresh_album_metadata(
 ) -> dict:
     session, repository = _repository()
     try:
-        existing = repository.get_completed_album_record_by_id(album_id)
-        refreshed = metadata_refresh_service.refresh_album_record(
-            existing,
-            spotify_url=request.spotify_url if request else None,
-        )
-        refreshed.pop("_refresh_warnings", None)
-        return repository.replace_completed_album_metadata_by_id_or_merge_duplicate(
-            album_id,
-            refreshed,
+        return metadata_refresh_logging.refresh_album(
+            repository, album_id, spotify_url=request.spotify_url if request else None,
         )
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
