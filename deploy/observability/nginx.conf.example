@@ -1,16 +1,8 @@
-# Replace the IPs below with the actual observability, Albumary and dev IPs.
-server {
-    listen OBSERVABILITY_IP:3000;
-    allow 192.168.1.0/24;
-    deny all;
-    location / {
-        proxy_pass http://127.0.0.1:3001;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
+# Replace the IPs below with the actual observability, central Grafana,
+# Albumary, and development hosts.
 server {
     listen OBSERVABILITY_IP:3100;
+    allow MONITORING_IP;
     allow ALBUMARY_IP;
     allow DEVELOPMENT_IP;
     deny all;
