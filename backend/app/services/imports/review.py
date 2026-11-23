@@ -5,8 +5,10 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from backend.app.models import ImportedListeningEvent
-from backend.app.repositories import import_event_repository as import_events
-from backend.app.repositories import import_session_repository as import_sessions
+from backend.app.repositories import (
+    import_event_repository as import_events,
+    import_session_repository as import_sessions,
+)
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportResolveRequest, ImportReviewItem
 
@@ -77,25 +79,10 @@ def resolve_review_item(
         for target in representative_rows:
             album = repository.add_album_listen(album_id, target.listened_at)
     else:
-        create_payload = request.create_album
-        created = repository.create_completed_album(
-            {
-                "artist": create_payload.artist,
-                "name": create_payload.name,
-                "release_year": create_payload.release_year,
-                "release_month": create_payload.release_month,
-                "release_day": create_payload.release_day,
-                "label": create_payload.label,
-                "image_url": create_payload.image_url,
-                "spotify_url": create_payload.spotify_url,
-                "musicbrainz_url": create_payload.musicbrainz_url,
-                "source": representative.source,
-                "entry_source": representative.source,
-            },
-            listen_date=representative.listened_at,
-        )
-        album_id = created["id"]
-        album = created
+        payload = request.create_album.model_dump(exclude={"listened_at"})
+        payload.update(source=representative.source, entry_source=representative.source)
+        album = repository.create_completed_album(payload, listen_date=representative.listened_at)
+        album_id = album["id"]
         for target in representative_rows[:-1]:
             album = repository.add_album_listen(album_id, target.listened_at)
 

@@ -31,23 +31,7 @@ def import_session_logs(
 
     safe_limit = max(1, min(limit, 500))
     rows = import_sessions.logs_for_session(session, import_session.id, safe_limit, order)
-    return [
-        ImportSessionLogEntry(
-            id=row.id,
-            import_session_id=row.import_session_id,
-            created_at=row.created_at,
-            level=row.level,
-            stage=row.stage,
-            message=row.message,
-            artist=row.artist,
-            album=row.album,
-            current=row.current,
-            total=row.total,
-            elapsed_seconds=row.elapsed_seconds,
-            metadata=row.metadata_json or {},
-        )
-        for row in rows
-    ]
+    return [ImportSessionLogEntry(**vars(row), metadata=row.metadata_json or {}) for row in rows]
 
 
 def delete_import_session(

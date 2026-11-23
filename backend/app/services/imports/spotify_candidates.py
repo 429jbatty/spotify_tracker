@@ -1,6 +1,5 @@
 """Build Spotify album-session candidates from raw plays or persisted candidate rows."""
 
-import hashlib
 import time
 from collections import defaultdict
 from itertools import groupby
@@ -9,16 +8,17 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from backend.app.models import ImportSession, ImportedListeningEvent, SpotifyStreamingEvent
-from backend.app.repositories import import_event_repository as import_events
-from backend.app.repositories import spotify_import_repository as import_spotify
+from backend.app.repositories import (
+    import_event_repository as import_events,
+    spotify_import_repository as import_spotify,
+)
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.import_parsers import NormalizedImportEvent
 
-from .common import SPOTIFY_IMPORT_SOURCE
+from .events import SPOTIFY_IMPORT_SOURCE, fingerprint, split_listening_sessions
 from .matching import AlbumCandidate, match_album_session
-from .metadata import album_match_key, load_existing_albums
+from .metadata import AlbumLookup, album_match_key
 from .progress import ImportMetadataStats, append_import_log
-from .session_window import split_listening_sessions
 from .spotify_completion import spotify_completion_result
 
 
@@ -35,8 +35,7 @@ def build_spotify_candidates_from_plays(
     metadata_stats: ImportMetadataStats | None = None,
     progress_callback: Any | None = None,
 ) -> list[AlbumCandidate]:
-    metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
-    existing_album_index = load_existing_albums(repository)
+    lookup = AlbumLookup(session, repository, metadata_stats)
     candidates: list[AlbumCandidate] = []
     rows = import_spotify.candidate_source_rows(session, repository.user.id, import_session.id)
     sorted_rows = sorted(
@@ -56,16 +55,7 @@ def build_spotify_candidates_from_plays(
     last_progress_at = 0.0
     partial_short_circuits = 0
     for index, chunk in enumerate(event_chunks, start=1):
-        candidate = match_album_session(
-            session=session,
-            events=chunk,
-            source_user_id=None,
-            metadata_cache=metadata_cache,
-            existing_album_index=existing_album_index,
-            load_metadata=True,
-            allow_remote_metadata=allow_remote_metadata,
-            metadata_stats=metadata_stats,
-        )
+        candidate = match_album_session(lookup, chunk, None, remote=allow_remote_metadata)
         if candidate.status == "partial_listen" and spotify_completion_result(chunk) is not None:
             partial_short_circuits += 1
         candidates.append(candidate)
@@ -112,8 +102,7 @@ def rebuild_spotify_candidates_from_rows(
     metadata_stats: ImportMetadataStats | None = None,
     progress_callback: Any | None = None,
 ) -> list[AlbumCandidate]:
-    metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
-    existing_album_index = load_existing_albums(repository)
+    lookup = AlbumLookup(session, repository, metadata_stats)
     candidates: list[AlbumCandidate] = []
     grouped_rows: dict[tuple[str, str], list[ImportedListeningEvent]] = defaultdict(list)
     for row in imported_rows:
@@ -130,16 +119,7 @@ def rebuild_spotify_candidates_from_rows(
             ]
             if not events:
                 continue
-            candidate = match_album_session(
-                session=session,
-                events=events,
-                source_user_id=None,
-                metadata_cache=metadata_cache,
-                existing_album_index=existing_album_index,
-                load_metadata=True,
-                allow_remote_metadata=allow_remote_metadata,
-                metadata_stats=metadata_stats,
-            )
+            candidate = match_album_session(lookup, events, None, remote=allow_remote_metadata)
             candidate.candidate_key = row.candidate_key or candidate.candidate_key
             candidates.append(candidate)
         if progress_callback and (index == 1 or index % 5 == 0 or index == total):
@@ -165,53 +145,8 @@ def _persist_spotify_candidate_rows(
     import_session: ImportSession,
     candidates: list[AlbumCandidate],
 ) -> None:
-    rows: list[dict[str, Any]] = []
-    for candidate in candidates:
-        if candidate.status == "partial_listen":
-            continue
-        representative = candidate.events[-1]
-        streaming_event_ids = [
-            event.raw_payload.get("_spotify_streaming_event_id")
-            for event in candidate.events
-            if event.raw_payload.get("_spotify_streaming_event_id") is not None
-        ]
-        rows.append(
-            {
-                "user_id": repository.user.id,
-                "import_session_id": import_session.id,
-                "album_id": None,
-                "source": SPOTIFY_IMPORT_SOURCE,
-                "source_user_id": None,
-                "source_event_id": candidate.candidate_key,
-                "event_fingerprint": _spotify_candidate_fingerprint(candidate),
-                "candidate_key": candidate.candidate_key,
-                "listened_at": candidate.listened_at,
-                "artist": candidate.artist,
-                "album": candidate.album,
-                "track": f"{candidate.unique_scrobbled_tracks} unique Spotify tracks",
-                "source_label": SPOTIFY_IMPORT_SOURCE,
-                "rating": None,
-                "notes": None,
-                "match_status": "raw_imported",
-                "match_confidence": None,
-                "error_message": None,
-                "raw_payload": {
-                    "_spotify_streaming_event_ids": streaming_event_ids,
-                    "_representative_track": representative.track,
-                    "_track_count": len(streaming_event_ids),
-                    "_spotify_album_id": representative.raw_payload.get("_spotify_album_id"),
-                    "_spotify_album_total_tracks": representative.raw_payload.get(
-                        "_spotify_album_total_tracks"
-                    ),
-                    "_spotify_album_type": representative.raw_payload.get("_spotify_album_type"),
-                    "_spotify_completion_authority": (
-                        "spotify_catalog"
-                        if representative.raw_payload.get("_spotify_album_total_tracks")
-                        else "metadata_tracklist"
-                    ),
-                },
-            }
-        )
+    rows = [_candidate_row(candidate, repository.user.id, import_session.id)
+            for candidate in candidates if candidate.status != "partial_listen"]
     if not rows:
         return
 
@@ -224,6 +159,27 @@ def _persist_spotify_candidate_rows(
         current=len(rows),
         total=len(rows),
     )
+
+
+def _candidate_row(candidate, user_id, session_id):
+    last = candidate.events[-1]
+    ids = [event.raw_payload["_spotify_streaming_event_id"] for event in candidate.events
+           if event.raw_payload.get("_spotify_streaming_event_id") is not None]
+    total = last.raw_payload.get("_spotify_album_total_tracks")
+    return {
+        "user_id": user_id, "import_session_id": session_id, "source": SPOTIFY_IMPORT_SOURCE,
+        "candidate_key": candidate.candidate_key, "source_event_id": candidate.candidate_key,
+        "event_fingerprint": fingerprint(SPOTIFY_IMPORT_SOURCE, candidate.candidate_key),
+        "listened_at": candidate.listened_at, "artist": candidate.artist, "album": candidate.album,
+        "track": f"{candidate.unique_scrobbled_tracks} unique Spotify tracks",
+        "source_label": SPOTIFY_IMPORT_SOURCE, "match_status": "raw_imported",
+        "raw_payload": {
+            "_spotify_streaming_event_ids": ids, "_representative_track": last.track, "_track_count": len(ids),
+            "_spotify_album_id": last.raw_payload.get("_spotify_album_id"), "_spotify_album_total_tracks": total,
+            "_spotify_album_type": last.raw_payload.get("_spotify_album_type"),
+            "_spotify_completion_authority": "spotify_catalog" if total else "metadata_tracklist",
+        },
+    }
 
 
 def _spotify_streaming_event_to_import_event(
@@ -259,14 +215,3 @@ def _spotify_streaming_event_to_import_event(
             "_spotify_ms_played": row.ms_played,
         },
     )
-
-
-def _spotify_candidate_fingerprint(candidate: AlbumCandidate) -> str:
-    return hashlib.sha256(
-        "|".join(
-            [
-                SPOTIFY_IMPORT_SOURCE,
-                candidate.candidate_key,
-            ]
-        ).encode("utf-8")
-    ).hexdigest()

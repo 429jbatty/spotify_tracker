@@ -14,14 +14,9 @@ from backend.app.repositories.import_event_repository import latest_timestamp as
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportSessionSummary
 from backend.app.services.artwork_backfill_service import ArtworkBackfillService
-from backend.app.services.imports.common import SPOTIFY_IMPORT_SOURCE, utc_now
-from backend.app.services.imports.history import (
-    delete_import_session,
-    import_history,
-    import_session_logs,
-)
-from backend.app.services.imports.lastfm_source import commit_import, preview_import
-from backend.app.services.imports.lastfm_workflow import run_lastfm_import_session
+from backend.app.services.imports.events import SPOTIFY_IMPORT_SOURCE, utc_now
+from backend.app.services.imports.history import delete_import_session, import_history, import_session_logs
+from backend.app.services.imports.lastfm import commit_import, preview_import, run_lastfm_import_session
 from backend.app.services.imports.progress import (
     append_import_log,
     build_import_session_summary,
@@ -29,10 +24,9 @@ from backend.app.services.imports.progress import (
     set_import_progress,
 )
 from backend.app.services.imports.review import resolve_review_item, unresolved_review_items
+from backend.app.services.imports.spotify import repair_spotify_import_session, run_spotify_import_session
 from backend.app.services.imports.spotify_diagnostics import spotify_import_diagnostics
-from backend.app.services.imports.spotify_recovery import repair_spotify_import_session
 from backend.app.services.imports.spotify_source import create_spotify_import_session
-from backend.app.services.imports.spotify_workflow import run_spotify_import_session
 
 
 __all__ = [

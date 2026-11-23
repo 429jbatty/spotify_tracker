@@ -29,22 +29,27 @@ The implementation lives in `backend/app/services/imports/`.
 
 | Task | Start here |
 | --- | --- |
-| Preview or queue Last.fm, deduplicate and store raw scrobbles | `lastfm_source.py` |
-| Follow a Last.fm worker from fetch through local matching or resume its pending metadata | `lastfm_workflow.py` |
+| Preview, queue or resume Last.fm and store scrobbles | `lastfm.py` |
 | Queue a Spotify upload, stream raw play batches or resolve catalog IDs | `spotify_source.py` |
-| Follow the ZIP worker through validation, raw storage and cached matching | `spotify_workflow.py` |
-| Resume Spotify from persisted plays or candidate rows, or repair a completed session | `spotify_recovery.py` |
-| Group source rows into album sessions and link their provenance | `lastfm_candidates.py`, `spotify_candidates.py`, `session_window.py` |
+| Run, resume or repair a Spotify ZIP import | `spotify.py` |
+| Group source rows into album sessions and link their provenance | `lastfm_candidates.py`, `spotify_candidates.py`, `events.py` |
 | Decide completion, review eligibility and whether to look up metadata | `matching.py`, `spotify_completion.py`, `metadata.py` |
-| Commit candidate outcomes to the library, enrich pending albums and finalize | `candidate_results.py`, `candidate_workflow.py` |
-| Read progress, history, Spotify diagnostics or change review decisions | `progress.py`, `history.py`, `spotify_diagnostics.py`, `review.py` |
+| Apply candidate decisions, enrich pending albums and publish progress | `candidate_results.py`, `candidate_workflow.py`, `progress.py` |
+| Read history or Spotify diagnostics, delete an import or resolve reviews | `history.py`, `spotify_diagnostics.py`, `review.py` |
 
-Both sources record raw events before matching. The candidate workflow commits
-the locally matched results before remote lookups, then commits each album’s
-metadata result, progress and log together. On restart, Last.fm can continue
-from pending metadata rows. Spotify can rebuild candidates from persisted plays
-or reuse saved candidates. Repository methods retain their existing transaction
-semantics, including commits in album-listen operations.
+Last.fm preview groups the bounded fetch and counts distinct tracks. Committed
+imports persist raw plays or scrobbles, match sessions against saved metadata,
+then enrich pending albums. Each worker owns one `ImportRun` containing its
+database session, profile repository, progress summary and lookup statistics.
+The source workflow and candidate workflow contain the commit points, including
+one checkpoint for each album in the remote lookup queue. Repository methods
+retain their existing commits when creating or updating library listens. Spotify
+streams the ZIP into batched inserts while publishing progress after each raw
+play.
+
+On restart, Last.fm can continue from pending metadata rows. Spotify can
+rebuild candidates from persisted plays or reuse saved candidates. The two
+recovery paths retain their own progress summaries and finalization behavior.
 
 ## Import Feature Guidance
 

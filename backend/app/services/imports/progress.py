@@ -1,18 +1,20 @@
 """Persisted progress, timings and API summaries for import sessions."""
 
-import time
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
-from typing import Any
 
-import structlog
 from sqlalchemy.orm import Session
 
 from backend.app.models import ImportSession
 from backend.app.repositories import import_session_repository as import_sessions
-from backend.app.schemas import ImportPreviewSummary, ImportProgressStep, ImportSessionSummary
+from backend.app.schemas import (
+    ImportCommitResponse,
+    ImportPreviewSummary,
+    ImportProgressStep,
+    ImportSessionSummary,
+)
 
-from .common import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
+from .events import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
 
 
 TERMINAL_IMPORT_STATUSES = {"completed", "failed"}
@@ -50,76 +52,30 @@ class ImportMetadataStats:
     def request_count(self) -> int:
         return len(self.lookup_seconds)
 
-    @property
-    def average_seconds(self) -> float | None:
-        if not self.lookup_seconds:
-            return None
-        return sum(self.lookup_seconds) / len(self.lookup_seconds)
-
-    @property
-    def p95_seconds(self) -> float | None:
-        if not self.lookup_seconds:
-            return None
-        ordered = sorted(self.lookup_seconds)
-        index = max(0, min(len(ordered) - 1, int(len(ordered) * 0.95) - 1))
-        return ordered[index]
-
-
-@dataclass
-class ImportStageTimer:
-    import_session_id: int
-    summary: ImportPreviewSummary
-    active_stage: str | None = None
-    active_started_at: float | None = None
-
-    def start(self, stage: str) -> None:
-        self.finish()
-        self.active_stage = stage
-        self.active_started_at = time.perf_counter()
-        structlog.get_logger(__name__).info("import_stage_started", import_session_id=self.import_session_id, stage=stage)
-
-    def finish(self) -> None:
-        if self.active_stage is None or self.active_started_at is None:
-            return
-        elapsed = time.perf_counter() - self.active_started_at
-        timings = dict(self.summary.stage_timings or {})
-        timings[self.active_stage] = round(timings.get(self.active_stage, 0.0) + elapsed, 3)
-        self.summary.stage_timings = timings
-        structlog.get_logger(__name__).info(
-            "import_stage_completed", import_session_id=self.import_session_id,
-            stage=self.active_stage, duration_ms=round(elapsed * 1000, 3),
-        )
-        self.active_stage = None
-        self.active_started_at = None
+    def apply(self, summary: ImportPreviewSummary, *, current=None, total=None):
+        summary.metadata_cache_hits = self.cache_hits
+        summary.metadata_cache_misses = self.cache_misses
+        summary.musicbrainz_requests = self.request_count
+        average = sum(self.lookup_seconds) / self.request_count if self.request_count else None
+        summary.musicbrainz_lookup_seconds_avg = round(average, 3) if average is not None else None
+        if self.lookup_seconds:
+            index = max(0, int(self.request_count * 0.95) - 1)
+            summary.musicbrainz_lookup_seconds_p95 = round(sorted(self.lookup_seconds)[index], 3)
+        else:
+            summary.musicbrainz_lookup_seconds_p95 = None
+        if current is not None and total is not None:
+            summary.metadata_lookup_current = current
+            summary.metadata_lookup_total = total
+            if current >= total:
+                summary.estimated_seconds_remaining = 0
+            elif current > 0 and average is not None:
+                summary.estimated_seconds_remaining = round((total - current) * average, 3)
 
 
-def append_import_log(
-    session: Session,
-    import_session: ImportSession,
-    *,
-    message: str,
-    level: str = "info",
-    stage: str | None = None,
-    artist: str | None = None,
-    album: str | None = None,
-    current: int | None = None,
-    total: int | None = None,
-    elapsed_seconds: float | None = None,
-    metadata: dict[str, Any] | None = None,
-) -> None:
+def append_import_log(session, import_session, *, message, level="info", metadata=None, **fields):
     import_sessions.stage_log(
-        session,
-        import_session_id=import_session.id,
-        created_at=utc_now(),
-        level=level,
-        stage=stage,
-        message=message,
-        artist=artist,
-        album=album,
-        current=current,
-        total=total,
-        elapsed_seconds=elapsed_seconds,
-        metadata_json=metadata or {},
+        session, import_session_id=import_session.id, created_at=utc_now(),
+        message=message, level=level, metadata_json=metadata or {}, **fields,
     )
 
 
@@ -151,38 +107,6 @@ def stage_completed_import(
     append_import_log(session, import_session, stage="completed", message=message)
 
 
-def apply_metadata_stats(
-    summary: ImportPreviewSummary,
-    stats: ImportMetadataStats,
-    *,
-    current: int | None = None,
-    total: int | None = None,
-) -> None:
-    if current is not None:
-        summary.metadata_lookup_current = current
-    if total is not None:
-        summary.metadata_lookup_total = total
-    summary.metadata_cache_hits = stats.cache_hits
-    summary.metadata_cache_misses = stats.cache_misses
-    summary.musicbrainz_requests = stats.request_count
-    summary.musicbrainz_lookup_seconds_avg = (
-        round(stats.average_seconds, 3) if stats.average_seconds is not None else None
-    )
-    summary.musicbrainz_lookup_seconds_p95 = (
-        round(stats.p95_seconds, 3) if stats.p95_seconds is not None else None
-    )
-    if (
-        current is not None
-        and total is not None
-        and current > 0
-        and total > current
-        and stats.average_seconds is not None
-    ):
-        summary.estimated_seconds_remaining = round((total - current) * stats.average_seconds, 3)
-    elif current is not None and total is not None and current >= total:
-        summary.estimated_seconds_remaining = 0
-
-
 def session_summary(import_session: ImportSession) -> ImportPreviewSummary:
     summary = ImportPreviewSummary.model_validate(
         import_session.summary_json or empty_summary().model_dump()
@@ -207,7 +131,13 @@ def _build_progress_steps(
         (index for index, (key, _) in enumerate(IMPORT_STEP_ORDER) if key == current_key),
         len(IMPORT_STEP_ORDER) - 1,
     )
-    steps: list[ImportProgressStep] = []
+    totals = {
+        "store_source": (summary.new_event_rows, summary.total_rows),
+        "find_sessions": (summary.distinct_album_candidates, summary.distinct_album_candidates),
+        "lookup_missing": (summary.metadata_lookup_current, summary.metadata_lookup_total),
+    }
+    totals[current_key] = summary.progress_current, summary.progress_total
+    steps = []
     for index, (key, label) in enumerate(IMPORT_STEP_ORDER):
         if import_session.status == "failed" and key == current_key:
             status = "failed"
@@ -218,33 +148,9 @@ def _build_progress_steps(
         else:
             status = "pending"
 
-        current = 0
-        total = 0
-        detail = None
-        if key == current_key:
-            current = summary.progress_current
-            total = summary.progress_total
-            detail = _current_step_detail(import_session, summary)
-        elif key == "store_source":
-            current = summary.new_event_rows
-            total = summary.total_rows
-        elif key == "find_sessions":
-            current = summary.distinct_album_candidates
-            total = summary.distinct_album_candidates
-        elif key == "lookup_missing":
-            current = summary.metadata_lookup_current
-            total = summary.metadata_lookup_total
-
-        steps.append(
-            ImportProgressStep(
-                key=key,
-                label=label,
-                status=status,
-                current=current,
-                total=total,
-                detail=detail,
-            )
-        )
+        current, total = totals.get(key, (0, 0))
+        detail = _current_step_detail(import_session, summary) if key == current_key else None
+        steps.append(ImportProgressStep(key=key, label=label, status=status, current=current, total=total, detail=detail))
     return steps
 
 
@@ -301,11 +207,7 @@ def build_import_session_summary(import_session: ImportSession) -> ImportSession
         session_name=import_session.session_name,
         started_at=import_session.started_at,
         completed_at=import_session.completed_at,
-        original_filename=import_session.original_filename,
-        file_size_bytes=import_session.file_size_bytes,
-        file_sha256=import_session.file_sha256,
-        zip_member_count=import_session.zip_member_count,
-        duplicate_of_import_session_id=import_session.duplicate_of_import_session_id,
+        **archive_fields(import_session),
         summary=summary,
         steps=steps,
         current_step_key=current_step.key if current_step else None,
@@ -332,3 +234,18 @@ def empty_summary() -> ImportPreviewSummary:
         derived_album_listens=0,
         review_candidates=0,
     )
+
+
+def commit_response(row: ImportSession) -> ImportCommitResponse:
+    return ImportCommitResponse(
+        import_session_id=row.id, source=row.source, status=row.status, source_user_id=row.source_user_id,
+        session_name=row.session_name, summary=session_summary(row), **archive_fields(row),
+    )
+
+
+def archive_fields(row: ImportSession) -> dict:
+    return {
+        "original_filename": row.original_filename, "file_size_bytes": row.file_size_bytes,
+        "file_sha256": row.file_sha256, "zip_member_count": row.zip_member_count,
+        "duplicate_of_import_session_id": row.duplicate_of_import_session_id,
+    }

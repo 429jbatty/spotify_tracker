@@ -30,7 +30,7 @@ from backend.app.models import (
 )
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import auth_service, import_service, spotify_catalog_service
-from backend.app.services.imports.common import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
+from backend.app.services.imports.events import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
 from backend.app.services.imports.metadata import album_metadata_cache_key, write_album_metadata_cache
 from backend.app.services.imports.progress import empty_summary
 from backend.app.services.imports.spotify_candidates import build_spotify_candidates_from_plays
@@ -3044,8 +3044,11 @@ class ApiImportTests(unittest.TestCase):
             mock_client.get.return_value = mock_response
 
             with patch("backend.app.services.lastfm_import_client.httpx.Client", return_value=mock_client), patch(
-                "backend.app.services.imports.matching.resolve_album_metadata",
+                "backend.app.services.imports.metadata.AlbumLookup.resolve",
                 side_effect=AssertionError("Preview should not call metadata matching."),
+            ), patch.object(
+                SqliteStateRepository, "library_album_records",
+                side_effect=AssertionError("Preview should not load the album library."),
             ):
                 response = client.post(
                     "/api/users/jacob/imports/preview",

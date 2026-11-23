@@ -8,19 +8,22 @@ import structlog
 from sqlalchemy.orm import Session
 
 from backend.app.models import ImportSession
-from backend.app.repositories import import_session_repository as import_sessions
-from backend.app.repositories import spotify_import_repository as import_spotify
+from backend.app.repositories import (
+    import_session_repository as import_sessions,
+    spotify_import_repository as import_spotify,
+)
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportCommitResponse, ImportPreviewSummary
 from backend.app.services import spotify_catalog_service
 from backend.app.services.import_parsers import clean_text
 from backend.app.services.spotify_import_parser import (
+    SpotifyZipHistoryEntry,
     iter_spotify_history_events_with_provenance,
     spotify_streaming_fingerprint,
 )
 
-from .common import SPOTIFY_IMPORT_SOURCE, utc_now
-from .progress import append_import_log, empty_summary, session_summary
+from .events import SPOTIFY_IMPORT_SOURCE, utc_now
+from .progress import append_import_log, commit_response, empty_summary
 
 
 SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 1_000
@@ -90,19 +93,7 @@ def create_spotify_import_session(
             import_session_id=import_session.id, duplicate_of_session_id=duplicate_session_id,
         )
 
-    return ImportCommitResponse(
-        import_session_id=import_session.id,
-        source=SPOTIFY_IMPORT_SOURCE,
-        status=import_session.status,
-        session_name=import_session.session_name,
-        source_user_id=None,
-        original_filename=import_session.original_filename,
-        file_size_bytes=import_session.file_size_bytes,
-        file_sha256=import_session.file_sha256,
-        zip_member_count=import_session.zip_member_count,
-        duplicate_of_import_session_id=import_session.duplicate_of_import_session_id,
-        summary=session_summary(import_session),
-    )
+    return commit_response(import_session)
 
 
 def store_streaming_events(
@@ -110,7 +101,7 @@ def store_streaming_events(
     repository: SqliteStateRepository,
     import_session: ImportSession,
     artifact_path: str,
-    history_entries: list[Any],
+    history_entries: list[SpotifyZipHistoryEntry],
     progress_callback: Any | None = None,
 ) -> ImportPreviewSummary:
     summary = empty_summary()
@@ -149,31 +140,12 @@ def store_streaming_events(
                 continue
             seen_fingerprints.add(fingerprint)
 
-            batch.append(
-                {
-                    "user_id": repository.user.id,
-                    "import_session_id": import_session.id,
-                    "event_fingerprint": fingerprint,
-                    "source_file": sourced_row.source_file,
-                    "source_index": sourced_row.source_index,
-                    "played_at": row.played_at,
-                    "ms_played": row.ms_played,
-                    "spotify_track_uri": row.spotify_track_uri,
-                    "spotify_track_id": spotify_catalog_service.spotify_track_id_from_uri(
-                        row.spotify_track_uri
-                    ),
-                    "track_name": row.track_name,
-                    "artist_name": row.artist_name,
-                    "album_name": row.album_name,
-                    "platform": row.platform,
-                    "country": row.country,
-                    "reason_start": row.reason_start,
-                    "reason_end": row.reason_end,
-                    "skipped": row.skipped,
-                    "offline": row.offline,
-                    "raw_payload": row.raw_payload,
-                }
-            )
+            batch.append({
+                **vars(row), "user_id": repository.user.id, "import_session_id": import_session.id,
+                "event_fingerprint": fingerprint,
+                "source_file": sourced_row.source_file, "source_index": sourced_row.source_index,
+                "spotify_track_id": spotify_catalog_service.spotify_track_id_from_uri(row.spotify_track_uri),
+            })
             if not row.album_name:
                 summary.missing_album_rows += 1
 

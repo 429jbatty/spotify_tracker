@@ -10,14 +10,9 @@ from backend.app.repositories import import_event_repository as import_events
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportPreviewSummary
 
-from .common import parse_timestamp
+from .events import parse_timestamp
 from .matching import AlbumCandidate
-from .metadata import (
-    ExistingAlbumMatch,
-    album_match_key,
-    build_album_record,
-    load_existing_albums,
-)
+from .metadata import ExistingAlbumMatch, album_match_key, load_existing_albums
 
 
 def apply_candidate_results(
@@ -41,65 +36,40 @@ def apply_candidate_results(
         if not candidate_rows:
             continue
 
-        album_id = candidate.matched_album_id
-        status = candidate.status
-        error_message = candidate.status_detail
-
-        if candidate.status == "matched_existing" and album_id is not None:
-            if _has_album_listen_on_utc_date(
-                session,
-                repository.user.id,
-                album_id,
-                candidate.listened_at,
-            ):
-                status = "duplicate_listen"
-                candidate.status = status
-                error_message = "Album already has a listen on this UTC date."
-                album_id = None
-            else:
-                repository.add_album_listen(album_id, candidate.listened_at)
-        elif candidate.status == "new_album":
-            record = candidate.metadata or build_album_record(candidate.events[-1])
-            album_key = album_match_key(record.get("artist"), record.get("name"))
-            existing_album = album_index.get(album_key)
-            if existing_album is not None:
-                if _has_album_listen_on_utc_date(
-                    session,
-                    repository.user.id,
-                    existing_album.album_id,
-                    candidate.listened_at,
-                ):
-                    status = "duplicate_listen"
-                    candidate.status = status
-                    error_message = "Album already has a listen on this UTC date."
-                    album_id = None
-                else:
-                    repository.add_album_listen(existing_album.album_id, candidate.listened_at)
-                    album_id = existing_album.album_id
-            else:
-                created = repository.create_completed_album(
-                    record,
-                    listen_date=candidate.listened_at,
-                )
-                album_id = created["id"]
-                album_index[album_key] = ExistingAlbumMatch(album_id=album_id, record=created)
-        else:
-            album_id = None
-
-        if status in {"matched_existing", "new_album"}:
-            persisted_status = "processed_album_listen"
-        elif status == "candidate_review":
-            persisted_status = "candidate_review"
-        elif status in {"no_tracklist", "pending_metadata"}:
-            persisted_status = "pending_metadata"
-        else:
-            persisted_status = status
-
+        album_id, error_message = _apply_listen(session, repository, album_index, candidate)
+        persisted_status = {
+            "matched_existing": "processed_album_listen",
+            "new_album": "processed_album_listen",
+            "no_tracklist": "pending_metadata",
+        }.get(candidate.status, candidate.status)
         for row in candidate_rows:
             import_events.record_candidate_result(
                 row, album_id=album_id, status=persisted_status,
                 confidence=candidate.confidence, error=error_message,
             )
+
+
+def _apply_listen(session, repository, album_index, candidate):
+    if candidate.status == "new_album":
+        # Completion of a new album always requires a matched metadata tracklist.
+        record = candidate.metadata
+        key = album_match_key(record.get("artist"), record.get("name"))
+        existing = album_index.get(key)
+        if existing is None:
+            created = repository.create_completed_album(record, listen_date=candidate.listened_at)
+            album_index[key] = ExistingAlbumMatch(created["id"], created)
+            return created["id"], candidate.status_detail
+        album_id = existing.album_id
+    elif candidate.status == "matched_existing":
+        album_id = candidate.matched_album_id
+    else:
+        return None, candidate.status_detail
+
+    if _has_album_listen_on_utc_date(session, repository.user.id, album_id, candidate.listened_at):
+        candidate.status = "duplicate_listen"
+        return None, "Album already has a listen on this UTC date."
+    repository.add_album_listen(album_id, candidate.listened_at)
+    return album_id, candidate.status_detail
 
 
 def _has_album_listen_on_utc_date(
@@ -138,33 +108,16 @@ def summarize_candidates(
     summary: ImportPreviewSummary,
     candidates: list[AlbumCandidate],
 ) -> None:
-    final_album_keys = {
-        (
-            "id",
-            str(candidate.matched_album_id),
-        )
-        if candidate.matched_album_id is not None
-        else (
-            "album",
-            candidate.artist.strip().casefold(),
-            candidate.album.strip().casefold(),
-        )
-        for candidate in candidates
-        if candidate.status in {"matched_existing", "new_album"}
+    counts = Counter(candidate.status for candidate in candidates)
+    albums = {
+        candidate.matched_album_id if candidate.matched_album_id is not None
+        else album_match_key(candidate.artist, candidate.album)
+        for candidate in candidates if candidate.status in {"matched_existing", "new_album"}
     }
     summary.distinct_album_candidates = len(candidates)
-    summary.matched_existing_rows = sum(
-        1 for candidate in candidates if candidate.status == "matched_existing"
-    )
-    summary.new_album_rows = sum(1 for candidate in candidates if candidate.status == "new_album")
-    summary.derived_album_listens = summary.matched_existing_rows + summary.new_album_rows
-    summary.final_album_count = len(final_album_keys)
-    summary.valid_rows = summary.derived_album_listens
-    summary.estimated_new_unique_albums = summary.new_album_rows
-    summary.review_candidates = sum(
-        1 for candidate in candidates if candidate.status == "candidate_review"
-    )
-    summary.unresolved_rows = summary.review_candidates
-    summary.pending_metadata_candidates = sum(
-        1 for candidate in candidates if candidate.status in {"no_tracklist", "pending_metadata"}
-    )
+    summary.matched_existing_rows = counts["matched_existing"]
+    summary.new_album_rows = summary.estimated_new_unique_albums = counts["new_album"]
+    summary.valid_rows = summary.derived_album_listens = counts["matched_existing"] + counts["new_album"]
+    summary.final_album_count = len(albums)
+    summary.unresolved_rows = summary.review_candidates = counts["candidate_review"]
+    summary.pending_metadata_candidates = counts["no_tracklist"] + counts["pending_metadata"]

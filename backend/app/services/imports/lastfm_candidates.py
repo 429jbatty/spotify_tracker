@@ -1,6 +1,5 @@
 """Group Last.fm scrobbles and link each persisted row to its candidate."""
 
-import hashlib
 from collections import defaultdict
 from typing import Any
 
@@ -10,11 +9,10 @@ from backend.app.models import ImportedListeningEvent
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.import_parsers import NormalizedImportEvent
 
-from .common import parse_timestamp
+from .events import fingerprint, parse_timestamp, split_listening_sessions
 from .matching import AlbumCandidate, match_album_session
-from .metadata import load_existing_albums
+from .metadata import AlbumLookup
 from .progress import ImportMetadataStats
-from .session_window import split_listening_sessions
 
 
 def build_lastfm_candidates_from_rows(
@@ -42,16 +40,17 @@ def build_lastfm_candidates_from_rows(
         )
         for row in imported_rows
     ]
-    candidates = build_lastfm_candidates(
-        session=session,
-        repository=repository,
-        rows=events,
-        source_user_id=imported_rows[0].source_user_id if imported_rows else None,
-        load_metadata=True,
-        allow_remote_metadata=allow_remote_metadata,
-        metadata_stats=metadata_stats,
-        progress_callback=progress_callback,
-    )
+    candidate_event_chunks = scrobble_sessions(events)
+    source_user_id = imported_rows[0].source_user_id if imported_rows else None
+    lookup = AlbumLookup(session, repository, metadata_stats)
+    candidates: list[AlbumCandidate] = []
+    total_candidates = len(candidate_event_chunks)
+    for index, chunk in enumerate(candidate_event_chunks, start=1):
+        candidate = match_album_session(lookup, chunk, source_user_id, remote=allow_remote_metadata)
+        candidates.append(candidate)
+        if progress_callback and (index == 1 or index % 5 == 0 or index == total_candidates):
+            progress_callback(index, total_candidates, candidates)
+    candidates.sort(key=lambda candidate: candidate.listened_at, reverse=True)
     imported_lookup = {
         scrobble_fingerprint(event): row
         for event, row in zip(events, imported_rows)
@@ -64,57 +63,21 @@ def build_lastfm_candidates_from_rows(
     return candidates
 
 
-def build_lastfm_candidates(
-    session: Session,
-    repository: SqliteStateRepository,
-    rows: list[NormalizedImportEvent],
-    source_user_id: str | None,
-    *,
-    load_metadata: bool = True,
-    allow_remote_metadata: bool = True,
-    metadata_stats: ImportMetadataStats | None = None,
-    progress_callback: Any | None = None,
-) -> list[AlbumCandidate]:
+def scrobble_sessions(rows):
     grouped: dict[tuple[str, str], list[NormalizedImportEvent]] = defaultdict(list)
     for row in rows:
         if not row.artist or not row.album or not row.listened_at:
             continue
         grouped[(row.artist.casefold(), row.album.casefold())].append(row)
 
-    metadata_cache: dict[tuple[str, str], dict[str, Any] | None] = {}
-    existing_album_index = load_existing_albums(repository)
     candidate_event_chunks: list[list[NormalizedImportEvent]] = []
     for event_group in grouped.values():
         event_group.sort(key=lambda row: parse_timestamp(row.listened_at))
         candidate_event_chunks.extend(split_listening_sessions(event_group, lambda event: event.listened_at))
 
-    candidates: list[AlbumCandidate] = []
-    total_candidates = len(candidate_event_chunks)
-    for index, chunk in enumerate(candidate_event_chunks, start=1):
-        candidate = match_album_session(
-            session=session,
-            events=chunk,
-            source_user_id=source_user_id,
-            metadata_cache=metadata_cache,
-            existing_album_index=existing_album_index,
-            load_metadata=load_metadata,
-            allow_remote_metadata=allow_remote_metadata,
-            metadata_stats=metadata_stats,
-        )
-        candidates.append(candidate)
-        if progress_callback and (index == 1 or index % 5 == 0 or index == total_candidates):
-            progress_callback(index, total_candidates, candidates)
-    candidates.sort(key=lambda candidate: candidate.listened_at, reverse=True)
-    return candidates
+    return candidate_event_chunks
 
 
 def scrobble_fingerprint(event: NormalizedImportEvent) -> str:
-    payload = "|".join(
-        [
-            event.listened_at or "",
-            (event.artist or "").casefold(),
-            (event.album or "").casefold(),
-            (event.track or "").casefold(),
-        ]
-    )
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+    return fingerprint(event.listened_at or "", (event.artist or "").casefold(),
+                       (event.album or "").casefold(), (event.track or "").casefold())

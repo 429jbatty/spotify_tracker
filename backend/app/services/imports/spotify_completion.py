@@ -6,7 +6,7 @@ from typing import Any
 from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
 from backend.app.services.import_parsers import NormalizedImportEvent, clean_text
 
-from .common import SPOTIFY_IMPORT_SOURCE
+from .events import SPOTIFY_IMPORT_SOURCE
 from .track_matching import track_identity
 
 
