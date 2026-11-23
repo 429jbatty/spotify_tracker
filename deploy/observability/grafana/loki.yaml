@@ -1,9 +1,0 @@
-apiVersion: 1
-datasources:
-  - name: Albumary Loki
-    uid: albumary-loki
-    type: loki
-    access: proxy
-    url: http://127.0.0.1:3101
-    isDefault: true
-    editable: false
