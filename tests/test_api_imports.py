@@ -29,10 +29,12 @@ from backend.app.models import (
     User,
 )
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.services import import_service
-from backend.app.services import spotify_catalog_service
+from backend.app.services import auth_service, import_service, spotify_catalog_service
+from backend.app.services.imports.common import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
+from backend.app.services.imports.metadata import album_metadata_cache_key, write_album_metadata_cache
+from backend.app.services.imports.progress import empty_summary
+from backend.app.services.imports.spotify_candidates import build_spotify_candidates_from_plays
 from backend.app.services.lastfm_import_client import _fetch_lastfm_page
-from backend.app.services import auth_service
 
 
 SPOTIFY_IMPORT_REGRESSION_ZIP_ENV = "SPOTIFY_IMPORT_REGRESSION_ZIP"
@@ -456,7 +458,7 @@ class ApiImportTests(unittest.TestCase):
         resolved = {}
         for index, row in enumerate(rows, start=1):
             uri = row["spotify_track_uri"]
-            resolved[uri] = import_service.spotify_catalog_service.SpotifyCatalogTrack(
+            resolved[uri] = spotify_catalog_service.SpotifyCatalogTrack(
                 track_uri=uri,
                 track_id=uri.removeprefix("spotify:track:"),
                 track_name=row["master_metadata_track_name"],
@@ -676,7 +678,7 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -714,7 +716,7 @@ class ApiImportTests(unittest.TestCase):
             expected_sha = hashlib.sha256(zip_bytes).hexdigest()
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -786,10 +788,10 @@ class ApiImportTests(unittest.TestCase):
             client, database_url = self._client(temp_dir, state=seeded_state)
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 side_effect=spotify_catalog_service.SpotifyCatalogUnavailable("mocked"),
             ) as catalog_lookup, patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ) as metadata_lookup:
                 response = client.post(
@@ -865,7 +867,7 @@ class ApiImportTests(unittest.TestCase):
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ):
                 response = client.post(
@@ -892,7 +894,7 @@ class ApiImportTests(unittest.TestCase):
             first_sha = hashlib.sha256(first_bytes).hexdigest()
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 first_response = client.post(
@@ -931,7 +933,7 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ):
                 first_response = client.post(
@@ -962,7 +964,7 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -1028,7 +1030,7 @@ class ApiImportTests(unittest.TestCase):
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ):
                 response = client.post(
@@ -1055,7 +1057,7 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -1089,7 +1091,7 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -1183,7 +1185,7 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ) as metadata_lookup:
                 response = client.post(
@@ -1220,7 +1222,7 @@ class ApiImportTests(unittest.TestCase):
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ) as metadata_lookup:
                 response = client.post(
@@ -1255,10 +1257,10 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 return_value=catalog,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Spotify catalog singles should not call MusicBrainz."),
             ):
                 response = client.post(
@@ -1302,10 +1304,10 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 return_value=catalog,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Spotify catalog compilations should not call MusicBrainz."),
             ):
                 response = client.post(
@@ -1370,7 +1372,7 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -1441,14 +1443,14 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 return_value=self._spotify_catalog_tracks(
                     rows,
                     album_id="spotify-dookie",
                     album_total_tracks=15,
                 ),
             ) as catalog_lookup, patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ) as metadata_lookup:
                 response = client.post(
@@ -1516,7 +1518,7 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -1581,14 +1583,14 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 return_value=self._spotify_catalog_tracks(
                     rows,
                     album_id="spotify-dookie",
                     album_total_tracks=15,
                 ),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ) as metadata_lookup:
                 response = client.post(
@@ -1624,7 +1626,7 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -1685,10 +1687,10 @@ class ApiImportTests(unittest.TestCase):
             }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 return_value={**first_catalog, **second_catalog},
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -1737,10 +1739,10 @@ class ApiImportTests(unittest.TestCase):
                 return catalog
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 side_effect=resolve,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -1774,7 +1776,7 @@ class ApiImportTests(unittest.TestCase):
                 }
                 rows.append(row)
                 uri = row["spotify_track_uri"]
-                catalog[uri] = import_service.spotify_catalog_service.SpotifyCatalogTrack(
+                catalog[uri] = spotify_catalog_service.SpotifyCatalogTrack(
                     track_uri=uri,
                     track_id=f"partial-track-{index}",
                     track_name="Only Track",
@@ -1792,10 +1794,10 @@ class ApiImportTests(unittest.TestCase):
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri",
+                "backend.app.services.spotify_catalog_service.resolve_tracks_by_uri",
                 return_value=catalog,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Spotify partials should not fetch metadata."),
             ):
                 response = client.post(
@@ -1823,7 +1825,7 @@ class ApiImportTests(unittest.TestCase):
                 repository = SqliteStateRepository(session)
                 import_session = ImportSession(
                     user_id=repository.user.id,
-                    source=import_service.SPOTIFY_IMPORT_SOURCE,
+                    source=SPOTIFY_IMPORT_SOURCE,
                     status="matching_cached_albums",
                     started_at="2026-02-02T00:00:00+00:00",
                     summary_json={},
@@ -1857,10 +1859,10 @@ class ApiImportTests(unittest.TestCase):
 
                 progress_calls = []
                 with patch(
-                    "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                    "album_metadata_service.get_album_metadata_for_import_matching",
                     side_effect=AssertionError("Spotify partials should not fetch metadata."),
                 ):
-                    candidates = import_service._build_spotify_candidates_from_streaming_events(
+                    candidates = build_spotify_candidates_from_plays(
                         session=session,
                         repository=repository,
                         import_session=import_session,
@@ -1922,7 +1924,7 @@ class ApiImportTests(unittest.TestCase):
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": full_rows + partial_rows})
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -1972,7 +1974,7 @@ class ApiImportTests(unittest.TestCase):
             zip_file = self._spotify_zip({"Streaming_History_Audio_0.json": rows})
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ):
                 response = client.post(
@@ -2068,7 +2070,7 @@ class ApiImportTests(unittest.TestCase):
                 }
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=metadata_lookup,
             ) as metadata_lookup_mock:
                 response = client.post(
@@ -2105,10 +2107,10 @@ class ApiImportTests(unittest.TestCase):
                     source_user_id=None,
                     status="storing_streaming_events",
                     session_name="Resume stored Spotify rows",
-                    started_at=import_service._utc_now(),
+                    started_at=utc_now(),
                     completed_at=None,
                     artifact_path=None,
-                    summary_json=import_service._empty_summary().model_dump(),
+                    summary_json=empty_summary().model_dump(),
                 )
                 session.add(import_session)
                 session.flush()
@@ -2156,14 +2158,14 @@ class ApiImportTests(unittest.TestCase):
                 repository = SqliteStateRepository(session)
                 import_session = ImportSession(
                     user_id=repository.user.id,
-                    source=import_service.SPOTIFY_IMPORT_SOURCE,
+                    source=SPOTIFY_IMPORT_SOURCE,
                     source_user_id=None,
                     status="matching_cached_albums",
                     session_name="Resume raw Spotify candidates",
-                    started_at=import_service._utc_now(),
+                    started_at=utc_now(),
                     completed_at=None,
                     artifact_path=None,
-                    summary_json=import_service._empty_summary().model_dump(),
+                    summary_json=empty_summary().model_dump(),
                 )
                 session.add(import_session)
                 session.flush()
@@ -2187,7 +2189,7 @@ class ApiImportTests(unittest.TestCase):
                         )
                     )
                 session.flush()
-                import_service._build_spotify_candidates_from_streaming_events(
+                build_spotify_candidates_from_plays(
                     session=session,
                     repository=repository,
                     import_session=import_session,
@@ -2249,7 +2251,7 @@ class ApiImportTests(unittest.TestCase):
                 }
                 session.add(
                     AlbumMetadataCache(
-                        cache_key=import_service._album_metadata_cache_key(
+                        cache_key=album_metadata_cache_key(
                             "Repair Artist",
                             "Repair Album",
                         ),
@@ -2257,20 +2259,20 @@ class ApiImportTests(unittest.TestCase):
                         album="Repair Album",
                         status="matched",
                         metadata_json=metadata,
-                        updated_at=import_service._utc_now(),
+                        updated_at=utc_now(),
                     )
                 )
                 import_session = ImportSession(
                     user_id=repository.user.id,
-                    source=import_service.SPOTIFY_IMPORT_SOURCE,
+                    source=SPOTIFY_IMPORT_SOURCE,
                     source_user_id=None,
                     status="completed",
                     session_name="Repair raw Spotify candidates",
-                    started_at=import_service._utc_now(),
-                    completed_at=import_service._utc_now(),
+                    started_at=utc_now(),
+                    completed_at=utc_now(),
                     artifact_path=None,
                     summary_json={
-                        **import_service._empty_summary().model_dump(),
+                        **empty_summary().model_dump(),
                         "derived_album_listens": 1,
                     },
                 )
@@ -2300,14 +2302,14 @@ class ApiImportTests(unittest.TestCase):
                         )
                     )
                 session.flush()
-                import_service._build_spotify_candidates_from_streaming_events(
+                build_spotify_candidates_from_plays(
                     session=session,
                     repository=repository,
                     import_session=import_session,
                     allow_remote_metadata=False,
                 )
                 import_session.status = "completed"
-                import_session.completed_at = import_service._utc_now()
+                import_session.completed_at = utc_now()
                 import_session_id = import_session.id
                 session.commit()
 
@@ -2354,20 +2356,20 @@ class ApiImportTests(unittest.TestCase):
                     user_id=repository.user.id,
                     source="lastfm",
                     status="completed",
-                    started_at=import_service._utc_now(),
-                    completed_at=import_service._utc_now(),
-                    summary_json=import_service._empty_summary().model_dump(),
+                    started_at=utc_now(),
+                    completed_at=utc_now(),
+                    summary_json=empty_summary().model_dump(),
                 )
                 other_user = User(slug="other-user", display_name="Other User")
                 session.add_all([lastfm_session, other_user])
                 session.flush()
                 other_session = ImportSession(
                     user_id=other_user.id,
-                    source=import_service.SPOTIFY_IMPORT_SOURCE,
+                    source=SPOTIFY_IMPORT_SOURCE,
                     status="completed",
-                    started_at=import_service._utc_now(),
-                    completed_at=import_service._utc_now(),
-                    summary_json=import_service._empty_summary().model_dump(),
+                    started_at=utc_now(),
+                    completed_at=utc_now(),
+                    summary_json=empty_summary().model_dump(),
                 )
                 session.add(other_session)
                 session.commit()
@@ -2398,10 +2400,10 @@ class ApiImportTests(unittest.TestCase):
                     source_user_id=None,
                     status="queued",
                     session_name="Missing ZIP",
-                    started_at=import_service._utc_now(),
+                    started_at=utc_now(),
                     completed_at=None,
                     artifact_path=None,
-                    summary_json=import_service._empty_summary().model_dump(),
+                    summary_json=empty_summary().model_dump(),
                 )
                 session.add(import_session)
                 session.commit()
@@ -2421,7 +2423,7 @@ class ApiImportTests(unittest.TestCase):
             )
 
             with patch("backend.app.routers.imports._start_import_background_worker"), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -2512,7 +2514,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -2578,7 +2580,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 first_response = client.post("/api/users/jacob/imports/commit", json=request_body)
@@ -2612,10 +2614,10 @@ class ApiImportTests(unittest.TestCase):
             )
             tracks = ["Track 1", "Track 2", "Track 3", "Track 4"]
             overlapping_start = int(
-                import_service._parse_timestamp("2026-04-01T12:00:00Z").timestamp()
+                parse_timestamp("2026-04-01T12:00:00Z").timestamp()
             )
             later_start = int(
-                import_service._parse_timestamp("2026-04-04T12:00:00Z").timestamp()
+                parse_timestamp("2026-04-04T12:00:00Z").timestamp()
             )
             overlapping_payload = self._lastfm_payload(
                 "Existing Artist",
@@ -2643,7 +2645,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -2706,7 +2708,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -2769,7 +2771,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 commit_response = client.post("/api/users/jacob/imports/commit", json=request_body)
@@ -2922,7 +2924,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=return_no_metadata,
             ):
                 response = client.post(
@@ -2935,6 +2937,45 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(review_response.status_code, 200)
         self.assertEqual(len(review_response.json()), 1)
+
+    def test_lastfm_resume_retries_only_the_interrupted_album(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            tracks = ["One", "Two", "Three"]
+            payload = self._lastfm_payload("Artist", "First", tracks)
+            second = self._lastfm_payload("Artist", "Second", tracks)
+            payload["recenttracks"]["track"].extend(second["recenttracks"]["track"])
+            payload["recenttracks"]["@attr"]["total"] = "6"
+            with patch("backend.app.routers.imports._start_import_background_worker"):
+                response = client.post(
+                    "/api/users/jacob/imports/commit",
+                    json={"source": "lastfm", "lastfm_username": "listener"},
+                )
+            self.assertEqual(response.status_code, 200)
+            session_id = response.json()["import_session_id"]
+            with patch(
+                "backend.app.services.lastfm_import_client.httpx.Client",
+                return_value=self._mock_lastfm_client(payload),
+            ), patch(
+                "album_metadata_service.get_album_metadata_for_import_matching",
+                side_effect=[None, KeyboardInterrupt()],
+            ) as first_run:
+                with self.assertRaises(KeyboardInterrupt):
+                    self._run_import_session(database_url, session_id)
+
+            interrupted_album = first_run.call_args.args
+            self.assertEqual(self._imported_event_count(database_url, "candidate_review"), 3)
+            self.assertEqual(self._imported_event_count(database_url, "pending_metadata"), 3)
+            self.assertEqual(client.get("/api/users/jacob/imports").json()[0]["status"], "fetching_metadata")
+
+            with patch("backend.app.services.lastfm_import_client.httpx.Client") as lastfm, patch(
+                "album_metadata_service.get_album_metadata_for_import_matching", return_value=None,
+            ) as resumed_lookup:
+                self._run_import_session(database_url, session_id)
+            lastfm.assert_not_called()
+            resumed_lookup.assert_called_once_with(*interrupted_album)
+            self.assertEqual(self._imported_event_count(database_url, "candidate_review"), 6)
+            self.assertEqual(client.get("/api/users/jacob/imports").json()[0]["status"], "completed")
 
     def test_lastfm_preview_keeps_single_scrobble_out_of_review(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -3003,7 +3044,7 @@ class ApiImportTests(unittest.TestCase):
             mock_client.get.return_value = mock_response
 
             with patch("backend.app.services.lastfm_import_client.httpx.Client", return_value=mock_client), patch(
-                "backend.app.services.import_service._lastfm_album_metadata",
+                "backend.app.services.imports.matching.resolve_album_metadata",
                 side_effect=AssertionError("Preview should not call metadata matching."),
             ):
                 response = client.post(
@@ -3177,7 +3218,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -3245,7 +3286,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -3306,7 +3347,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -3374,7 +3415,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=mock_client,
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -3403,7 +3444,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Low-evidence candidates should not call MusicBrainz."),
             ):
                 response = client.post(
@@ -3436,7 +3477,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Low-evidence candidates should not call MusicBrainz."),
             ):
                 response = client.post(
@@ -3480,7 +3521,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ) as metadata_lookup:
                 response = client.post(
@@ -3521,7 +3562,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -3573,7 +3614,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(first_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=RuntimeError("temporary MusicBrainz failure"),
             ):
                 first_response = client.post(
@@ -3587,7 +3628,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(second_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ) as metadata_lookup:
                 second_response = client.post(
@@ -3626,7 +3667,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
@@ -3651,7 +3692,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                import_service._write_album_metadata_cache(
+                write_album_metadata_cache(
                     session,
                     "Cached Single Artist",
                     "Cached Single",
@@ -3675,7 +3716,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Cached low-track metadata should not call MusicBrainz."),
             ):
                 response = client.post(
@@ -3710,7 +3751,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Existing album tracklist should be reused."),
             ):
                 response = client.post(
@@ -3734,7 +3775,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                import_service._write_album_metadata_cache(
+                write_album_metadata_cache(
                     session,
                     "Cached Artist",
                     "Cached Album",
@@ -3760,7 +3801,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Cached metadata should be reused."),
             ):
                 response = client.post(
@@ -3783,7 +3824,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                import_service._write_album_metadata_cache(
+                write_album_metadata_cache(
                     session,
                     "Missing Metadata Artist",
                     "Missing Metadata Album",
@@ -3801,7 +3842,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 side_effect=AssertionError("Negative metadata cache should be reused."),
             ):
                 response = client.post(
@@ -3867,7 +3908,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ) as metadata_lookup:
                 response = client.post(
@@ -3906,7 +3947,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=None,
             ):
                 response = client.post(
@@ -3966,7 +4007,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.lastfm_import_client.httpx.Client",
                 return_value=self._mock_lastfm_client(lastfm_payload),
             ), patch(
-                "backend.app.services.import_service.album_metadata_service.get_album_metadata_for_import_matching",
+                "album_metadata_service.get_album_metadata_for_import_matching",
                 return_value=metadata,
             ):
                 response = client.post(
