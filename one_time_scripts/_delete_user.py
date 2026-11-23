@@ -1,8 +1,7 @@
 import argparse
 import sys
 
-from backend.app.database import get_engine
-from sqlalchemy.orm import sessionmaker
+from backend.app.job_database import job_session
 
 from backend.app.services.admin_user_service import delete_user_by_slug
 
@@ -17,13 +16,7 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    session_factory = sessionmaker(
-        bind=get_engine(),
-        autoflush=False,
-        autocommit=False,
-    )
-
-    with session_factory() as session:
+    with job_session(initialize=False) as session:
         try:
             result = delete_user_by_slug(
                 session,

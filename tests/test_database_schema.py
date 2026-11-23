@@ -1,14 +1,69 @@
 import sqlite3
 import tempfile
 import unittest
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from pathlib import Path
+from threading import Event
+from unittest.mock import patch
+
+from fastapi.testclient import TestClient
 
 from sqlalchemy import text
 
-from backend.app.database import create_schema
+from backend.app.database import create_schema, session_factory_for
+from backend.app.repositories.user_repository import UserRepository
 
 
 class DatabaseSchemaTests(unittest.TestCase):
+    def test_in_memory_reader_cannot_roll_back_another_sessions_pending_write(self):
+        engine = create_schema("sqlite://")
+        self.addCleanup(engine.dispose)
+        sessions = session_factory_for(engine)
+        started = Event()
+
+        def read_user():
+            with sessions() as session:
+                started.set()
+                return UserRepository(session).get_user_by_slug("pending") is not None
+
+        with ThreadPoolExecutor(max_workers=1) as worker, sessions() as writer:
+            UserRepository(writer).ensure_user(slug="pending")
+            reader = worker.submit(read_user)
+            self.assertTrue(started.wait(timeout=2))
+            with self.assertRaises(TimeoutError):
+                reader.result(timeout=0.1)
+            writer.commit()
+            self.assertTrue(reader.result(timeout=2))
+        with sessions() as session:
+            self.assertIsNotNone(UserRepository(session).get_user_by_slug("pending"))
+
+    def test_api_shares_its_own_engine_across_requests_and_disposes_at_shutdown(self):
+        with tempfile.TemporaryDirectory() as directory, patch.dict("os.environ", {
+            "DATABASE_URL": "sqlite:///:memory:",
+            "DATA_DIR": directory,
+            "MEDIA_DIR": directory,
+        }):
+            from backend.app.main import create_app
+
+            app = create_app()
+            other_app = create_app()
+            engine = app.state.session_factory.kw["bind"]
+            self.assertIsNot(engine, other_app.state.session_factory.kw["bind"])
+            with patch.object(engine, "dispose", wraps=engine.dispose) as dispose:
+                with TestClient(app) as client:
+                    with app.state.session_factory() as session:
+                        UserRepository(session).create_user(slug="private-test", display_name="Private Test")
+                    for _ in range(2):
+                        response = client.get("/api/users")
+                        self.assertEqual(response.status_code, 200)
+                        self.assertIn("private-test", {user["slug"] for user in response.json()})
+                dispose.assert_called_once()
+
+            with TestClient(other_app) as other_client:
+                response = other_client.get("/api/users")
+                self.assertEqual(response.status_code, 200)
+                self.assertEqual({user["slug"] for user in response.json()}, {"jacob"})
+
     def test_create_schema_creates_album_metadata_cache_idempotently(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

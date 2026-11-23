@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from backend.app.logging_config import configure_logging
 from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.database import create_schema, session_factory_for
 from backend.app.services.artwork_static_files import ArtworkStaticFiles
 from backend.app.routers import (
     album_state,
@@ -24,14 +24,19 @@ from backend.app.routers import users
 def create_app() -> FastAPI:
     configure_logging()
     settings = get_settings()
-    create_schema(settings.database_url)
+    engine = create_schema(settings.database_url)
+    session_factory = session_factory_for(engine)
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
-        imports.resume_interrupted_imports()
-        yield
+        try:
+            imports.resume_interrupted_imports(session_factory)
+            yield
+        finally:
+            engine.dispose()
 
     app = FastAPI(title=settings.app_name, lifespan=lifespan)
+    app.state.session_factory = session_factory
     app.add_middleware(RequestLoggingMiddleware)
 
     app.include_router(health.router, prefix=settings.api_prefix)

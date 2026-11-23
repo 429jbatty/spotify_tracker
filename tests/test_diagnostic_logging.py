@@ -1,6 +1,7 @@
 import tempfile
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import nullcontext
 import unittest
 from unittest.mock import Mock, patch
 from types import SimpleNamespace
@@ -95,17 +96,16 @@ class DiagnosticLoggingTests(unittest.TestCase):
         session_context = Mock()
         session_context.__enter__ = Mock(return_value=session)
         session_context.__exit__ = Mock(return_value=False)
-        with patch.object(auth, '_session_factory', return_value=lambda: session_context), \
-             patch.object(auth, 'get_settings', return_value=SimpleNamespace(frontend_origin='https://frontend.test')), \
+        with patch.object(auth, 'get_settings', return_value=SimpleNamespace(frontend_origin='https://frontend.test')), \
              patch.object(auth.auth_service, 'complete_google_sign_in', side_effect=HTTPException(status_code=503, detail='private')), \
              capture_logs() as events:
-            response = auth.google_callback(code='secret-code', state='secret-state', error=None)
+            response = auth.google_callback(lambda: session_context, code='secret-code', state='secret-state', error=None)
         self.assertEqual(response.status_code, 303)
         self.assertEqual((events[0]['event'], events[0]['reason']), ('sign_in_failed', 'unavailable'))
         self.assertNotIn('secret', repr(events))
         with capture_logs() as events:
             with self.assertRaises(HTTPException):
-                spotify.spotify_callback(code='secret-code', state=None)
+                spotify.spotify_callback(Mock(), code='secret-code', state=None)
         self.assertEqual(events[0]['reason'], 'invalid_request')
         self.assertNotIn('secret', repr(events))
 
@@ -115,11 +115,10 @@ class DiagnosticLoggingTests(unittest.TestCase):
         session_context.__enter__ = Mock(return_value=session)
         session_context.__exit__ = Mock(return_value=False)
         account = SimpleNamespace(id=42, email='private@example.test')
-        with patch.object(auth, '_session_factory', return_value=lambda: session_context), \
-             patch.object(auth, 'get_settings', return_value=SimpleNamespace(frontend_origin='https://frontend.test')), \
+        with patch.object(auth, 'get_settings', return_value=SimpleNamespace(frontend_origin='https://frontend.test')), \
              patch.object(auth.auth_service, 'complete_google_sign_in', return_value=(account, 'secret-token')), \
              capture_logs() as events:
-            response = auth.google_callback(code='secret-code', state='secret-state', error=None)
+            response = auth.google_callback(lambda: session_context, code='secret-code', state='secret-state', error=None)
         self.assertEqual(response.status_code, 303)
         session.commit.assert_called_once()
         self.assertEqual((events[0]['event'], events[0]['account_id']), ('sign_in_succeeded', 42))
@@ -139,7 +138,7 @@ class DiagnosticLoggingTests(unittest.TestCase):
     def test_spotify_sync_failure_classifies_rate_limit_on_existing_event(self):
         with patch.object(spotify_tracking_service, '_run_tracking_for_user', side_effect=SpotifyException(429, -1, 'rate limit')), capture_logs() as events:
             with self.assertRaises(SpotifyException):
-                spotify_tracking_service.run_tracking_for_user('fixture')
+                spotify_tracking_service.run_tracking_for_user('fixture', open_session=nullcontext)
         self.assertEqual(len(events), 1)
         self.assertEqual((events[0]['event'], events[0]['failure_category'], events[0]['status_code']), ('spotify_sync_failed', 'rate_limited', 429))
 

@@ -34,6 +34,27 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 - Spotify credential persistence belongs in
   `backend/app/repositories/spotify_credentials_repository.py`.
 
+## Engine and session lifetime
+
+The API creates one SQLite engine and session factory per application. Routes
+get that factory through `backend/app/dependencies.py` and open a session
+for each unit of work. Import workers use the same factory and start a new
+session inside each worker thread. Startup resumes eligible imports using
+that factory. Shutdown disposes the API engine. Jobs interrupted by process
+exit resume from durable checkpoints when eligible. In-memory databases lend
+their single connection to one session at a time so each transaction is isolated.
+
+Standalone commands may run before the API starts. In
+`backend/app/job_database.py`, `job_session_factory()` initializes the configured
+database once and disposes its engine when the command ends. The Spotify batch
+uses it for profile discovery, a fresh session per profile, and a separate
+session to record an individual sync failure. Single-session commands can use
+`job_session()`.
+
+The Spotify sync HTTP handler opens a short session to authorize the owner and
+passes the same application factory to tracking. Album state and sync status
+are committed separately.
+
 ## Repository Rules
 
 - Preserve the distinction between shared album metadata and user-scoped state.
@@ -41,7 +62,12 @@ deployment, set `DATA_DIR` outside the repo and back it up.
   `backend/app/schemas.py`.
 - Preserve listen history when refreshing metadata.
 - Preserve local artwork paths when refreshed metadata only changes remote data.
-- Avoid direct SQL writes from routers. Use repositories, services, or explicit maintenance scripts.
+- Keep queries and bulk writes in repositories. Services own workflow decisions
+  and can stage field changes on records loaded in their unit of work.
+- Pass the same session when several repository operations share a transaction.
+  Imports save progress and related writes at explicit checkpoints.
+- Explicit maintenance scripts may query the database directly for scoped
+  audits, migrations, and repairs.
 
 ## Media Storage
 

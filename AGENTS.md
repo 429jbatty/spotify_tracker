@@ -58,7 +58,17 @@ and app state are user-scoped.
 
 - Keep FastAPI routers small: validate input, load dependencies, call services
   or repositories, and translate expected errors into HTTP responses.
-- Keep database access in repositories or explicit migration/admin scripts.
+- Keep queries, bulk writes, and SQLite-specific locking in repositories or
+  database infrastructure. A service can update fields on records in its
+  unit of work and commit related operations at a workflow checkpoint. Migration
+  and admin scripts can query the database directly for their maintenance work.
+- HTTP routes use the application session factory from
+  `backend/app/dependencies.py`. Open a session for each unit of work. Pass the
+  application factory to in-process workers so they open their own sessions.
+- For standalone tracking and maintenance jobs, open the database at the job
+  boundary using `backend/app/job_database.py`. Pass sessions to repositories.
+  When processing multiple profiles, reuse the engine and open a session per
+  profile so a failed transaction can be closed before continuing.
 - Preserve user scoping. A change to album listens, in-progress state, tags,
   ratings, notes, or Spotify credentials must not affect another user.
 - Preserve shared album identity. `albums.album_key` is the canonical

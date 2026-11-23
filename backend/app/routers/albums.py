@@ -1,10 +1,12 @@
+from collections.abc import Iterator
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, Header, HTTPException, status
-from sqlalchemy.orm import sessionmaker
 
 from backend.app.services import metadata_refresh_logging
-from backend.app.config import get_settings
-from backend.app.database import get_engine
+from backend.app.dependencies import AppSessions
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.repositories.user_repository import DEFAULT_USER_SLUG
 from backend.app.services.manual_album_service import (
     add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
     update_manual_album_feedback, update_manual_album_tags,
@@ -22,37 +24,25 @@ from backend.app.schemas import (
     UserAlbumTagsUpdate,
 )
 
-def _require_default_profile_owner(
-    authorization: str | None = Header(default=None),
-) -> None:
-    """Keep compatibility routes fail-closed behind the default owner's session."""
-    settings = get_settings()
-    engine = get_engine(settings.database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    with session_factory() as session:
-        auth_service.require_profile_owner(
-            session,
-            user_slug="jacob",
-            authorization=authorization,
-        )
 
-
-router = APIRouter(
-    prefix="/albums",
-    tags=["albums"],
-    dependencies=[Depends(_require_default_profile_owner)],
-)
-
-
+router = APIRouter(prefix="/albums", tags=["albums"])
 DUPLICATE_KEY_PREFIX = "Album key already exists: "
 
 
-def _repository():
-    settings = get_settings()
-    engine = get_engine(settings.database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    session = session_factory()
-    return session, SqliteStateRepository(session)
+def _default_album_repository(
+    session_factory: AppSessions,
+    authorization: str | None = Header(default=None),
+) -> Iterator[SqliteStateRepository]:
+    with session_factory() as session:
+        auth_service.require_profile_owner(
+            session,
+            user_slug=DEFAULT_USER_SLUG,
+            authorization=authorization,
+        )
+        yield SqliteStateRepository(session, user_slug=DEFAULT_USER_SLUG)
+
+
+DefaultAlbumRepository = Annotated[SqliteStateRepository, Depends(_default_album_repository)]
 
 
 def _duplicate_album_detail(repository: SqliteStateRepository, error: ValueError):
@@ -78,10 +68,10 @@ def _duplicate_album_detail(repository: SqliteStateRepository, error: ValueError
     response_model=CompletedAlbum,
 )
 def refresh_album_metadata(
+    repository: DefaultAlbumRepository,
     album_id: int,
     request: AlbumRefreshRequest | None = None,
 ) -> dict:
-    session, repository = _repository()
     try:
         return metadata_refresh_logging.refresh_album(
             repository, album_id, spotify_url=request.spotify_url if request else None,
@@ -92,25 +82,19 @@ def refresh_album_metadata(
         raise HTTPException(status_code=status.HTTP_502_BAD_GATEWAY, detail=str(exc))
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.post("", response_model=CompletedAlbum, status_code=status.HTTP_201_CREATED)
-def create_album(request: ManualAlbumCreate) -> dict:
-    session, repository = _repository()
+def create_album(repository: DefaultAlbumRepository, request: ManualAlbumCreate) -> dict:
     try:
         return create_manual_album(repository, request)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.patch("/{album_id}", response_model=CompletedAlbum)
-def update_album(album_id: int, request: AlbumMetadataUpdate) -> dict:
+def update_album(repository: DefaultAlbumRepository, album_id: int, request: AlbumMetadataUpdate) -> dict:
     fields = request.model_dump(exclude_unset=True)
-    session, repository = _repository()
     try:
         return repository.update_completed_album_fields(album_id, fields)
     except KeyError as exc:
@@ -120,35 +104,26 @@ def update_album(album_id: int, request: AlbumMetadataUpdate) -> dict:
             status_code=status.HTTP_409_CONFLICT,
             detail=_duplicate_album_detail(repository, exc),
         )
-    finally:
-        session.close()
 
 
 @router.post("/{album_id}/listens", response_model=CompletedAlbum)
-def add_album_listen(album_id: int, request: AlbumListenCreate) -> dict:
-    session, repository = _repository()
+def add_album_listen(repository: DefaultAlbumRepository, album_id: int, request: AlbumListenCreate) -> dict:
     try:
         return add_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.delete("/{album_id}/listens", response_model=CompletedAlbum)
-def delete_album_listen(album_id: int, request: AlbumListenDelete) -> dict:
-    session, repository = _repository()
+def delete_album_listen(repository: DefaultAlbumRepository, album_id: int, request: AlbumListenDelete) -> dict:
     try:
         return delete_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.post("/{album_id}/merge", response_model=CompletedAlbum)
-def merge_album(album_id: int, request: AlbumMergeRequest) -> dict:
-    session, repository = _repository()
+def merge_album(repository: DefaultAlbumRepository, album_id: int, request: AlbumMergeRequest) -> dict:
     try:
         return repository.merge_completed_album_listens(
             album_id,
@@ -158,37 +133,28 @@ def merge_album(album_id: int, request: AlbumMergeRequest) -> dict:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.delete("/{album_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_album(album_id: int) -> None:
-    session, repository = _repository()
+def delete_album(repository: DefaultAlbumRepository, album_id: int) -> None:
     try:
         delete_manual_album(repository, album_id)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.put("/{album_id}/your-tags", response_model=CompletedAlbum)
-def update_album_user_tags(album_id: int, request: UserAlbumTagsUpdate) -> dict:
-    session, repository = _repository()
+def update_album_user_tags(repository: DefaultAlbumRepository, album_id: int, request: UserAlbumTagsUpdate) -> dict:
     try:
         return update_manual_album_tags(repository, album_id, request.your_tags)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
-    finally:
-        session.close()
 
 
 @router.put("/{album_id}/your-feedback", response_model=CompletedAlbum)
-def update_album_user_feedback(album_id: int, request: UserAlbumFeedbackUpdate) -> dict:
-    session, repository = _repository()
+def update_album_user_feedback(repository: DefaultAlbumRepository, album_id: int, request: UserAlbumFeedbackUpdate) -> dict:
     try:
         return update_manual_album_feedback(
             repository,
@@ -198,5 +164,3 @@ def update_album_user_feedback(album_id: int, request: UserAlbumFeedbackUpdate) 
         )
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-    finally:
-        session.close()

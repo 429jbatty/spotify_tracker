@@ -7,14 +7,14 @@ from pathlib import Path
 from typing import Callable, Iterable
 
 from sqlalchemy import delete, func, select
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.models import (
     Album,
     AlbumListen,
@@ -282,9 +282,7 @@ def main() -> None:
     args = parser.parse_args()
 
     settings = get_settings()
-    engine = create_schema(settings.database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    with session_factory() as session:
+    with job_session(settings.database_url) as session:
         findings = audit_spotify_non_album_imports(session)
         write_findings(findings, args.output)
         if args.apply:

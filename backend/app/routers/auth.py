@@ -4,10 +4,9 @@ import structlog
 
 from fastapi import APIRouter, Header, HTTPException, Query, Response, status
 from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
-from backend.app.database import get_engine
+from backend.app.dependencies import AppSessions
 from backend.app.schemas import AuthenticatedAccount, GoogleAuthorizeResponse
 from backend.app.services import auth_service
 
@@ -15,43 +14,38 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 logger = structlog.get_logger(__name__)
 
 
-def _session_factory():
-    return sessionmaker(bind=get_engine(get_settings().database_url), autoflush=False, autocommit=False)
-
-
 @router.get("/google/start", response_model=GoogleAuthorizeResponse)
-def start_google_sign_in() -> GoogleAuthorizeResponse:
-    with _session_factory()() as session:
+def start_google_sign_in(session_factory: AppSessions) -> GoogleAuthorizeResponse:
+    with session_factory() as session:
         url = auth_service.begin_google_sign_in(session, settings=get_settings())
-        session.commit()
         return GoogleAuthorizeResponse(authorize_url=url)
 
 
 @router.get("/me", response_model=AuthenticatedAccount)
-def current_account(authorization: str | None = Header(default=None)) -> AuthenticatedAccount:
-    with _session_factory()() as session:
+def current_account(session_factory: AppSessions, authorization: str | None = Header(default=None)) -> AuthenticatedAccount:
+    with session_factory() as session:
         account = auth_service.require_account(session, authorization=authorization)
-        return AuthenticatedAccount(**auth_service.account_payload(account))
+        return AuthenticatedAccount(**auth_service.account_payload(session, account))
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
-def logout(authorization: str | None = Header(default=None)) -> Response:
-    with _session_factory()() as session:
+def logout(session_factory: AppSessions, authorization: str | None = Header(default=None)) -> Response:
+    with session_factory() as session:
         auth_service.revoke_session(session, authorization=authorization)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/google/callback")
 def google_callback(
+    session_factory: AppSessions,
     code: str | None = Query(default=None),
     state: str | None = Query(default=None),
     error: str | None = Query(default=None),
 ):
     settings = get_settings()
-    with _session_factory()() as session:
+    with session_factory() as session:
         if error:
             auth_service.cancel_google_sign_in(session, state=state)
-            session.commit()
             logger.info("sign_in_failed", provider="google", reason="cancelled")
             return _frontend_auth_error_redirect(settings.frontend_origin, "cancelled")
         if not code or not state:

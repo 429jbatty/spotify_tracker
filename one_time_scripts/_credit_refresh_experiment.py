@@ -13,7 +13,7 @@ if str(REPO_ROOT) not in sys.path:
 
 import metadata_refresh_service
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from one_time_scripts import _audit_credit_intelligence as credit_audit
 
@@ -391,16 +391,17 @@ def main() -> int:
     read_engine = credit_audit._query_only_engine(database_url)
     read_session_factory = sessionmaker(bind=read_engine, autoflush=False, autocommit=False)
 
-    with read_session_factory() as session:
-        if args.album_id:
-            candidates = select_refresh_candidates_by_id(session, args.user_slug, args.album_id)
-        else:
-            candidates = select_refresh_candidates(session, args.user_slug, limit=args.limit)
+    try:
+        with read_session_factory() as session:
+            if args.album_id:
+                candidates = select_refresh_candidates_by_id(session, args.user_slug, args.album_id)
+            else:
+                candidates = select_refresh_candidates(session, args.user_slug, limit=args.limit)
+    finally:
+        read_engine.dispose()
 
     if args.apply:
-        write_engine = create_schema(database_url)
-        write_session_factory = sessionmaker(bind=write_engine, autoflush=False, autocommit=False)
-        with write_session_factory() as session:
+        with job_session(database_url) as session:
             repository = SqliteStateRepository(session, user_slug=args.user_slug)
             results = apply_refresh_experiment(repository, candidates)
     else:

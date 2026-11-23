@@ -117,9 +117,9 @@ class GoogleAuthServiceTests(unittest.TestCase):
 
             self.assertEqual(account.id, prebound.owner_account_id)
             self.assertEqual(account.google_subject, "google-subject")
-            self.assertEqual(auth_service.account_payload(account)["profile_slugs"], ["legacy-jacob"])
+            self.assertEqual(auth_service.account_payload(session, account)["profile_slugs"], ["legacy-jacob"])
             self.assertEqual(
-                auth_service.account_payload(account)["profiles"],
+                auth_service.account_payload(session, account)["profiles"],
                 [{"slug": "legacy-jacob", "display_name": "Jacob"}],
             )
 

@@ -70,21 +70,10 @@ def create_manual_album(
     request: ManualAlbumCreate,
 ) -> dict[str, Any]:
     record = _metadata_record(request) or _manual_record(request)
-    user = _begin_collection_write(repository)
+    user = repository.begin_manual_collection_write()
     result, change = repository.create_completed_album_with_changes(record, listen_date=request.listen_date)
     _emit_change(user, change, _added_events(change))
     return result
-
-
-def _begin_collection_write(repository: SqliteStateRepository) -> tuple[int, str]:
-    # SQLite SELECTs may start a SQLAlchemy transaction without taking a database
-    # write lock. Serialize the change check and write after metadata lookup.
-    connection = repository.session.connection()
-    if connection.dialect.name == "sqlite":
-        if connection.connection.driver_connection.in_transaction:
-            raise RuntimeError("Manual activity requires a fresh SQLite write transaction")
-        connection.exec_driver_sql("BEGIN IMMEDIATE")
-    return repository.user.id, repository.user.slug
 
 
 def _emit_change(user: tuple[int, str], change: AlbumChange, events: list[tuple[str, dict]]) -> None:
@@ -102,21 +91,21 @@ def _added_events(change: AlbumChange) -> list[tuple[str, dict]]:
 
 
 def add_manual_album_listen(repository: SqliteStateRepository, album_id: int, listened_at: str) -> dict[str, Any]:
-    user = _begin_collection_write(repository)
+    user = repository.begin_manual_collection_write()
     result, change = repository.add_album_listen_with_changes(album_id, listened_at)
     _emit_change(user, change, _added_events(change))
     return result
 
 
 def delete_manual_album_listen(repository: SqliteStateRepository, album_id: int, listened_at: str) -> dict[str, Any]:
-    user = _begin_collection_write(repository)
+    user = repository.begin_manual_collection_write()
     result, change = repository.delete_album_listen(album_id, listened_at)
     _emit_change(user, change, [("album_listen_removed", {"listened_at": listened_at})])
     return result
 
 
 def delete_manual_album(repository: SqliteStateRepository, album_id: int) -> None:
-    user = _begin_collection_write(repository)
+    user = repository.begin_manual_collection_write()
     change = repository.delete_completed_album(album_id)
     _emit_change(user, change, [("album_removed", {})])
 
@@ -124,7 +113,7 @@ def delete_manual_album(repository: SqliteStateRepository, album_id: int) -> Non
 def update_manual_album_feedback(
     repository: SqliteStateRepository, album_id: int, *, rating: int | None, notes: str | None,
 ) -> dict[str, Any]:
-    user = _begin_collection_write(repository)
+    user = repository.begin_manual_collection_write()
     result, album, rating_change, note_change = repository.update_user_album_feedback_with_changes(
         album_id, rating=rating, notes=notes,
     )
@@ -144,7 +133,7 @@ def update_manual_album_feedback(
 def update_manual_album_tags(
     repository: SqliteStateRepository, album_id: int, your_tags: list[str],
 ) -> dict[str, Any]:
-    user = _begin_collection_write(repository)
+    user = repository.begin_manual_collection_write()
     result, album, added, removed = repository.update_user_album_tags_with_changes(album_id, your_tags)
     events = [("album_tags_changed", {"added_tags": added, "removed_tags": removed})] if added or removed else []
     _emit_change(user, album, events)

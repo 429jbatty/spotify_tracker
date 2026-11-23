@@ -1,5 +1,6 @@
 import json
 import logging
+from collections.abc import Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -121,6 +122,15 @@ class SqliteStateRepository:
             else UserRepository(session).ensure_default_user()
         )
 
+    def begin_manual_collection_write(self) -> tuple[int, str]:
+        # SQLite SELECTs may start a SQLAlchemy transaction without taking a database
+        # write lock. Serialize the change check and write after metadata lookup.
+        connection = self.session.connection()
+        if connection.connection.driver_connection.in_transaction:
+            raise RuntimeError("Manual activity requires a fresh SQLite write transaction")
+        connection.exec_driver_sql("BEGIN IMMEDIATE")
+        return self.user.id, self.user.slug
+
     def import_album_state(self, state: dict[str, Any]) -> None:
         self.save_album_state(state)
 
@@ -141,6 +151,24 @@ class SqliteStateRepository:
         state["completed_albums"] = self._load_completed_albums()
         state["most_recently_listened"] = self._most_recently_listened()
         return state
+
+    def library_album_records(self) -> Iterator[tuple[int, str, str, dict[str, Any]]]:
+        albums = self.session.scalars(
+            select(Album).join(UserAlbum).where(UserAlbum.user_id == self.user.id)
+        ).all()
+        for album in albums:
+            yield album.id, album.artist, album.name, self._album_record(album)
+
+    def get_library_album_metadata(self, artist: str, name: str) -> dict[str, Any] | None:
+        return self.session.scalars(
+            select(Album.metadata_json)
+            .join(UserAlbum)
+            .where(
+                UserAlbum.user_id == self.user.id,
+                func.lower(Album.artist) == artist.strip().casefold(),
+                func.lower(Album.name) == name.strip().casefold(),
+            )
+        ).first()
 
     def completed_album_keys(self) -> list[str]:
         return list(self.session.scalars(select(Album.album_key).order_by(Album.album_key)))

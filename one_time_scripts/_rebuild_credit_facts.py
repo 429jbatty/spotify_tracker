@@ -4,14 +4,13 @@ from collections import Counter
 from pathlib import Path
 
 from sqlalchemy import func, select
-from sqlalchemy.orm import sessionmaker
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.logging_config import configure_logging
 from backend.app.models import AlbumCreditFact
 from backend.app.services.credit_fact_service import (
@@ -86,11 +85,9 @@ def main() -> int:
 
     configure_logging()
     database_url = args.database_url or get_settings().database_url
-    engine = create_schema(database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
     album_ids = args.album_id or None
 
-    with session_factory() as session:
+    with job_session(database_url) as session:
         if args.apply:
             result = rebuild_credit_facts(session, album_ids=album_ids)
             print(format_apply_result(session, result))

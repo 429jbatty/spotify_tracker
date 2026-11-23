@@ -547,8 +547,11 @@ def main() -> int:
     engine = _query_only_engine(database_url)
     session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
-    with session_factory() as session:
-        reports = build_user_reports(session, user_slug=args.user_slug)
+    try:
+        with session_factory() as session:
+            reports = build_user_reports(session, user_slug=args.user_slug)
+    finally:
+        engine.dispose()
 
     if args.json:
         print(json.dumps([_report_to_json(report) for report in reports], indent=2))

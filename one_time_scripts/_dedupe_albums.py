@@ -6,7 +6,6 @@ from typing import Iterable
 
 from rapidfuzz import fuzz
 from sqlalchemy import func, select
-from sqlalchemy.orm import sessionmaker
 from unidecode import unidecode
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -16,7 +15,7 @@ if str(REPO_ROOT) not in sys.path:
 import metadata_refresh_service
 from backend.app.album_identity import normalized_artist_title_identity, release_group_identity
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.models import Album, AlbumListen, UserAlbum
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from musicbrainz_resolver import normalize
@@ -295,11 +294,9 @@ def main() -> int:
     args = parser.parse_args()
 
     database_url = args.database_url or get_settings().database_url
-    engine = create_schema(database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
     actions: list[str] = []
-    with session_factory() as session:
+    with job_session(database_url) as session:
         repository = SqliteStateRepository(session)
         groups = find_duplicate_groups(session)
         if args.refresh_candidates:

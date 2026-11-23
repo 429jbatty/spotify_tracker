@@ -1,10 +1,7 @@
 from fastapi import APIRouter, Header, HTTPException, status
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
 
 from backend.app.services import metadata_refresh_logging
-from backend.app.config import get_settings
-from backend.app.database import get_engine
+from backend.app.dependencies import AppSessions
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.repositories.user_repository import UserRepository
 from backend.app.services.manual_album_service import (
@@ -31,12 +28,6 @@ from backend.app.services import auth_service
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-def _session_factory():
-    settings = get_settings()
-    engine = get_engine(settings.database_url)
-    return sessionmaker(bind=engine, autoflush=False, autocommit=False)
-
-
 def _user_payload(user) -> dict:
     return {
         "id": user.id,
@@ -55,45 +46,27 @@ def _require_owner(session, user_slug: str, authorization: str | None):
 
 
 @router.get("", response_model=list[User])
-def list_users() -> list:
-    session_factory = _session_factory()
+def list_users(session_factory: AppSessions) -> list:
     with session_factory() as session:
-        repository = UserRepository(session)
-        repository.ensure_default_user()
-        session.commit()
-        return [_user_payload(user) for user in repository.list_users()]
+        return [_user_payload(user) for user in UserRepository(session).list_users_with_default()]
 
 
 @router.post("", response_model=ProfileCreateResponse, status_code=status.HTTP_201_CREATED)
-def create_user(request: UserCreate, authorization: str | None = Header(default=None)) -> object:
-    session_factory = _session_factory()
+def create_user(session_factory: AppSessions, request: UserCreate, authorization: str | None = Header(default=None)) -> object:
     with session_factory() as session:
-        repository = UserRepository(session)
         try:
             account = auth_service.require_account(session, authorization=authorization)
-            auth_service.require_profile_creation_eligibility(session, account=account)
-            user = repository.create_user(
-                slug=request.slug,
-                display_name=request.display_name,
-                owner_account_id=account.id,
-                commit=False,
+            user, token = auth_service.create_owned_profile(
+                session, account=account, slug=request.slug, display_name=request.display_name,
             )
-            token = auth_service.create_session(session, account=account)
-            session.commit()
             return ProfileCreateResponse(session_token=token, **_user_payload(user))
-        except (IntegrityError, ValueError) as exc:
-            session.rollback()
-            detail = (
-                "This Google account already owns a profile."
-                if isinstance(exc, IntegrityError)
-                else str(exc)
-            )
-            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=detail)
+        except ValueError as exc:
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=str(exc)) from exc
+
 
 
 @router.get("/{user_slug}/album-state", response_model=AlbumState)
-def get_user_album_state(user_slug: str) -> AlbumState:
-    session_factory = _session_factory()
+def get_user_album_state(session_factory: AppSessions, user_slug: str) -> AlbumState:
     with session_factory() as session:
         try:
             repository = SqliteStateRepository(session, user_slug=user_slug)
@@ -104,11 +77,11 @@ def get_user_album_state(user_slug: str) -> AlbumState:
 
 @router.get("/{user_slug}/export", response_model=AlbumState)
 def export_user_album_state(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> AlbumState:
     """Return an owner-only portable snapshot of a profile's album history."""
-    session_factory = _session_factory()
     with session_factory() as session:
         _require_owner(session, user_slug, authorization)
         repository = SqliteStateRepository(session, user_slug=user_slug)
@@ -121,11 +94,11 @@ def export_user_album_state(
     status_code=status.HTTP_201_CREATED,
 )
 def create_user_album(
+    session_factory: AppSessions,
     user_slug: str,
     request: ManualAlbumCreate,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -139,12 +112,12 @@ def create_user_album(
 
 @router.post("/{user_slug}/albums/{album_id}/listens", response_model=CompletedAlbum)
 def add_user_album_listen(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: AlbumListenCreate,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -156,12 +129,12 @@ def add_user_album_listen(
 
 @router.delete("/{user_slug}/albums/{album_id}/listens", response_model=CompletedAlbum)
 def delete_user_album_listen(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: AlbumListenDelete,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -173,12 +146,12 @@ def delete_user_album_listen(
 
 @router.put("/{user_slug}/albums/{album_id}/your-tags", response_model=CompletedAlbum)
 def update_user_album_tags(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: UserAlbumTagsUpdate,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -192,12 +165,12 @@ def update_user_album_tags(
 
 @router.put("/{user_slug}/albums/{album_id}/your-feedback", response_model=CompletedAlbum)
 def update_user_album_feedback(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: UserAlbumFeedbackUpdate,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -214,12 +187,12 @@ def update_user_album_feedback(
 
 @router.post("/{user_slug}/albums/{album_id}/refresh-metadata", response_model=CompletedAlbum)
 def refresh_user_album_metadata(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: AlbumRefreshRequest | None = None,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -238,12 +211,12 @@ def refresh_user_album_metadata(
 
 @router.patch("/{user_slug}/albums/{album_id}", response_model=CompletedAlbum)
 def update_user_album(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: AlbumMetadataUpdate,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -260,12 +233,12 @@ def update_user_album(
 
 @router.post("/{user_slug}/albums/{album_id}/merge", response_model=CompletedAlbum)
 def merge_user_album(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     request: AlbumMergeRequest,
     authorization: str | None = Header(default=None),
 ) -> dict:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)
@@ -279,11 +252,11 @@ def merge_user_album(
 
 @router.delete("/{user_slug}/albums/{album_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_user_album(
+    session_factory: AppSessions,
     user_slug: str,
     album_id: int,
     authorization: str | None = Header(default=None),
 ) -> None:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             _require_owner(session, user_slug, authorization)

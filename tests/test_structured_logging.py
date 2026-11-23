@@ -54,7 +54,7 @@ class StructuredLoggingTests(unittest.TestCase):
             from backend.app.logging_config import configure_logging
             from backend.app.services.spotify_tracking_service import run_tracking_for_user
             configure_logging()
-            def fail(_slug):
+            def fail(_slug, _session):
                 bind_contextvars(user_id=42)
                 raise RuntimeError('offline')
             with patch('backend.app.services.spotify_tracking_service._run_tracking_for_user', side_effect=fail):
@@ -145,8 +145,8 @@ class StructuredLoggingTests(unittest.TestCase):
             configure_logging()
             def run(session, session_id):
                 logging.getLogger('test').info('thread_event')
-            with patch('backend.app.routers.imports._session_factory', return_value=lambda: nullcontext(None)), patch('backend.app.routers.imports.import_service.run_import_session', side_effect=run):
-                threads = [threading.Thread(target=_run_import_background_worker, args=(n,)) for n in (1, 2)]
+            with patch('backend.app.routers.imports.import_service.run_import_session', side_effect=run):
+                threads = [threading.Thread(target=_run_import_background_worker, args=(n, lambda: nullcontext(None))) for n in (1, 2)]
                 for t in threads: t.start()
                 for t in threads: t.join()
             logging.getLogger('test').info('outside_event')

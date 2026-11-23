@@ -41,8 +41,8 @@ validation, response shaping, and expected error translation.
 
 ## Jobs and Scripts
 
-- `make track`: runs `main.py`, a compatibility wrapper for default-user
-  tracking.
+- `make track`: runs `backend.app.jobs.track_default_user`. The root
+  `main.py` also forwards to that job for existing scripts.
 - `make track-all`: runs `backend.app.jobs.track_all_users` for active, sync-enabled
   profiles with Spotify credentials.
 - `make refresh-metadata`: runs the targeted refresh script in

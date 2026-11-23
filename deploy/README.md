@@ -83,6 +83,11 @@ The deploy script performs:
 - API restart
 - local health check
 
+The worker timer invokes `backend.app.jobs.track_all_users` through
+`spotify-tracker-worker.service`. From the configured checkout, `make track-all`
+runs the same batch manually. Each invocation initializes the schema once
+and processes eligible profiles in separate sessions.
+
 ## Checks
 
 ```bash
