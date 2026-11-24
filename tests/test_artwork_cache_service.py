@@ -8,7 +8,7 @@ from PIL import Image
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.database.models import Album
 from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.artwork_cache_service import (

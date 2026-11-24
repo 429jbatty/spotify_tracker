@@ -8,7 +8,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import Settings
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.database.models import Account, GoogleOAuthState, User
 from backend.app.services import auth_service
 

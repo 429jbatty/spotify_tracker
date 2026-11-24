@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import Settings
 from backend.app.database.engine import get_engine
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.main import create_app
 from backend.app.database.models import GoogleOAuthState
 from backend.app.services import auth_service

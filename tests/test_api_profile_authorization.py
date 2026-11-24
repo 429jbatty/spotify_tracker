@@ -10,7 +10,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database.engine import get_engine
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.main import create_app
 from backend.app.database.models import Album, AlbumCreditFact
 from backend.app.database.repositories.spotify_credentials_repository import SpotifyCredentialsRepository
@@ -257,7 +257,7 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
                     user_id=owner.id, refresh_token="token"
                 )
             with patch(
-                "backend.app.job_database.create_schema",
+                "backend.app.job_database.initialize_database",
                 side_effect=AssertionError("unexpected schema setup"),
             ), patch(
                 "backend.app.services.spotify_tracking_service.SpotifyAPI"

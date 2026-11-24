@@ -8,7 +8,7 @@ from sqlalchemy import text
 
 import utils
 from backend.app.config import get_settings
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 
 
 def sample_state():

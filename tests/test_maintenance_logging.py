@@ -10,7 +10,7 @@ from structlog.testing import capture_logs
 
 import metadata_refresh_service
 
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.persistence_logging import database_error_fields
 from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.services import import_service

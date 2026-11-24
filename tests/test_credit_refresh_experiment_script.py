@@ -6,7 +6,7 @@ from unittest.mock import patch
 from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.database.models import Album, AlbumListen, User, UserAlbum
 from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from one_time_scripts import _credit_refresh_experiment as experiment

@@ -30,8 +30,7 @@ def get_engine(database_url: str | None = None) -> Engine:
     # connection to one unit of work at a time, including across worker threads.
     options = {"poolclass": QueuePool, "pool_size": 1, "max_overflow": 0} if is_memory else {}
     engine = create_engine(url, connect_args={"check_same_thread": False, "timeout": 60}, **options)
-    if not is_memory:
-        _configure_sqlite_engine(engine)
+    _configure_sqlite_engine(engine, is_memory=is_memory)
     return engine
 
 
@@ -39,12 +38,13 @@ def session_factory_for(engine: Engine) -> SessionFactory:
     return sessionmaker(bind=engine, autoflush=False)
 
 
-def _configure_sqlite_engine(target_engine: Engine) -> None:
+def _configure_sqlite_engine(target_engine: Engine, *, is_memory: bool) -> None:
     @event.listens_for(target_engine, "connect")
     def _set_sqlite_pragmas(dbapi_connection, _connection_record):
         cursor = dbapi_connection.cursor()
-        cursor.execute("PRAGMA journal_mode=WAL")
-        cursor.execute("PRAGMA synchronous=NORMAL")
-        cursor.execute("PRAGMA busy_timeout=60000")
+        if not is_memory:
+            cursor.execute("PRAGMA journal_mode=WAL")
+            cursor.execute("PRAGMA synchronous=NORMAL")
+            cursor.execute("PRAGMA busy_timeout=60000")
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()

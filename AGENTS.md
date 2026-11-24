@@ -75,7 +75,7 @@ and app state are user-scoped.
 - Preserve shared album identity. `albums.album_key` is the canonical
   artist/title key, while MusicBrainz IDs and cached artwork are shared
   metadata.
-- Keep schema initialization idempotent; `create_schema()` runs at startup and
+- Keep schema initialization idempotent; `initialize_database()` runs at startup and
   in tests. Plan an explicit upgrade when a future change affects deployed data.
 - Do not make ad hoc MusicBrainz calls from route handlers or frontend code.
 - Import flows should store raw source events first, derive album-listen

@@ -17,7 +17,7 @@ from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database.engine import get_engine
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.database.models import (
     Album,
     AlbumCreditFact,

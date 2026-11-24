@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.database.models import Album, UserAlbum
 from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository

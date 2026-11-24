@@ -8,7 +8,7 @@ from spotipy.exceptions import SpotifyException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database.schema import create_schema
+from tests.database_helpers import create_schema
 from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
