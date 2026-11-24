@@ -5,9 +5,9 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import Album, AlbumCreditFact, AlbumListen, UserAlbum
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.schema import create_schema
+from backend.app.database.models import Album, AlbumCreditFact, AlbumListen, UserAlbum
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 
 
 def sample_album_state():

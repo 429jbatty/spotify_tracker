@@ -8,8 +8,8 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import Settings
-from backend.app.database import create_schema
-from backend.app.models import Account, GoogleOAuthState, User
+from backend.app.database.schema import create_schema
+from backend.app.database.models import Account, GoogleOAuthState, User
 from backend.app.services import auth_service
 
 
@@ -180,7 +180,7 @@ class GoogleAuthServiceTests(unittest.TestCase):
             session.commit()
             auth_service.bind_profile_owner(session, user_slug="legacy-jacob", account_email="person@example.com")
             auth_service.bind_profile_owner(session, user_slug="legacy-jacob", account_email="person@example.com")
-            from backend.app.models import ProfileOwnershipAssignment
+            from backend.app.database.models import ProfileOwnershipAssignment
             self.assertEqual(session.query(ProfileOwnershipAssignment).count(), 1)
 
     def test_operator_can_unbind_a_profile_without_deleting_its_account(self):

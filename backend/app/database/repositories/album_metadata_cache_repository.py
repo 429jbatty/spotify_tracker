@@ -3,7 +3,7 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from backend.app.models import AlbumMetadataCache
+from backend.app.database.models import AlbumMetadataCache
 
 
 def get(session: Session, cache_key: str) -> AlbumMetadataCache | None:

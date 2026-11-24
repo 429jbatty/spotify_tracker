@@ -91,8 +91,8 @@ connect Spotify from that profile.
 ./.venv/bin/python - "${PROFILE_SLUG:?set PROFILE_SLUG}" <<'PY'
 import sys
 from sqlalchemy import update
-from backend.app.database import get_engine
-from backend.app.models import User
+from backend.app.database.engine import get_engine
+from backend.app.database.models import User
 
 with get_engine().begin() as connection:
     granted = connection.execute(

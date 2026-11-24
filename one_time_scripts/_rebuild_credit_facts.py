@@ -12,7 +12,7 @@ if str(REPO_ROOT) not in sys.path:
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
 from backend.app.logging_config import configure_logging
-from backend.app.models import AlbumCreditFact
+from backend.app.database.models import AlbumCreditFact
 from backend.app.services.credit_fact_service import (
     preview_credit_facts,
     rebuild_credit_facts,

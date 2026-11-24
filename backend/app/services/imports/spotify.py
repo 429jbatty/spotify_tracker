@@ -3,13 +3,13 @@
 from sqlalchemy.orm import Session
 
 from backend.app.config import get_settings
-from backend.app.models import ImportSession
-from backend.app.repositories import (
+from backend.app.database.models import ImportSession
+from backend.app.database.repositories import (
     import_event_repository as import_events,
     import_session_repository as import_sessions,
     spotify_import_repository as import_spotify,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportSessionSummary
 from backend.app.services.spotify_import_parser import (
     spotify_history_entries_from_zip,

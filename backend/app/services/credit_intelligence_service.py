@@ -7,8 +7,8 @@ from itertools import combinations
 
 from sqlalchemy.orm import Session
 
-from backend.app.models import AlbumCreditFact, User
-from backend.app.repositories.credit_repository import CreditRepository
+from backend.app.database.models import AlbumCreditFact, User
+from backend.app.database.repositories.credit_repository import CreditRepository
 
 
 DEFAULT_EXCLUDED_FLAGS = {

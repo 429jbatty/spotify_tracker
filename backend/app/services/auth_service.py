@@ -15,8 +15,8 @@ from google.oauth2 import id_token
 from sqlalchemy.orm import Session
 
 from backend.app.config import Settings
-from backend.app.models import Account, User
-from backend.app.repositories.account_repository import AccountRepository
+from backend.app.database.models import Account, User
+from backend.app.database.repositories.account_repository import AccountRepository
 
 logger = structlog.get_logger(__name__)
 

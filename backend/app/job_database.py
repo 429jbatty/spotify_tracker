@@ -5,7 +5,8 @@ from contextlib import contextmanager
 
 from sqlalchemy.orm import Session
 
-from backend.app.database import SessionFactory, create_schema, get_engine, session_factory_for
+from backend.app.database.engine import SessionFactory, get_engine, session_factory_for
+from backend.app.database.schema import create_schema
 
 
 @contextmanager

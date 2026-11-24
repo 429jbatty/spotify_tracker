@@ -5,9 +5,9 @@ from collections import Counter, defaultdict
 import structlog
 from sqlalchemy.orm import Session
 
-from backend.app.models import ImportedListeningEvent
-from backend.app.repositories import import_event_repository as import_events
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.models import ImportedListeningEvent
+from backend.app.database.repositories import import_event_repository as import_events
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportPreviewSummary
 
 from .events import parse_timestamp

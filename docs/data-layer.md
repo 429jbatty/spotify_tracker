@@ -23,16 +23,18 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 
 ## Ownership
 
-- Models live in `backend/app/models.py`.
-- Schema initialization lives in `backend/app/database.py`; models define the
-  current tables. SQLite startup seeds the default profile and ensures unique
-  indexes for known release groups and assigned profile owners. Starting the
-  app on a current database preserves its data, including older credit formats.
+- SQLAlchemy models live in `backend/app/database/models/`.
+- Engine creation, session factory configuration, and SQLite pragmas live in
+  `backend/app/database/engine.py`.
+- Schema initialization lives in `backend/app/database/schema.py`. SQLite
+  startup seeds the default profile and ensures unique indexes for known release
+  groups and assigned profile owners. Starting the app on a current database
+  preserves its data, including older credit formats.
 - Runtime reads/writes should go through repositories in
-  `backend/app/repositories/`, especially `SqliteStateRepository`.
-- User lookup/creation belongs in `backend/app/repositories/user_repository.py`.
+  `backend/app/database/repositories/`, especially `SqliteStateRepository`.
+- User lookup/creation belongs in `backend/app/database/repositories/user_repository.py`.
 - Spotify credential persistence belongs in
-  `backend/app/repositories/spotify_credentials_repository.py`.
+  `backend/app/database/repositories/spotify_credentials_repository.py`.
 
 ## Engine and session lifetime
 

@@ -11,7 +11,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
-from backend.app.models import Album, AlbumCreditFact, AlbumListen, User, UserAlbum
+from backend.app.database.models import Album, AlbumCreditFact, AlbumListen, User, UserAlbum
 
 
 def build_fact_audit(session, user_slug: str) -> dict:

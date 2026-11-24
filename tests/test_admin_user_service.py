@@ -5,8 +5,8 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import (
+from backend.app.database.schema import create_schema
+from backend.app.database.models import (
     Album,
     AlbumCreditFact,
     AlbumInProgress,
@@ -16,8 +16,8 @@ from backend.app.models import (
     UserAppState,
     UserSpotifyCredentials,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
 from backend.app.services.admin_user_service import delete_user_by_slug
 
 

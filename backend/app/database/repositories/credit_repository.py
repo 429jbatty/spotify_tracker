@@ -5,7 +5,7 @@ from typing import Iterable
 from sqlalchemy import LargeBinary, cast, delete, func, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import Album, AlbumCreditFact, User, UserAlbum
+from backend.app.database.models import Album, AlbumCreditFact, User, UserAlbum
 
 
 @dataclass(frozen=True)

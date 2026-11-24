@@ -6,12 +6,12 @@ from unittest.mock import patch
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.repositories.spotify_credentials_repository import (
+from backend.app.database.schema import create_schema
+from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import spotify_tracking_service
 
 
@@ -60,7 +60,7 @@ class SpotifyTrackingServiceTests(unittest.TestCase):
                     SpotifyCredentialsRepository(session).upsert_credentials(user_id=user.id, refresh_token=slug)
 
             with patch.dict("os.environ", {"DATABASE_URL": url}), patch(
-                "backend.app.database.create_engine", wraps=create_engine
+                "backend.app.database.engine.create_engine", wraps=create_engine
             ) as engines, patch.object(
                 spotify_tracking_service, "SpotifyAPI", side_effect=[RuntimeError("offline"), EmptyHistory()]
             ):

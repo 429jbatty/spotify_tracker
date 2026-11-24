@@ -2,8 +2,8 @@
 
 from sqlalchemy.orm import Session
 
-from backend.app.repositories import import_session_repository as import_sessions
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories import import_session_repository as import_sessions
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportDeleteResponse, ImportSessionLogEntry, ImportSessionSummary
 
 from .progress import TERMINAL_IMPORT_STATUSES, build_import_session_summary

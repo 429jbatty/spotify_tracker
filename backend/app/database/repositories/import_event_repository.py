@@ -4,7 +4,7 @@ from sqlalchemy import func, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
 
-from backend.app.models import AlbumListen, ImportedListeningEvent
+from backend.app.database.models import AlbumListen, ImportedListeningEvent
 
 
 SPOTIFY_CANDIDATE_INSERT_BATCH_SIZE = 500

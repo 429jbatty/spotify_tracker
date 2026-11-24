@@ -16,8 +16,8 @@ import metadata_refresh_service
 from backend.app.album_identity import normalized_artist_title_identity, release_group_identity
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
-from backend.app.models import Album, AlbumListen, UserAlbum
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.models import Album, AlbumListen, UserAlbum
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from musicbrainz_resolver import normalize
 
 

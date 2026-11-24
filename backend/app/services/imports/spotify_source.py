@@ -7,12 +7,12 @@ from typing import Any
 import structlog
 from sqlalchemy.orm import Session
 
-from backend.app.models import ImportSession
-from backend.app.repositories import (
+from backend.app.database.models import ImportSession
+from backend.app.database.repositories import (
     import_session_repository as import_sessions,
     spotify_import_repository as import_spotify,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportCommitResponse, ImportPreviewSummary
 from backend.app.services import spotify_catalog_service
 from backend.app.services.import_parsers import clean_text

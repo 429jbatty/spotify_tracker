@@ -16,8 +16,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema, get_engine
-from backend.app.models import (
+from backend.app.database.engine import get_engine
+from backend.app.database.schema import create_schema
+from backend.app.database.models import (
     Album,
     AlbumCreditFact,
     AlbumMetadataCache,
@@ -28,7 +29,7 @@ from backend.app.models import (
     SpotifyStreamingEvent,
     User,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import auth_service, import_service, spotify_catalog_service
 from backend.app.services.imports.events import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
 from backend.app.services.imports.metadata import album_metadata_cache_key, write_album_metadata_cache

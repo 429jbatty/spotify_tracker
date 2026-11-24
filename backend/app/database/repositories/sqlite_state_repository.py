@@ -7,7 +7,7 @@ from typing import Any
 from sqlalchemy import LargeBinary, Select, cast, delete, func, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import (
+from backend.app.database.models import (
     Album,
     AlbumCreditFact,
     AlbumInProgress,
@@ -20,11 +20,11 @@ from backend.app.album_identity import (
     normalized_artist_title_identity,
     release_group_identity,
 )
-from backend.app.repositories.state_utils import (
+from backend.app.database.repositories.state_utils import (
     _normalize_completed_albums,
     empty_album_state,
 )
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.credit_fact_service import rebuild_credit_facts
 from backend.app.user_tags import normalize_user_tags
 

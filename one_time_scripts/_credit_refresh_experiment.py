@@ -14,7 +14,7 @@ if str(REPO_ROOT) not in sys.path:
 import metadata_refresh_service
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from one_time_scripts import _audit_credit_intelligence as credit_audit
 
 

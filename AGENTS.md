@@ -11,7 +11,7 @@ the data to a React/Vite frontend.
 Spotify tracking job
   -> tracking.py completion logic
   -> album_metadata_service.py / musicbrainz_client.py enrichment
-  -> backend/app/repositories/sqlite_state_repository.py
+  -> backend/app/database/repositories/sqlite_state_repository.py
   -> SQLite
   -> FastAPI routers in backend/app/routers
   -> frontend/src/services/albumApi.js
@@ -28,8 +28,8 @@ and app state are user-scoped.
   handlers thin.
 - Backend business logic: use `backend/app/services/` or the existing root
   service modules when the behavior already lives there.
-- Persistence: change `backend/app/models.py`, schema initialization, and
-  `backend/app/repositories/` as needed. Do not bypass repository behavior for
+- Persistence: change models, schema initialization, and repositories under
+  `backend/app/database/` as needed. Do not bypass repository behavior for
   normal app writes.
 - Spotify tracking: start in `backend/app/services/spotify_tracking_service.py`,
   `backend/app/jobs/`, and `tracking.py`.

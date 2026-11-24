@@ -7,9 +7,9 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from backend.app.database.schema import create_schema
 from backend.app.main import create_app
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import auth_service
 
 

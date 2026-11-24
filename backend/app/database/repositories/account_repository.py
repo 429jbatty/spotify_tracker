@@ -2,8 +2,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from backend.app.models import Account, AccountSession, GoogleOAuthState, ProfileOwnershipAssignment, User
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.models import Account, AccountSession, GoogleOAuthState, ProfileOwnershipAssignment, User
+from backend.app.database.repositories.user_repository import UserRepository
 
 
 class AccountRepository:

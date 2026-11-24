@@ -11,7 +11,7 @@ from backend.app.persistence_logging import database_error_fields
 
 from sqlalchemy.orm import Session
 
-from backend.app.repositories.credit_repository import AlbumCreditSource, CreditRepository, ProjectedCreditFact
+from backend.app.database.repositories.credit_repository import AlbumCreditSource, CreditRepository, ProjectedCreditFact
 
 
 logger = structlog.get_logger(__name__)

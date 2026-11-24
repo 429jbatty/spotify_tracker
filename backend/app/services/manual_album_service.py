@@ -5,7 +5,7 @@ from contextvars import copy_context
 from typing import Any
 
 import album_metadata_service
-from backend.app.repositories.sqlite_state_repository import AlbumChange, SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import AlbumChange, SqliteStateRepository
 from backend.app.services.user_activity_logging import AlbumActivity, emit_activity
 from backend.app.schemas import ManualAlbumCreate
 

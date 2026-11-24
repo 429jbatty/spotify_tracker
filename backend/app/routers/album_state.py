@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 from backend.app.dependencies import AppSessions
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import AlbumState
 
 router = APIRouter(tags=["albums"])

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query
 
 from backend.app.dependencies import AppSessions
-from backend.app.repositories.public_activity_repository import PublicActivityRepository
+from backend.app.database.repositories.public_activity_repository import PublicActivityRepository
 from backend.app.schemas import PublicRecentListenAlbum, SplashResponse
 from backend.app.services.public_activity_service import recent_listened_albums, splash_payload
 

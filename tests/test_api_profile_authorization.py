@@ -9,11 +9,12 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema, get_engine
+from backend.app.database.engine import get_engine
+from backend.app.database.schema import create_schema
 from backend.app.main import create_app
-from backend.app.models import Album, AlbumCreditFact
-from backend.app.repositories.spotify_credentials_repository import SpotifyCredentialsRepository
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.models import Album, AlbumCreditFact
+from backend.app.database.repositories.spotify_credentials_repository import SpotifyCredentialsRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import auth_service
 
 

@@ -4,15 +4,15 @@ from pathlib import Path
 
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import (
+from backend.app.database.schema import create_schema
+from backend.app.database.models import (
     Album,
     AlbumListen,
     ImportedListeningEvent,
     ImportSession,
     SpotifyStreamingEvent,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.spotify_catalog_service import SpotifyCatalogTrack
 from one_time_scripts import remediate_spotify_non_album_imports as remediation
 

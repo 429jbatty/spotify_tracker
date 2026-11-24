@@ -4,7 +4,7 @@ from contextlib import contextmanager
 from dotenv import load_dotenv
 
 from backend.app.job_database import job_session
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 
 load_dotenv()
 SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}

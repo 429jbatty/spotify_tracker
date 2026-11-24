@@ -10,11 +10,11 @@ from sqlalchemy import event, select
 from sqlalchemy.orm import sessionmaker
 from structlog.contextvars import get_contextvars
 
-from backend.app.database import create_schema
+from backend.app.database.schema import create_schema
 from backend.app.main import create_app
-from backend.app.models import Album, AlbumListen, UserAlbum
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.models import Album, AlbumListen, UserAlbum
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import auth_service, manual_album_service
 from backend.app.schemas import ManualAlbumCreate
 

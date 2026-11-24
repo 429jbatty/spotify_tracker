@@ -16,11 +16,11 @@ import utils as util
 from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
 from backend.app.job_database import job_session, job_session_factory
 from backend.app.persistence_logging import database_error_fields
-from backend.app.repositories.spotify_credentials_repository import (
+from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
 from backend.app.services.spotify_access_service import require_spotify_sync_access
 from spotify_manager import SpotifyAPI
 

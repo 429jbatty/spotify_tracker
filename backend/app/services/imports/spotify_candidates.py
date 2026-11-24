@@ -7,12 +7,12 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from backend.app.models import ImportSession, ImportedListeningEvent, SpotifyStreamingEvent
-from backend.app.repositories import (
+from backend.app.database.models import ImportSession, ImportedListeningEvent, SpotifyStreamingEvent
+from backend.app.database.repositories import (
     import_event_repository as import_events,
     spotify_import_repository as import_spotify,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.import_parsers import NormalizedImportEvent
 
 from .events import SPOTIFY_IMPORT_SOURCE, fingerprint, split_listening_sessions

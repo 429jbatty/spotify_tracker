@@ -2,8 +2,8 @@ from fastapi import APIRouter, Header, HTTPException, status
 
 from backend.app.services import metadata_refresh_logging
 from backend.app.dependencies import AppSessions
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.manual_album_service import (
     add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
     update_manual_album_feedback, update_manual_album_tags,

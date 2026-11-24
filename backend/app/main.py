@@ -6,7 +6,8 @@ from fastapi import FastAPI
 from backend.app.logging_config import configure_logging
 from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.config import get_settings
-from backend.app.database import create_schema, session_factory_for
+from backend.app.database.engine import session_factory_for
+from backend.app.database.schema import create_schema
 from backend.app.services.artwork_static_files import ArtworkStaticFiles
 from backend.app.routers import (
     album_state,

@@ -7,9 +7,9 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from backend.app.database.schema import create_schema
 from backend.app.main import create_app
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services import auth_service
 
 
@@ -31,7 +31,7 @@ def sample_album_state():
 
 class MultiUserAlbumStateTests(unittest.TestCase):
     def _create_user(self, client, slug="friend", display_name="Friend"):
-        from backend.app.database import get_engine
+        from backend.app.database.engine import get_engine
         with sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))() as session:
             account = auth_service.create_account(session, email=f"{slug}@example.com", password="unused")
             token = auth_service.create_session(session, account=account)

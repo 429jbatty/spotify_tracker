@@ -5,8 +5,8 @@ from typing import Any
 
 from sqlalchemy.orm import Session
 
-from backend.app.models import ImportedListeningEvent
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.models import ImportedListeningEvent
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.services.import_parsers import NormalizedImportEvent
 
 from .events import fingerprint, parse_timestamp, split_listening_sessions

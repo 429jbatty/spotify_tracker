@@ -10,7 +10,7 @@ from structlog.testing import capture_logs
 
 import metadata_refresh_service
 
-from backend.app.database import create_schema
+from backend.app.database.schema import create_schema
 from backend.app.persistence_logging import database_error_fields
 from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.services import import_service
@@ -21,7 +21,7 @@ from backend.app.services.credit_fact_service import AlbumCreditSource, rebuild_
 class MaintenanceLoggingTests(unittest.TestCase):
     def test_schema_failure_is_queryable_without_statement_or_parameters(self):
         exc = IntegrityError("INSERT INTO secrets VALUES (?)", ("private-token",), sqlite3.IntegrityError("constraint failed"))
-        with patch("backend.app.database.Base.metadata.create_all", side_effect=exc), capture_logs() as events:
+        with patch("backend.app.database.schema.Base.metadata.create_all", side_effect=exc), capture_logs() as events:
             with self.assertRaises(IntegrityError):
                 create_schema("sqlite:///:memory:")
         self.assertEqual(events[0]["event"], "database_schema_initialization_failed")

@@ -10,11 +10,40 @@ from fastapi.testclient import TestClient
 
 from sqlalchemy import text
 
-from backend.app.database import create_schema, session_factory_for
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.engine import session_factory_for
+from backend.app.database.models import Base
+from backend.app.database.repositories.user_repository import UserRepository
+from backend.app.database.schema import create_schema
 
 
 class DatabaseSchemaTests(unittest.TestCase):
+    def test_all_model_domains_register_on_one_base(self):
+        Base.registry.configure()
+
+        self.assertEqual(
+            {mapper.local_table.name for mapper in Base.registry.mappers},
+            {
+                "accounts",
+                "account_sessions",
+                "album_credit_facts",
+                "album_listens",
+                "album_metadata_cache",
+                "albums",
+                "albums_in_progress",
+                "google_oauth_states",
+                "import_sessions",
+                "import_session_logs",
+                "imported_listening_events",
+                "profile_ownership_assignments",
+                "spotify_oauth_states",
+                "spotify_streaming_events",
+                "user_albums",
+                "user_app_state",
+                "user_spotify_credentials",
+                "users",
+            },
+        )
+
     def test_in_memory_reader_cannot_roll_back_another_sessions_pending_write(self):
         engine = create_schema("sqlite://")
         self.addCleanup(engine.dispose)

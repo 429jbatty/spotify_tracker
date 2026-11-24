@@ -7,11 +7,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from backend.app.database.schema import create_schema
 from backend.app.main import create_app
-from backend.app.models import User
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.models import User
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 class PublicActivityApiTests(unittest.TestCase):
     def _client(self, temp_dir):
         database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"

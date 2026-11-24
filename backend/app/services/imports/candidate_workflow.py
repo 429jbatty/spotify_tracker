@@ -9,9 +9,9 @@ import structlog
 from sqlalchemy.orm import Session
 from structlog.contextvars import bind_contextvars
 
-from backend.app.models import ImportSession
-from backend.app.repositories import import_event_repository as import_events
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.models import ImportSession
+from backend.app.database.repositories import import_event_repository as import_events
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportPreviewSummary
 
 from .candidate_results import apply_candidate_results, log_candidate_outcomes, summarize_candidates

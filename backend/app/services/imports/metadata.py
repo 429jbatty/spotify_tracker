@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
 import album_metadata_service
-from backend.app.repositories import album_metadata_cache_repository as cache
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories import album_metadata_cache_repository as cache
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 
 from .events import fingerprint, utc_now
 from .progress import ImportMetadataStats

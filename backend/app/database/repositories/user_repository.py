@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import (
+from backend.app.database.models import (
     Album, AlbumCreditFact, AlbumInProgress, AlbumListen, User, UserAlbum, UserAppState, UserSpotifyCredentials,
 )
 

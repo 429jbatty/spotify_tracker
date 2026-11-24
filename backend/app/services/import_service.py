@@ -7,11 +7,11 @@ from sqlalchemy.orm import Session
 from structlog.contextvars import bound_contextvars, get_contextvars
 
 from backend.app.config import get_settings
-from backend.app.models import ImportSession
+from backend.app.database.models import ImportSession
 from backend.app.persistence_logging import database_error_fields
-from backend.app.repositories import import_session_repository as import_sessions
-from backend.app.repositories.import_event_repository import latest_timestamp as latest_imported_timestamp
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories import import_session_repository as import_sessions
+from backend.app.database.repositories.import_event_repository import latest_timestamp as latest_imported_timestamp
+from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportSessionSummary
 from backend.app.services.artwork_backfill_service import ArtworkBackfillService
 from backend.app.services.imports.events import SPOTIFY_IMPORT_SOURCE, utc_now

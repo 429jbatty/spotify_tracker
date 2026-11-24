@@ -1,17 +1,11 @@
 from pathlib import Path
 
-import structlog
-from sqlalchemy import Engine, create_engine, event, text
-from sqlalchemy.dialects.sqlite import insert
+from sqlalchemy import Engine, create_engine, event
 from sqlalchemy.engine import make_url
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import QueuePool
 
 from backend.app.config import get_settings
-from backend.app.models import Base, User
-from backend.app.persistence_logging import database_error_fields
-from backend.app.repositories.user_repository import DEFAULT_USER_DISPLAY_NAME, DEFAULT_USER_SLUG
 
 
 SessionFactory = sessionmaker[Session]
@@ -54,31 +48,3 @@ def _configure_sqlite_engine(target_engine: Engine) -> None:
         cursor.execute("PRAGMA busy_timeout=60000")
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
-
-
-def create_schema(database_url: str | None = None) -> Engine:
-    target_engine = get_engine(database_url)
-    try:
-        Base.metadata.create_all(bind=target_engine)
-        with target_engine.begin() as connection:
-            connection.execute(
-                insert(User)
-                .values(slug=DEFAULT_USER_SLUG, display_name=DEFAULT_USER_DISPLAY_NAME)
-                .on_conflict_do_nothing(index_elements=[User.slug])
-            )
-            connection.execute(text(
-                "CREATE UNIQUE INDEX IF NOT EXISTS uq_albums_release_group_mbid "
-                "ON albums (release_group_mbid) "
-                "WHERE release_group_mbid IS NOT NULL AND release_group_mbid != ''"
-            ))
-            connection.execute(text(
-                "CREATE UNIQUE INDEX IF NOT EXISTS uq_users_owner_account_id "
-                "ON users (owner_account_id) WHERE owner_account_id IS NOT NULL"
-            ))
-    except SQLAlchemyError as exc:
-        structlog.get_logger(__name__).error(
-            "database_schema_initialization_failed", **database_error_fields(exc)
-        )
-        target_engine.dispose()
-        raise
-    return target_engine
