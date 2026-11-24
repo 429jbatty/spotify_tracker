@@ -1,57 +1,74 @@
 import json
+import logging
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from typing import Iterable
 
 from sqlalchemy import LargeBinary, cast, delete, func, select
 from sqlalchemy.orm import Session
 
-from backend.app.database.models import Album, AlbumCreditFact, User, UserAlbum
+from backend.app.credit_projection import AlbumCreditSource, ProjectedCreditFact, project_credit_facts
+from backend.app.database.models import Album, AlbumCreditFact, UserAlbum
 
 
 @dataclass(frozen=True)
-class AlbumCreditSource:
-    album_id: int
-    artist: str
-    artist_mbid: str | None
-    metadata_json: dict
-    metadata_parse_error: bool = False
-
-
-@dataclass(frozen=True)
-class ProjectedCreditFact:
-    album_id: int
-    person_key: str
-    person_name: str
-    person_mbid: str | None
-    identity_resolution: str
-    ingestion_version: str
-    raw_role: str
-    role_bucket: str
-    source_scope: str
-    recording_mbid: str | None
-    track_count: int
-    album_track_count: int
-    track_share: float
-    quality_flags_json: list[str]
-    created_at: str
-    updated_at: str
+class RebuildResult:
+    album_ids: list[int]
+    deleted_count: int
+    inserted_count: int
+    skipped_parse_error_count: int = 0
 
 
 class CreditRepository:
     def __init__(self, session: Session):
         self.session = session
 
-    def clear_facts(self, album_ids: list[int]) -> int:
-        return self.session.execute(
+    def stage_changed_album_credits(self, album_ids: list[int]) -> None:
+        """Flush pending album changes and their projected facts in the caller's transaction."""
+        album_ids = list(dict.fromkeys(album_ids))
+        if not album_ids:
+            return
+
+        try:
+            # The source query must see pending metadata with autoflush disabled.
+            self.session.flush()
+            sources = self.album_credit_sources(album_ids=album_ids)
+            if sources:
+                _, facts = self.clear_and_project_facts(sources)
+                self.stage_facts(facts)
+                self.session.flush()
+        except Exception as exc:
+            # Keep the existing logger name for projection failures during album writes.
+            logging.getLogger("backend.app.repositories.sqlite_state_repository").error(
+                "Credit fact rebuild failed for %d albums (%s)",
+                len(album_ids), type(exc).__name__,
+            )
+            raise
+
+    def clear_and_project_facts(
+        self, sources: list[AlbumCreditSource],
+    ) -> tuple[RebuildResult, list[ProjectedCreditFact]]:
+        """Delete existing facts in the current transaction and calculate replacements."""
+        album_ids = [source.album_id for source in sources]
+        if not album_ids:
+            return RebuildResult(album_ids=[], deleted_count=0, inserted_count=0), []
+
+        deleted_count = self.session.execute(
             delete(AlbumCreditFact).where(AlbumCreditFact.album_id.in_(album_ids))
         ).rowcount or 0
+        now = datetime.now(timezone.utc).isoformat()
+        facts = project_credit_facts(sources, now=now)
+        result = RebuildResult(
+            album_ids=album_ids,
+            deleted_count=deleted_count,
+            inserted_count=len(facts),
+            skipped_parse_error_count=sum(source.metadata_parse_error for source in sources),
+        )
+        return result, facts
 
-    def store_facts(self, facts: list[ProjectedCreditFact], *, commit: bool) -> None:
+    def stage_facts(self, facts: list[ProjectedCreditFact]) -> None:
+        """Add calculated facts for the caller to flush or commit."""
         self.session.add_all(AlbumCreditFact(**vars(fact)) for fact in facts)
-        if commit:
-            self.session.commit()
-        else:
-            self.session.flush()
 
     def library_album_ids(self, user_id: int, album_ids: set[int]):
         return set(
@@ -77,9 +94,6 @@ class CreditRepository:
             .where(UserAlbum.user_id == user_id)
             .where(Album.id.in_(album_ids))
         ).all()
-
-    def find_profile(self, user_slug: str):
-        return self.session.scalars(select(User).where(User.slug == user_slug)).first()
 
     def library_coverage_counts(self, user_id: int):
         library_album_count = self.session.scalar(

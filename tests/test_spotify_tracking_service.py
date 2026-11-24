@@ -10,7 +10,7 @@ from tests.database_helpers import create_schema
 from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
 from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import spotify_tracking_service
 
@@ -124,7 +124,7 @@ class SpotifyTrackingServiceTests(unittest.TestCase):
             self.assertEqual(contexts[0]["sync_phase"], "record_sync_success")
             self.assertTrue(contexts[0]["album_state_saved"])
             with session_factory() as session:
-                state = SqliteStateRepository(session, user_slug="friend").load_album_state()
+                state = AlbumStateRepository(session, UserRepository(session).require_user_by_slug("friend")).load()
                 self.assertIn("Artist - Completed Album", state["completed_albums"])
 
     def test_run_tracking_for_user_updates_user_scoped_state(self):
@@ -161,10 +161,7 @@ class SpotifyTrackingServiceTests(unittest.TestCase):
                         result = spotify_tracking_service.run_tracking_for_user("friend")
 
             with session_factory() as session:
-                loaded = SqliteStateRepository(
-                    session,
-                    user_slug="friend",
-                ).load_album_state()
+                loaded = AlbumStateRepository(session, UserRepository(session).require_user_by_slug("friend")).load()
                 credentials = SpotifyCredentialsRepository(session).get_for_user(user_id)
 
         self.assertEqual(result["tracks_fetched"], 2)

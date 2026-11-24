@@ -6,7 +6,7 @@ from typing import Any
 from sqlalchemy.orm import Session
 
 from backend.app.database.models import ImportedListeningEvent
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.services.import_parsers import NormalizedImportEvent
 
 from .events import fingerprint, parse_timestamp, split_listening_sessions
@@ -17,7 +17,7 @@ from .progress import ImportMetadataStats
 
 def build_lastfm_candidates_from_rows(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     imported_rows: list[ImportedListeningEvent],
     *,
     allow_remote_metadata: bool = True,

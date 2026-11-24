@@ -46,6 +46,8 @@ class GoogleAuthServiceTests(unittest.TestCase):
                 )
 
         self.assertEqual(raised.exception.status_code, status.HTTP_401_UNAUTHORIZED)
+        with self.session_factory() as session:
+            self.assertIsNone(session.query(GoogleOAuthState).first())
 
     def test_google_callback_turns_transport_failures_into_retryable_errors(self):
         with self.session_factory() as session:
@@ -65,6 +67,8 @@ class GoogleAuthServiceTests(unittest.TestCase):
                 )
 
         self.assertEqual(raised.exception.status_code, status.HTTP_503_SERVICE_UNAVAILABLE)
+        with self.session_factory() as session:
+            self.assertIsNotNone(session.query(GoogleOAuthState).first())
 
     def test_operator_can_bind_only_google_authenticated_account(self):
         with self.session_factory() as session:

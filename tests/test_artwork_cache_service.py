@@ -10,7 +10,9 @@ from sqlalchemy.orm import sessionmaker
 
 from tests.database_helpers import create_schema
 from backend.app.database.models import Album
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.artwork_cache_service import (
     MAX_ARTWORK_BYTES,
     ArtworkCacheService,
@@ -48,9 +50,10 @@ class ArtworkCacheServiceTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         session = session_factory()
-        repository = SqliteStateRepository(session)
-        repository.save_album_state(sample_album_state())
-        return session, repository
+        user = UserRepository(session).ensure_default_user()
+        repository = AlbumStateRepository(session, user)
+        repository.replace(sample_album_state())
+        return session, AlbumCatalog(session)
 
     def test_successful_download_updates_local_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -62,7 +65,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = repository.load_album_state()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
                 album = loaded["completed_albums"]["Artist - Album"]
                 output_path = Path(temp_dir) / album["local_image_path"]
 
@@ -102,7 +105,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = repository.load_album_state()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
                 album = loaded["completed_albums"]["Artist - Album"]
 
                 self.assertTrue(results[0].cached)
@@ -130,7 +133,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
             album.image_url = None
             album.remote_image_url = None
             session.commit()
-            repository.update_album_local_image_path(
+            repository.set_local_artwork(
                 album.id,
                 "artwork/release-group-mbid.jpg",
             )
@@ -188,7 +191,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = repository.load_album_state()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
             finally:
                 session.close()
 
@@ -215,7 +218,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
                     downloader=lambda url: (image_bytes(format="PNG"), "image/png"),
                 )
                 results = service.cache_missing_artwork(repository)
-                loaded = repository.load_album_state()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
             finally:
                 session.close()
 
@@ -237,7 +240,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = repository.load_album_state()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
             finally:
                 session.close()
 

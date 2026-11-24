@@ -4,10 +4,11 @@ from sqlalchemy import func, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
 
-from backend.app.database.models import AlbumListen, ImportedListeningEvent
+from backend.app.database.models import ImportedListeningEvent
 
 
 SPOTIFY_CANDIDATE_INSERT_BATCH_SIZE = 500
+_CANDIDATE_LOOKUP_BATCH_SIZE = 500
 
 
 def diagnostic_candidates(
@@ -111,21 +112,18 @@ def count_spotify_candidates(session: Session, user_id: int, import_session_id: 
 def rows_for_candidates(
     session: Session, user_id: int, candidate_keys: list[str],
 ) -> list[ImportedListeningEvent]:
-    return session.scalars(
-        select(ImportedListeningEvent).where(
-            ImportedListeningEvent.user_id == user_id,
-            ImportedListeningEvent.candidate_key.in_(candidate_keys),
-        )
-    ).all()
-
-
-def album_listen_timestamps(session: Session, user_id: int, album_id: int) -> list[str]:
-    return session.scalars(
-        select(AlbumListen.listened_at).where(
-            AlbumListen.user_id == user_id,
-            AlbumListen.album_id == album_id,
-        )
-    ).all()
+    """Load a profile's candidate events across import sessions in bounded batches."""
+    keys = list(dict.fromkeys(candidate_keys))
+    rows = []
+    for start in range(0, len(keys), _CANDIDATE_LOOKUP_BATCH_SIZE):
+        batch = keys[start : start + _CANDIDATE_LOOKUP_BATCH_SIZE]
+        rows.extend(session.scalars(
+            select(ImportedListeningEvent).where(
+                ImportedListeningEvent.user_id == user_id,
+                ImportedListeningEvent.candidate_key.in_(batch),
+            )
+        ).all())
+    return rows
 
 
 def latest_timestamp(
@@ -171,3 +169,15 @@ def record_candidate_result(
     event.match_status = status
     event.match_confidence = confidence
     event.error_message = error
+
+
+def linked_album_ids(session: Session, import_session_id: int) -> list[int]:
+    return list(session.scalars(
+        select(ImportedListeningEvent.album_id)
+        .where(
+            ImportedListeningEvent.import_session_id == import_session_id,
+            ImportedListeningEvent.album_id.is_not(None),
+        )
+        .distinct()
+        .order_by(ImportedListeningEvent.album_id)
+    ))

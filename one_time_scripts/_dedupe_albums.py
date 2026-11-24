@@ -17,7 +17,8 @@ from backend.app.album_identity import normalized_artist_title_identity, release
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
 from backend.app.database.models import Album, AlbumListen, UserAlbum
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.user_repository import UserRepository
 from musicbrainz_resolver import normalize
 
 
@@ -201,7 +202,7 @@ def _merge_target(group: DuplicateGroup) -> AlbumSummary:
     )[0]
 
 
-def apply_duplicate_groups(repository: SqliteStateRepository, groups: list[DuplicateGroup]) -> list[str]:
+def apply_duplicate_groups(repository: AlbumLibrary, groups: list[DuplicateGroup]) -> list[str]:
     actions = []
     merged_ids: set[int] = set()
     for group in groups:
@@ -219,7 +220,7 @@ def apply_duplicate_groups(repository: SqliteStateRepository, groups: list[Dupli
         # first merge, since each merge commits its profile-scoped changes.
         try:
             for album in active_albums:
-                repository.require_user_album(album.id)
+                repository.require_member(album.id)
         except KeyError as exc:
             actions.append(f"skipped {active_group.reason}: {exc.args[0]}")
             continue
@@ -227,7 +228,7 @@ def apply_duplicate_groups(repository: SqliteStateRepository, groups: list[Dupli
         for source in active_albums:
             if source.id == target.id:
                 continue
-            repository.merge_completed_album_listens(source.id, target.id)
+            repository.merge(source.id, target.id)
             merged_ids.add(source.id)
             actions.append(
                 f"merged {source.id} into {target.id} ({active_group.reason})"
@@ -235,13 +236,13 @@ def apply_duplicate_groups(repository: SqliteStateRepository, groups: list[Dupli
     return actions
 
 
-def refresh_candidates(repository: SqliteStateRepository, album_ids: list[int]) -> list[str]:
+def refresh_candidates(repository: AlbumLibrary, album_ids: list[int]) -> list[str]:
     actions = []
     for album_id in album_ids:
         try:
-            record = repository.get_completed_album_record_by_id(album_id)
+            record = repository.record_for(repository.catalog.require_by_id(album_id))
             refreshed = metadata_refresh_service.refresh_album_record(record)
-            repository.replace_completed_album_metadata_by_id_or_merge_duplicate(
+            repository.replace_metadata(
                 album_id,
                 refreshed,
             )
@@ -297,7 +298,7 @@ def main() -> int:
 
     actions: list[str] = []
     with job_session(database_url) as session:
-        repository = SqliteStateRepository(session)
+        repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
         groups = find_duplicate_groups(session)
         if args.refresh_candidates:
             candidate_ids = sorted({album.id for group in groups for album in group.albums})

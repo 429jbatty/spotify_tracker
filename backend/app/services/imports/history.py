@@ -3,7 +3,6 @@
 from sqlalchemy.orm import Session
 
 from backend.app.database.repositories import import_session_repository as import_sessions
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import ImportDeleteResponse, ImportSessionLogEntry, ImportSessionSummary
 
 from .progress import TERMINAL_IMPORT_STATUSES, build_import_session_summary
@@ -11,21 +10,21 @@ from .progress import TERMINAL_IMPORT_STATUSES, build_import_session_summary
 
 def import_history(
     session: Session,
-    repository: SqliteStateRepository,
+    user_id: int,
 ) -> list[ImportSessionSummary]:
-    rows = import_sessions.list_for_user(session, repository.user.id)
+    rows = import_sessions.list_for_user(session, user_id)
     return [build_import_session_summary(row) for row in rows]
 
 
 def import_session_logs(
     session: Session,
-    repository: SqliteStateRepository,
+    user_id: int,
     import_session_id: int,
     *,
     limit: int = 100,
     order: str = "asc",
 ) -> list[ImportSessionLogEntry]:
-    import_session = import_sessions.get_for_user(session, repository.user.id, import_session_id)
+    import_session = import_sessions.get_for_user(session, user_id, import_session_id)
     if import_session is None:
         raise KeyError(f"Import session not found: {import_session_id}")
 
@@ -36,10 +35,10 @@ def import_session_logs(
 
 def delete_import_session(
     session: Session,
-    repository: SqliteStateRepository,
+    user_id: int,
     import_session_id: int,
 ) -> ImportDeleteResponse:
-    import_session = import_sessions.get_for_user(session, repository.user.id, import_session_id)
+    import_session = import_sessions.get_for_user(session, user_id, import_session_id)
     if import_session is None:
         raise KeyError(f"Import session not found: {import_session_id}")
     if import_session.status not in TERMINAL_IMPORT_STATUSES:

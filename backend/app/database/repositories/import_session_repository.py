@@ -1,12 +1,16 @@
 from typing import Any, NamedTuple
 
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from backend.app.database.models import (
-    Album, AlbumCreditFact, AlbumListen, ImportedListeningEvent, ImportSession, ImportSessionLog,
+    AlbumListen, ImportedListeningEvent, ImportSession, ImportSessionLog,
     SpotifyStreamingEvent, UserAlbum,
 )
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+
+
+_ALBUM_CLEANUP_BATCH_SIZE = 500
 
 
 class DeletedImportRows(NamedTuple):
@@ -77,7 +81,7 @@ def delete_session(session: Session, import_session: ImportSession) -> DeletedIm
             ImportedListeningEvent.user_id == import_session.user_id,
         )
     ).all()
-    album_ids = {row.album_id for row in imported_rows if row.album_id is not None}
+    album_ids = list({row.album_id for row in imported_rows if row.album_id is not None})
     listen_keys = {
         (row.album_id, row.listened_at)
         for row in imported_rows
@@ -112,40 +116,23 @@ def delete_session(session: Session, import_session: ImportSession) -> DeletedIm
     session.delete(import_session)
     session.flush()
 
-    removed_user_albums = 0
+    removed_memberships = 0
     deleted_albums = 0
-    for album_id in album_ids:
-        user_listen_count = session.scalar(
-            select(func.count())
-            .select_from(AlbumListen)
-            .where(
-                AlbumListen.user_id == import_session.user_id,
-                AlbumListen.album_id == album_id,
-            )
+    catalog = AlbumCatalog(session)
+    for start in range(0, len(album_ids), _ALBUM_CLEANUP_BATCH_SIZE):
+        batch = album_ids[start : start + _ALBUM_CLEANUP_BATCH_SIZE]
+        membership_delete = delete(UserAlbum).where(
+            UserAlbum.user_id == import_session.user_id,
+            UserAlbum.album_id.in_(batch),
+            ~select(AlbumListen.id).where(
+                AlbumListen.user_id == UserAlbum.user_id,
+                AlbumListen.album_id == UserAlbum.album_id,
+            ).exists(),
         )
-        if user_listen_count == 0:
-            result = session.execute(
-                delete(UserAlbum).where(
-                    UserAlbum.user_id == import_session.user_id,
-                    UserAlbum.album_id == album_id,
-                )
-            )
-            removed_user_albums += result.rowcount or 0
-
-        global_listen_count = session.scalar(
-            select(func.count()).select_from(AlbumListen).where(AlbumListen.album_id == album_id)
-        )
-        global_membership_count = session.scalar(
-            select(func.count()).select_from(UserAlbum).where(UserAlbum.album_id == album_id)
-        )
-        if global_listen_count == 0 and global_membership_count == 0:
-            session.execute(
-                delete(AlbumCreditFact).where(AlbumCreditFact.album_id == album_id)
-            )
-            result = session.execute(delete(Album).where(Album.id == album_id))
-            deleted_albums += result.rowcount or 0
-
-    return DeletedImportRows(deleted_events, deleted_listens, removed_user_albums, deleted_albums)
+        result = session.execute(membership_delete.execution_options(synchronize_session="fetch"))
+        removed_memberships += result.rowcount or 0
+        deleted_albums += catalog.delete_albums_without_listens_or_memberships(batch)
+    return DeletedImportRows(deleted_events, deleted_listens, removed_memberships, deleted_albums)
 
 
 def duplicate_spotify_session(session: Session, user_id: int, file_sha256: str) -> int | None:

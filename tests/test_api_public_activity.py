@@ -10,7 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from tests.database_helpers import create_schema
 from backend.app.main import create_app
 from backend.app.database.models import User
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
 from backend.app.database.repositories.user_repository import UserRepository
 class PublicActivityApiTests(unittest.TestCase):
     def _client(self, temp_dir):
@@ -30,7 +30,7 @@ class PublicActivityApiTests(unittest.TestCase):
             inactive = User(slug="inactive", display_name="Inactive", is_active=False)
             session.add(inactive)
             session.commit()
-            SqliteStateRepository(session).save_album_state(
+            AlbumStateRepository(session, UserRepository(session).ensure_default_user()).replace(
                 {
                     "last_checked": None,
                     "albums_in_progress": {},
@@ -63,7 +63,7 @@ class PublicActivityApiTests(unittest.TestCase):
                     ],
                 }
             )
-            SqliteStateRepository(session, user_slug="friend").save_album_state(
+            AlbumStateRepository(session, UserRepository(session).require_user_by_slug("friend")).replace(
                 {
                     "last_checked": None,
                     "albums_in_progress": {},
@@ -90,7 +90,7 @@ class PublicActivityApiTests(unittest.TestCase):
                     ],
                 }
             )
-            SqliteStateRepository(session, user_slug="smoke-test").save_album_state(
+            AlbumStateRepository(session, UserRepository(session).require_user_by_slug("smoke-test")).replace(
                 {
                     "last_checked": None,
                     "albums_in_progress": {},
@@ -107,7 +107,7 @@ class PublicActivityApiTests(unittest.TestCase):
                     "most_recently_listened": ["Demo Artist - Demo Album"],
                 }
             )
-            SqliteStateRepository(session, user_slug="inactive").save_album_state(
+            AlbumStateRepository(session, UserRepository(session).require_user_by_slug("inactive")).replace(
                 {
                     "last_checked": None,
                     "albums_in_progress": {},
@@ -323,7 +323,7 @@ class PublicActivityApiTests(unittest.TestCase):
                         },
                     }
                 )
-                SqliteStateRepository(session, user_slug="listener").save_album_state(
+                AlbumStateRepository(session, UserRepository(session).require_user_by_slug("listener")).replace(
                     {
                         "last_checked": None,
                         "albums_in_progress": {},

@@ -13,7 +13,7 @@ Spotify recent plays
   -> backend/app/services/spotify_tracking_service.py
   -> tracking.py
   -> album_metadata_service.py
-  -> backend/app/database/repositories/sqlite_state_repository.py
+  -> AlbumStateRepository / AlbumLibrary / AlbumCatalog
   -> SQLite
   -> backend/app/main.py FastAPI app
   -> frontend/src/services/albumApi.js

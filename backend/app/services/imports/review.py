@@ -9,15 +9,15 @@ from backend.app.database.repositories import (
     import_event_repository as import_events,
     import_session_repository as import_sessions,
 )
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.schemas import ImportResolveRequest, ImportReviewItem
 
 
 def unresolved_review_items(
     session: Session,
-    repository: SqliteStateRepository,
+    user_id: int,
 ) -> list[ImportReviewItem]:
-    rows = import_events.unresolved_review(session, repository.user.id)
+    rows = import_events.unresolved_review(session, user_id)
 
     grouped: dict[tuple[str, str, str, str], ImportedListeningEvent] = {}
     passthrough: list[ImportedListeningEvent] = []
@@ -34,7 +34,7 @@ def unresolved_review_items(
     selected.sort(key=lambda row: (row.listened_at or "", row.id), reverse=True)
     selected = selected[:200]
     session_names = import_sessions.names_for_user_sessions(
-        session, repository.user.id,
+        session, user_id,
         {row.import_session_id for row in selected if row.import_session_id is not None},
     )
 
@@ -58,7 +58,7 @@ def unresolved_review_items(
 
 def resolve_review_item(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     review_item_id: int,
     request: ImportResolveRequest,
 ) -> dict[str, Any]:
@@ -77,21 +77,21 @@ def resolve_review_item(
         album_id = request.existing_album_id
         album = {}
         for target in representative_rows:
-            album = repository.add_album_listen(album_id, target.listened_at)
+            album = repository.add_listen(album_id, target.listened_at).record
     else:
         payload = request.create_album.model_dump(exclude={"listened_at"})
         payload.update(source=representative.source, entry_source=representative.source)
-        album = repository.create_completed_album(payload, listen_date=representative.listened_at)
+        album = repository.add_album(payload, listen_date=representative.listened_at).record
         album_id = album["id"]
         for target in representative_rows[:-1]:
-            album = repository.add_album_listen(album_id, target.listened_at)
+            album = repository.add_listen(album_id, target.listened_at).record
 
     if representative.rating is not None or representative.notes:
-        album = repository.update_user_album_feedback(
+        album = repository.set_feedback(
             album_id,
             rating=representative.rating,
             notes=representative.notes,
-        )
+        ).record
 
     for row in target_rows:
         import_events.record_candidate_result(
@@ -117,7 +117,7 @@ def _review_album_group_key(
 
 def _review_resolution_target_rows(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     review_item: ImportedListeningEvent,
 ) -> list[ImportedListeningEvent]:
     group_key = _review_album_group_key(review_item)

@@ -12,7 +12,7 @@ from backend.app.database.repositories import (
     import_event_repository as import_events,
     spotify_import_repository as import_spotify,
 )
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.services.import_parsers import NormalizedImportEvent
 
 from .events import SPOTIFY_IMPORT_SOURCE, fingerprint, split_listening_sessions
@@ -28,7 +28,7 @@ SPOTIFY_CANDIDATE_PROGRESS_SECONDS = 2.0
 
 def build_spotify_candidates_from_plays(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     import_session: ImportSession,
     *,
     allow_remote_metadata: bool,
@@ -95,7 +95,7 @@ def build_spotify_candidates_from_plays(
 
 def rebuild_spotify_candidates_from_rows(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     imported_rows: list[ImportedListeningEvent],
     *,
     allow_remote_metadata: bool,
@@ -141,7 +141,7 @@ def _spotify_streaming_event_group_key(row: SpotifyStreamingEvent) -> tuple[str,
 
 def _persist_spotify_candidate_rows(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     import_session: ImportSession,
     candidates: list[AlbumCandidate],
 ) -> None:

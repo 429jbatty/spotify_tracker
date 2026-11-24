@@ -13,7 +13,7 @@ from structlog.contextvars import get_contextvars
 from tests.database_helpers import create_schema
 from backend.app.main import create_app
 from backend.app.database.models import Album, AlbumListen, UserAlbum
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import auth_service, manual_album_service
 from backend.app.schemas import ManualAlbumCreate
@@ -27,7 +27,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
         self.engine = create_schema(self.database_url)
         self.sessions = sessionmaker(bind=self.engine, autoflush=False, autocommit=False)
         with self.sessions() as session:
-            repository = SqliteStateRepository(session)
+            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
             account = auth_service.create_account(session, email="owner@example.com", password="unused")
             repository.user.owner_account_id = account.id
             self.user_id = repository.user.id
@@ -113,16 +113,16 @@ class ManualActivityLoggingTests(unittest.TestCase):
         with self.sessions() as session:
             other = UserRepository(session).create_user(slug="other", display_name="Other")
             other_id = other.id
-            repo = SqliteStateRepository(session, user_slug="other")
-            album_id = repo.create_completed_album({"artist": "Shared", "name": "Album", "source": "spotify_sync"})["id"]
+            repo = AlbumLibrary(session, UserRepository(session).require_user_by_slug("other"))
+            album_id = repo.add_album({"artist": "Shared", "name": "Album", "source": "spotify_sync"}).record["id"]
         with self.sessions() as session:
-            repo = SqliteStateRepository(session, user_slug="jacob")
+            repo = AlbumLibrary(session, UserRepository(session).require_user_by_slug("jacob"))
             manual_album_service.add_manual_album_listen(repo, album_id, "2026-01-01T00:00:00Z")
         self.assertEqual([e["event"] for e in self.events], ["album_manually_added", "album_listen_added"])
         self.assertTrue(all(e["user_id"] == self.user_id and e["action_source"] == "manual" for e in self.events))
         self.events.clear()
         with self.sessions() as session:
-            repo = SqliteStateRepository(session, user_slug="jacob")
+            repo = AlbumLibrary(session, UserRepository(session).require_user_by_slug("jacob"))
             manual_album_service.delete_manual_album(repo, album_id)
         with self.sessions() as session:
             self.assertIsNotNone(session.get(Album, album_id))
@@ -131,7 +131,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
 
     def test_failed_commit_emits_nothing_and_logging_failure_does_not_fail_write(self):
         with self.sessions() as session:
-            repo = SqliteStateRepository(session, user_slug="jacob")
+            repo = AlbumLibrary(session, UserRepository(session).require_user_by_slug("jacob"))
             with patch("backend.app.services.manual_album_service._metadata_record", return_value=None), patch.object(session, "commit", side_effect=RuntimeError("commit failed")):
                 with self.assertRaises(RuntimeError):
                     manual_album_service.create_manual_album(repo, ManualAlbumCreate(artist="X", name="Y"))
@@ -187,7 +187,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
             lambda repo: manual_album_service.update_manual_album_tags(repo, album_id, ["lush"]),
         ):
             with self.sessions() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 with patch.object(session, "commit", side_effect=RuntimeError("commit failed")):
                     with self.assertRaises(RuntimeError):
                         update(repository)
@@ -209,7 +209,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
             ready = threading.Barrier(2)
             def run():
                 with self.sessions() as session:
-                    repo = SqliteStateRepository(session)
+                    repo = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                     ready.wait(timeout=5)
                     update(repo)
             with ThreadPoolExecutor(max_workers=2) as pool:
@@ -220,16 +220,16 @@ class ManualActivityLoggingTests(unittest.TestCase):
 
     def test_import_feedback_does_not_emit_manual_activity(self):
         with self.sessions() as session:
-            repository = SqliteStateRepository(session)
-            album_id = repository.create_completed_album({"artist": "Import", "name": "Album"})["id"]
-            repository.update_user_album_feedback(album_id, rating=8, notes="imported")
-            repository.update_user_album_tags(album_id, ["lush"])
+            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            album_id = repository.add_album({"artist": "Import", "name": "Album"}).record["id"]
+            repository.set_feedback(album_id, rating=8, notes="imported")
+            repository.set_tags(album_id, ["lush"])
         self.assertEqual(self.events, [])
 
     def test_import_listen_does_not_repeat_membership_lookup_for_change_facts(self):
         with self.sessions() as session:
-            repository = SqliteStateRepository(session)
-            album_id = repository.create_completed_album({"artist": "Artist", "name": "Import"})["id"]
+            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            album_id = repository.add_album({"artist": "Artist", "name": "Import"}).record["id"]
 
         statements = []
         def collect_membership_queries(connection, cursor, statement, parameters, context, executemany):
@@ -239,8 +239,8 @@ class ManualActivityLoggingTests(unittest.TestCase):
         event.listen(self.engine, "before_cursor_execute", collect_membership_queries)
         try:
             with self.sessions() as session:
-                repository = SqliteStateRepository(session)
-                repository.add_album_listen(album_id, "2026-01-01T00:00:00Z")
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository.add_listen(album_id, "2026-01-01T00:00:00Z")
         finally:
             event.remove(self.engine, "before_cursor_execute", collect_membership_queries)
         # One lookup ensures membership; the other builds the returned album record.
@@ -249,12 +249,12 @@ class ManualActivityLoggingTests(unittest.TestCase):
 
     def test_concurrent_duplicate_listens_emit_once(self):
         with self.sessions() as session:
-            repo = SqliteStateRepository(session, user_slug="jacob")
-            album_id = repo.create_completed_album({"artist": "Artist", "name": "Concurrent"})["id"]
+            repo = AlbumLibrary(session, UserRepository(session).require_user_by_slug("jacob"))
+            album_id = repo.add_album({"artist": "Artist", "name": "Concurrent"}).record["id"]
         ready = threading.Barrier(2)
         def add_listen():
             with self.sessions() as session:
-                repo = SqliteStateRepository(session, user_slug="jacob")
+                repo = AlbumLibrary(session, UserRepository(session).require_user_by_slug("jacob"))
                 ready.wait(timeout=5)
                 manual_album_service.add_manual_album_listen(repo, album_id, "2026-01-01T00:00:00Z")
         with ThreadPoolExecutor(max_workers=2) as pool:

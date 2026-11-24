@@ -11,7 +11,7 @@ the data to a React/Vite frontend.
 Spotify tracking job
   -> tracking.py completion logic
   -> album_metadata_service.py / musicbrainz_client.py enrichment
-  -> backend/app/database/repositories/sqlite_state_repository.py
+  -> AlbumStateRepository / AlbumLibrary / AlbumCatalog
   -> SQLite
   -> FastAPI routers in backend/app/routers
   -> frontend/src/services/albumApi.js

@@ -6,6 +6,7 @@ from sqlalchemy import select, text
 from sqlalchemy.orm import sessionmaker
 
 from tests.database_helpers import create_schema
+from backend.app.credit_projection import LEGACY_CREDIT_INGESTION_VERSION
 from backend.app.database.models import Album, AlbumCreditFact
 from backend.app.services import credit_fact_service
 
@@ -101,7 +102,7 @@ class CreditFactServiceTests(unittest.TestCase):
         self.assertEqual(legacy_producer.identity_resolution, "normalized_name")
         self.assertEqual(
             legacy_producer.ingestion_version,
-            credit_fact_service.LEGACY_CREDIT_INGESTION_VERSION,
+            LEGACY_CREDIT_INGESTION_VERSION,
         )
         self.assertEqual(legacy_producer.track_count, 2)
         self.assertEqual(legacy_producer.album_track_count, 2)
@@ -152,42 +153,54 @@ class CreditFactServiceTests(unittest.TestCase):
         self.assertEqual(result.inserted_count, 2)
         self.assertEqual({fact.album_id for fact in facts}, {legacy_id})
 
-    def test_rebuild_credit_facts_skips_malformed_metadata(self):
+    def test_empty_rebuild_scope_does_not_write_or_commit_pending_changes(self):
         with tempfile.TemporaryDirectory() as temp_dir:
-            database_url = f"sqlite:///{Path(temp_dir) / 'tracker.sqlite'}"
-            engine = create_schema(database_url)
-            with engine.begin() as connection:
-                connection.execute(
-                    text(
-                        """
-                        INSERT INTO albums (
-                            album_key,
-                            artist,
-                            name,
-                            source,
-                            entry_source,
-                            metadata_json
-                        )
-                        VALUES (
-                            'Broken - Album',
-                            'Broken',
-                            'Album',
-                            'musicbrainz',
-                            'spotify_sync',
-                            '{"tracklist": ['
-                        )
-                        """
-                    )
-                )
-
-            session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+            session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                result = credit_fact_service.rebuild_credit_facts(session)
-                facts = session.scalars(select(AlbumCreditFact)).all()
+                legacy_id, enriched_id = self._seed_albums(session)
+                initial = credit_fact_service.rebuild_credit_facts(session, album_ids=None)
+                self.assertEqual(initial.album_ids, [legacy_id, enriched_id])
+                album = session.get(Album, legacy_id)
+                album.name = "Pending name"
 
+                for album_ids in ([], [enriched_id + 1]):
+                    with self.subTest(album_ids=album_ids):
+                        result = credit_fact_service.rebuild_credit_facts(session, album_ids=album_ids)
+                        self.assertEqual(
+                            (result.album_ids, result.deleted_count, result.inserted_count), ([], 0, 0),
+                        )
+                        self.assertEqual(credit_fact_service.preview_credit_facts(session, album_ids=album_ids), [])
+                        self.assertEqual(session.scalar(select(Album.name).where(Album.id == legacy_id)), "Legacy")
+                        self.assertIn(album, session.dirty)
+                        self.assertEqual(
+                            set(session.scalars(select(AlbumCreditFact.album_id))), {legacy_id, enriched_id},
+                        )
+
+    def test_rebuild_credit_facts_clears_old_facts_for_malformed_metadata(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            session_factory = self._session_factory(temp_dir)
+            with session_factory() as session:
+                legacy_id, enriched_id = self._seed_albums(session)
+                credit_fact_service.rebuild_credit_facts(session)
+                session.execute(
+                    text("UPDATE albums SET metadata_json = :metadata WHERE id = :id"),
+                    {"metadata": '{"tracklist": [', "id": legacy_id},
+                )
+                session.commit()
+
+                preview = credit_fact_service.preview_credit_facts(session)
+                self.assertEqual([fact.album_id for fact in preview], [enriched_id])
+                persisted_album_ids = session.scalars(
+                    select(AlbumCreditFact.album_id).order_by(AlbumCreditFact.album_id)
+                ).all()
+                self.assertEqual(persisted_album_ids, [legacy_id, legacy_id, enriched_id])
+                result = credit_fact_service.rebuild_credit_facts(session, album_ids=[legacy_id])
+                self.assertEqual(set(session.scalars(select(AlbumCreditFact.album_id))), {enriched_id})
+
+        self.assertEqual(result.album_ids, [legacy_id])
+        self.assertEqual(result.deleted_count, 2)
         self.assertEqual(result.inserted_count, 0)
         self.assertEqual(result.skipped_parse_error_count, 1)
-        self.assertEqual(facts, [])
 
 
 if __name__ == "__main__":

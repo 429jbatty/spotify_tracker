@@ -87,7 +87,7 @@ The target album is chosen by preferring:
 4. higher user membership count
 5. lower album ID as a stable tiebreaker
 
-Merging uses `SqliteStateRepository.merge_completed_album_listens(...)`, which
+Merging uses `AlbumLibrary.merge(source_id, target_id)`, which
 moves the default profile's listens and combines its membership fields.
 Other profiles keep their memberships and listens. A source album can be
 deleted once it has no remaining owners.

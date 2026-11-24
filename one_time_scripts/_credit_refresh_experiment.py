@@ -14,7 +14,8 @@ if str(REPO_ROOT) not in sys.path:
 import metadata_refresh_service
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.user_repository import UserRepository
 from one_time_scripts import _audit_credit_intelligence as credit_audit
 
 
@@ -222,13 +223,13 @@ def dry_run_results(candidates: list[RefreshCandidate]) -> list[RefreshResult]:
     ]
 
 
-def apply_refresh_experiment(repository: SqliteStateRepository, candidates: list[RefreshCandidate]) -> list[RefreshResult]:
+def apply_refresh_experiment(repository: AlbumLibrary, candidates: list[RefreshCandidate]) -> list[RefreshResult]:
     results = []
     for candidate in candidates:
         try:
-            record = repository.get_completed_album_record_by_id(candidate.album_id)
+            record = repository.record_for(repository.catalog.require_by_id(candidate.album_id))
             refreshed = metadata_refresh_service.refresh_album_record(record)
-            updated = repository.replace_completed_album_metadata_by_id_or_merge_duplicate(
+            updated = repository.replace_metadata(
                 candidate.album_id,
                 refreshed,
             )
@@ -402,7 +403,9 @@ def main() -> int:
 
     if args.apply:
         with job_session(database_url) as session:
-            repository = SqliteStateRepository(session, user_slug=args.user_slug)
+            users = UserRepository(session)
+            user = users.require_user_by_slug(args.user_slug) if args.user_slug else users.ensure_default_user()
+            repository = AlbumLibrary(session, user)
             results = apply_refresh_experiment(repository, candidates)
     else:
         results = dry_run_results(candidates)

@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 from backend.app.config import Settings
 from backend.app.database.models import Account, User
 from backend.app.database.repositories.account_repository import AccountRepository
+from backend.app.database.repositories.user_repository import UserRepository
 
 logger = structlog.get_logger(__name__)
 
@@ -32,7 +33,21 @@ def begin_google_sign_in(session: Session, *, settings: Settings) -> str:
     return f"{GOOGLE_AUTHORIZATION_ENDPOINT}?{urlencode({'client_id': settings.google_client_id, 'redirect_uri': settings.google_redirect_uri, 'response_type': 'code', 'scope': 'openid email profile', 'state': state, 'prompt': 'select_account'})}"
 
 
+def complete_google_sign_in_callback(
+    session: Session, *, code: str, state: str, settings: Settings,
+) -> tuple[Account, str] | HTTPException:
+    """Commit handled callback outcomes, including consumption of rejected states."""
+    try:
+        account, session_token = complete_google_sign_in(session, code=code, state=state, settings=settings)
+        session.commit()
+    except HTTPException as exc:
+        session.commit()
+        return exc
+    return account, session_token
+
+
 def complete_google_sign_in(session: Session, *, code: str, state: str, settings: Settings) -> tuple[Account, str]:
+    """Stage a sign-in for the caller and commit expired state consumption immediately."""
     _require_google_settings(settings)
     repository = AccountRepository(session)
     created_at = repository.take_google_state(_token_hash(state))
@@ -75,8 +90,8 @@ def complete_google_sign_in(session: Session, *, code: str, state: str, settings
 
 def cancel_google_sign_in(session: Session, *, state: str | None) -> None:
     """Consume a pending OAuth state when Google returns a denial callback."""
-    if state:
-        AccountRepository(session).discard_google_state(_token_hash(state))
+    if state and AccountRepository(session).take_google_state(_token_hash(state)) is not None:
+        session.commit()
 
 
 def create_session(session: Session, *, account: Account) -> str:
@@ -118,8 +133,7 @@ def revoke_session(session: Session, *, authorization: str | None) -> None:
 
 
 def require_profile_owner(session: Session, *, user_slug: str, authorization: str | None) -> User:
-    repository = AccountRepository(session)
-    user = repository.find_profile(user_slug.strip().casefold())
+    user = UserRepository(session).find_by_slug(user_slug.strip().casefold())
     if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User not found: {user_slug}")
     account = require_account(session, authorization=authorization)
@@ -159,7 +173,7 @@ def _require_account_without_other_profile(repository: AccountRepository, *, acc
 
 def bind_profile_owner(session: Session, *, user_slug: str, account_email: str, assigned_by: str = "operator_cli") -> User:
     repository = AccountRepository(session)
-    user = repository.find_profile(user_slug.strip().casefold())
+    user = UserRepository(session).find_by_slug(user_slug.strip().casefold())
     account = repository.find_by_email(_normalize_email(account_email))
     if user is None:
         raise ValueError(f"Profile not found: {user_slug}")
@@ -181,7 +195,7 @@ def unbind_profile_owner(session: Session, *, user_slug: str) -> User:
     profile before repeating ownership-flow tests.
     """
     repository = AccountRepository(session)
-    user = repository.find_profile(user_slug.strip().casefold())
+    user = UserRepository(session).find_by_slug(user_slug.strip().casefold())
     if user is None:
         raise ValueError(f"Profile not found: {user_slug}")
     if user.owner_account_id is None:
@@ -197,7 +211,7 @@ def prebind_profile_owner(session: Session, *, user_slug: str, account_email: st
     its first verified Google sign-in.
     """
     repository = AccountRepository(session)
-    user = repository.find_profile(user_slug.strip().casefold())
+    user = UserRepository(session).find_by_slug(user_slug.strip().casefold())
     if user is None:
         raise ValueError(f"Profile not found: {user_slug}")
 

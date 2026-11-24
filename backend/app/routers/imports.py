@@ -11,7 +11,8 @@ from fastapi import APIRouter, File, Header, HTTPException, UploadFile, status
 from backend.app.config import get_settings
 from backend.app.database.engine import SessionFactory
 from backend.app.dependencies import AppSessions
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.schemas import (
     CompletedAlbum,
     ImportCommitResponse,
@@ -73,8 +74,8 @@ def preview_user_import(
 ) -> ImportPreviewResponse:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+            repository = AlbumLibrary(session, user)
             return import_service.preview_import(session, repository, request)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -91,8 +92,8 @@ def commit_user_import(
 ) -> ImportCommitResponse:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+            repository = AlbumLibrary(session, user)
             response = import_service.commit_import(session, repository, request)
             _start_import_background_worker(response.import_session_id, session_factory)
             return response
@@ -120,10 +121,11 @@ async def upload_spotify_import(
             )
         artifact_path = await _store_spotify_zip_upload(file)
         with session_factory() as session:
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            # A profile ID may be reused after deletion while the upload streams.
+            user = UserRepository(session).require_user_by_slug(user_slug)
             response = import_service.create_spotify_import_session(
                 session,
-                repository,
+                user.id,
                 artifact_path=str(artifact_path),
                 original_filename=file.filename,
             )
@@ -147,9 +149,8 @@ def list_user_imports(
 ) -> list[ImportSessionSummary]:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
-            return import_service.import_history(session, repository)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+            return import_service.import_history(session, user.id)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
@@ -165,11 +166,10 @@ def list_user_import_logs(
 ) -> list[ImportSessionLogEntry]:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             return import_service.import_session_logs(
                 session,
-                repository,
+                user.id,
                 import_session_id,
                 limit=limit,
                 order=order,
@@ -189,8 +189,8 @@ def get_spotify_import_diagnostics(
 ) -> SpotifyImportDiagnosticsResponse:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+            repository = AlbumLibrary(session, user)
             return import_service.spotify_import_diagnostics(
                 session,
                 repository,
@@ -249,9 +249,8 @@ def list_user_import_review(
 ) -> list[ImportReviewItem]:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
-            return import_service.unresolved_review_items(session, repository)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+            return import_service.unresolved_review_items(session, user.id)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
@@ -266,8 +265,8 @@ def resolve_user_import_review(
 ) -> CompletedAlbum:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+            repository = AlbumLibrary(session, user)
             return import_service.resolve_review_item(
                 session,
                 repository,
@@ -289,11 +288,10 @@ def delete_user_import(
 ) -> ImportDeleteResponse:
     with session_factory() as session:
         try:
-            auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             return import_service.delete_import_session(
                 session,
-                repository,
+                user.id,
                 import_session_id,
             )
         except KeyError as exc:

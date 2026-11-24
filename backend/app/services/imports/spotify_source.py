@@ -12,7 +12,7 @@ from backend.app.database.repositories import (
     import_session_repository as import_sessions,
     spotify_import_repository as import_spotify,
 )
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.schemas import ImportCommitResponse, ImportPreviewSummary
 from backend.app.services import spotify_catalog_service
 from backend.app.services.import_parsers import clean_text
@@ -31,7 +31,7 @@ SPOTIFY_IMPORT_INSERT_BATCH_SIZE = 1_000
 
 def create_spotify_import_session(
     session: Session,
-    repository: SqliteStateRepository,
+    user_id: int,
     *,
     artifact_path: str,
     original_filename: str | None,
@@ -40,11 +40,11 @@ def create_spotify_import_session(
     file_size_bytes = os.path.getsize(artifact_path)
     file_sha256 = _file_sha256(artifact_path)
     duplicate_session_id = import_sessions.duplicate_spotify_session(
-        session, repository.user.id, file_sha256,
+        session, user_id, file_sha256,
     )
     import_session = import_sessions.stage_session(
         session,
-        user_id=repository.user.id,
+        user_id=user_id,
         source=SPOTIFY_IMPORT_SOURCE,
         source_user_id=None,
         status="queued",
@@ -89,7 +89,7 @@ def create_spotify_import_session(
     session.commit()
     if duplicate_session_id is not None:
         structlog.get_logger(__name__).warning(
-            "spotify_import_duplicate_archive", user_id=repository.user.id,
+            "spotify_import_duplicate_archive", user_id=user_id,
             import_session_id=import_session.id, duplicate_of_session_id=duplicate_session_id,
         )
 
@@ -98,7 +98,7 @@ def create_spotify_import_session(
 
 def store_streaming_events(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     import_session: ImportSession,
     artifact_path: str,
     history_entries: list[SpotifyZipHistoryEntry],
@@ -164,7 +164,7 @@ def store_streaming_events(
 
 def resolve_spotify_catalog_for_import(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     import_session: ImportSession,
     summary: ImportPreviewSummary,
 ) -> None:

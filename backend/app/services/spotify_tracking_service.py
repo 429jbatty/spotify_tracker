@@ -19,7 +19,7 @@ from backend.app.persistence_logging import database_error_fields
 from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
 from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
 from backend.app.services.spotify_access_service import require_spotify_sync_access
 from spotify_manager import SpotifyAPI
@@ -82,9 +82,9 @@ def _run_tracking_for_user(user_slug: str, session: Session) -> dict[str, int]:
         session,
         user.id,
     )
-    repository = SqliteStateRepository(session, user_slug=user_slug)
+    repository = AlbumStateRepository(session, user)
     bind_contextvars(sync_phase="load_state")
-    start_state = repository.load_album_state()
+    start_state = repository.load()
 
     starting_completed_count = len(start_state.get("completed_albums", {}))
 
@@ -130,7 +130,7 @@ def _run_tracking_for_user(user_slug: str, session: Session) -> dict[str, int]:
     )
 
     bind_contextvars(sync_phase="save_album_state")
-    repository.save_album_state(end_state)
+    repository.replace(end_state)
     # The state save commits separately from the sync-success update below.
     bind_contextvars(sync_phase="record_sync_success", album_state_saved=True)
     SpotifyCredentialsRepository(session).record_sync_success(

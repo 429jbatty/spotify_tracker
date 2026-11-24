@@ -10,8 +10,12 @@ from backend.app.config import get_settings
 from backend.app.database.models import ImportSession
 from backend.app.persistence_logging import database_error_fields
 from backend.app.database.repositories import import_session_repository as import_sessions
-from backend.app.database.repositories.import_event_repository import latest_timestamp as latest_imported_timestamp
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.import_event_repository import (
+    latest_timestamp as latest_imported_timestamp,
+    linked_album_ids,
+)
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.schemas import ImportSessionSummary
 from backend.app.services.artwork_backfill_service import ArtworkBackfillService
 from backend.app.services.imports.events import SPOTIFY_IMPORT_SOURCE, utc_now
@@ -73,7 +77,7 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
         candidate_summary_scope="full_import",
     ):
         structlog.get_logger(__name__).info("import_started", source=import_session.source)
-        repository = SqliteStateRepository(session, user_slug=import_session.user.slug)
+        repository = AlbumLibrary(session, import_session.user)
         try:
             if import_session.source == "lastfm":
                 run_lastfm_import_session(session, repository, import_session)
@@ -81,7 +85,7 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
                 run_spotify_import_session(session, repository, import_session)
             else:
                 raise ValueError(f"Unsupported import source: {import_session.source}")
-            _run_post_import_artwork_backfill(session, repository, import_session)
+            _run_post_import_artwork_backfill(session, import_session)
         except Exception as exc:
             database_fields = database_error_fields(exc)
             log_failure = structlog.get_logger(__name__).error if database_fields else structlog.get_logger(__name__).exception
@@ -145,16 +149,13 @@ def run_import_session(session: Session, import_session_id: int) -> ImportSessio
 
 def _run_post_import_artwork_backfill(
     session: Session,
-    repository: SqliteStateRepository,
     import_session: ImportSession,
 ) -> None:
     if import_session.status != "completed":
         return
 
     try:
-        album_ids = repository.album_ids_for_import_session_artwork_backfill(
-            import_session.id,
-        )
+        album_ids = linked_album_ids(session, import_session.id)
         if not album_ids:
             return
 
@@ -172,7 +173,7 @@ def _run_post_import_artwork_backfill(
 
         service = ArtworkBackfillService(media_dir=get_settings().media_dir)
         summary, _ = service.backfill_missing_artwork(
-            repository,
+            AlbumCatalog(session),
             apply=True,
             limit=POST_IMPORT_ARTWORK_BACKFILL_LIMIT,
             album_ids=album_ids,

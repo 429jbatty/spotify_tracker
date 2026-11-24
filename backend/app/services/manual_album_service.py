@@ -5,7 +5,7 @@ from contextvars import copy_context
 from typing import Any
 
 import album_metadata_service
-from backend.app.database.repositories.sqlite_state_repository import AlbumChange, SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumChange, AlbumLibrary
 from backend.app.services.user_activity_logging import AlbumActivity, emit_activity
 from backend.app.schemas import ManualAlbumCreate
 
@@ -66,14 +66,14 @@ def _metadata_record(request: ManualAlbumCreate) -> dict[str, Any] | None:
 
 
 def create_manual_album(
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     request: ManualAlbumCreate,
 ) -> dict[str, Any]:
     record = _metadata_record(request) or _manual_record(request)
     user = repository.begin_manual_collection_write()
-    result, change = repository.create_completed_album_with_changes(record, listen_date=request.listen_date)
-    _emit_change(user, change, _added_events(change))
-    return result
+    result = repository.add_album(record, listen_date=request.listen_date)
+    _emit_change(user, result.change, _added_events(result.change))
+    return result.record
 
 
 def _emit_change(user: tuple[int, str], change: AlbumChange, events: list[tuple[str, dict]]) -> None:
@@ -90,51 +90,55 @@ def _added_events(change: AlbumChange) -> list[tuple[str, dict]]:
     return events
 
 
-def add_manual_album_listen(repository: SqliteStateRepository, album_id: int, listened_at: str) -> dict[str, Any]:
+def add_manual_album_listen(repository: AlbumLibrary, album_id: int, listened_at: str) -> dict[str, Any]:
     user = repository.begin_manual_collection_write()
-    result, change = repository.add_album_listen_with_changes(album_id, listened_at)
-    _emit_change(user, change, _added_events(change))
-    return result
+    result = repository.add_listen(album_id, listened_at)
+    _emit_change(user, result.change, _added_events(result.change))
+    return result.record
 
 
-def delete_manual_album_listen(repository: SqliteStateRepository, album_id: int, listened_at: str) -> dict[str, Any]:
+def delete_manual_album_listen(repository: AlbumLibrary, album_id: int, listened_at: str) -> dict[str, Any]:
     user = repository.begin_manual_collection_write()
-    result, change = repository.delete_album_listen(album_id, listened_at)
-    _emit_change(user, change, [("album_listen_removed", {"listened_at": listened_at})])
-    return result
+    result = repository.remove_listen(album_id, listened_at)
+    _emit_change(user, result.change, [("album_listen_removed", {"listened_at": listened_at})])
+    return result.record
 
 
-def delete_manual_album(repository: SqliteStateRepository, album_id: int) -> None:
+def delete_manual_album(repository: AlbumLibrary, album_id: int) -> None:
     user = repository.begin_manual_collection_write()
-    change = repository.delete_completed_album(album_id)
+    change = repository.remove_album(album_id)
     _emit_change(user, change, [("album_removed", {})])
 
 
 def update_manual_album_feedback(
-    repository: SqliteStateRepository, album_id: int, *, rating: int | None, notes: str | None,
+    repository: AlbumLibrary, album_id: int, *, rating: int | None, notes: str | None,
 ) -> dict[str, Any]:
     user = repository.begin_manual_collection_write()
-    result, album, rating_change, note_change = repository.update_user_album_feedback_with_changes(
+    result = repository.set_feedback(
         album_id, rating=rating, notes=notes,
     )
     events = []
-    if rating_change == "removed":
+    if result.rating_change == "removed":
         events.append(("album_rating_removed", {}))
-    elif rating_change:
-        events.append(("album_rating_changed", {"rating": rating, "change": rating_change}))
-    if note_change == "removed":
+    elif result.rating_change:
+        events.append(("album_rating_changed", {"rating": rating, "change": result.rating_change}))
+    if result.note_change == "removed":
         events.append(("album_note_removed", {}))
-    elif note_change:
-        events.append(("album_note_changed", {"change": note_change}))
-    _emit_change(user, album, events)
-    return result
+    elif result.note_change:
+        events.append(("album_note_changed", {"change": result.note_change}))
+    _emit_change(user, result.change, events)
+    return result.record
 
 
 def update_manual_album_tags(
-    repository: SqliteStateRepository, album_id: int, your_tags: list[str],
+    repository: AlbumLibrary, album_id: int, your_tags: list[str],
 ) -> dict[str, Any]:
     user = repository.begin_manual_collection_write()
-    result, album, added, removed = repository.update_user_album_tags_with_changes(album_id, your_tags)
-    events = [("album_tags_changed", {"added_tags": added, "removed_tags": removed})] if added or removed else []
-    _emit_change(user, album, events)
-    return result
+    result = repository.set_tags(album_id, your_tags)
+    events = []
+    if result.tags_added or result.tags_removed:
+        events.append(("album_tags_changed", {
+            "added_tags": result.tags_added, "removed_tags": result.tags_removed,
+        }))
+    _emit_change(user, result.change, events)
+    return result.record

@@ -1,29 +1,25 @@
 import os
 import logging
-from contextlib import contextmanager
 from dotenv import load_dotenv
 
 from backend.app.job_database import job_session
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 
 load_dotenv()
 SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}
 
 
-@contextmanager
-def sqlite_state_repository():
-    with job_session() as session:
-        yield SqliteStateRepository(session)
-
-
 def load_state():
-    with sqlite_state_repository() as repository:
-        return repository.load_album_state()
+    with job_session() as session:
+        user = UserRepository(session).ensure_default_user()
+        return AlbumStateRepository(session, user).load()
 
 
 def save_state(state):
-    with sqlite_state_repository() as repository:
-        repository.save_album_state(state)
+    with job_session() as session:
+        user = UserRepository(session).ensure_default_user()
+        AlbumStateRepository(session, user).replace(state)
 
 
 def get_local_credentials():

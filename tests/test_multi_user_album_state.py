@@ -9,7 +9,8 @@ from sqlalchemy.orm import sessionmaker
 
 from tests.database_helpers import create_schema
 from backend.app.main import create_app
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import auth_service
 
 
@@ -48,8 +49,8 @@ class MultiUserAlbumStateTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         with session_factory() as session:
-            repository = SqliteStateRepository(session)
-            repository.save_album_state(sample_album_state())
+            repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+            repository.replace(sample_album_state())
 
         patcher = patch.dict(
             "os.environ",

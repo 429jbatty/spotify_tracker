@@ -11,7 +11,7 @@ from backend.app.database.repositories import (
     import_session_repository as import_sessions,
     spotify_import_repository as import_spotify,
 )
-from backend.app.database.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.schemas import (
     SpotifyImportDiagnosticRawRow,
     SpotifyImportDiagnosticSession,
@@ -27,7 +27,7 @@ from .track_matching import normalize_track_name
 
 def spotify_import_diagnostics(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     import_session_id: int,
     *,
     artist: str,
@@ -87,11 +87,11 @@ def _diagnostic_session(group, expected, imported_by_raw_id):
 
 def _diagnostic_expected_tracks(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     artist: str,
     album: str,
 ) -> list[str]:
-    album_metadata = repository.get_library_album_metadata(artist, album)
+    album_metadata = repository.find_metadata(artist, album)
     if album_metadata is not None:
         tracks = _track_titles_from_metadata(album_metadata)
         if tracks:
