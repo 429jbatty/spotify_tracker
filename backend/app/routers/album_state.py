@@ -1,7 +1,8 @@
 from fastapi import APIRouter
 
 from backend.app.dependencies import AppSessions
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.schemas import AlbumState
 
 router = APIRouter(tags=["albums"])
@@ -10,5 +11,5 @@ router = APIRouter(tags=["albums"])
 @router.get("/album-state", response_model=AlbumState)
 def get_album_state(session_factory: AppSessions) -> AlbumState:
     with session_factory() as session:
-        repository = SqliteStateRepository(session)
-        return AlbumState.model_validate(repository.load_album_state())
+        user = UserRepository(session).ensure_default_user()
+        return AlbumState.model_validate(AlbumStateRepository(session, user).load())

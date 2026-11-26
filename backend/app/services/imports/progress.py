@@ -5,8 +5,8 @@ from datetime import datetime, timezone
 
 from sqlalchemy.orm import Session
 
-from backend.app.models import ImportSession
-from backend.app.repositories import import_session_repository as import_sessions
+from backend.app.database.models import ImportSession
+from backend.app.database.repositories import import_session_repository as import_sessions
 from backend.app.schemas import (
     ImportCommitResponse,
     ImportPreviewSummary,

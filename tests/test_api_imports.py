@@ -16,8 +16,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema, get_engine
-from backend.app.models import (
+from backend.app.database.engine import get_engine
+from tests.database_helpers import create_schema
+from backend.app.database.models import (
     Album,
     AlbumCreditFact,
     AlbumMetadataCache,
@@ -28,7 +29,10 @@ from backend.app.models import (
     SpotifyStreamingEvent,
     User,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
+from backend.app.job_database import job_session
 from backend.app.services import auth_service, import_service, spotify_catalog_service
 from backend.app.services.imports.events import SPOTIFY_IMPORT_SOURCE, parse_timestamp, utc_now
 from backend.app.services.imports.metadata import album_metadata_cache_key, write_album_metadata_cache
@@ -110,8 +114,8 @@ class ApiImportTests(unittest.TestCase):
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
         with session_factory() as session:
-            repository = SqliteStateRepository(session)
-            repository.save_album_state(state or sample_album_state())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            AlbumStateRepository(session, repository.user).replace(state or sample_album_state())
             account = auth_service.create_account(
                 session,
                 email="owner@example.com",
@@ -163,8 +167,8 @@ class ApiImportTests(unittest.TestCase):
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                AlbumStateRepository(session, repository.user).replace(
                     {
                         "last_checked": None,
                         "albums_in_progress": {},
@@ -225,11 +229,7 @@ class ApiImportTests(unittest.TestCase):
                     "ArtworkBackfillService",
                     FailingArtworkBackfillService,
                 ):
-                    import_service._run_post_import_artwork_backfill(
-                        session,
-                        repository,
-                        import_session,
-                    )
+                    import_service._run_post_import_artwork_backfill(session, import_session)
 
                 session.refresh(import_session)
                 warning_log = (
@@ -561,6 +561,43 @@ class ApiImportTests(unittest.TestCase):
             response.json()["import_session_id"], client.app.state.session_factory,
         )
         self.assertEqual(history_response.json()[0]["status"], "queued")
+
+    def test_spotify_zip_does_not_queue_for_reused_profile_id_after_upload(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, database_url = self._client(temp_dir)
+            token = self._create_owned_profile_session(
+                database_url, slug="original-owner", display_name="Original Owner",
+            )
+            artifact_path = Path(temp_dir) / "uploaded.zip"
+
+            async def replace_profile_during_upload(upload):
+                await upload.close()
+                artifact_path.write_bytes(b"staged archive")
+                with job_session(database_url, initialize=False) as session:
+                    user = UserRepository(session).require_user_by_slug("original-owner")
+                    reused_id = user.id
+                    session.delete(user)
+                    session.flush()
+                    session.add(User(id=reused_id, slug="replacement", display_name="Replacement"))
+                    session.commit()
+                return artifact_path
+
+            with (
+                patch("backend.app.routers.imports._store_spotify_zip_upload", side_effect=replace_profile_during_upload),
+                patch("backend.app.routers.imports._start_import_background_worker") as start_worker,
+            ):
+                response = client.post(
+                    "/api/users/original-owner/imports/spotify/upload",
+                    headers={"Authorization": f"Bearer {token}"},
+                    files={"file": ("history.zip", b"archive", "application/zip")},
+                )
+
+            self.assertEqual(response.status_code, 404)
+            self.assertIn("User not found: original-owner", response.json()["detail"])
+            self.assertFalse(artifact_path.exists())
+            start_worker.assert_not_called()
+            with job_session(database_url, initialize=False) as session:
+                self.assertEqual(session.scalar(select(func.count()).select_from(ImportSession)), 0)
 
     def test_spotify_zip_rejects_non_zip_upload(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -1822,7 +1859,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source=SPOTIFY_IMPORT_SOURCE,
@@ -2100,7 +2137,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source="spotify_import",
@@ -2155,7 +2192,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source=SPOTIFY_IMPORT_SOURCE,
@@ -2241,7 +2278,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 metadata = {
                     "artist": "Repair Artist",
                     "name": "Repair Album",
@@ -2351,7 +2388,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 lastfm_session = ImportSession(
                     user_id=repository.user.id,
                     source="lastfm",
@@ -2393,7 +2430,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source="spotify_import",
@@ -2802,9 +2839,9 @@ class ApiImportTests(unittest.TestCase):
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 listened_at = "2026-04-01T10:00:00+00:00"
-                created = repository.create_completed_album(
+                created = repository.add_album(
                     {
                         "artist": "Import Artist",
                         "name": "Import Album",
@@ -2818,7 +2855,7 @@ class ApiImportTests(unittest.TestCase):
                         ],
                     },
                     listen_date=listened_at,
-                )
+                ).record
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source="lastfm",
@@ -2851,11 +2888,7 @@ class ApiImportTests(unittest.TestCase):
                 )
                 session.commit()
 
-                result = import_service.delete_import_session(
-                    session,
-                    repository,
-                    import_session.id,
-                )
+                result = import_service.delete_import_session(session, repository.user.id, import_session.id)
                 remaining_albums = list(session.scalars(select(Album)))
                 remaining_credit_facts = list(session.scalars(select(AlbumCreditFact)))
 
@@ -3047,7 +3080,7 @@ class ApiImportTests(unittest.TestCase):
                 "backend.app.services.imports.metadata.AlbumLookup.resolve",
                 side_effect=AssertionError("Preview should not call metadata matching."),
             ), patch.object(
-                SqliteStateRepository, "library_album_records",
+                AlbumLibrary, "matching_albums",
                 side_effect=AssertionError("Preview should not load the album library."),
             ):
                 response = client.post(

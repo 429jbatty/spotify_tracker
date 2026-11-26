@@ -5,10 +5,11 @@ from unittest.mock import patch
 
 from fastapi.testclient import TestClient
 
-from backend.app.database import create_schema
-from backend.app.models import Album
+from tests.database_helpers import create_schema
+from backend.app.database.models import Album
 from backend.app.main import create_app
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
@@ -55,8 +56,8 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
 
             with patch.dict(
                 "os.environ",
@@ -109,8 +110,8 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(state)
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(state)
 
             with patch.dict(
                 "os.environ",
@@ -139,8 +140,8 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
 
             with patch.dict(
                 "os.environ",
@@ -169,8 +170,8 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
                 album = session.scalars(select(Album)).one()
                 album.local_image_path = "artwork/release-group-mbid.jpg"
                 session.commit()

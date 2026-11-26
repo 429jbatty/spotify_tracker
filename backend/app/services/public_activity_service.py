@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 
-from backend.app.repositories.public_activity_repository import PublicActivityRepository, PublicListen
+from backend.app.database.repositories.public_activity_repository import PublicActivityRepository, PublicListen
 
 
 ARTWORK_URL_PREFIX = "/media/artwork/"

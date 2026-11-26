@@ -1,6 +1,6 @@
 """Eligibility rules for Spotify live synchronization."""
 
-from backend.app.models import User
+from backend.app.database.models import User
 
 
 SPOTIFY_SYNC_UNAVAILABLE_MESSAGE = (

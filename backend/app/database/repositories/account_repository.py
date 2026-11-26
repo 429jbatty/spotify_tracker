@@ -2,8 +2,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from backend.app.models import Account, AccountSession, GoogleOAuthState, ProfileOwnershipAssignment, User
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.models import Account, AccountSession, GoogleOAuthState, ProfileOwnershipAssignment, User
+from backend.app.database.repositories.user_repository import UserRepository
 
 
 class AccountRepository:
@@ -22,10 +22,6 @@ class AccountRepository:
             return None
         self.session.delete(state)
         return state.created_at
-
-    def discard_google_state(self, state_hash: str) -> None:
-        if self.take_google_state(state_hash) is not None:
-            self.session.commit()
 
     def find_by_subject(self, subject: str) -> Account | None:
         return self.session.scalars(select(Account).where(Account.google_subject == subject)).first()
@@ -67,9 +63,6 @@ class AccountRepository:
         return self.session.scalars(
             select(AccountSession).where(AccountSession.token_hash == token_hash)
         ).first()
-
-    def find_profile(self, slug: str) -> User | None:
-        return self.session.scalars(select(User).where(User.slug == slug)).first()
 
     def owned_profile(self, account_id: int) -> User | None:
         return self.session.scalars(select(User).where(User.owner_account_id == account_id)).first()

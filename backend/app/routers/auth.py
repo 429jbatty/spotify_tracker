@@ -51,19 +51,14 @@ def google_callback(
         if not code or not state:
             logger.warning("sign_in_failed", provider="google", reason="invalid_request")
             return _frontend_auth_error_redirect(settings.frontend_origin, "invalid_request")
-        try:
-            account, session_token = auth_service.complete_google_sign_in(
-                session,
-                code=code,
-                state=state,
-                settings=settings,
-            )
-            session.commit()
-        except HTTPException as exc:
-            session.commit()
-            reason = _auth_error_code(exc)
+        result = auth_service.complete_google_sign_in_callback(
+            session, code=code, state=state, settings=settings,
+        )
+        if isinstance(result, HTTPException):
+            reason = _auth_error_code(result)
             logger.warning("sign_in_failed", provider="google", reason=reason)
             return _frontend_auth_error_redirect(settings.frontend_origin, reason)
+        account, session_token = result
         logger.info("sign_in_succeeded", provider="google", account_id=account.id)
         fragment = urlencode({"session_token": session_token, "email": account.email})
     return RedirectResponse(url=f"{settings.frontend_origin.rstrip('/')}/auth/callback#{fragment}", status_code=status.HTTP_303_SEE_OTHER)

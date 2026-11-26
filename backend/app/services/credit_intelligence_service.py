@@ -7,8 +7,9 @@ from itertools import combinations
 
 from sqlalchemy.orm import Session
 
-from backend.app.models import AlbumCreditFact, User
-from backend.app.repositories.credit_repository import CreditRepository
+from backend.app.database.models import AlbumCreditFact, User
+from backend.app.database.repositories.credit_repository import CreditRepository
+from backend.app.database.repositories.user_repository import UserRepository
 
 
 DEFAULT_EXCLUDED_FLAGS = {
@@ -445,7 +446,7 @@ def _user_album_summaries(
 
 
 def _require_user(session: Session, user_slug: str) -> User:
-    user = CreditRepository(session).find_profile(user_slug)
+    user = UserRepository(session).find_by_slug(user_slug)
     if user is None:
         raise KeyError(f"User not found: {user_slug}")
     return user

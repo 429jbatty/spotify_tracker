@@ -2,8 +2,9 @@ from fastapi import APIRouter, Header, HTTPException, status
 
 from backend.app.services import metadata_refresh_logging
 from backend.app.dependencies import AppSessions
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.manual_album_service import (
     add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
     update_manual_album_feedback, update_manual_album_tags,
@@ -69,8 +70,8 @@ def create_user(session_factory: AppSessions, request: UserCreate, authorization
 def get_user_album_state(session_factory: AppSessions, user_slug: str) -> AlbumState:
     with session_factory() as session:
         try:
-            repository = SqliteStateRepository(session, user_slug=user_slug)
-            return AlbumState.model_validate(repository.load_album_state())
+            user = UserRepository(session).require_user_by_slug(user_slug)
+            return AlbumState.model_validate(AlbumStateRepository(session, user).load())
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
@@ -83,9 +84,8 @@ def export_user_album_state(
 ) -> AlbumState:
     """Return an owner-only portable snapshot of a profile's album history."""
     with session_factory() as session:
-        _require_owner(session, user_slug, authorization)
-        repository = SqliteStateRepository(session, user_slug=user_slug)
-        return AlbumState.model_validate(repository.load_album_state())
+        user = _require_owner(session, user_slug, authorization)
+        return AlbumState.model_validate(AlbumStateRepository(session, user).load())
 
 
 @router.post(
@@ -101,8 +101,8 @@ def create_user_album(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
             return create_manual_album(repository, request)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -120,8 +120,8 @@ def add_user_album_listen(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
             return add_manual_album_listen(repository, album_id, request.listened_at)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -137,8 +137,8 @@ def delete_user_album_listen(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
             return delete_manual_album_listen(repository, album_id, request.listened_at)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -154,8 +154,8 @@ def update_user_album_tags(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
             return update_manual_album_tags(repository, album_id, request.your_tags)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -173,8 +173,8 @@ def update_user_album_feedback(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
             return update_manual_album_feedback(
                 repository,
                 album_id,
@@ -195,11 +195,11 @@ def refresh_user_album_metadata(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
-            repository.require_user_album(album_id)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
+            album = repository.require_member(album_id)
             return metadata_refresh_logging.refresh_album(
-                repository, album_id, spotify_url=request.spotify_url if request else None,
+                repository, album, spotify_url=request.spotify_url if request else None,
             )
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -219,9 +219,9 @@ def update_user_album(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
-            return repository.update_completed_album_fields(
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
+            return repository.patch_metadata(
                 album_id,
                 request.model_dump(exclude_unset=True),
             )
@@ -241,9 +241,9 @@ def merge_user_album(
 ) -> dict:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            repository = SqliteStateRepository(session, user_slug=user_slug)
-            return repository.merge_completed_album_listens(album_id, request.target_album_id)
+            user = _require_owner(session, user_slug, authorization)
+            repository = AlbumLibrary(session, user)
+            return repository.merge(album_id, request.target_album_id)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
         except ValueError as exc:
@@ -259,7 +259,7 @@ def delete_user_album(
 ) -> None:
     with session_factory() as session:
         try:
-            _require_owner(session, user_slug, authorization)
-            delete_manual_album(SqliteStateRepository(session, user_slug=user_slug), album_id)
+            user = _require_owner(session, user_slug, authorization)
+            delete_manual_album(AlbumLibrary(session, user), album_id)
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))

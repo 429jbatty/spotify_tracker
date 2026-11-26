@@ -5,8 +5,8 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import (
+from tests.database_helpers import create_schema
+from backend.app.database.models import (
     Album,
     AlbumCreditFact,
     AlbumInProgress,
@@ -16,8 +16,9 @@ from backend.app.models import (
     UserAppState,
     UserSpotifyCredentials,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
-from backend.app.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
 from backend.app.services.admin_user_service import delete_user_by_slug
 
 
@@ -54,15 +55,15 @@ class AdminUserServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                default_repo = SqliteStateRepository(session)
-                default_repo.save_album_state(sample_album_state())
+                default_repo = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                default_repo.replace(sample_album_state())
 
                 friend = UserRepository(session).create_user(
                     slug="friend",
                     display_name="Friend",
                 )
-                friend_repo = SqliteStateRepository(session, user_slug=friend.slug)
-                friend_repo.create_completed_album(
+                friend_repo = AlbumLibrary(session, friend)
+                friend_repo.add_album(
                     {
                         "artist": "Artist",
                         "name": "Shared Album",
@@ -70,7 +71,7 @@ class AdminUserServiceTests(unittest.TestCase):
                     },
                     listen_date="2026-04-19T15:45:00.000Z",
                 )
-                friend_repo.create_completed_album(
+                friend_repo.add_album(
                     {
                         "artist": "Friend Artist",
                         "name": "Friend Only Album",
@@ -85,10 +86,10 @@ class AdminUserServiceTests(unittest.TestCase):
                     },
                     listen_date="2026-04-21T10:00:00.000Z",
                 )
-                friend_album_id = friend_repo.load_album_state()["completed_albums"][
+                friend_album_id = AlbumStateRepository(session, friend).load()["completed_albums"][
                     "Artist - Shared Album"
                 ]["id"]
-                friend_repo.update_user_album_feedback(
+                friend_repo.set_feedback(
                     friend_album_id,
                     rating=8,
                     notes="Friend note",
@@ -148,7 +149,7 @@ class AdminUserServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                SqliteStateRepository(session)
+                UserRepository(session).ensure_default_user()
 
                 with self.assertRaises(ValueError):
                     delete_user_by_slug(session, user_slug=DEFAULT_USER_SLUG)
@@ -157,7 +158,7 @@ class AdminUserServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                SqliteStateRepository(session)
+                UserRepository(session).ensure_default_user()
                 result = delete_user_by_slug(session, user_slug="missing-user")
 
         self.assertFalse(result.found)

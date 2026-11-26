@@ -3,13 +3,13 @@
 from sqlalchemy.orm import Session
 
 from backend.app.config import get_settings
-from backend.app.models import ImportSession
-from backend.app.repositories import (
+from backend.app.database.models import ImportSession
+from backend.app.database.repositories import (
     import_event_repository as import_events,
     import_session_repository as import_sessions,
     spotify_import_repository as import_spotify,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.schemas import ImportSessionSummary
 from backend.app.services.spotify_import_parser import (
     spotify_history_entries_from_zip,
@@ -37,7 +37,7 @@ from .spotify_candidates import build_spotify_candidates_from_plays, rebuild_spo
 from .spotify_source import delete_file_quietly, resolve_spotify_catalog_for_import, store_streaming_events
 
 
-def run_spotify_import_session(session: Session, repository: SqliteStateRepository, import_session: ImportSession) -> None:
+def run_spotify_import_session(session: Session, repository: AlbumLibrary, import_session: ImportSession) -> None:
     path = import_session.artifact_path
     user_id = repository.user.id
     raw_count = import_spotify.event_count(session, user_id, import_session.id)
@@ -112,7 +112,7 @@ def _ingest_zip(run: ImportRun, path):
 
 
 def repair_spotify_import_session(
-    session: Session, repository: SqliteStateRepository, import_session_id: int,
+    session: Session, repository: AlbumLibrary, import_session_id: int,
 ) -> ImportSessionSummary:
     user_id = repository.user.id
     row = import_sessions.get_for_user(session, user_id, import_session_id)

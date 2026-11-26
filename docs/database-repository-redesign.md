@@ -24,7 +24,9 @@ check and the album operation.
 | Public recent listens and splash | `public_activity_repository.py` |
 | Accounts, authorization, and ownership | `account_repository.py` and `user_repository.py` |
 | Spotify authorization and credentials | `spotify_credentials_repository.py` |
-| Album state, metadata, artwork, and manual activity | `sqlite_state_repository.py` |
+| Shared album identity, metadata and artwork | `album_catalog.py` |
+| Profile collection, listens and feedback | `album_library.py` |
+| Full profile snapshots and tracking cursor | `album_state.py` |
 | Credit facts and library-scoped connection data | `credit_repository.py` |
 | Import workflow | `import_session_repository.py`, `import_event_repository.py`, `spotify_import_repository.py`, and `album_metadata_cache_repository.py` |
 
@@ -93,8 +95,7 @@ filter, and profiles with albums but zero listens against the public API tests.
 
 ## Verification
 
-The backend suite passed 321 tests and skipped the opt-in live MusicBrainz
-test. The regression tests cover application engine reuse and disposal,
+Regression tests cover application engine reuse and disposal,
 isolation between application instances, the shared session and owner check on
 legacy album writes, and rolling back Spotify credentials when consuming
 their OAuth state fails. The credit rebuild preview and audit

@@ -8,7 +8,7 @@ from spotipy import Spotify
 from spotipy.exceptions import SpotifyException
 from spotipy.oauth2 import SpotifyOAuth
 
-from backend.app.repositories.spotify_credentials_repository import (
+from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
 from backend.app.services.spotify_access_service import require_spotify_sync_access

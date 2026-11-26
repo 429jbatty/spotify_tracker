@@ -5,9 +5,11 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import Album
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from tests.database_helpers import create_schema
+from backend.app.database.models import Album
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.artwork_backfill_service import ArtworkBackfillService
 
 
@@ -55,9 +57,10 @@ class ArtworkBackfillServiceTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         session = session_factory()
-        repository = SqliteStateRepository(session)
-        repository.save_album_state(state or album_state())
-        return session, repository
+        user = UserRepository(session).ensure_default_user()
+        repository = AlbumStateRepository(session, user)
+        repository.replace(state or album_state())
+        return session, AlbumCatalog(session)
 
     def test_dry_run_finds_artwork_without_writing(self):
         with tempfile.TemporaryDirectory() as temp_dir:

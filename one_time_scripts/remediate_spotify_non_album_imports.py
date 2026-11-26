@@ -15,7 +15,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from backend.app.config import get_settings
 from backend.app.job_database import job_session
-from backend.app.models import (
+from backend.app.database.models import (
     Album,
     AlbumListen,
     ImportedListeningEvent,

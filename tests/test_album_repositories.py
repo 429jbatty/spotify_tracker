@@ -5,9 +5,12 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import Album, AlbumCreditFact, AlbumListen, UserAlbum
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from tests.database_helpers import create_schema
+from backend.app.database.models import Album, AlbumCreditFact, AlbumListen, UserAlbum
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 
 
 def sample_album_state():
@@ -60,7 +63,7 @@ def sample_album_state():
     }
 
 
-class SqliteStateRepositoryTests(unittest.TestCase):
+class AlbumStateRepositoryTests(unittest.TestCase):
     def _session_factory(self, temp_dir):
         database_path = Path(temp_dir) / "tracker.sqlite"
         database_url = f"sqlite:///{database_path}"
@@ -72,9 +75,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
-                loaded = repository.load_album_state()
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                loaded = repository.load()
 
         self.assertEqual(loaded["last_checked"], "2026-04-18T16:14:25.872Z")
         self.assertEqual(
@@ -104,9 +107,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
-                repository.import_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                repository.replace(sample_album_state())
 
                 album_count = len(session.scalars(select(Album)).all())
                 listen_count = len(session.scalars(select(AlbumListen)).all())
@@ -119,9 +122,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
-                repository.import_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                repository.replace(sample_album_state())
 
                 facts = session.scalars(
                     select(AlbumCreditFact).order_by(AlbumCreditFact.person_name)
@@ -137,12 +140,12 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
                 original = session.scalars(select(AlbumCreditFact)).one()
                 original_identity = (original.id, original.updated_at)
 
-                repository.import_album_state(sample_album_state())
+                repository.replace(sample_album_state())
                 unchanged = session.scalars(select(AlbumCreditFact)).one()
 
         self.assertEqual((unchanged.id, unchanged.updated_at), original_identity)
@@ -152,9 +155,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.import_album_state(sample_album_state())
-                loaded = repository.load_album_state()
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                loaded = repository.load()
 
         album = loaded["completed_albums"]["Sparse Artist - Sparse Album"]
         self.assertEqual(album["artist"], "Sparse Artist")
@@ -173,10 +176,10 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             updated_state["albums_in_progress"] = {}
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
-                repository.save_album_state(updated_state)
-                loaded = repository.load_album_state()
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                repository.replace(updated_state)
+                loaded = repository.load()
 
                 album_count = len(session.scalars(select(Album)).all())
                 listen_count = len(session.scalars(select(AlbumListen)).all())
@@ -197,9 +200,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             del updated_state["completed_albums"]["Artist - Finished Album"]
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
-                repository.save_album_state(updated_state)
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                repository.replace(updated_state)
 
                 album_count = len(session.scalars(select(Album)).all())
                 credit_fact_count = len(session.scalars(select(AlbumCreditFact)).all())
@@ -212,9 +215,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
-                new_key = repository.replace_completed_album_metadata(
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                new_key = AlbumLibrary(session, repository.user).replace_catalog_metadata_for_refresh(
                     "Artist - Finished Album",
                     {
                         "artist": "Artist",
@@ -223,7 +226,7 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                         "source": "musicbrainz",
                     },
                 )
-                loaded = repository.load_album_state()
+                loaded = repository.load()
 
                 album_count = len(session.scalars(select(Album)).all())
                 listen_count = len(session.scalars(select(AlbumListen)).all())
@@ -246,9 +249,9 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
-                repository.replace_completed_album_metadata(
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                AlbumLibrary(session, repository.user).replace_catalog_metadata_for_refresh(
                     "Artist - Finished Album",
                     {
                         "artist": "Artist",
@@ -276,17 +279,17 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
 
-                exact = repository.find_completed_album_key(
+                exact = AlbumCatalog(session).find_for_refresh(
                     artist="Artist",
-                    album="Finished Album",
-                )
-                casefolded = repository.find_completed_album_key(
+                    title="Finished Album",
+                ).album_key
+                casefolded = AlbumCatalog(session).find_for_refresh(
                     artist="artist",
-                    album="finished album",
-                )
+                    title="finished album",
+                ).album_key
 
         self.assertEqual(exact, "Artist - Finished Album")
         self.assertEqual(casefolded, "Artist - Finished Album")
@@ -301,8 +304,8 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             ] = "https://example.test/new-cover.jpg"
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
 
                 album = session.scalars(
                     select(Album).where(Album.album_key == "Artist - Finished Album")
@@ -310,8 +313,8 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                 album.local_image_path = "artwork/release-group-mbid.jpg"
                 session.commit()
 
-                repository.save_album_state(updated_state)
-                loaded = repository.load_album_state()
+                repository.replace(updated_state)
+                loaded = repository.load()
 
         album = loaded["completed_albums"]["Artist - Finished Album"]
         self.assertEqual(album["image_url"], "/media/artwork/release-group-mbid.jpg")
@@ -326,46 +329,46 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
-                album_id = repository.load_album_state()["completed_albums"][
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                album_id = repository.load()["completed_albums"][
                     "Artist - Finished Album"
                 ]["id"]
 
-                updated = repository.update_user_album_tags(
-                    album_id,
-                    ["atmospheric", "cohesive"],
+                result = AlbumLibrary(session, repository.user).set_tags(
+                    album_id, ["atmospheric", "cohesive"],
                 )
 
-        self.assertEqual(updated["your_tags"], ["atmospheric", "cohesive"])
+        self.assertEqual(result.record["your_tags"], ["atmospheric", "cohesive"])
+        self.assertEqual(result.tags_added, ["atmospheric", "cohesive"])
+        self.assertEqual(result.tags_removed, [])
 
     def test_update_user_album_feedback_persists_rating_and_notes(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
-                album_id = repository.load_album_state()["completed_albums"][
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
+                album_id = repository.load()["completed_albums"][
                     "Artist - Finished Album"
                 ]["id"]
 
-                updated = repository.update_user_album_feedback(
-                    album_id,
-                    rating=8,
-                    notes="Huge low end and great pacing.",
+                result = AlbumLibrary(session, repository.user).set_feedback(
+                    album_id, rating=8, notes="Huge low end and great pacing.",
                 )
 
-        self.assertEqual(updated["rating"], 8)
-        self.assertEqual(updated["notes"], "Huge low end and great pacing.")
+        self.assertEqual(result.record["rating"], 8)
+        self.assertEqual(result.record["notes"], "Huge low end and great pacing.")
+        self.assertEqual((result.rating_change, result.note_change), ("added", "added"))
 
     def test_replace_completed_album_metadata_preserves_existing_local_image_path(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                repository.save_album_state(sample_album_state())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository.replace(sample_album_state())
 
                 album = session.scalars(
                     select(Album).where(Album.album_key == "Artist - Finished Album")
@@ -373,7 +376,7 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                 album.local_image_path = "artwork/release-group-mbid.jpg"
                 session.commit()
 
-                repository.replace_completed_album_metadata(
+                AlbumLibrary(session, repository.user).replace_catalog_metadata_for_refresh(
                     "Artist - Finished Album",
                     {
                         "artist": "Artist",
@@ -382,7 +385,7 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                         "source": "musicbrainz",
                     },
                 )
-                loaded = repository.load_album_state()
+                loaded = repository.load()
 
         album = loaded["completed_albums"]["Artist - Finished Album"]
         self.assertEqual(album["image_url"], "/media/artwork/release-group-mbid.jpg")
@@ -396,8 +399,8 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                imported = repository.create_completed_album(
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                imported = repository.add_album(
                     {
                         "artist": "Charli XCX",
                         "name": "how i’m feeling now",
@@ -405,12 +408,12 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                         "source": "spotify_import",
                     },
                     listen_date="2025-01-01T00:00:00Z",
-                )
-                repository.update_user_album_tags(imported["id"], ["cohesive"])
-                repository.update_user_album_feedback(
+                ).record
+                repository.set_tags(imported["id"], ["cohesive"])
+                repository.set_feedback(
                     imported["id"], rating=9, notes="Keep this note"
                 )
-                synced = repository.create_completed_album(
+                synced = repository.add_album(
                     {
                         "artist": "Charli xcx",
                         "name": "how i'm feeling now",
@@ -418,7 +421,7 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                         "source": "spotify_sync",
                     },
                     listen_date="2026-01-01T00:00:00Z",
-                )
+                ).record
 
                 albums = session.scalars(select(Album)).all()
 
@@ -433,15 +436,15 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                first = repository.create_completed_album(
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                first = repository.add_album(
                     {"artist": "Beyoncé", "name": "Lemonade", "source": "manual"},
                     listen_date="2025-01-01T00:00:00Z",
-                )
-                second = repository.create_completed_album(
+                ).record
+                second = repository.add_album(
                     {"artist": "beyonce", "name": "LEMONADE", "source": "spotify_import"},
                     listen_date="2026-01-01T00:00:00Z",
-                )
+                ).record
 
         self.assertEqual(first["id"], second["id"])
         self.assertEqual(len(second["listen_history"]), 2)
@@ -458,8 +461,8 @@ class SqliteStateRepositoryTests(unittest.TestCase):
             for index, (first_source, second_source) in enumerate(source_pairs):
                 with self.subTest(first=first_source, second=second_source):
                     with session_factory() as session:
-                        repository = SqliteStateRepository(session)
-                        first = repository.create_completed_album(
+                        repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                        first = repository.add_album(
                             {
                                 "artist": "Artist Name",
                                 "name": f"Album Name {index}",
@@ -468,8 +471,8 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                                 "entry_source": first_source,
                             },
                             listen_date="2025-01-01T00:00:00Z",
-                        )
-                        second = repository.create_completed_album(
+                        ).record
+                        second = repository.add_album(
                             {
                                 "artist": "artist name",
                                 "name": f"album name {index}",
@@ -478,7 +481,7 @@ class SqliteStateRepositoryTests(unittest.TestCase):
                                 "entry_source": second_source,
                             },
                             listen_date="2026-01-01T00:00:00Z",
-                        )
+                        ).record
 
                     self.assertEqual(first["id"], second["id"])
 
@@ -486,15 +489,15 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                first = repository.create_completed_album(
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                first = repository.add_album(
                     {"artist": "Artist", "name": "Album", "release_group_mbid": "rg-one"},
                     listen_date="2025-01-01T00:00:00Z",
-                )
-                second = repository.create_completed_album(
+                ).record
+                second = repository.add_album(
                     {"artist": "Artist", "name": "Album", "release_group_mbid": "rg-two"},
                     listen_date="2026-01-01T00:00:00Z",
-                )
+                ).record
 
         self.assertNotEqual(first["id"], second["id"])
 
@@ -502,20 +505,20 @@ class SqliteStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                source = repository.create_completed_album(
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                source = repository.add_album(
                     {"artist": "Source Artist", "name": "Source Album"},
                     listen_date="2025-01-01T00:00:00Z",
-                )
-                target = repository.create_completed_album(
+                ).record
+                target = repository.add_album(
                     {
                         "artist": "Target Artist",
                         "name": "Target Album",
                         "release_group_mbid": "refreshed-rg",
                     },
                     listen_date="2026-01-01T00:00:00Z",
-                )
-                refreshed = repository.replace_completed_album_metadata_by_id_or_merge_duplicate(
+                ).record
+                refreshed = repository.replace_metadata(
                     source["id"],
                     {
                         "artist": "Source Artist",

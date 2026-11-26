@@ -5,9 +5,9 @@ from collections import Counter, defaultdict
 import structlog
 from sqlalchemy.orm import Session
 
-from backend.app.models import ImportedListeningEvent
-from backend.app.repositories import import_event_repository as import_events
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.models import ImportedListeningEvent
+from backend.app.database.repositories import import_event_repository as import_events
+from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.schemas import ImportPreviewSummary
 
 from .events import parse_timestamp
@@ -17,7 +17,7 @@ from .metadata import ExistingAlbumMatch, album_match_key, load_existing_albums
 
 def apply_candidate_results(
     session: Session,
-    repository: SqliteStateRepository,
+    repository: AlbumLibrary,
     candidates: list[AlbumCandidate],
 ) -> None:
     album_index = load_existing_albums(repository)
@@ -25,18 +25,16 @@ def apply_candidate_results(
         {candidate.candidate_key for candidate in candidates if candidate.candidate_key}
     )
     rows_by_candidate_key: dict[str, list[ImportedListeningEvent]] = defaultdict(list)
-    for start in range(0, len(candidate_keys), 500):
-        batch = candidate_keys[start : start + 500]
-        for row in import_events.rows_for_candidates(session, repository.user.id, batch):
-            if row.candidate_key:
-                rows_by_candidate_key[row.candidate_key].append(row)
+    for row in import_events.rows_for_candidates(session, repository.user.id, candidate_keys):
+        if row.candidate_key:
+            rows_by_candidate_key[row.candidate_key].append(row)
 
     for candidate in candidates:
         candidate_rows = rows_by_candidate_key.get(candidate.candidate_key, [])
         if not candidate_rows:
             continue
 
-        album_id, error_message = _apply_listen(session, repository, album_index, candidate)
+        album_id, error_message = _apply_listen(repository, album_index, candidate)
         persisted_status = {
             "matched_existing": "processed_album_listen",
             "new_album": "processed_album_listen",
@@ -49,14 +47,18 @@ def apply_candidate_results(
             )
 
 
-def _apply_listen(session, repository, album_index, candidate):
+def _apply_listen(
+    repository: AlbumLibrary,
+    album_index: dict[tuple[str, str], ExistingAlbumMatch],
+    candidate: AlbumCandidate,
+) -> tuple[int | None, str]:
     if candidate.status == "new_album":
         # Completion of a new album always requires a matched metadata tracklist.
         record = candidate.metadata
         key = album_match_key(record.get("artist"), record.get("name"))
         existing = album_index.get(key)
         if existing is None:
-            created = repository.create_completed_album(record, listen_date=candidate.listened_at)
+            created = repository.add_album(record, listen_date=candidate.listened_at).record
             album_index[key] = ExistingAlbumMatch(created["id"], created)
             return created["id"], candidate.status_detail
         album_id = existing.album_id
@@ -65,16 +67,15 @@ def _apply_listen(session, repository, album_index, candidate):
     else:
         return None, candidate.status_detail
 
-    if _has_album_listen_on_utc_date(session, repository.user.id, album_id, candidate.listened_at):
+    if _has_album_listen_on_utc_date(repository, album_id, candidate.listened_at):
         candidate.status = "duplicate_listen"
         return None, "Album already has a listen on this UTC date."
-    repository.add_album_listen(album_id, candidate.listened_at)
+    repository.add_listen(album_id, candidate.listened_at)
     return album_id, candidate.status_detail
 
 
 def _has_album_listen_on_utc_date(
-    session: Session,
-    user_id: int,
+    repository: AlbumLibrary,
     album_id: int,
     listened_at: str,
 ) -> bool:
@@ -82,7 +83,7 @@ def _has_album_listen_on_utc_date(
     if target_date is None:
         return False
 
-    existing_listens = import_events.album_listen_timestamps(session, user_id, album_id)
+    existing_listens = repository.listen_timestamps(album_id)
     return any(_utc_date_key(existing) == target_date for existing in existing_listens)
 
 

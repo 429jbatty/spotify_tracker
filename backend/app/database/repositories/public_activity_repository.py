@@ -3,7 +3,7 @@ from typing import NamedTuple
 from sqlalchemy import distinct, func, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import Album, AlbumListen, User, UserAlbum
+from backend.app.database.models import Album, AlbumListen, User, UserAlbum
 
 
 class PublicListen(NamedTuple):

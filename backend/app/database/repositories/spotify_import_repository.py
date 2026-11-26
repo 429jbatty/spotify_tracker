@@ -4,7 +4,7 @@ from sqlalchemy import func, select
 from sqlalchemy.dialects.sqlite import insert as sqlite_insert
 from sqlalchemy.orm import Session
 
-from backend.app.models import SpotifyStreamingEvent
+from backend.app.database.models import SpotifyStreamingEvent
 
 
 def diagnostic_rows(

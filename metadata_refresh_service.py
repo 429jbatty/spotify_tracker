@@ -7,7 +7,9 @@ import musicbrainzngs
 from backend.app.persistence_logging import database_error_fields
 
 import album_metadata_service as metadata_service
-import utils
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.user_repository import UserRepository
+from backend.app.job_database import job_session
 
 logger = structlog.get_logger(__name__)
 
@@ -122,26 +124,20 @@ def refresh_album_record(record: dict, spotify_url: str | None = None):
     return _merge_refreshed_metadata(record, refreshed)
 
 
-def _refresh_album_in_sqlite_repository(
-    repository,
+def _refresh_catalog_album(
+    library: AlbumLibrary,
     *,
     artist: str | None = None,
     album: str | None = None,
     key: str | None = None,
     spotify_url: str | None = None,
 ):
-    target_key = repository.find_completed_album_key(
-        artist=artist,
-        album=album,
-        key=key,
-    )
-    existing_record = repository.get_completed_album_record(target_key)
+    target = library.catalog.find_for_refresh(artist=artist, title=album, key=key)
+    target_key = target.album_key
+    existing_record = library.record_for(target)
     refreshed_record = refresh_album_record(existing_record, spotify_url=spotify_url)
     warnings = refreshed_record.pop("_refresh_warnings", [])
-    new_key = repository.replace_completed_album_metadata(
-        target_key,
-        refreshed_record,
-    )
+    new_key = library.replace_catalog_metadata_for_refresh(target_key, refreshed_record)
 
     logger.info("album_metadata_refreshed", album_id=existing_record.get("id"), warning_count=len(warnings))
 
@@ -162,9 +158,10 @@ def refresh_album_and_save(
     key: str | None = None,
     spotify_url: str | None = None,
 ):
-    with utils.sqlite_state_repository() as repository:
-        return _refresh_album_in_sqlite_repository(
-            repository,
+    with job_session() as session:
+        user = UserRepository(session).ensure_default_user()
+        return _refresh_catalog_album(
+            AlbumLibrary(session, user),
             artist=artist,
             album=album,
             key=key,
@@ -175,16 +172,18 @@ def refresh_album_and_save(
 def refresh_all_albums_and_save(continue_on_error: bool = True):
     results = []
 
-    with utils.sqlite_state_repository() as repository:
-        original_keys = repository.completed_album_keys()
+    with job_session() as session:
+        user = UserRepository(session).ensure_default_user()
+        library = AlbumLibrary(session, user)
+        original_keys = library.catalog.list_keys()
 
         for key in original_keys:
             try:
-                result = _refresh_album_in_sqlite_repository(repository, key=key)
+                result = _refresh_catalog_album(library, key=key)
             except Exception as exc:
                 status = _log_refresh_error(key, exc)
                 try:
-                    record = repository.get_completed_album_record(key)
+                    record = library.record_for(library.catalog.require_by_key(key))
                 except Exception:
                     record = {}
 

@@ -23,16 +23,25 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 
 ## Ownership
 
-- Models live in `backend/app/models.py`.
-- Schema initialization lives in `backend/app/database.py`; models define the
-  current tables. SQLite startup seeds the default profile and ensures unique
-  indexes for known release groups and assigned profile owners. Starting the
-  app on a current database preserves its data, including older credit formats.
-- Runtime reads/writes should go through repositories in
-  `backend/app/repositories/`, especially `SqliteStateRepository`.
-- User lookup/creation belongs in `backend/app/repositories/user_repository.py`.
+- SQLAlchemy models live in `backend/app/database/models/`.
+- Engine creation, session factory configuration, and SQLite pragmas live in
+  `backend/app/database/engine.py`.
+- Schema initialization lives in `backend/app/database/schema.py`. SQLite
+  startup seeds the default profile and ensures unique indexes for known release
+  groups and assigned profile owners. Starting the app on a current database
+  preserves its data, including older credit formats.
+- `AlbumCatalog(session)` owns shared album identity, metadata, artwork and
+  physical cleanup of eligible catalog entries.
+- `AlbumLibrary(session, user)` owns a profile's collection, listens and
+  annotations. Library commands that change shared metadata rebuild credit
+  facts in the same transaction.
+- `AlbumStateRepository(session, user)` loads or replaces a profile's complete
+  snapshot, including its tracking cursor and in-progress albums. Snapshot
+  reads retrieve memberships and ordered listens in two queries. Import
+  matching reads its own catalog projection without loading listens or feedback.
+- User lookup/creation belongs in `backend/app/database/repositories/user_repository.py`.
 - Spotify credential persistence belongs in
-  `backend/app/repositories/spotify_credentials_repository.py`.
+  `backend/app/database/repositories/spotify_credentials_repository.py`.
 
 ## Engine and session lifetime
 
@@ -64,8 +73,15 @@ are committed separately.
 - Preserve local artwork paths when refreshed metadata only changes remote data.
 - Keep queries and bulk writes in repositories. Services own workflow decisions
   and can stage field changes on records loaded in their unit of work.
-- Pass the same session when several repository operations share a transaction.
-  Imports save progress and related writes at explicit checkpoints.
+- Resolve the profile in the caller and pass the attached `User` to the library
+  or snapshot repository. Authorized routes reuse the profile returned by the
+  ownership check. Catalog-only jobs require a session.
+- Pass the same session when several operations share a transaction. Manual
+  album changes take the SQLite write lock after enrichment and emit activity
+  after commit. Import candidate and review workflows commit library writes
+  before saving the current result on the import row.
+- Snapshot replacement and profile deletion can remove catalog entries with
+  no memberships. Import cleanup also requires that no global listens remain.
 - Explicit maintenance scripts may query the database directly for scoped
   audits, migrations, and repairs.
 

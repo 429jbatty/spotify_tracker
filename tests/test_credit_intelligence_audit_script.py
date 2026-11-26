@@ -5,8 +5,8 @@ from pathlib import Path
 from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import Album, AlbumListen, User, UserAlbum
+from tests.database_helpers import create_schema
+from backend.app.database.models import Album, AlbumListen, User, UserAlbum
 from one_time_scripts import _audit_credit_intelligence as audit
 
 

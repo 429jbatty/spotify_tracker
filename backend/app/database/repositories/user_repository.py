@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 
-from sqlalchemy import delete, func, select
+from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import (
-    Album, AlbumCreditFact, AlbumInProgress, AlbumListen, User, UserAlbum, UserAppState, UserSpotifyCredentials,
+from backend.app.database.models import (
+    AlbumInProgress, AlbumListen, User, UserAlbum, UserAppState, UserSpotifyCredentials,
 )
+from backend.app.database.repositories.album_catalog import AlbumCatalog
 
 
 DEFAULT_USER_SLUG = "jacob"
@@ -38,7 +39,7 @@ class UserRepository:
 
     def ensure_user(self, *, slug: str, display_name: str | None = None) -> User:
         normalized_slug = _normalize_slug(slug)
-        user = self.get_user_by_slug(normalized_slug)
+        user = self.find_by_slug(normalized_slug)
         if user:
             return user
 
@@ -60,7 +61,7 @@ class UserRepository:
         commit: bool = True,
     ) -> User:
         normalized_slug = _normalize_slug(slug)
-        if self.get_user_by_slug(normalized_slug):
+        if self.find_by_slug(normalized_slug):
             raise ValueError(f"User already exists: {normalized_slug}")
 
         user = User(
@@ -76,10 +77,11 @@ class UserRepository:
             self.session.flush()
         return user
 
+    def find_by_slug(self, stored_slug: str) -> User | None:
+        return self.session.scalars(select(User).where(User.slug == stored_slug)).first()
+
     def get_user_by_slug(self, slug: str) -> User | None:
-        return self.session.scalars(
-            select(User).where(User.slug == _normalize_slug(slug))
-        ).first()
+        return self.find_by_slug(_normalize_slug(slug))
 
     def require_user_by_slug(self, slug: str) -> User:
         user = self.get_user_by_slug(slug)
@@ -133,7 +135,9 @@ class UserRepository:
             delete(User).where(User.id == user.id),
         )
 
-        orphaned_albums_removed = _delete_orphaned_albums(self.session, affected_album_ids)
+        orphaned_albums_removed = AlbumCatalog(self.session).delete_albums_without_memberships(
+            affected_album_ids,
+        )
         self.session.commit()
 
         return DeleteUserResult(
@@ -156,28 +160,4 @@ def _normalize_slug(slug: str) -> str:
 
 def _delete_count(session: Session, statement) -> int:
     result = session.execute(statement)
-    return int(result.rowcount or 0)
-
-
-def _delete_orphaned_albums(session: Session, album_ids: list[int]) -> int:
-    if not album_ids:
-        return 0
-
-    orphaned_album_ids = list(
-        session.scalars(
-            select(Album.id)
-            .where(Album.id.in_(album_ids))
-            .outerjoin(UserAlbum, UserAlbum.album_id == Album.id)
-            .group_by(Album.id)
-            .having(func.count(UserAlbum.id) == 0)
-        )
-    )
-    if not orphaned_album_ids:
-        return 0
-
-    session.execute(delete(AlbumListen).where(AlbumListen.album_id.in_(orphaned_album_ids)))
-    session.execute(
-        delete(AlbumCreditFact).where(AlbumCreditFact.album_id.in_(orphaned_album_ids))
-    )
-    result = session.execute(delete(Album).where(Album.id.in_(orphaned_album_ids)))
     return int(result.rowcount or 0)

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from backend.app.repositories.user_repository import DEFAULT_USER_SLUG, DeleteUserResult, UserRepository
+from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, DeleteUserResult, UserRepository
 
 
 def delete_user_by_slug(

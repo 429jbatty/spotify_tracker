@@ -5,6 +5,8 @@ from typing import Callable
 import musicbrainz_client
 from backend.app.services.artwork_cache_service import ArtworkCacheService
 
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+
 logger = structlog.get_logger(__name__)
 
 
@@ -46,7 +48,7 @@ class ArtworkBackfillService:
 
     def backfill_missing_artwork(
         self,
-        repository,
+        catalog: AlbumCatalog,
         *,
         apply: bool = False,
         limit: int | None = None,
@@ -57,15 +59,15 @@ class ArtworkBackfillService:
         summary = ArtworkBackfillSummary()
         stage = "select"
         try:
-            albums = repository.albums_for_artwork_backfill(
-                album_ids=album_ids,
+            albums = catalog.artwork_backfill_candidates(
+                ids=album_ids,
                 limit=limit,
             )
             summary.total = len(albums)
             stage = "process"
             for album in albums:
                 result = self._backfill_album(
-                    repository,
+                    catalog,
                     album,
                     apply=apply,
                     cache_local=cache_local,
@@ -87,7 +89,7 @@ class ArtworkBackfillService:
 
     def _backfill_album(
         self,
-        repository,
+        catalog: AlbumCatalog,
         album: dict,
         *,
         apply: bool,
@@ -140,7 +142,7 @@ class ArtworkBackfillService:
                 remote_image_url=remote_image_url,
             )
 
-        repository.update_album_remote_artwork(album_id, remote_image_url)
+        catalog.set_remote_artwork(album_id, remote_image_url)
         applied_album = {
             **album,
             "image_url": remote_image_url,
@@ -150,7 +152,7 @@ class ArtworkBackfillService:
         if cache_local:
             cache_result = self.cache_service.cache_album_artwork(applied_album)
             if cache_result.cached and cache_result.local_image_path:
-                repository.update_album_local_image_path(
+                catalog.set_local_artwork(
                     album_id,
                     cache_result.local_image_path,
                 )

@@ -6,9 +6,10 @@ from unittest.mock import patch
 from sqlalchemy import func, select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import Album, AlbumListen, User, UserAlbum
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from tests.database_helpers import create_schema
+from backend.app.database.models import Album, AlbumListen, User, UserAlbum
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.user_repository import UserRepository
 from one_time_scripts import _credit_refresh_experiment as experiment
 
 
@@ -214,7 +215,7 @@ class CreditRefreshExperimentScriptTests(unittest.TestCase):
                     )
                     if candidate.album_id == ids["covered"]
                 )
-                repository = SqliteStateRepository(session, user_slug="listener")
+                repository = AlbumLibrary(session, UserRepository(session).require_user_by_slug("listener"))
                 refreshed = {
                     "artist": "Artist",
                     "name": "Covered",

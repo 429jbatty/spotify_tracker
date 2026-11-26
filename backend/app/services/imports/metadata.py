@@ -6,8 +6,8 @@ from dataclasses import dataclass
 from sqlalchemy.orm import Session
 
 import album_metadata_service
-from backend.app.repositories import album_metadata_cache_repository as cache
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories import album_metadata_cache_repository as cache
+from backend.app.database.repositories.album_library import AlbumLibrary
 
 from .events import fingerprint, utc_now
 from .progress import ImportMetadataStats
@@ -26,9 +26,9 @@ def album_match_key(artist, album):
     return (artist or "").strip().casefold(), (album or "").strip().casefold()
 
 
-def load_existing_albums(repository):
+def load_existing_albums(repository: AlbumLibrary) -> dict[tuple[str, str], ExistingAlbumMatch]:
     return {album_match_key(artist, name): ExistingAlbumMatch(album_id, record)
-            for album_id, artist, name, record in repository.library_album_records()}
+            for album_id, artist, name, record in repository.matching_albums()}
 
 
 def album_metadata_cache_key(artist, album):
@@ -50,7 +50,7 @@ def write_album_metadata_cache(session, artist, album, metadata):
 class AlbumLookup:
     """In-memory cache for one matching pass. A local-only miss expires before the remote pass."""
 
-    def __init__(self, session: Session, repository: SqliteStateRepository, stats: ImportMetadataStats | None = None):
+    def __init__(self, session: Session, repository: AlbumLibrary, stats: ImportMetadataStats | None = None):
         self.session = session
         self.albums = load_existing_albums(repository)
         self.stats = stats or ImportMetadataStats()

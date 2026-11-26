@@ -24,8 +24,10 @@ Lint should pass; existing shadcn/Radix fast-refresh warnings may appear.
   shaping.
 - `tests/test_metadata_refresh_service.py`: metadata refresh preservation and
   failure behavior.
-- `tests/test_sqlite_state_repository.py`: SQLite state round trips and album
+- `tests/test_album_repositories.py`: SQLite state round trips and album
   mutations.
+- `tests/test_album_repository_boundaries.py` covers catalog and profile scope,
+  import write checkpoints, and query counts for snapshot and matching reads.
 - `tests/test_database_schema.py`: current schema creation and idempotency.
 - `tests/test_api_album_state.py`: album-state API behavior.
 - `tests/test_api_album_actions.py`: manual album, listen, refresh, merge,

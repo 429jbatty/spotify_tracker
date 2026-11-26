@@ -12,6 +12,8 @@ from urllib.request import Request, urlopen
 
 from PIL import Image, ImageOps
 
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+
 logger = structlog.get_logger(__name__)
 
 ARTWORK_VARIANT_WIDTHS = (240, 640)
@@ -151,23 +153,23 @@ class ArtworkCacheService:
             optimized=True,
         )
 
-    def cache_missing_artwork(self, repository) -> list[ArtworkCacheResult]:
+    def cache_missing_artwork(self, catalog: AlbumCatalog) -> list[ArtworkCacheResult]:
         results = []
-        for album in repository.albums_for_artwork_cache():
+        for album in catalog.artwork_inventory():
             result = self.cache_album_artwork(album)
             results.append(result)
 
             if result.cached and result.local_image_path:
-                repository.update_album_local_image_path(
+                catalog.set_local_artwork(
                     result.album_id,
                     result.local_image_path,
                 )
 
         return results
 
-    def optimize_existing_artwork(self, repository) -> list[ArtworkCacheResult]:
+    def optimize_existing_artwork(self, catalog: AlbumCatalog) -> list[ArtworkCacheResult]:
         results = []
-        for album in repository.albums_for_artwork_cache():
+        for album in catalog.artwork_inventory():
             local_image_path = album.get("local_image_path")
             if not local_image_path:
                 continue
@@ -181,7 +183,7 @@ class ArtworkCacheService:
                 and result.local_image_path
                 and result.local_image_path != local_image_path
             ):
-                repository.update_album_local_image_path(
+                catalog.set_local_artwork(
                     result.album_id,
                     result.local_image_path,
                 )

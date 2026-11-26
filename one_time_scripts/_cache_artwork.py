@@ -2,7 +2,8 @@ import argparse
 
 import structlog
 
-import utils
+from backend.app.database.repositories.album_catalog import AlbumCatalog
+from backend.app.job_database import job_session
 from backend.app.config import get_settings
 from backend.app.logging_config import configure_logging
 from backend.app.services.artwork_cache_service import ArtworkCacheService
@@ -14,10 +15,11 @@ def cache_artwork(*, existing_only: bool = False) -> list:
     settings = get_settings()
     service = ArtworkCacheService(settings.media_dir)
 
-    with utils.sqlite_state_repository() as repository:
+    with job_session() as session:
+        catalog = AlbumCatalog(session)
         if existing_only:
-            return service.optimize_existing_artwork(repository)
-        return service.cache_missing_artwork(repository)
+            return service.optimize_existing_artwork(catalog)
+        return service.cache_missing_artwork(catalog)
 
 
 def main() -> None:

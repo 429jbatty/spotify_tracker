@@ -58,15 +58,16 @@ class DiagnosticLoggingTests(unittest.TestCase):
 
     def test_refresh_reports_committed_success_and_classified_failure(self):
         repository = Mock()
-        repository.get_completed_album_record_by_id.return_value = {'artist': 'A', 'name': 'B'}
-        repository.replace_completed_album_metadata_by_id_or_merge_duplicate.return_value = {'id': 4}
+        album = Mock(id=4)
+        repository.record_for.return_value = {'artist': 'A', 'name': 'B'}
+        repository.replace_metadata.return_value = {'id': 4}
         with patch.object(metadata_refresh_logging.metadata_refresh_service, 'refresh_album_record', return_value={'_refresh_warnings': ['warning']}), capture_logs() as events:
-            self.assertEqual(metadata_refresh_logging.refresh_album(repository, 4), {'id': 4})
+            self.assertEqual(metadata_refresh_logging.refresh_album(repository, album), {'id': 4})
         self.assertEqual([(e['event'], e['warning_count']) for e in events], [('album_metadata_refreshed', 1)])
-        repository.replace_completed_album_metadata_by_id_or_merge_duplicate.side_effect = RuntimeError('secret URL')
+        repository.replace_metadata.side_effect = RuntimeError('secret URL')
         with patch.object(metadata_refresh_logging.metadata_refresh_service, 'refresh_album_record', return_value={}), capture_logs() as events:
             with self.assertRaises(RuntimeError):
-                metadata_refresh_logging.refresh_album(repository, 4)
+                metadata_refresh_logging.refresh_album(repository, album)
         self.assertEqual(events[0]['event'], 'album_metadata_refresh_failed')
         self.assertNotIn('secret', repr(events))
 

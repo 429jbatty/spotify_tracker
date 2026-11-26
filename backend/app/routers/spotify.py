@@ -7,7 +7,7 @@ from fastapi.responses import RedirectResponse
 
 from backend.app.config import get_settings
 from backend.app.dependencies import AppSessions
-from backend.app.repositories.spotify_credentials_repository import (
+from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
 from backend.app.schemas import SpotifyConnectResponse, SpotifyStatus

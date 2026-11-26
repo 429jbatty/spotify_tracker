@@ -4,17 +4,80 @@ import unittest
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from pathlib import Path
 from threading import Event
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 
 from fastapi.testclient import TestClient
 
 from sqlalchemy import text
+from sqlalchemy.exc import IntegrityError
 
-from backend.app.database import create_schema, session_factory_for
-from backend.app.repositories.user_repository import UserRepository
+from backend.app.database.engine import session_factory_for
+from backend.app.database.models import Base
+from backend.app.database.repositories.user_repository import UserRepository
+from tests.database_helpers import create_schema
 
 
 class DatabaseSchemaTests(unittest.TestCase):
+    def test_engine_owners_dispose_if_initialization_fails(self):
+        from backend.app.job_database import job_session_factory
+        from backend.app.main import create_app
+
+        for module, start in (
+            ("backend.app.main", create_app),
+            ("backend.app.job_database", lambda: job_session_factory().__enter__()),
+        ):
+            with self.subTest(module=module):
+                engine = Mock()
+                with patch(f"{module}.get_engine", return_value=engine), patch(
+                    f"{module}.initialize_database", side_effect=RuntimeError("failed")
+                ):
+                    with self.assertRaisesRegex(RuntimeError, "failed"):
+                        start()
+                engine.dispose.assert_called_once_with()
+
+    def test_foreign_keys_are_enforced_for_memory_and_file_databases(self):
+        with tempfile.TemporaryDirectory() as directory:
+            for url in ("sqlite:///:memory:", f"sqlite:///{Path(directory) / 'test.sqlite'}"):
+                with self.subTest(url=url):
+                    engine = create_schema(url)
+                    try:
+                        with engine.connect() as connection:
+                            self.assertEqual(connection.scalar(text("PRAGMA foreign_keys")), 1)
+                            with self.assertRaises(IntegrityError):
+                                connection.execute(text(
+                                    "INSERT INTO user_albums (user_id, album_id, your_tags) "
+                                    "VALUES (999999, 999999, '[]')"
+                                ))
+                    finally:
+                        engine.dispose()
+
+    def test_all_model_domains_register_on_one_base(self):
+        Base.registry.configure()
+
+        self.assertEqual(
+            {mapper.local_table.name for mapper in Base.registry.mappers},
+            {
+                "accounts",
+                "account_sessions",
+                "album_credit_facts",
+                "album_listens",
+                "album_metadata_cache",
+                "albums",
+                "albums_in_progress",
+                "google_oauth_states",
+                "import_sessions",
+                "import_session_logs",
+                "imported_listening_events",
+                "profile_ownership_assignments",
+                "spotify_oauth_states",
+                "spotify_streaming_events",
+                "user_albums",
+                "user_app_state",
+                "user_spotify_credentials",
+                "users",
+            },
+        )
+
     def test_in_memory_reader_cannot_roll_back_another_sessions_pending_write(self):
         engine = create_schema("sqlite://")
         self.addCleanup(engine.dispose)

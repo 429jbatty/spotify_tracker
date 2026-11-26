@@ -13,7 +13,7 @@ Spotify recent plays
   -> backend/app/services/spotify_tracking_service.py
   -> tracking.py
   -> album_metadata_service.py
-  -> backend/app/repositories/sqlite_state_repository.py
+  -> AlbumStateRepository / AlbumLibrary / AlbumCatalog
   -> SQLite
   -> backend/app/main.py FastAPI app
   -> frontend/src/services/albumApi.js
@@ -31,8 +31,9 @@ state from Spotify.
   actions, users, imports, authentication, credit intelligence, and Spotify OAuth/sync.
 - `backend/app/services/`: backend services for user admin, Spotify tracking,
   Spotify OAuth, imports, credit intelligence, and artwork caching.
-- `backend/app/repositories/`: SQLite-backed persistence.
-- `backend/app/models.py`: SQLAlchemy table definitions.
+- `backend/app/database/`: engine and schema initialization.
+- `backend/app/database/repositories/`: SQLite-backed persistence.
+- `backend/app/database/models/`: SQLAlchemy table definitions.
 - `backend/app/schemas.py`: Pydantic request and response contracts.
 - `backend/app/jobs/`: command-line worker entrypoints.
 - Root modules such as `tracking.py`, `album_metadata_service.py`,

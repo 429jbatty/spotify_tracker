@@ -7,9 +7,11 @@ from unittest.mock import patch
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from tests.database_helpers import create_schema
 from backend.app.main import create_app
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.models import Album
+from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services import auth_service
 
 
@@ -37,9 +39,9 @@ class ApiAlbumActionTests(unittest.TestCase):
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
         with session_factory() as session:
-            repository = SqliteStateRepository(session)
-            repository.save_album_state(state or sample_album_state())
-            album = next(iter(repository.load_album_state()["completed_albums"].values()))
+            repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+            repository.replace(state or sample_album_state())
+            album = next(iter(repository.load()["completed_albums"].values()))
             account = auth_service.create_account(
                 session,
                 email="owner@example.com",
@@ -111,6 +113,35 @@ class ApiAlbumActionTests(unittest.TestCase):
             self.assertEqual(payload["name"], "Canonical Title")
             self.assertEqual(payload["release_year"], 2001)
             self.assertEqual(payload["listen_history"], ["2026-04-01T10:00:00.000Z"])
+
+    def test_scoped_refresh_keeps_manual_identity_updated_during_remote_lookup(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            state = sample_album_state()
+            state["completed_albums"]["Artist - Old Title"]["_manual_input_identity"] = "original"
+            client, album_id, _ = self._client(temp_dir, state)
+            sessions = client.app.state.session_factory
+
+            def update_identity_during_lookup(*_args, **_kwargs):
+                with sessions() as other_session:
+                    album = other_session.get(Album, album_id)
+                    album.metadata_json = {**album.metadata_json, "_manual_input_identity": "concurrent"}
+                    other_session.commit()
+                return {
+                    "artist": "Artist", "name": "Old Title", "release_year": 2001,
+                    "source": "musicbrainz",
+                }
+
+            with patch(
+                "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
+                side_effect=update_identity_during_lookup,
+            ):
+                response = client.post(f"/api/users/jacob/albums/{album_id}/refresh-metadata")
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(response.json()["release_year"], 2001)
+            with sessions() as session:
+                album = session.get(Album, album_id)
+                self.assertEqual(album.metadata_json["_manual_input_identity"], "concurrent")
 
     def test_failed_refresh_does_not_partially_update_album(self):
         with tempfile.TemporaryDirectory() as temp_dir:

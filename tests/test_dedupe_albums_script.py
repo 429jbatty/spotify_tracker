@@ -5,10 +5,11 @@ from unittest.mock import patch
 
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import Album, UserAlbum
-from backend.app.repositories.user_repository import UserRepository
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from tests.database_helpers import create_schema
+from backend.app.database.models import Album, UserAlbum
+from backend.app.database.repositories.user_repository import UserRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.album_state import AlbumStateRepository
 from one_time_scripts import _dedupe_albums as dedupe
 
 
@@ -94,8 +95,8 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         with session_factory() as session:
-            repository = SqliteStateRepository(session)
-            repository.save_album_state(state or duplicate_state())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            AlbumStateRepository(session, repository.user).replace(state or duplicate_state())
         return session_factory
 
     def test_find_duplicate_groups_reports_safe_and_review_groups(self):
@@ -149,24 +150,24 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             factory = self._session_factory(temp_dir)
             with factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 for artist, mbid in [("Beyonce", "group-one"), ("Beyoncé", "group-two")]:
-                    repository.create_completed_album(
+                    repository.add_album(
                         {"artist": artist, "name": "Record", "release_group_mbid": mbid},
                         listen_date="2026-04-01",
                     )
-                before = repository.load_album_state()
+                before = AlbumStateRepository(session, repository.user).load()
                 groups = dedupe.find_duplicate_groups(session)
                 group = next(group for group in groups if group.reason == "exact_normalized_artist_album")
                 self.assertFalse(group.safe_to_apply)
                 self.assertEqual(dedupe.apply_duplicate_groups(repository, groups), [])
-                self.assertEqual(repository.load_album_state(), before)
+                self.assertEqual(AlbumStateRepository(session, repository.user).load(), before)
 
     def test_apply_checks_membership_before_merging_any_album_in_group(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             factory = self._session_factory(temp_dir)
             with factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 other = UserRepository(session).create_user(slug="other", display_name="Other")
                 # Older rows can have distinct keys for the same normalized identity.
                 copies = []
@@ -178,27 +179,27 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                     copies.append(album)
                 session.commit()
                 groups = dedupe.find_duplicate_groups(session)
-                before = repository.load_album_state()
+                before = AlbumStateRepository(session, repository.user).load()
                 actions = dedupe.apply_duplicate_groups(repository, groups)
                 self.assertEqual(len(actions), 1)
                 self.assertIn("skipped", actions[0])
-                self.assertEqual(repository.load_album_state(), before)
+                self.assertEqual(AlbumStateRepository(session, repository.user).load(), before)
 
                 session.add(UserAlbum(user_id=repository.user.id, album_id=copies[2].id))
                 session.commit()
-                other_repository = SqliteStateRepository(session, user_slug="other")
-                other_before = other_repository.load_album_state()
+                other_repository = AlbumLibrary(session, UserRepository(session).require_user_by_slug("other"))
+                other_before = AlbumStateRepository(session, other_repository.user).load()
                 actions = dedupe.apply_duplicate_groups(repository, dedupe.find_duplicate_groups(session))
                 self.assertEqual(len([action for action in actions if action.startswith("merged")]), 2)
-                self.assertEqual(other_repository.load_album_state(), other_before)
+                self.assertEqual(AlbumStateRepository(session, other_repository.user).load(), other_before)
 
     def test_dry_run_detection_does_not_mutate_albums(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                before = len(SqliteStateRepository(session).load_album_state()["completed_albums"])
+                before = len(AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()["completed_albums"])
                 dedupe.find_duplicate_groups(session)
-                after = len(SqliteStateRepository(session).load_album_state()["completed_albums"])
+                after = len(AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()["completed_albums"])
 
         self.assertEqual(before, 8)
         self.assertEqual(after, 8)
@@ -207,10 +208,10 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
                 groups = dedupe.find_duplicate_groups(session)
                 actions = dedupe.apply_duplicate_groups(repository, groups)
-                state = repository.load_album_state()
+                state = AlbumStateRepository(session, repository.user).load()
 
         self.assertEqual(len(actions), 0)
         self.assertIn("The Beatles - Revolver", state["completed_albums"])
@@ -242,8 +243,8 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                 },
             )
             with session_factory() as session:
-                repository = SqliteStateRepository(session)
-                album_id = next(iter(repository.load_album_state()["completed_albums"].values()))[
+                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                album_id = next(iter(AlbumStateRepository(session, repository.user).load()["completed_albums"].values()))[
                     "id"
                 ]
                 with patch(
@@ -253,7 +254,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                     ),
                 ):
                     actions = dedupe.refresh_candidates(repository, [album_id])
-                state = repository.load_album_state()
+                state = AlbumStateRepository(session, repository.user).load()
 
         self.assertEqual(state["completed_albums"]["Artist - Album"]["source"], "manual")
         self.assertIn("skipped", actions[0])

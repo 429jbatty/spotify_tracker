@@ -4,8 +4,13 @@ import tempfile
 from pathlib import Path
 from unittest.mock import patch
 
+from sqlalchemy import select, text
+
 import metadata_refresh_service as refresh
 import utils
+from backend.app.album_identity import normalized_artist_title_identity
+from backend.app.database.models import Album
+from backend.app.job_database import job_session
 
 
 def state_with_album():
@@ -230,10 +235,10 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             },
         ), patch(
-            "metadata_refresh_service.utils.load_state",
+            "backend.app.database.repositories.album_state.AlbumStateRepository.load",
             side_effect=AssertionError("load_state should not be called"),
         ), patch(
-            "metadata_refresh_service.utils.save_state",
+            "backend.app.database.repositories.album_state.AlbumStateRepository.replace",
             side_effect=AssertionError("save_state should not be called"),
         ):
             result = refresh.refresh_album_and_save(key="Artist - Old Title")
@@ -250,6 +255,73 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             loaded["completed_albums"]["Artist - Canonical Title"]["release_year"],
             2001,
         )
+
+    def test_key_refresh_rejects_a_concurrent_rename_during_remote_lookup(self):
+        utils.save_state(state_with_album())
+
+        def rename_during_lookup(*_args, **_kwargs):
+            with job_session(initialize=False) as other_session:
+                other_session.execute(
+                    text(
+                        "UPDATE albums "
+                        "SET album_key = :key, name = :title, normalized_identity = :identity "
+                        "WHERE album_key = :original_key"
+                    ),
+                    {
+                        "key": "Artist - Concurrent Title",
+                        "title": "Concurrent Title",
+                        "identity": normalized_artist_title_identity("Artist", "Concurrent Title"),
+                        "original_key": "Artist - Old Title",
+                    },
+                )
+                other_session.commit()
+            return {
+                "artist": "Artist", "name": "Remote Title", "release_year": 2001,
+                "source": "musicbrainz",
+            }
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            side_effect=rename_during_lookup,
+        ):
+            with self.assertRaisesRegex(KeyError, "Album key not found: Artist - Old Title"):
+                refresh.refresh_album_and_save(artist="artist", album="old title")
+
+        completed = utils.load_state()["completed_albums"]
+        self.assertEqual(list(completed), ["Artist - Concurrent Title"])
+        self.assertEqual(completed["Artist - Concurrent Title"]["release_year"], 1999)
+        self.assertEqual(
+            completed["Artist - Concurrent Title"]["listen_history"],
+            ["2026-04-01T10:00:00.000Z"],
+        )
+
+    def test_key_refresh_keeps_manual_identity_updated_during_remote_lookup(self):
+        state = state_with_album()
+        key = "Artist - Old Title"
+        state["completed_albums"][key]["_manual_input_identity"] = "original"
+        utils.save_state(state)
+
+        def update_identity_during_lookup(*_args, **_kwargs):
+            with job_session(initialize=False) as other_session:
+                album = other_session.scalars(select(Album).where(Album.album_key == key)).one()
+                album.metadata_json = {**album.metadata_json, "_manual_input_identity": "concurrent"}
+                other_session.commit()
+            return {
+                "artist": "Artist", "name": "Old Title", "release_year": 2001,
+                "source": "musicbrainz",
+            }
+
+        with patch(
+            "metadata_refresh_service.metadata_service.get_album_metadata",
+            side_effect=update_identity_during_lookup,
+        ):
+            result = refresh.refresh_album_and_save(key=key)
+
+        self.assertTrue(result.refreshed)
+        with job_session(initialize=False) as session:
+            album = session.scalars(select(Album).where(Album.album_key == key)).one()
+            self.assertEqual(album.release_year, 2001)
+            self.assertEqual(album.metadata_json["_manual_input_identity"], "concurrent")
 
     def test_refresh_all_albums_and_save_uses_direct_sqlite_updates(self):
         state = state_with_album()
@@ -273,10 +345,10 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             "metadata_refresh_service.metadata_service.get_album_metadata",
             side_effect=fake_metadata,
         ), patch(
-            "metadata_refresh_service.utils.load_state",
+            "backend.app.database.repositories.album_state.AlbumStateRepository.load",
             side_effect=AssertionError("load_state should not be called"),
         ), patch(
-            "metadata_refresh_service.utils.save_state",
+            "backend.app.database.repositories.album_state.AlbumStateRepository.replace",
             side_effect=AssertionError("save_state should not be called"),
         ):
             results = refresh.refresh_all_albums_and_save()

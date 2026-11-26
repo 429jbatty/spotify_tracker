@@ -4,15 +4,16 @@ from pathlib import Path
 
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
-from backend.app.models import (
+from tests.database_helpers import create_schema
+from backend.app.database.models import (
     Album,
     AlbumListen,
     ImportedListeningEvent,
     ImportSession,
     SpotifyStreamingEvent,
 )
-from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
+from backend.app.database.repositories.album_library import AlbumLibrary
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.spotify_catalog_service import SpotifyCatalogTrack
 from one_time_scripts import remediate_spotify_non_album_imports as remediation
 
@@ -24,8 +25,8 @@ class SpotifyNonAlbumRemediationTests(unittest.TestCase):
         return sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
     def _seed_spotify_import_listen(self, session):
-        repository = SqliteStateRepository(session)
-        created = repository.create_completed_album(
+        repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+        created = repository.add_album(
             {
                 "artist": "White Noise Artist",
                 "name": "White Noise Single",
@@ -33,7 +34,7 @@ class SpotifyNonAlbumRemediationTests(unittest.TestCase):
                 "entry_source": "spotify_import",
             },
             listen_date="2026-02-02T02:45:00Z",
-        )
+        ).record
         import_session = ImportSession(
             user_id=repository.user.id,
             source="spotify_import",

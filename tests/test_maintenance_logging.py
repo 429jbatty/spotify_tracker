@@ -10,18 +10,20 @@ from structlog.testing import capture_logs
 
 import metadata_refresh_service
 
-from backend.app.database import create_schema
+from tests.database_helpers import create_schema
 from backend.app.persistence_logging import database_error_fields
 from backend.app.request_logging import RequestLoggingMiddleware
 from backend.app.services import import_service
 from backend.app.services.artwork_backfill_service import ArtworkBackfillResult, ArtworkBackfillService
-from backend.app.services.credit_fact_service import AlbumCreditSource, rebuild_credit_facts
+from backend.app.credit_projection import AlbumCreditSource
+from backend.app.database.repositories.credit_repository import CreditRepository
+from backend.app.services.credit_fact_service import rebuild_credit_facts
 
 
 class MaintenanceLoggingTests(unittest.TestCase):
     def test_schema_failure_is_queryable_without_statement_or_parameters(self):
         exc = IntegrityError("INSERT INTO secrets VALUES (?)", ("private-token",), sqlite3.IntegrityError("constraint failed"))
-        with patch("backend.app.database.Base.metadata.create_all", side_effect=exc), capture_logs() as events:
+        with patch("backend.app.database.schema.Base.metadata.create_all", side_effect=exc), capture_logs() as events:
             with self.assertRaises(IntegrityError):
                 create_schema("sqlite:///:memory:")
         self.assertEqual(events[0]["event"], "database_schema_initialization_failed")
@@ -73,14 +75,17 @@ class MaintenanceLoggingTests(unittest.TestCase):
         self.assertNotIn('INSERT INTO', repr(events))
 
     def test_post_import_backfill_never_logs_or_persists_sql_parameters(self):
-        repository = Mock()
-        repository.album_ids_for_import_session_artwork_backfill.side_effect = IntegrityError(
+        error = IntegrityError(
             'INSERT INTO secrets VALUES (?)', ('private-token',), sqlite3.IntegrityError('constraint failed'),
         )
         session = Mock()
         import_session = SimpleNamespace(status='completed', id=7)
-        with patch.object(import_service, 'append_import_log') as append_log, capture_logs() as events:
-            import_service._run_post_import_artwork_backfill(session, repository, import_session)
+        with (
+            patch.object(import_service, 'linked_album_ids', side_effect=error),
+            patch.object(import_service, 'append_import_log') as append_log,
+            capture_logs() as events,
+        ):
+            import_service._run_post_import_artwork_backfill(session, import_session)
         event = next(e for e in events if e['event'] == 'post_import_artwork_backfill_failed')
         self.assertEqual(event['database_operation'], 'write')
         self.assertNotIn('private-token', repr(events))
@@ -91,7 +96,7 @@ class MaintenanceLoggingTests(unittest.TestCase):
 
     def test_backfill_reports_completed_items_on_failure(self):
         repository = Mock()
-        repository.albums_for_artwork_backfill.return_value = [{'id': 1}, {'id': 2}]
+        repository.artwork_backfill_candidates.return_value = [{'id': 1}, {'id': 2}]
         service = ArtworkBackfillService(media_dir='/unused')
         first = ArtworkBackfillResult(album_id=1, album_key='Fixture', status='updated')
         with patch.object(service, '_backfill_album', side_effect=[first, RuntimeError('failed')]), capture_logs() as events:
@@ -105,8 +110,7 @@ class MaintenanceLoggingTests(unittest.TestCase):
         source = AlbumCreditSource(album_id=4, artist='A', artist_mbid=None, metadata_json={})
         session = Mock()
         session.execute.return_value = SimpleNamespace(rowcount=2)
-        with patch('backend.app.services.credit_fact_service.load_album_credit_sources', return_value=[source]), \
-             patch('backend.app.services.credit_fact_service._facts_for_album', return_value=[]), capture_logs() as events:
+        with patch.object(CreditRepository, 'album_credit_sources', return_value=[source]), capture_logs() as events:
             rebuild_credit_facts(session, commit=False)
             self.assertEqual(events, [])
             rebuild_credit_facts(session, commit=True)
