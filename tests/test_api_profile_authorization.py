@@ -9,9 +9,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import select
 from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from backend.app.database import create_schema, get_engine
 from backend.app.main import create_app
 from backend.app.models import Album, AlbumCreditFact
+from backend.app.repositories.spotify_credentials_repository import SpotifyCredentialsRepository
+from backend.app.repositories.user_repository import UserRepository
 from backend.app.services import auth_service
 
 
@@ -28,7 +30,6 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         return TestClient(create_app())
 
     def _create_profile(self, client, *, slug, email):
-        from backend.app.database import get_engine
         session_factory = sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))
         with session_factory() as session:
             account = auth_service.create_account(session, email=email, password="unused")
@@ -182,8 +183,6 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
     def test_concurrent_profile_creation_conflict_is_reported_as_a_409(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
-            from backend.app.database import get_engine
-
             with sessionmaker(bind=get_engine(os.environ["DATABASE_URL"]))() as session:
                 account = auth_service.create_account(
                     session,
@@ -243,6 +242,34 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
         ):
             self.assertEqual(response.status_code, 401)
         self.assertFalse((Path(temp_dir) / "import_uploads").exists())
+
+    def test_authorized_sync_uses_the_request_database_without_reinitializing_it(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client = self._client(temp_dir)
+            headers = self._create_profile(client, slug="owner", email="owner@example.test")
+            engine = get_engine(os.environ["DATABASE_URL"])
+            sessions = sessionmaker(bind=engine)
+            with sessions() as session:
+                owner = UserRepository(session).require_user_by_slug("owner")
+                owner.spotify_sync_enabled = True
+                SpotifyCredentialsRepository(session).upsert_credentials(
+                    user_id=owner.id, refresh_token="token"
+                )
+            with patch(
+                "backend.app.job_database.create_schema",
+                side_effect=AssertionError("unexpected schema setup"),
+            ), patch(
+                "backend.app.services.spotify_tracking_service.SpotifyAPI"
+            ) as spotify:
+                spotify.return_value.fetch_recent_tracks.return_value = []
+                response = client.post("/api/users/owner/spotify/sync", headers=headers)
+            self.assertEqual(response.status_code, 202)
+            self.assertEqual(response.json()["tracks_fetched"], 0)
+            with sessions() as session:
+                owner = UserRepository(session).require_user_by_slug("owner")
+                credentials = SpotifyCredentialsRepository(session).get_for_user(owner.id)
+                self.assertIsNotNone(credentials.last_successful_sync_at)
+            engine.dispose()
 
     def test_ineligible_owner_cannot_start_or_run_spotify_sync(self):
         with tempfile.TemporaryDirectory() as temp_dir:

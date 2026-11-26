@@ -60,6 +60,37 @@ class ApiAlbumActionTests(unittest.TestCase):
         client.headers.update({"Authorization": f"Bearer {token}"})
         return client, album["id"], database_url
 
+    def test_legacy_album_mutation_uses_one_owner_authorized_session(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            client, album_id, _ = self._client(temp_dir)
+            sessions = client.app.state.session_factory
+            with sessions() as session:
+                account = auth_service.create_account(
+                    session, email="other@example.test", password="fixture-password",
+                )
+                other_token = auth_service.create_session(session, account=account)
+                session.commit()
+
+            path = f"/api/albums/{album_id}/listens"
+            denied = client.post(
+                path,
+                headers={"Authorization": f"Bearer {other_token}"},
+                json={"listened_at": "2026-04-02T10:00:00.000Z"},
+            )
+            self.assertEqual(denied.status_code, 403)
+
+            with patch.object(client.app.state, "session_factory", wraps=sessions) as factory:
+                response = client.post(
+                    path, json={"listened_at": "2026-04-03T10:00:00.000Z"},
+                )
+                factory.assert_called_once_with()
+
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(
+                response.json()["listen_history"],
+                ["2026-04-01T10:00:00.000Z", "2026-04-03T10:00:00.000Z"],
+            )
+
     def test_refresh_one_album_updates_metadata_and_preserves_listens(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, album_id, _ = self._client(temp_dir)

@@ -4,9 +4,8 @@ import argparse
 import sys
 
 from dotenv import load_dotenv
-from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.services.auth_service import prebind_profile_owner
 
 
@@ -19,7 +18,7 @@ def main() -> int:
     parser.add_argument("account_email", help="Google email allowed to claim the profile")
     args = parser.parse_args()
 
-    with sessionmaker(bind=create_schema(), autoflush=False, autocommit=False)() as session:
+    with job_session() as session:
         try:
             user = prebind_profile_owner(
                 session,

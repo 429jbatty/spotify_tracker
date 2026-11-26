@@ -5,10 +5,10 @@ from collections import Counter, deque
 from dataclasses import dataclass, field
 from itertools import combinations
 
-from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import Album, AlbumCreditFact, User, UserAlbum
+from backend.app.models import AlbumCreditFact, User
+from backend.app.repositories.credit_repository import CreditRepository
 
 
 DEFAULT_EXCLUDED_FLAGS = {
@@ -418,13 +418,7 @@ def _parse_graph_album_focus(focus_node_id: str) -> int | None:
 
 
 def _require_user_album_ids(session: Session, user_id: int, album_ids: set[int]) -> set[int]:
-    owned_ids = set(
-        session.scalars(
-            select(UserAlbum.album_id)
-            .where(UserAlbum.user_id == user_id)
-            .where(UserAlbum.album_id.in_(album_ids))
-        ).all()
-    )
+    owned_ids = CreditRepository(session).library_album_ids(user_id, album_ids)
     if owned_ids != album_ids:
         missing = sorted(album_ids - owned_ids)
         raise KeyError(f"Album not found for user library: {missing}")
@@ -436,20 +430,7 @@ def _user_album_summaries(
     user_id: int,
     album_ids: set[int],
 ) -> dict[int, AlbumFactSummary]:
-    rows = session.execute(
-        select(
-            Album.id,
-            Album.album_key,
-            Album.artist,
-            Album.name,
-            Album.artist_mbid,
-            Album.image_url,
-            Album.local_image_path,
-        )
-        .join(UserAlbum, UserAlbum.album_id == Album.id)
-        .where(UserAlbum.user_id == user_id)
-        .where(Album.id.in_(album_ids))
-    ).all()
+    rows = CreditRepository(session).library_album_details(user_id, album_ids)
     return {
         album_id: AlbumFactSummary(
             album_id=album_id,
@@ -464,26 +445,14 @@ def _user_album_summaries(
 
 
 def _require_user(session: Session, user_slug: str) -> User:
-    user = session.scalars(select(User).where(User.slug == user_slug)).first()
+    user = CreditRepository(session).find_profile(user_slug)
     if user is None:
         raise KeyError(f"User not found: {user_slug}")
     return user
 
 
 def _coverage(session: Session, user_id: int) -> dict:
-    library_album_count = session.scalar(
-        select(func.count(UserAlbum.id)).where(UserAlbum.user_id == user_id)
-    ) or 0
-    albums_with_facts = session.scalar(
-        select(func.count(func.distinct(AlbumCreditFact.album_id)))
-        .join(UserAlbum, UserAlbum.album_id == AlbumCreditFact.album_id)
-        .where(UserAlbum.user_id == user_id)
-    ) or 0
-    fact_count = session.scalar(
-        select(func.count(AlbumCreditFact.id))
-        .join(UserAlbum, UserAlbum.album_id == AlbumCreditFact.album_id)
-        .where(UserAlbum.user_id == user_id)
-    ) or 0
+    library_album_count, albums_with_facts, fact_count = CreditRepository(session).library_coverage_counts(user_id)
     return {
         "library_album_count": library_album_count,
         "albums_with_facts": albums_with_facts,
@@ -493,21 +462,7 @@ def _coverage(session: Session, user_id: int) -> dict:
 
 
 def _user_fact_rows(session: Session, user_id: int) -> list[dict]:
-    rows = session.execute(
-        select(
-            AlbumCreditFact,
-            Album.album_key,
-            Album.artist,
-            Album.name,
-            Album.artist_mbid,
-            Album.image_url,
-            Album.local_image_path,
-        )
-        .join(Album, Album.id == AlbumCreditFact.album_id)
-        .join(UserAlbum, UserAlbum.album_id == Album.id)
-        .where(UserAlbum.user_id == user_id)
-        .order_by(AlbumCreditFact.person_name, Album.artist, Album.name)
-    ).all()
+    rows = CreditRepository(session).library_credit_facts(user_id)
     return [
         {
             "fact": fact,

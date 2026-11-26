@@ -533,7 +533,9 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["status"], "queued")
         self.assertIsNotNone(response.json()["import_session_id"])
-        start_worker.assert_called_once_with(response.json()["import_session_id"])
+        start_worker.assert_called_once_with(
+            response.json()["import_session_id"], client.app.state.session_factory,
+        )
         self.assertEqual(history_response.json()[0]["status"], "queued")
 
     def test_spotify_zip_upload_returns_queued_session_before_parsing(self):
@@ -553,7 +555,9 @@ class ApiImportTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["source"], "spotify_import")
         self.assertEqual(response.json()["status"], "queued")
-        start_worker.assert_called_once_with(response.json()["import_session_id"])
+        start_worker.assert_called_once_with(
+            response.json()["import_session_id"], client.app.state.session_factory,
+        )
         self.assertEqual(history_response.json()[0]["status"], "queued")
 
     def test_spotify_zip_rejects_non_zip_upload(self):
@@ -1998,7 +2002,13 @@ class ApiImportTests(unittest.TestCase):
         )
         self.assertGreater(log_count, 0)
         self.assertEqual(logs_response.status_code, 200)
+        self.assertEqual(history_item["status"], "completed")
         log_messages = [entry["message"] for entry in logs_response.json()]
+        self.assertEqual(log_messages.count("Spotify import completed."), 1)
+        self.assertLess(
+            log_messages.index("Finalizing Spotify import."),
+            log_messages.index("Spotify import completed."),
+        )
         self.assertIn("Spotify import queued.", log_messages)
         self.assertTrue(
             any("Checked Logged Spotify Artist - Logged Spotify Album" in message for message in log_messages)

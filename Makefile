@@ -44,7 +44,7 @@ dev-home:
 	$(MAKE) dev FRONTEND_HOST=0.0.0.0 HOME_MODE=1
 
 track:
-	$(PYTHON) main.py
+	$(PYTHON) -m backend.app.jobs.track_default_user
 
 track-all:
 	$(PYTHON) -m backend.app.jobs.track_all_users

@@ -1,4 +1,3 @@
-import json
 import re
 import unicodedata
 from collections import defaultdict
@@ -10,10 +9,9 @@ import structlog
 
 from backend.app.persistence_logging import database_error_fields
 
-from sqlalchemy import LargeBinary, cast, delete, select
 from sqlalchemy.orm import Session
 
-from backend.app.models import Album, AlbumCreditFact
+from backend.app.repositories.credit_repository import AlbumCreditSource, CreditRepository, ProjectedCreditFact
 
 
 logger = structlog.get_logger(__name__)
@@ -21,14 +19,6 @@ logger = structlog.get_logger(__name__)
 LEGACY_CREDIT_INGESTION_VERSION = "legacy_tuple_credit_v1"
 UNKNOWN_SCOPE = "unknown"
 
-
-@dataclass(frozen=True)
-class AlbumCreditSource:
-    album_id: int
-    artist: str
-    artist_mbid: str | None
-    metadata_json: dict
-    metadata_parse_error: bool = False
 
 
 @dataclass(frozen=True)
@@ -82,6 +72,7 @@ def rebuild_credit_facts(
     album_ids: Iterable[int] | None = None,
     commit: bool = True,
 ) -> RebuildResult:
+    repository = CreditRepository(session)
     stage = "load"
     try:
         sources = load_album_credit_sources(session, album_ids=album_ids)
@@ -90,9 +81,7 @@ def rebuild_credit_facts(
             result = RebuildResult(album_ids=[], deleted_count=0, inserted_count=0)
         else:
             stage = "rebuild"
-            deleted_count = session.execute(
-                delete(AlbumCreditFact).where(AlbumCreditFact.album_id.in_(source_ids))
-            ).rowcount or 0
+            deleted_count = repository.clear_facts(source_ids)
             now = datetime.now(timezone.utc).isoformat()
             facts = []
             skipped_parse_errors = 0
@@ -101,12 +90,8 @@ def rebuild_credit_facts(
                     skipped_parse_errors += 1
                     continue
                 facts.extend(_facts_for_album(source, now=now))
-            session.add_all(facts)
             stage = "commit" if commit else "flush"
-            if commit:
-                session.commit()
-            else:
-                session.flush()
+            repository.store_facts(facts, commit=commit)
             result = RebuildResult(
                 album_ids=source_ids, deleted_count=deleted_count,
                 inserted_count=len(facts), skipped_parse_error_count=skipped_parse_errors,
@@ -129,7 +114,7 @@ def preview_credit_facts(
     session: Session,
     *,
     album_ids: Iterable[int] | None = None,
-) -> list[AlbumCreditFact]:
+) -> list[ProjectedCreditFact]:
     now = datetime.now(timezone.utc).isoformat()
     facts = []
     for source in load_album_credit_sources(session, album_ids=album_ids):
@@ -144,34 +129,10 @@ def load_album_credit_sources(
     *,
     album_ids: Iterable[int] | None = None,
 ) -> list[AlbumCreditSource]:
-    stmt = select(
-        Album.id,
-        Album.artist,
-        Album.artist_mbid,
-        cast(Album.metadata_json, LargeBinary).label("metadata_json_blob"),
-    ).order_by(Album.id)
-    if album_ids is not None:
-        requested_ids = list(dict.fromkeys(album_ids))
-        if not requested_ids:
-            return []
-        stmt = stmt.where(Album.id.in_(requested_ids))
-
-    sources = []
-    for album_id, artist, artist_mbid, metadata_blob in session.execute(stmt):
-        metadata_json, parse_error = _decode_metadata_json(metadata_blob)
-        sources.append(
-            AlbumCreditSource(
-                album_id=album_id,
-                artist=artist,
-                artist_mbid=artist_mbid,
-                metadata_json=metadata_json,
-                metadata_parse_error=parse_error,
-            )
-        )
-    return sources
+    return CreditRepository(session).album_credit_sources(album_ids=album_ids)
 
 
-def _facts_for_album(source: AlbumCreditSource, *, now: str) -> list[AlbumCreditFact]:
+def _facts_for_album(source: AlbumCreditSource, *, now: str) -> list[ProjectedCreditFact]:
     parsed_credits = list(_iter_parsed_credits(source))
     album_track_count = _album_track_count(source.metadata_json)
     high_credit_album = len(parsed_credits) >= 100 or len(
@@ -215,7 +176,7 @@ def _facts_for_album(source: AlbumCreditSource, *, now: str) -> list[AlbumCredit
             accumulator.flags.add("low_track_share")
 
         facts.append(
-            AlbumCreditFact(
+            ProjectedCreditFact(
                 album_id=source.album_id,
                 person_key=person_key,
                 person_name=accumulator.person_name,
@@ -381,22 +342,3 @@ def _normalize_identity(value: str) -> str:
     normalized = unicodedata.normalize("NFKD", value)
     ascii_text = normalized.encode("ascii", "ignore").decode("ascii")
     return re.sub(r"\s+", " ", ascii_text.casefold()).strip()
-
-
-def _decode_metadata_json(value) -> tuple[dict, bool]:
-    if isinstance(value, dict):
-        return value, False
-    if isinstance(value, memoryview):
-        value = value.tobytes()
-    if isinstance(value, bytes):
-        text_value = value.decode("utf-8", "replace")
-    else:
-        text_value = str(value or "")
-    text_value = text_value.strip()
-    if not text_value:
-        return {}, False
-    try:
-        parsed = json.loads(text_value)
-    except json.JSONDecodeError:
-        return {}, True
-    return (parsed, False) if isinstance(parsed, dict) else ({}, True)

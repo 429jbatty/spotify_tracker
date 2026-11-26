@@ -7,10 +7,10 @@ import uuid
 from pathlib import Path
 
 from fastapi import APIRouter, File, Header, HTTPException, UploadFile, status
-from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
-from backend.app.database import get_engine
+from backend.app.database import SessionFactory
+from backend.app.dependencies import AppSessions
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 from backend.app.schemas import (
     CompletedAlbum,
@@ -37,14 +37,7 @@ SPOTIFY_ZIP_CONTENT_TYPES = {
 }
 
 
-def _session_factory():
-    settings = get_settings()
-    engine = get_engine(settings.database_url)
-    return sessionmaker(bind=engine, autoflush=False, autocommit=False)
-
-
-def _run_import_background_worker(import_session_id: int) -> None:
-    session_factory = _session_factory()
+def _run_import_background_worker(import_session_id: int, session_factory: SessionFactory) -> None:
     with bound_contextvars(import_session_id=import_session_id):
         try:
             with session_factory() as session:
@@ -54,31 +47,30 @@ def _run_import_background_worker(import_session_id: int) -> None:
                 structlog.get_logger(__name__).exception("import_failed")
 
 
-def _start_import_background_worker(import_session_id: int) -> None:
+def _start_import_background_worker(import_session_id: int, session_factory: SessionFactory) -> None:
     thread = threading.Thread(
         target=_run_import_background_worker,
-        args=(import_session_id,),
+        args=(import_session_id, session_factory),
         daemon=True,
     )
     thread.start()
 
 
-def resume_interrupted_imports() -> None:
-    session_factory = _session_factory()
+def resume_interrupted_imports(session_factory: SessionFactory) -> None:
     with session_factory() as session:
         import_session_ids = import_service.resumable_import_session_ids(session)
     for import_session_id in import_session_ids:
         logger.info("Auto-resuming import session %s.", import_session_id)
-        _start_import_background_worker(import_session_id)
+        _start_import_background_worker(import_session_id, session_factory)
 
 
 @router.post("/preview", response_model=ImportPreviewResponse)
 def preview_user_import(
+    session_factory: AppSessions,
     user_slug: str,
     request: ImportPreviewRequest,
     authorization: str | None = Header(default=None),
 ) -> ImportPreviewResponse:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
@@ -92,17 +84,17 @@ def preview_user_import(
 
 @router.post("/commit", response_model=ImportCommitResponse)
 def commit_user_import(
+    session_factory: AppSessions,
     user_slug: str,
     request: ImportPreviewRequest,
     authorization: str | None = Header(default=None),
 ) -> ImportCommitResponse:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
             repository = SqliteStateRepository(session, user_slug=user_slug)
             response = import_service.commit_import(session, repository, request)
-            _start_import_background_worker(response.import_session_id)
+            _start_import_background_worker(response.import_session_id, session_factory)
             return response
         except KeyError as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -112,12 +104,12 @@ def commit_user_import(
 
 @router.post("/spotify/upload", response_model=ImportCommitResponse)
 async def upload_spotify_import(
+    session_factory: AppSessions,
     user_slug: str,
     file: UploadFile = File(...),
     authorization: str | None = Header(default=None),
 ) -> ImportCommitResponse:
     artifact_path: Path | None = None
-    session_factory = _session_factory()
     try:
         # Authorize before writing a potentially large file to local storage.
         with session_factory() as session:
@@ -135,7 +127,7 @@ async def upload_spotify_import(
                 artifact_path=str(artifact_path),
                 original_filename=file.filename,
             )
-            _start_import_background_worker(response.import_session_id)
+            _start_import_background_worker(response.import_session_id, session_factory)
             return response
     except KeyError as exc:
         if artifact_path:
@@ -149,10 +141,10 @@ async def upload_spotify_import(
 
 @router.get("", response_model=list[ImportSessionSummary])
 def list_user_imports(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> list[ImportSessionSummary]:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
@@ -164,13 +156,13 @@ def list_user_imports(
 
 @router.get("/{import_session_id}/logs", response_model=list[ImportSessionLogEntry])
 def list_user_import_logs(
+    session_factory: AppSessions,
     user_slug: str,
     import_session_id: int,
     limit: int = 100,
     order: str = "asc",
     authorization: str | None = Header(default=None),
 ) -> list[ImportSessionLogEntry]:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
@@ -188,13 +180,13 @@ def list_user_import_logs(
 
 @router.get("/{import_session_id}/diagnostics", response_model=SpotifyImportDiagnosticsResponse)
 def get_spotify_import_diagnostics(
+    session_factory: AppSessions,
     user_slug: str,
     import_session_id: int,
     artist: str,
     album: str,
     authorization: str | None = Header(default=None),
 ) -> SpotifyImportDiagnosticsResponse:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
@@ -251,10 +243,10 @@ async def _store_spotify_zip_upload(file: UploadFile) -> Path:
 
 @router.get("/review", response_model=list[ImportReviewItem])
 def list_user_import_review(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> list[ImportReviewItem]:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
@@ -266,12 +258,12 @@ def list_user_import_review(
 
 @router.post("/review/{review_item_id}/resolve", response_model=CompletedAlbum)
 def resolve_user_import_review(
+    session_factory: AppSessions,
     user_slug: str,
     review_item_id: int,
     request: ImportResolveRequest,
     authorization: str | None = Header(default=None),
 ) -> CompletedAlbum:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
@@ -290,11 +282,11 @@ def resolve_user_import_review(
 
 @router.delete("/{import_session_id}", response_model=ImportDeleteResponse)
 def delete_user_import(
+    session_factory: AppSessions,
     user_slug: str,
     import_session_id: int,
     authorization: str | None = Header(default=None),
 ) -> ImportDeleteResponse:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)

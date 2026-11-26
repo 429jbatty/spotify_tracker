@@ -4,14 +4,13 @@ from collections import Counter
 from pathlib import Path
 
 from sqlalchemy import func, select
-from sqlalchemy.orm import sessionmaker
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.models import Album, AlbumCreditFact, AlbumListen, User, UserAlbum
 
 
@@ -141,9 +140,7 @@ def main() -> int:
     args = parser.parse_args()
 
     database_url = args.database_url or get_settings().database_url
-    engine = create_schema(database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    with session_factory() as session:
+    with job_session(database_url) as session:
         print(format_fact_audit(build_fact_audit(session, args.user_slug)))
 
     return 0

@@ -3,6 +3,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
@@ -43,6 +44,42 @@ class FakeSpotifyAPI:
 
 
 class SpotifyTrackingServiceTests(unittest.TestCase):
+    def test_batch_reuses_one_engine_and_continues_after_one_profile_fails(self):
+        class EmptyHistory:
+            def fetch_recent_tracks(self, after_timestamp):
+                return []
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            url = f"sqlite:///{Path(temp_dir) / 'batch.sqlite'}"
+            engine = create_schema(url)
+            sessions = sessionmaker(bind=engine)
+            with sessions() as session:
+                for slug in ("first", "second"):
+                    user = UserRepository(session).create_user(slug=slug, display_name=slug)
+                    user.spotify_sync_enabled = True
+                    SpotifyCredentialsRepository(session).upsert_credentials(user_id=user.id, refresh_token=slug)
+
+            with patch.dict("os.environ", {"DATABASE_URL": url}), patch(
+                "backend.app.database.create_engine", wraps=create_engine
+            ) as engines, patch.object(
+                spotify_tracking_service, "SpotifyAPI", side_effect=[RuntimeError("offline"), EmptyHistory()]
+            ):
+                results = spotify_tracking_service.run_tracking_for_all_users()
+
+            self.assertEqual(results["first"], {"error": "offline"})
+            self.assertEqual(results["second"]["tracks_fetched"], 0)
+            with sessions() as session:
+                users = UserRepository(session)
+                credentials = SpotifyCredentialsRepository(session)
+                first = credentials.get_for_user(users.require_user_by_slug("first").id)
+                second = credentials.get_for_user(users.require_user_by_slug("second").id)
+                self.assertEqual(first.last_sync_error, "offline")
+                self.assertIsNone(first.last_successful_sync_at)
+                self.assertIsNone(second.last_sync_error)
+                self.assertIsNotNone(second.last_successful_sync_at)
+            engine.dispose()
+            self.assertEqual(engines.call_count, 1)
+
     def test_spotify_client_failure_reports_initialization_phase(self):
         from structlog.contextvars import get_contextvars
 

@@ -5,6 +5,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from spotipy.exceptions import SpotifyException
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker
 
 from backend.app.database import create_schema
@@ -95,6 +96,44 @@ class SpotifyOAuthServiceTests(unittest.TestCase):
         self.assertEqual(credentials.refresh_token, "refresh-token")
         self.assertEqual(credentials.spotify_user_id, "spotify-user-id")
         self.assertEqual(credentials.scope, "user-read-recently-played")
+
+    def test_callback_rolls_back_credentials_if_oauth_state_cannot_be_consumed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            engine = create_schema(f"sqlite:///{Path(directory) / 'tracker.sqlite'}")
+            self.addCleanup(engine.dispose)
+            sessions = sessionmaker(bind=engine, autoflush=False)
+            state_hash = spotify_oauth_service._state_hash("callback-state")
+            with sessions() as session:
+                account = auth_service.create_account(
+                    session, email="friend@example.com", password="fixture-password",
+                )
+                user = UserRepository(session).create_user(
+                    slug="friend", display_name="Friend", owner_account_id=account.id,
+                )
+                user_id = user.id
+                user.spotify_sync_enabled = True
+                SpotifyCredentialsRepository(session).create_oauth_state(
+                    user_id=user_id, account_id=account.id, state_hash=state_hash,
+                    created_at=datetime.now(timezone.utc).isoformat(),
+                )
+
+            with engine.begin() as connection:
+                connection.exec_driver_sql(
+                    "CREATE TRIGGER reject_oauth_delete BEFORE DELETE ON spotify_oauth_states "
+                    "BEGIN SELECT RAISE(ABORT, 'fixture refuses state deletion'); END"
+                )
+            with sessions() as session, patch.object(
+                spotify_oauth_service, "_oauth", return_value=FakeOAuth(),
+            ), patch.object(spotify_oauth_service, "Spotify", FakeSpotify):
+                with self.assertRaises(IntegrityError):
+                    spotify_oauth_service.connect_user_from_callback(
+                        session, code="callback-code", state="callback-state",
+                    )
+
+            with sessions() as session:
+                repository = SpotifyCredentialsRepository(session)
+                self.assertIsNone(repository.get_for_user(user_id))
+                self.assertIsNotNone(repository.find_oauth_state(state_hash))
 
     def test_callback_rejects_ineligible_profile_without_calling_spotify(self):
         with tempfile.TemporaryDirectory() as temp_dir:

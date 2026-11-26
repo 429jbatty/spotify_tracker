@@ -4,9 +4,8 @@ import argparse
 import sys
 
 from dotenv import load_dotenv
-from sqlalchemy.orm import sessionmaker
 
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.services.auth_service import unbind_profile_owner
 
 
@@ -18,7 +17,7 @@ def main() -> int:
     parser.add_argument("user_slug", help="Existing profile slug, for example jacob")
     args = parser.parse_args()
 
-    with sessionmaker(bind=create_schema(), autoflush=False, autocommit=False)() as session:
+    with job_session() as session:
         try:
             user = unbind_profile_owner(session, user_slug=args.user_slug)
             unbound_slug = user.slug

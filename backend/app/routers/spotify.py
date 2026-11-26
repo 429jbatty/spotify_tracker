@@ -4,10 +4,9 @@ import structlog
 
 from fastapi import APIRouter, Header, HTTPException, status
 from fastapi.responses import RedirectResponse
-from sqlalchemy.orm import sessionmaker
 
 from backend.app.config import get_settings
-from backend.app.database import get_engine
+from backend.app.dependencies import AppSessions
 from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
@@ -23,18 +22,12 @@ router = APIRouter(tags=["spotify"])
 logger = structlog.get_logger(__name__)
 
 
-def _session_factory():
-    settings = get_settings()
-    engine = get_engine(settings.database_url)
-    return sessionmaker(bind=engine, autoflush=False, autocommit=False)
-
-
 @router.post("/users/{user_slug}/spotify/connect", response_model=SpotifyConnectResponse)
 def connect_spotify(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> SpotifyConnectResponse:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             user = auth_service.require_profile_owner(
@@ -50,7 +43,6 @@ def connect_spotify(
                     account_id=user.owner_account_id,
                 )
             )
-            session.commit()
             return response
         except (KeyError, LookupError) as exc:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
@@ -60,10 +52,10 @@ def connect_spotify(
 
 @router.get("/users/{user_slug}/spotify/status", response_model=SpotifyStatus)
 def spotify_status(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> SpotifyStatus:
-    session_factory = _session_factory()
     with session_factory() as session:
         try:
             user = auth_service.require_profile_owner(
@@ -93,11 +85,11 @@ def spotify_status(
 
 @router.post("/users/{user_slug}/spotify/sync", status_code=status.HTTP_202_ACCEPTED)
 def sync_spotify_now(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> dict[str, int]:
     try:
-        session_factory = _session_factory()
         with session_factory() as session:
             user = auth_service.require_profile_owner(
                 session,
@@ -105,7 +97,7 @@ def sync_spotify_now(
                 authorization=authorization,
             )
             spotify_access_service.require_spotify_sync_access(user)
-        return run_tracking_for_user(user_slug)
+        return run_tracking_for_user(user_slug, open_session=session_factory)
     except KeyError as exc:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
     except LookupError as exc:
@@ -116,10 +108,10 @@ def sync_spotify_now(
 
 @router.delete("/users/{user_slug}/spotify", status_code=status.HTTP_204_NO_CONTENT)
 def disconnect_spotify(
+    session_factory: AppSessions,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> None:
-    session_factory = _session_factory()
     with session_factory() as session:
         user = auth_service.require_profile_owner(
             session,
@@ -127,11 +119,10 @@ def disconnect_spotify(
             authorization=authorization,
         )
         SpotifyCredentialsRepository(session).delete_for_user(user.id)
-        session.commit()
 
 
 @router.get("/spotify/callback")
-def spotify_callback(code: str | None = None, state: str | None = None) -> RedirectResponse:
+def spotify_callback(session_factory: AppSessions, code: str | None = None, state: str | None = None) -> RedirectResponse:
     if not code or not state:
         logger.warning("spotify_connection_failed", reason="invalid_request")
         raise HTTPException(
@@ -139,7 +130,6 @@ def spotify_callback(code: str | None = None, state: str | None = None) -> Redir
             detail="Spotify callback is missing code or state.",
         )
 
-    session_factory = _session_factory()
     try:
         with session_factory() as session:
             user_slug = spotify_oauth_service.connect_user_from_callback(

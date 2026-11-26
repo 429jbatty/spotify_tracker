@@ -3,31 +3,17 @@ import logging
 from contextlib import contextmanager
 from dotenv import load_dotenv
 
-from sqlalchemy.orm import sessionmaker
-
-from backend.app.config import get_settings
-from backend.app.database import create_schema
+from backend.app.job_database import job_session
 from backend.app.repositories.sqlite_state_repository import SqliteStateRepository
 
 load_dotenv()
 SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}
 
 
-def _sqlite_repository():
-    settings = get_settings()
-    engine = create_schema(settings.database_url)
-    session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
-    session = session_factory()
-    return session, SqliteStateRepository(session)
-
-
 @contextmanager
 def sqlite_state_repository():
-    session, repository = _sqlite_repository()
-    try:
-        yield repository
-    finally:
-        session.close()
+    with job_session() as session:
+        yield SqliteStateRepository(session)
 
 
 def load_state():

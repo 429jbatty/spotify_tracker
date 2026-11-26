@@ -1,3 +1,6 @@
+from collections.abc import Callable
+from contextlib import AbstractContextManager
+from datetime import datetime, timezone
 import time
 import uuid
 
@@ -5,16 +8,14 @@ import structlog
 from requests.exceptions import Timeout as RequestsTimeout
 from spotipy.exceptions import SpotifyException
 from structlog.contextvars import bind_contextvars, bound_contextvars
-from datetime import datetime, timezone
 
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session
 
 import tracking
 import utils as util
 from backend.app.album_completion import ALBUM_COMPLETION_THRESHOLD
-from backend.app.config import get_settings
+from backend.app.job_database import job_session, job_session_factory
 from backend.app.persistence_logging import database_error_fields
-from backend.app.database import create_schema
 from backend.app.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
@@ -34,29 +35,32 @@ def run_tracking_for_default_user() -> dict[str, int]:
 
 
 def run_tracking_for_all_users() -> dict[str, dict[str, int | str]]:
-    session_factory = _session_factory()
     results: dict[str, dict[str, int | str]] = {}
+    with job_session_factory() as sessions:
+        with sessions() as session:
+            users = SpotifyCredentialsRepository(session).users_with_credentials()
+            user_slugs = [user.slug for user in users]
 
-    with session_factory() as session:
-        credential_repository = SpotifyCredentialsRepository(session)
-        users = credential_repository.users_with_credentials()
-        user_slugs = [user.slug for user in users]
-
-    for user_slug in user_slugs:
-        try:
-            results[user_slug] = run_tracking_for_user(user_slug)
-        except Exception as exc:
-            _record_sync_error(user_slug, str(exc))
-            results[user_slug] = {"error": str(exc)}
-
+        for user_slug in user_slugs:
+            try:
+                results[user_slug] = run_tracking_for_user(user_slug, open_session=sessions)
+            except Exception as exc:
+                with sessions() as session:
+                    _record_sync_error(session, user_slug, str(exc))
+                results[user_slug] = {"error": str(exc)}
     return results
 
 
-def run_tracking_for_user(user_slug: str) -> dict[str, int]:
+def run_tracking_for_user(
+    user_slug: str,
+    *,
+    open_session: Callable[[], AbstractContextManager[Session]] = job_session,
+) -> dict[str, int]:
     started = time.perf_counter()
     with bound_contextvars(sync_run_id=uuid.uuid4().hex, user_id=None, sync_phase="initialize", album_state_saved=False):
         try:
-            result = _run_tracking_for_user(user_slug)
+            with open_session() as session:
+                result = _run_tracking_for_user(user_slug, session)
             logger.info("spotify_sync_completed", duration_ms=round((time.perf_counter() - started) * 1000, 3), **result)
             return result
         except Exception as exc:
@@ -68,87 +72,79 @@ def run_tracking_for_user(user_slug: str) -> dict[str, int]:
             raise
 
 
-def _run_tracking_for_user(user_slug: str) -> dict[str, int]:
-    session_factory = _session_factory()
-    with session_factory() as session:
-        user = UserRepository(session).require_user_by_slug(user_slug)
-        bind_contextvars(user_id=user.id)
-        logger.info("spotify_sync_started")
-        bind_contextvars(sync_phase="credentials")
-        require_spotify_sync_access(user)
-        credentials = _credentials_for_user(
-            session,
-            user.id,
-        )
-        repository = SqliteStateRepository(session, user_slug=user_slug)
-        bind_contextvars(sync_phase="load_state")
-        start_state = repository.load_album_state()
+def _run_tracking_for_user(user_slug: str, session: Session) -> dict[str, int]:
+    user = UserRepository(session).require_user_by_slug(user_slug)
+    bind_contextvars(user_id=user.id)
+    logger.info("spotify_sync_started")
+    bind_contextvars(sync_phase="credentials")
+    require_spotify_sync_access(user)
+    credentials = _credentials_for_user(
+        session,
+        user.id,
+    )
+    repository = SqliteStateRepository(session, user_slug=user_slug)
+    bind_contextvars(sync_phase="load_state")
+    start_state = repository.load_album_state()
 
-        starting_completed_count = len(start_state.get("completed_albums", {}))
+    starting_completed_count = len(start_state.get("completed_albums", {}))
 
-        bind_contextvars(sync_phase="initialize_spotify_client")
-        spotify = SpotifyAPI(credentials)
-        bind_contextvars(sync_phase="fetch_recent_tracks")
-        tracks = spotify.fetch_recent_tracks(start_state["last_checked"])
+    bind_contextvars(sync_phase="initialize_spotify_client")
+    spotify = SpotifyAPI(credentials)
+    bind_contextvars(sync_phase="fetch_recent_tracks")
+    tracks = spotify.fetch_recent_tracks(start_state["last_checked"])
 
-        bind_contextvars(sync_phase="derive_listens")
-        clean_up_state = tracking.cleanup_stale_albums(
-            start_state,
-            max_age_hours=STALE_HOURS,
-        )
-        updated_tracks_state = tracking.update_album_progress(
-            clean_up_state,
-            spotify,
-            tracks,
-        )
-        completed_album_ids = tracking.check_album_completion(
-            updated_tracks_state,
-            threshold=ALBUM_COMPLETION_THRESHOLD,
-        )
+    bind_contextvars(sync_phase="derive_listens")
+    clean_up_state = tracking.cleanup_stale_albums(
+        start_state,
+        max_age_hours=STALE_HOURS,
+    )
+    updated_tracks_state = tracking.update_album_progress(
+        clean_up_state,
+        spotify,
+        tracks,
+    )
+    completed_album_ids = tracking.check_album_completion(
+        updated_tracks_state,
+        threshold=ALBUM_COMPLETION_THRESHOLD,
+    )
 
-        newly_completed_albums = {}
-        for album_id in completed_album_ids:
-            new_entry = tracking.log_completed_album(updated_tracks_state, album_id)
-            del updated_tracks_state["albums_in_progress"][album_id]
-            newly_completed_albums = {**newly_completed_albums, **new_entry}
+    newly_completed_albums = {}
+    for album_id in completed_album_ids:
+        new_entry = tracking.log_completed_album(updated_tracks_state, album_id)
+        del updated_tracks_state["albums_in_progress"][album_id]
+        newly_completed_albums = {**newly_completed_albums, **new_entry}
 
-        base_state = updated_tracks_state.copy()
-        base_state["completed_albums"] = {}
-        if tracks:
-            base_state["last_checked"] = max(t["played_at"] for t in tracks)
+    base_state = updated_tracks_state.copy()
+    base_state["completed_albums"] = {}
+    if tracks:
+        base_state["last_checked"] = max(t["played_at"] for t in tracks)
 
-        end_state = base_state.copy()
-        end_state["completed_albums"] = util.merge_completed_albums_with_priority(
-            start_state=start_state.get("completed_albums", {}),
-            updated=newly_completed_albums,
-        )
-        end_state["most_recently_listened"] = tracking.get_most_recently_listened(
-            end_state,
-            num=10,
-        )
+    end_state = base_state.copy()
+    end_state["completed_albums"] = util.merge_completed_albums_with_priority(
+        start_state=start_state.get("completed_albums", {}),
+        updated=newly_completed_albums,
+    )
+    end_state["most_recently_listened"] = tracking.get_most_recently_listened(
+        end_state,
+        num=10,
+    )
 
-        bind_contextvars(sync_phase="save_album_state")
-        repository.save_album_state(end_state)
-        # The state save commits separately from the sync-success update below.
-        bind_contextvars(sync_phase="record_sync_success", album_state_saved=True)
-        SpotifyCredentialsRepository(session).record_sync_success(
-            user_id=user.id,
-            synced_at=_utc_now(),
-        )
+    bind_contextvars(sync_phase="save_album_state")
+    repository.save_album_state(end_state)
+    # The state save commits separately from the sync-success update below.
+    bind_contextvars(sync_phase="record_sync_success", album_state_saved=True)
+    SpotifyCredentialsRepository(session).record_sync_success(
+        user_id=user.id,
+        synced_at=_utc_now(),
+    )
 
-        final_completed_count = len(end_state["completed_albums"])
+    final_completed_count = len(end_state["completed_albums"])
 
-        return {
-            "tracks_fetched": len(tracks),
-            "completed_albums": len(completed_album_ids),
-            "net_album_count_change": final_completed_count - starting_completed_count,
-        }
-
-
-def _session_factory():
-    settings = get_settings()
-    engine = create_schema(settings.database_url)
-    return sessionmaker(bind=engine, autoflush=False, autocommit=False)
+    return {
+        "tracks_fetched": len(tracks),
+        "completed_albums": len(completed_album_ids),
+        "net_album_count_change": final_completed_count - starting_completed_count,
+    }
 
 
 def _credentials_for_user(
@@ -174,16 +170,14 @@ def _env_credentials() -> dict[str, str | None]:
     return util.get_local_credentials()
 
 
-def _record_sync_error(user_slug: str, error: str) -> None:
-    session_factory = _session_factory()
-    with session_factory() as session:
-        user = UserRepository(session).get_user_by_slug(user_slug)
-        if user is None:
-            return
-        SpotifyCredentialsRepository(session).record_sync_error(
-            user_id=user.id,
-            error=error,
-        )
+def _record_sync_error(session: Session, user_slug: str, error: str) -> None:
+    user = UserRepository(session).get_user_by_slug(user_slug)
+    if user is None:
+        return
+    SpotifyCredentialsRepository(session).record_sync_error(
+        user_id=user.id,
+        error=error,
+    )
 
 
 def _utc_now() -> str:
