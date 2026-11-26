@@ -10,7 +10,7 @@ from fastapi import APIRouter, File, Header, HTTPException, UploadFile, status
 
 from backend.app.config import get_settings
 from backend.app.database.engine import SessionFactory
-from backend.app.dependencies import AppSessions
+from backend.app.dependencies import AppSession, AppSessions
 from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.schemas import (
@@ -67,44 +67,44 @@ def resume_interrupted_imports(session_factory: SessionFactory) -> None:
 
 @router.post("/preview", response_model=ImportPreviewResponse)
 def preview_user_import(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     request: ImportPreviewRequest,
     authorization: str | None = Header(default=None),
 ) -> ImportPreviewResponse:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = AlbumLibrary(session, user)
-            return import_service.preview_import(session, repository, request)
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-        except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        repository = AlbumLibrary(session, user)
+        return import_service.preview_import(session, repository, request)
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
 
 @router.post("/commit", response_model=ImportCommitResponse)
 def commit_user_import(
+    session: AppSession,
     session_factory: AppSessions,
     user_slug: str,
     request: ImportPreviewRequest,
     authorization: str | None = Header(default=None),
 ) -> ImportCommitResponse:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = AlbumLibrary(session, user)
-            response = import_service.commit_import(session, repository, request)
-            _start_import_background_worker(response.import_session_id, session_factory)
-            return response
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-        except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        repository = AlbumLibrary(session, user)
+        response = import_service.commit_import(session, repository, request)
+        _start_import_background_worker(response.import_session_id, session_factory)
+        return response
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
 
 @router.post("/spotify/upload", response_model=ImportCommitResponse)
 async def upload_spotify_import(
+    session: AppSession,
     session_factory: AppSessions,
     user_slug: str,
     file: UploadFile = File(...),
@@ -113,24 +113,23 @@ async def upload_spotify_import(
     artifact_path: Path | None = None
     try:
         # Authorize before writing a potentially large file to local storage.
-        with session_factory() as session:
-            auth_service.require_profile_owner(
-                session,
-                user_slug=user_slug,
-                authorization=authorization,
-            )
+        auth_service.require_profile_owner(
+            session,
+            user_slug=user_slug,
+            authorization=authorization,
+        )
+        session.close()  # End authorization transaction before streaming the upload.
         artifact_path = await _store_spotify_zip_upload(file)
-        with session_factory() as session:
-            # A profile ID may be reused after deletion while the upload streams.
-            user = UserRepository(session).require_user_by_slug(user_slug)
-            response = import_service.create_spotify_import_session(
-                session,
-                user.id,
-                artifact_path=str(artifact_path),
-                original_filename=file.filename,
-            )
-            _start_import_background_worker(response.import_session_id, session_factory)
-            return response
+        # A profile ID may be reused after deletion while the upload streams.
+        user = UserRepository(session).require_user_by_slug(user_slug)
+        response = import_service.create_spotify_import_session(
+            session,
+            user.id,
+            artifact_path=str(artifact_path),
+            original_filename=file.filename,
+        )
+        _start_import_background_worker(response.import_session_id, session_factory)
+        return response
     except KeyError as exc:
         if artifact_path:
             artifact_path.unlink(missing_ok=True)
@@ -143,65 +142,62 @@ async def upload_spotify_import(
 
 @router.get("", response_model=list[ImportSessionSummary])
 def list_user_imports(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> list[ImportSessionSummary]:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            return import_service.import_history(session, user.id)
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        return import_service.import_history(session, user.id)
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
 
 @router.get("/{import_session_id}/logs", response_model=list[ImportSessionLogEntry])
 def list_user_import_logs(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     import_session_id: int,
     limit: int = 100,
     order: str = "asc",
     authorization: str | None = Header(default=None),
 ) -> list[ImportSessionLogEntry]:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            return import_service.import_session_logs(
-                session,
-                user.id,
-                import_session_id,
-                limit=limit,
-                order=order,
-            )
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        return import_service.import_session_logs(
+            session,
+            user.id,
+            import_session_id,
+            limit=limit,
+            order=order,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
 
 @router.get("/{import_session_id}/diagnostics", response_model=SpotifyImportDiagnosticsResponse)
 def get_spotify_import_diagnostics(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     import_session_id: int,
     artist: str,
     album: str,
     authorization: str | None = Header(default=None),
 ) -> SpotifyImportDiagnosticsResponse:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = AlbumLibrary(session, user)
-            return import_service.spotify_import_diagnostics(
-                session,
-                repository,
-                import_session_id,
-                artist=artist,
-                album=album,
-            )
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-        except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        repository = AlbumLibrary(session, user)
+        return import_service.spotify_import_diagnostics(
+            session,
+            repository,
+            import_session_id,
+            artist=artist,
+            album=album,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
 
 async def _store_spotify_zip_upload(file: UploadFile) -> Path:
@@ -243,58 +239,55 @@ async def _store_spotify_zip_upload(file: UploadFile) -> Path:
 
 @router.get("/review", response_model=list[ImportReviewItem])
 def list_user_import_review(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> list[ImportReviewItem]:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            return import_service.unresolved_review_items(session, user.id)
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        return import_service.unresolved_review_items(session, user.id)
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
 
 
 @router.post("/review/{review_item_id}/resolve", response_model=CompletedAlbum)
 def resolve_user_import_review(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     review_item_id: int,
     request: ImportResolveRequest,
     authorization: str | None = Header(default=None),
 ) -> CompletedAlbum:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            repository = AlbumLibrary(session, user)
-            return import_service.resolve_review_item(
-                session,
-                repository,
-                review_item_id,
-                request,
-            )
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-        except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        repository = AlbumLibrary(session, user)
+        return import_service.resolve_review_item(
+            session,
+            repository,
+            review_item_id,
+            request,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
 
 
 @router.delete("/{import_session_id}", response_model=ImportDeleteResponse)
 def delete_user_import(
-    session_factory: AppSessions,
+    session: AppSession,
     user_slug: str,
     import_session_id: int,
     authorization: str | None = Header(default=None),
 ) -> ImportDeleteResponse:
-    with session_factory() as session:
-        try:
-            user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
-            return import_service.delete_import_session(
-                session,
-                user.id,
-                import_session_id,
-            )
-        except KeyError as exc:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
-        except ValueError as exc:
-            raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))
+    try:
+        user = auth_service.require_profile_owner(session, user_slug=user_slug, authorization=authorization)
+        return import_service.delete_import_session(
+            session,
+            user.id,
+            import_session_id,
+        )
+    except KeyError as exc:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(exc))
+    except ValueError as exc:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=str(exc))

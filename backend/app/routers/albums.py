@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, Header, HTTPException, status
 
 from backend.app.services import metadata_refresh_logging
-from backend.app.dependencies import AppSessions
+from backend.app.dependencies import AppSession
 from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG
 from backend.app.services.manual_album_service import (
@@ -30,16 +30,15 @@ DUPLICATE_KEY_PREFIX = "Album key already exists: "
 
 
 def _default_album_library(
-    session_factory: AppSessions,
+    session: AppSession,
     authorization: str | None = Header(default=None),
 ) -> Iterator[AlbumLibrary]:
-    with session_factory() as session:
-        user = auth_service.require_profile_owner(
-            session,
-            user_slug=DEFAULT_USER_SLUG,
-            authorization=authorization,
-        )
-        yield AlbumLibrary(session, user)
+    user = auth_service.require_profile_owner(
+        session,
+        user_slug=DEFAULT_USER_SLUG,
+        authorization=authorization,
+    )
+    yield AlbumLibrary(session, user)
 
 
 DefaultAlbumLibrary = Annotated[AlbumLibrary, Depends(_default_album_library)]

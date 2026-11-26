@@ -94,13 +94,10 @@ class DiagnosticLoggingTests(unittest.TestCase):
 
     def test_auth_failure_logs_category_without_callback_credentials(self):
         session = Mock()
-        session_context = Mock()
-        session_context.__enter__ = Mock(return_value=session)
-        session_context.__exit__ = Mock(return_value=False)
         with patch.object(auth, 'get_settings', return_value=SimpleNamespace(frontend_origin='https://frontend.test')), \
              patch.object(auth.auth_service, 'complete_google_sign_in', side_effect=HTTPException(status_code=503, detail='private')), \
              capture_logs() as events:
-            response = auth.google_callback(lambda: session_context, code='secret-code', state='secret-state', error=None)
+            response = auth.google_callback(session, code='secret-code', state='secret-state', error=None)
         self.assertEqual(response.status_code, 303)
         self.assertEqual((events[0]['event'], events[0]['reason']), ('sign_in_failed', 'unavailable'))
         self.assertNotIn('secret', repr(events))
@@ -112,14 +109,11 @@ class DiagnosticLoggingTests(unittest.TestCase):
 
     def test_google_success_logs_account_only_after_commit(self):
         session = Mock()
-        session_context = Mock()
-        session_context.__enter__ = Mock(return_value=session)
-        session_context.__exit__ = Mock(return_value=False)
         account = SimpleNamespace(id=42, email='private@example.test')
         with patch.object(auth, 'get_settings', return_value=SimpleNamespace(frontend_origin='https://frontend.test')), \
              patch.object(auth.auth_service, 'complete_google_sign_in', return_value=(account, 'secret-token')), \
              capture_logs() as events:
-            response = auth.google_callback(lambda: session_context, code='secret-code', state='secret-state', error=None)
+            response = auth.google_callback(session, code='secret-code', state='secret-state', error=None)
         self.assertEqual(response.status_code, 303)
         session.commit.assert_called_once()
         self.assertEqual((events[0]['event'], events[0]['account_id']), ('sign_in_succeeded', 42))

@@ -6,7 +6,7 @@ from fastapi import APIRouter, Header, HTTPException, Query, Response, status
 from fastapi.responses import RedirectResponse
 
 from backend.app.config import get_settings
-from backend.app.dependencies import AppSessions
+from backend.app.dependencies import AppSession
 from backend.app.schemas import AuthenticatedAccount, GoogleAuthorizeResponse
 from backend.app.services import auth_service
 
@@ -15,52 +15,48 @@ logger = structlog.get_logger(__name__)
 
 
 @router.get("/google/start", response_model=GoogleAuthorizeResponse)
-def start_google_sign_in(session_factory: AppSessions) -> GoogleAuthorizeResponse:
-    with session_factory() as session:
-        url = auth_service.begin_google_sign_in(session, settings=get_settings())
-        return GoogleAuthorizeResponse(authorize_url=url)
+def start_google_sign_in(session: AppSession) -> GoogleAuthorizeResponse:
+    url = auth_service.begin_google_sign_in(session, settings=get_settings())
+    return GoogleAuthorizeResponse(authorize_url=url)
 
 
 @router.get("/me", response_model=AuthenticatedAccount)
-def current_account(session_factory: AppSessions, authorization: str | None = Header(default=None)) -> AuthenticatedAccount:
-    with session_factory() as session:
-        account = auth_service.require_account(session, authorization=authorization)
-        return AuthenticatedAccount(**auth_service.account_payload(session, account))
+def current_account(session: AppSession, authorization: str | None = Header(default=None)) -> AuthenticatedAccount:
+    account = auth_service.require_account(session, authorization=authorization)
+    return AuthenticatedAccount(**auth_service.account_payload(session, account))
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
-def logout(session_factory: AppSessions, authorization: str | None = Header(default=None)) -> Response:
-    with session_factory() as session:
-        auth_service.revoke_session(session, authorization=authorization)
+def logout(session: AppSession, authorization: str | None = Header(default=None)) -> Response:
+    auth_service.revoke_session(session, authorization=authorization)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.get("/google/callback")
 def google_callback(
-    session_factory: AppSessions,
+    session: AppSession,
     code: str | None = Query(default=None),
     state: str | None = Query(default=None),
     error: str | None = Query(default=None),
 ):
     settings = get_settings()
-    with session_factory() as session:
-        if error:
-            auth_service.cancel_google_sign_in(session, state=state)
-            logger.info("sign_in_failed", provider="google", reason="cancelled")
-            return _frontend_auth_error_redirect(settings.frontend_origin, "cancelled")
-        if not code or not state:
-            logger.warning("sign_in_failed", provider="google", reason="invalid_request")
-            return _frontend_auth_error_redirect(settings.frontend_origin, "invalid_request")
-        result = auth_service.complete_google_sign_in_callback(
-            session, code=code, state=state, settings=settings,
-        )
-        if isinstance(result, HTTPException):
-            reason = _auth_error_code(result)
-            logger.warning("sign_in_failed", provider="google", reason=reason)
-            return _frontend_auth_error_redirect(settings.frontend_origin, reason)
-        account, session_token = result
-        logger.info("sign_in_succeeded", provider="google", account_id=account.id)
-        fragment = urlencode({"session_token": session_token, "email": account.email})
+    if error:
+        auth_service.cancel_google_sign_in(session, state=state)
+        logger.info("sign_in_failed", provider="google", reason="cancelled")
+        return _frontend_auth_error_redirect(settings.frontend_origin, "cancelled")
+    if not code or not state:
+        logger.warning("sign_in_failed", provider="google", reason="invalid_request")
+        return _frontend_auth_error_redirect(settings.frontend_origin, "invalid_request")
+    result = auth_service.complete_google_sign_in_callback(
+        session, code=code, state=state, settings=settings,
+    )
+    if isinstance(result, HTTPException):
+        reason = _auth_error_code(result)
+        logger.warning("sign_in_failed", provider="google", reason=reason)
+        return _frontend_auth_error_redirect(settings.frontend_origin, reason)
+    account, session_token = result
+    logger.info("sign_in_succeeded", provider="google", account_id=account.id)
+    fragment = urlencode({"session_token": session_token, "email": account.email})
     return RedirectResponse(url=f"{settings.frontend_origin.rstrip('/')}/auth/callback#{fragment}", status_code=status.HTTP_303_SEE_OTHER)
 
 
