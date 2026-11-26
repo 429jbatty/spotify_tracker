@@ -5,7 +5,9 @@ from unittest.mock import Mock, patch
 from structlog.testing import capture_logs
 
 from spotify_manager import SpotifyAPI
-from backend.app.services.import_service import _log_candidate_outcomes, _resolve_spotify_catalog_for_import, _empty_summary
+from backend.app.services.imports.candidate_results import log_candidate_outcomes
+from backend.app.services.imports.progress import empty_summary
+from backend.app.services.imports.spotify_source import resolve_spotify_catalog_for_import
 from backend.app.services.spotify_catalog_service import SpotifyCatalogUnavailable
 
 
@@ -35,14 +37,14 @@ class OperationalEventsTests(unittest.TestCase):
         ]
         repository = SimpleNamespace(user=SimpleNamespace(id=1))
         import_session = SimpleNamespace(id=2)
-        summary = _empty_summary()
-        with patch("backend.app.services.import_service.import_spotify", autospec=True) as spotify_rows, \
-             patch("backend.app.services.import_service._append_import_log"), \
-             patch("backend.app.services.import_service.spotify_catalog_service.resolve_tracks_by_uri", side_effect=SpotifyCatalogUnavailable("offline")), \
+        summary = empty_summary()
+        with patch("backend.app.services.imports.spotify_source.import_spotify", autospec=True) as spotify_rows, \
+             patch("backend.app.services.imports.spotify_source.append_import_log"), \
+             patch("backend.app.services.spotify_catalog_service.resolve_tracks_by_uri", side_effect=SpotifyCatalogUnavailable("offline")), \
              capture_logs() as events:
             spotify_rows.unresolved_catalog_rows.return_value = rows
             spotify_rows.fallback_count.return_value = 2
-            _resolve_spotify_catalog_for_import(session, repository, import_session, summary)
+            resolve_spotify_catalog_for_import(session, repository, import_session, summary)
         event = next(event for event in events if event["event"] == "spotify_catalog_fallback")
         self.assertEqual(event["unique_track_ids"], 1)
         self.assertEqual(event["fallback_source_rows"], 2)
@@ -54,11 +56,11 @@ class OperationalEventsTests(unittest.TestCase):
         # the lookup query returns none because no IDs remain to be attempted.
         repository = SimpleNamespace(user=SimpleNamespace(id=1))
         import_session = SimpleNamespace(id=2)
-        summary = _empty_summary()
-        with patch("backend.app.services.import_service.import_spotify", autospec=True) as spotify_rows, capture_logs() as events:
+        summary = empty_summary()
+        with patch("backend.app.services.imports.spotify_source.import_spotify", autospec=True) as spotify_rows, capture_logs() as events:
             spotify_rows.unresolved_catalog_rows.return_value = []
             spotify_rows.fallback_count.return_value = 3
-            _resolve_spotify_catalog_for_import(session, repository, import_session, summary)
+            resolve_spotify_catalog_for_import(session, repository, import_session, summary)
         self.assertEqual(events[0]["reason"], "no_unresolved_track_uris")
         self.assertEqual(events[0]["fallback_source_rows"], 3)
 
@@ -67,7 +69,7 @@ class OperationalEventsTests(unittest.TestCase):
                       SimpleNamespace(status="partial_listen"),
                       SimpleNamespace(status="candidate_review")]
         with capture_logs() as events:
-            _log_candidate_outcomes(candidates, scope="resume_subset")
+            log_candidate_outcomes(candidates, scope="resume_subset")
         event = events[0]
         self.assertEqual(event["candidate_scope"], "resume_subset")
         self.assertEqual(event["album_session_candidates"], 3)

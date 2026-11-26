@@ -79,7 +79,7 @@ class MaintenanceLoggingTests(unittest.TestCase):
         )
         session = Mock()
         import_session = SimpleNamespace(status='completed', id=7)
-        with patch.object(import_service, '_append_import_log') as append_log, capture_logs() as events:
+        with patch.object(import_service, 'append_import_log') as append_log, capture_logs() as events:
             import_service._run_post_import_artwork_backfill(session, repository, import_session)
         event = next(e for e in events if e['event'] == 'post_import_artwork_backfill_failed')
         self.assertEqual(event['database_operation'], 'write')

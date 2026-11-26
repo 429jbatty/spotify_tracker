@@ -34,10 +34,12 @@ silent fallbacks.
 Pydantic API contracts live in `backend/app/schemas.py`. Keep frontend API
 usage in `frontend/src/services/albumApi.js` aligned with these contracts.
 
-Import routes start background workers and then delegate source parsing,
-candidate matching, progress updates, review rows, and cleanup to
-`backend/app/services/import_service.py`. Keep router changes limited to HTTP
-validation, response shaping, and expected error translation.
+Import routes use `backend/app/services/import_service.py` for public entry
+points and worker dispatch. The Last.fm and Spotify workflows in
+`backend/app/services/imports/` own their transaction checkpoints. See
+[Imports](imports.md#backend-module-map) for matching, review and recovery.
+Keep router changes limited to HTTP validation, response shaping, and expected
+error translation.
 
 ## Jobs and Scripts
 

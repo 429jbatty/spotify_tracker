@@ -38,8 +38,9 @@ and app state are user-scoped.
 - Artwork caching: use `backend/app/services/artwork_cache_service.py` and the
   `MEDIA_DIR`/`DATA_DIR` settings.
 - Imports: use `backend/app/routers/imports.py` for HTTP boundaries and
-  `backend/app/services/import_service.py` for Last.fm, Spotify ZIP, review,
-  diagnostics, and cleanup behavior.
+  `backend/app/services/import_service.py` for public entry points and worker
+  dispatch. Source workflows, matching, review and diagnostics live in
+  `backend/app/services/imports/`. See `docs/imports.md` for the module map.
 - Public activity and splash data: use `backend/app/routers/public.py` and
   `backend/app/services/public_activity_service.py`.
 - API contracts: update `backend/app/schemas.py` and the matching frontend API
@@ -80,8 +81,8 @@ and app state are user-scoped.
 - Import flows should store raw source events first, derive album-listen
   candidates second, and send uncertain but plausible candidates to review
   instead of silently creating or dropping listens.
-- `backend/app/services/import_service.py` is a high-risk module. Keep edits
-  focused, preserve resumable import statuses, and cover Last.fm/Spotify ZIP
+- Import workflows are high risk. Keep edits focused, preserve resumable
+  statuses and transaction checkpoints, and cover Last.fm and Spotify ZIP
   changes with import tests.
 
 ## Frontend Standards
