@@ -95,16 +95,17 @@ Legacy fallback fields include `endTime`, `msPlayed`, `artistName`, and
 
 ## Dedupe
 
-The raw event fingerprint uses Spotify URI when present:
+SQLite enforces uniqueness on `(user_id, event_fingerprint)`. For a play with
+a Spotify URI, the importer hashes these fields:
 
 ```text
-user_id + played_at + ms_played + spotify_track_uri
+played_at + ms_played + case-folded spotify_track_uri
 ```
 
 When URI is absent, it falls back to normalized names:
 
 ```text
-user_id + played_at + ms_played + normalized artist + normalized album + normalized track
+played_at + ms_played + normalized artist + normalized album + normalized track
 ```
 
 Raw dedupe happens before album-session derivation, so duplicate upload rows do
@@ -172,9 +173,8 @@ track URIs in batches and uses Spotify's own album identity for completion:
   matches do not silently become album listens
 - send uncertain but plausible sessions to review
 
-Spotify URI is still the raw dedupe key when present. For completion, resolved
-Spotify catalog data is authoritative for Spotify-sourced listens; MusicBrainz is
-the enrichment source rather than the source of the Spotify album track count.
+Resolved Spotify catalog data supplies the album track count used for
+completion. MusicBrainz supplies enrichment metadata.
 
 ## Progress States
 
@@ -197,25 +197,11 @@ candidates, and unique metadata lookups are different units.
 
 ## Performance Shape
 
-The optimized import avoids mirroring every Spotify play into
-`imported_listening_events`. For a 160k-row export:
-
-- SQLite/local processing should usually be 60-85% faster than a per-play
-  derived-row flow.
-- End-to-end import should usually be 40-70% faster when MusicBrainz is not the
-  dominant cost.
-- End-to-end import may only be 15-35% faster when thousands of uncached
-  MusicBrainz lookups dominate runtime.
-
-The main runtime drivers are unique album count, metadata cache hit rate,
-MusicBrainz rate limiting, disk speed, and transaction size.
-
-Keep the SQLite path optimized before considering a database migration. The
-importer should short-circuit Spotify catalog sessions that are clearly below
-the completion threshold, update candidate progress at coarse intervals, and
-bulk-persist actionable album-session rows. Revisit Postgres only if a
-75k-100k row Spotify ZIP still spends more than 2-3 minutes in local import
-processing after excluding Spotify catalog and MusicBrainz network time.
+The importer stores raw plays in `spotify_streaming_events` and derives
+album-session candidates from those rows. To investigate a slow run, compare
+the time spent inserting raw rows, resolving distinct Spotify tracks, grouping
+sessions, and fetching uncached album metadata. The number of uploaded plays
+alone cannot predict the MusicBrainz work.
 
 Raw insert batch size must stay below SQLite's bind-parameter limit. When new
 columns are added to `spotify_streaming_events`, recalculate:
@@ -252,7 +238,7 @@ Backend tests:
 
 ```bash
 ./.venv/bin/python -m unittest tests.test_api_imports -v
-./.venv/bin/python -m unittest tests.test_sqlite_migrations -v
+./.venv/bin/python -m unittest tests.test_database_schema -v
 make test
 ```
 

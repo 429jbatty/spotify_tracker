@@ -16,8 +16,8 @@ here so future changes can target it directly.
   evaluation, confidence diagnostics, Spotify URL resolution, and safe cover art
   lookup.
 - `album_metadata_service.py`: public metadata entry points, tracklist/credit
-  extraction, album-record shaping, and compatibility wrappers around resolver
-  scoring helpers.
+  extraction, and album-record shaping. The fixture benchmark also uses its
+  enriched-release selection helper.
 - `metadata_refresh_service.py`: refresh orchestration that updates stored
   metadata while preserving listen history and user data.
 - `backend/app/services/artwork_cache_service.py`: downloads remote artwork
@@ -190,55 +190,15 @@ Current implications:
 - The resolver may perform more bounded MusicBrainz wrapper calls than the old
   one-shot flow in order to avoid bad metadata writes.
 
-## Release Selection Today
+## Release selection
 
-There are legacy release selection helpers plus the resolver's bounded release
-candidate scoring.
-
-### `choose_best_release(...)`
-
-This helper is retained for compatibility and tests, but the main public
-metadata entry points now use `resolve_musicbrainz_candidate(...)`.
-
-It receives release summaries from `get_releases_for_group(...)`, then:
-
-1. Keeps releases whose `status` is `Official`, falling back to all releases if
-   none are official.
-2. Keeps summaries whose release title exactly equals the selected release-group
-   title, falling back to all official summaries if none match exactly.
-3. Splits summaries by medium format:
-   - any format containing `digital` goes into `digital`
-   - everything else goes into `physical`
-4. Prefers digital summaries if any exist; otherwise uses physical summaries.
-5. Sorts by release `date`, earliest first.
-6. If multiple releases share that earliest date, prefers country `US`.
-7. Returns the selected release summary.
-
-Known limitation: this path only has summary data. It does not inspect full
-tracklists, cover art, labels, or relationship richness before choosing.
-
-### `_choose_best_enriched_release(...)`
-
-This fuller helper is retained for compatibility and the benchmark's legacy
-comparison path. The resolver has its own full-release scoring for current
-metadata lookups.
-
-It receives full releases plus cover art URLs and scores each option:
-
-- `+40` exact normalized release title match to the release-group title
-- `+20` official status on full release or summary
-- `+30` cover art present
-- `+10` label info present
-- `+8` release date present
-- `+18` track count equals the most common positive track count among
-  candidates
-- small penalty when track count exceeds the preferred track count
-- `+4` digital media format
-- `+3` CD media format
-- `+2` country is `US`, `GB`, or `XW`
-- up to `+20` for relationship count
-
-It sorts by descending score, then by earliest release date.
+The resolver evaluates up to six ranked release groups. It ranks official
+release summaries first, falls back to the available summaries when necessary,
+and examines up to four full releases per group within an overall budget of 18.
+A full release is scored for title match, status, track count, labels, date,
+artwork, country, format, and relationships. Confidence combines the group
+score (72%) and the full-release score (28%). The offline benchmark uses
+`_choose_best_enriched_release` to score its comparison implementation.
 
 ## Album Record Construction
 

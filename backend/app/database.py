@@ -1,14 +1,15 @@
-from collections.abc import Generator
 from pathlib import Path
 from urllib.parse import unquote
 
-from sqlalchemy import event
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session, sessionmaker
+import structlog
+from sqlalchemy import create_engine, event, text
+from sqlalchemy.dialects.sqlite import insert
+from sqlalchemy.exc import SQLAlchemyError
 
 from backend.app.config import get_settings
-from backend.app.migrations import run_sqlite_migrations
-from backend.app.models import Base
+from backend.app.models import Base, User
+from backend.app.persistence_logging import database_error_fields
+from backend.app.repositories.user_repository import DEFAULT_USER_DISPLAY_NAME, DEFAULT_USER_SLUG
 
 
 def _ensure_sqlite_parent(database_url: str) -> None:
@@ -53,16 +54,31 @@ def _configure_sqlite_engine(target_engine) -> None:
 
 
 engine = get_engine()
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
 
 def create_schema(database_url: str | None = None):
     target_engine = get_engine(database_url) if database_url else engine
-    Base.metadata.create_all(bind=target_engine)
-    run_sqlite_migrations(target_engine)
+    try:
+        Base.metadata.create_all(bind=target_engine)
+        if target_engine.dialect.name == "sqlite":
+            with target_engine.begin() as connection:
+                connection.execute(
+                    insert(User)
+                    .values(slug=DEFAULT_USER_SLUG, display_name=DEFAULT_USER_DISPLAY_NAME)
+                    .on_conflict_do_nothing(index_elements=[User.slug])
+                )
+                connection.execute(text(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS uq_albums_release_group_mbid "
+                    "ON albums (release_group_mbid) "
+                    "WHERE release_group_mbid IS NOT NULL AND release_group_mbid != ''"
+                ))
+                connection.execute(text(
+                    "CREATE UNIQUE INDEX IF NOT EXISTS uq_users_owner_account_id "
+                    "ON users (owner_account_id) WHERE owner_account_id IS NOT NULL"
+                ))
+    except SQLAlchemyError as exc:
+        structlog.get_logger(__name__).error(
+            "database_schema_initialization_failed", **database_error_fields(exc)
+        )
+        raise
     return target_engine
-
-
-def get_session() -> Generator[Session, None, None]:
-    with SessionLocal() as session:
-        yield session

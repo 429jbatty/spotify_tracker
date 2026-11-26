@@ -3,8 +3,6 @@
 This is the application logging guide for contributors and agents. For setup,
 service management, access, and recovery, see the
 [observability runbook](../deploy/observability/README.md).
-The [implementation plan](logging-implementation-plan.md) lists proposed
-events and areas for future coverage.
 
 ## Status and infrastructure
 
@@ -25,6 +23,9 @@ can forward local files to the same Loki with `environment=development`; it is
 not required for normal development. Loki is configured for 30-day production
 and 3-day development retention. Recovery after an outage is best effort, and
 the app must continue working when observability services are unavailable.
+
+Schema startup failures emit `database_schema_initialization_failed` with the
+sanitized database error fields used by the maintenance dashboard.
 
 ## Logging practices
 

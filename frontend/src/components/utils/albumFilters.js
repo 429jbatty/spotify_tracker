@@ -28,7 +28,7 @@ function addAlbumFieldMatch(matches, term, field, label, value) {
   });
 }
 
-export function getAlbumCredits(album) {
+function getAlbumCredits(album) {
   const credits = [];
 
   for (const track of album.tracklist || []) {
@@ -42,7 +42,7 @@ export function getAlbumCredits(album) {
   return credits;
 }
 
-export function getAlbumSearchMatches(album, searchTerm) {
+function getAlbumSearchMatches(album, searchTerm) {
   const term = normalize(searchTerm).trim();
   if (!term) return [];
 
@@ -95,12 +95,6 @@ export function getAlbumSearchMatches(album, searchTerm) {
   return matches;
 }
 
-export function albumMatchesSearch(album, searchTerm) {
-  const term = normalize(searchTerm).trim();
-  if (!term) return true;
-  return getAlbumSearchMatches(album, searchTerm).length > 0;
-}
-
 export function createAlbumFilter(type, value, label = value) {
   return {
     id: `${type}:${value}`,
@@ -110,7 +104,7 @@ export function createAlbumFilter(type, value, label = value) {
   };
 }
 
-export function albumMatchesFilter(album, filter) {
+function albumMatchesFilter(album, filter) {
   const value = normalize(filter.value);
 
   if (filter.type === "label") return normalize(album.label) === value;
@@ -137,7 +131,7 @@ export function albumMatchesFilter(album, filter) {
   return true;
 }
 
-export function albumMatchesFilters(album, filters = []) {
+function albumMatchesFilters(album, filters = []) {
   return filters.every((filter) => albumMatchesFilter(album, filter));
 }
 

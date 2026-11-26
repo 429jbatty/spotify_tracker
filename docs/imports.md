@@ -6,8 +6,7 @@ listening data. See `docs/lastfm-import.md` for Last.fm scrobbles,
 and `docs/import-testing.md` for validation plans.
 
 Existing runtime data also enters the app through Spotify tracking, manual
-album actions, metadata refresh scripts, and legacy/default state migration
-paths.
+album actions and metadata refresh scripts.
 
 ## Current Entry Points
 
@@ -18,8 +17,6 @@ paths.
   endpoints.
 - `backend/app/routers/albums.py`: supports manual album creation and listen
   mutation through the API.
-- `backend/app/migrations.py`: migrates legacy state into the SQLite schema
-  where needed.
 - `one_time_scripts/`: contains operational scripts for refresh, artwork cache,
   and user deletion.
 
@@ -29,8 +26,8 @@ If CSV, Google Sheets, or another import source is added, keep the feature
 aligned with the existing data model:
 
 - Parse source data into normalized listening events before touching SQLite.
-- Preview and validate import results before committing destructive or noisy
-  changes.
+- Provide an appropriate preview or validation step for each source; Spotify ZIP
+  uploads create an import session directly and process it in the background.
 - Deduplicate by user, source, album candidate, and listened timestamp.
 - Reuse existing albums when artist/album matches are clear.
 - Use MusicBrainz enrichment through `album_metadata_service.py`; do not add

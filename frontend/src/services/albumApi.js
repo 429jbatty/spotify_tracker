@@ -1,7 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "/api";
-export const SELECTED_USER_STORAGE_KEY = "spotify_tracker_user_slug";
-export const AUTH_SESSION_STORAGE_KEY = "spotify_tracker_auth_session";
-export const OWNED_PROFILE_STORAGE_KEY = "spotify_tracker_owned_profiles";
+const SELECTED_USER_STORAGE_KEY = "spotify_tracker_user_slug";
+const AUTH_SESSION_STORAGE_KEY = "spotify_tracker_auth_session";
+const OWNED_PROFILE_STORAGE_KEY = "spotify_tracker_owned_profiles";
 const MANUAL_ALBUM_CREATE_TIMEOUT_MS = 12_000;
 
 function joinUrl(baseUrl, path) {
@@ -32,7 +32,7 @@ export function getOwnedProfileSlugs() {
   }
 }
 
-export function clearAuthenticatedSession() {
+function clearAuthenticatedSession() {
   window.localStorage.removeItem(AUTH_SESSION_STORAGE_KEY);
   window.localStorage.removeItem(OWNED_PROFILE_STORAGE_KEY);
 }
@@ -170,14 +170,6 @@ export async function signOut() {
   }
 }
 
-export function ownsProfile(userSlug) {
-  return getOwnedProfileSlugs().includes(userSlug);
-}
-
-export async function fetchPublicRecentListens(limit = 5) {
-  return requestJson(`/public/recent-listens?limit=${limit}`);
-}
-
 export async function fetchSplashData(options = {}) {
   return requestJson("/public/splash", options);
 }
@@ -229,14 +221,6 @@ export async function fetchConnectionGraph(
     `/users/${userSlug}/connections/graph?${params.toString()}`,
     options
   );
-}
-
-export async function fetchAlbumCreditPairs(
-  userSlug = getSelectedUserSlug(),
-  { limit = 12, ...options } = {}
-) {
-  if (!userSlug) return null;
-  return requestJson(`/users/${userSlug}/connections/album-pairs?limit=${limit}`, options);
 }
 
 export async function fetchAlbumConnectionGraph(
@@ -399,17 +383,6 @@ export async function fetchImportReview(userSlug = getSelectedUserSlug()) {
   return requestJson(`/users/${userSlug}/imports/review`);
 }
 
-export async function fetchImportLogs(
-  importSessionId,
-  userSlug = getSelectedUserSlug(),
-  { limit = 100, order = "asc" } = {}
-) {
-  if (!userSlug || !importSessionId) return [];
-  return requestJson(
-    `/users/${userSlug}/imports/${importSessionId}/logs?limit=${limit}&order=${order}`
-  );
-}
-
 export async function deleteImportSession(importSessionId, userSlug = getSelectedUserSlug()) {
   if (!userSlug) throw new Error("Select a user before deleting an import.");
   return requestJson(`/users/${userSlug}/imports/${importSessionId}`, {
@@ -425,7 +398,7 @@ export async function resolveImportReview(reviewItemId, payload, userSlug = getS
   });
 }
 
-export function getSelectedUserSlug() {
+function getSelectedUserSlug() {
   return window.localStorage.getItem(SELECTED_USER_STORAGE_KEY);
 }
 

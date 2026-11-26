@@ -25,7 +25,6 @@ vi.mock("./services/albumApi", () => ({
   getOwnedProfileSlugs: vi.fn(() => []),
   fetchUsers: vi.fn(),
   login: vi.fn(),
-  ownsProfile: vi.fn(() => true),
   setSelectedUserSlug: vi.fn(),
   signOut: vi.fn(),
   spotifyConnectUrl: vi.fn(),

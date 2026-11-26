@@ -14,19 +14,20 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 
 - `albums`: shared album metadata, MusicBrainz identifiers, release dates,
   source, metadata JSON, and artwork fields.
-- `users`: no-password app profiles.
+- `users`: listening profiles with optional Google account ownership and a Spotify sync eligibility flag.
 - `user_albums`: per-user album membership, tags, rating, and notes.
 - `album_listens`: per-user completed album listen timestamps.
 - `albums_in_progress`: per-user partial Spotify listening sessions.
 - `user_app_state`: per-user state values such as `last_checked`.
 - `user_spotify_credentials`: per-user Spotify refresh tokens and sync status.
-- `app_state`: legacy app-level state retained for migration compatibility.
 
 ## Ownership
 
 - Models live in `backend/app/models.py`.
-- Schema creation and migration compatibility live in
-  `backend/app/database.py` and `backend/app/migrations.py`.
+- Schema initialization lives in `backend/app/database.py`; models define the
+  current tables. SQLite startup seeds the default profile and ensures unique
+  indexes for known release groups and assigned profile owners. Starting the
+  app on a current database preserves its data, including older credit formats.
 - Runtime reads/writes should go through repositories in
   `backend/app/repositories/`, especially `SqliteStateRepository`.
 - User lookup/creation belongs in `backend/app/repositories/user_repository.py`.
@@ -40,8 +41,7 @@ deployment, set `DATA_DIR` outside the repo and back it up.
   `backend/app/schemas.py`.
 - Preserve listen history when refreshing metadata.
 - Preserve local artwork paths when refreshed metadata only changes remote data.
-- Avoid direct SQL writes from routers. Use repositories, services, migrations,
-  or explicit one-time scripts.
+- Avoid direct SQL writes from routers. Use repositories, services, or explicit maintenance scripts.
 
 ## Media Storage
 
@@ -76,8 +76,8 @@ DATA_DIR=/opt/spotify_tracker/data make backfill-artwork
 Before applying changes in production, back up the SQLite database:
 
 ```bash
-cp /opt/spotify_tracker/data/spotify_tracker.sqlite \
-  /opt/spotify_tracker/data/spotify_tracker.sqlite.bak-artwork-$(date +%Y%m%d-%H%M%S)
+sqlite3 /opt/spotify_tracker/data/spotify_tracker.sqlite \
+  ".backup /opt/spotify_tracker/data/spotify_tracker.sqlite.bak-artwork-$(date +%Y%m%d-%H%M%S)"
 ```
 
 Apply in bounded batches:

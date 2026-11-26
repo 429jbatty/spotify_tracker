@@ -77,9 +77,9 @@ committing large data files. Tests should prove:
 - Spotify catalog lookup dedupes and batches unique track IDs
 - MusicBrainz lookup is deduped by unique album key
 
-Run the import tests and migration tests:
+Run the import tests and current-schema tests:
 
 ```bash
 ./.venv/bin/python -m unittest tests.test_api_imports -v
-./.venv/bin/python -m unittest tests.test_sqlite_migrations -v
+./.venv/bin/python -m unittest tests.test_database_schema -v
 ```

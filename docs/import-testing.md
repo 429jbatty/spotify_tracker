@@ -99,12 +99,14 @@ Acceptance checks:
 
 ## API Checks
 
+Use a profile owner’s session token in `ALBUMARY_TOKEN` for the import endpoints.
+
 ```bash
-curl -s http://127.0.0.1:8000/api/users/test/imports | ./.venv/bin/python -m json.tool
+curl -s -H "Authorization: Bearer $ALBUMARY_TOKEN" http://127.0.0.1:8000/api/users/test/imports | ./.venv/bin/python -m json.tool
 ```
 
 ```bash
-curl -s http://127.0.0.1:8000/api/users/test/imports/review | ./.venv/bin/python -m json.tool
+curl -s -H "Authorization: Bearer $ALBUMARY_TOKEN" http://127.0.0.1:8000/api/users/test/imports/review | ./.venv/bin/python -m json.tool
 ```
 
 ```bash
@@ -126,4 +128,4 @@ npm run build
 npm run lint
 ```
 
-`npm run lint` should pass without warnings before opening a PR.
+Lint should pass; existing shadcn/Radix fast-refresh warnings may appear.

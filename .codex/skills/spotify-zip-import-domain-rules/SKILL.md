@@ -140,6 +140,6 @@ Run:
 
 ```bash
 ./.venv/bin/python -m unittest tests.test_api_imports -v
-./.venv/bin/python -m unittest tests.test_sqlite_migrations -v
+./.venv/bin/python -m unittest tests.test_database_schema -v
 make test
 ```

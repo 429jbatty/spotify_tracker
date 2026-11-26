@@ -1,6 +1,7 @@
 spotipy
-dotenv
-pandas
+requests
+python-dotenv
+python-dateutil
 unidecode
 rapidfuzz
 musicbrainzngs

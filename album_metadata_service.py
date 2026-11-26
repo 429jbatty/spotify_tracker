@@ -1,21 +1,11 @@
-import pandas as pd
-import json
-from datetime import datetime
-from rapidfuzz import fuzz
-
-import logging
-import structlog
 from collections import Counter
+
+import structlog
 
 from musicbrainz_resolver import (
     CANONICAL_AUTO_APPLY_CONFIDENCE,
     IMPORT_MATCH_CONFIDENCE,
-    MATCH_ALGORITHM_VERSION,
     RELEASE_GROUP_SEARCH_LIMIT,
-    _artist_credit_display,
-    _rank_release_groups,
-    _search_normalize,
-    _title_match_score,
     match_diagnostics,
     metadata_match_confidence,
     normalize,
@@ -23,83 +13,9 @@ from musicbrainz_resolver import (
     resolve_spotify_candidate,
 )
 
-logger = logging.getLogger(__name__)
 metadata_logger = structlog.get_logger(__name__)
 
 ENRICHED_CREDIT_INGESTION_VERSION = "musicbrainz_credit_v2"
-
-# ---------------------------
-# Release Group Matching
-# ---------------------------
-
-
-def compute_match_score(candidate, artist, album):
-    candidate_artist = _artist_credit_display(candidate.get("artist-credit"))
-    album_score, _, _ = _title_match_score(candidate.get("title", ""), album)
-    artist_score = fuzz.token_set_ratio(
-        _search_normalize(candidate_artist),
-        _search_normalize(artist),
-    )
-
-    return (album_score * 0.8) + (artist_score * 0.2)
-
-
-def choose_best_release_group(candidates, artist, album, threshold=75):
-    if not candidates:
-        return None
-
-    ranked = _rank_release_groups(candidates, artist, album, "canonical")
-    scored = [(item.score, item.release_group) for item in ranked]
-    scored.sort(reverse=True, key=lambda x: x[0])
-
-    scored = [(score, c) for score, c in scored if score >= threshold]
-    if not scored:
-        return None
-
-    return scored[0][1]
-
-
-# ---------------------------
-# Release Selection
-# ---------------------------
-
-
-def choose_best_release(releases, album_title: str):
-    if not releases:
-        return None
-
-    official = [r for r in releases if r.get("status") == "Official"] or releases
-
-    exact = [
-        r
-        for r in official
-        if r.get("title", "").strip().lower() == album_title.strip().lower()
-    ]
-    official = exact if exact else official
-
-    digital, physical = [], []
-    for r in official:
-        media_formats = [m.get("format", "").lower() for m in r.get("medium-list", [])]
-        if any("digital" in f for f in media_formats):
-            digital.append(r)
-        else:
-            physical.append(r)
-
-    candidates = digital if digital else physical
-    if not candidates:
-        return None
-
-    candidates.sort(key=lambda r: r.get("date", "9999-99-99"))
-
-    earliest_date = candidates[0].get("date", "9999-99-99")
-    earliest = [r for r in candidates if r.get("date", "9999-99-99") == earliest_date]
-
-    if len(earliest) > 1:
-        us = [r for r in earliest if r.get("country") == "US"]
-        if us:
-            return us[0]
-
-    return candidates[0]
 
 
 def _release_track_count(release):
@@ -283,25 +199,6 @@ def _artist_credit_name(artist_credit):
         or artist_credit.get("artist", {}).get("name")
         or artist_credit.get("artist", {}).get("sort-name")
     )
-
-
-def _resolve_release(artist: str, album: str, spotify_url: str | None = None):
-    """
-    Returns: (release_group, chosen_release, image_url)
-    """
-    resolved = resolve_spotify_candidate(spotify_url, "canonical")
-    if resolved is None:
-        resolved = resolve_musicbrainz_candidate(
-            artist,
-            album,
-            lookup_intent="canonical",
-            include_cover_art=True,
-        )
-
-    if not resolved:
-        return None, None, None
-
-    return resolved.release_group, resolved.release, resolved.image_url
 
 
 def _album_record_from_candidate(candidate, lookup_intent: str) -> dict:

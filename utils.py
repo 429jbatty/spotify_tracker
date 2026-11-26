@@ -13,10 +13,6 @@ load_dotenv()
 SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}
 
 
-def use_sqlite_state():
-    return True
-
-
 def _sqlite_repository():
     settings = get_settings()
     engine = create_schema(settings.database_url)

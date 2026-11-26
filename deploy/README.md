@@ -29,6 +29,7 @@ python3 -m venv .venv
 cd frontend
 npm ci
 npm run build
+cd ..
 ```
 
 Copy and edit the environment file:

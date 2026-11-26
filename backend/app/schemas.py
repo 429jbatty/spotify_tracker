@@ -34,10 +34,6 @@ class AuthenticatedAccount(BaseModel):
     profiles: list[OwnedProfile] = Field(default_factory=list)
 
 
-class LoginResponse(AuthenticatedAccount):
-    session_token: str
-
-
 class GoogleAuthorizeResponse(BaseModel):
     authorize_url: str
 
