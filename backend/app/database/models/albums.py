@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Float, ForeignKey, Integer, String, Text, UniqueConstraint
+from sqlalchemy import Float, ForeignKey, Index, Integer, String, Text, UniqueConstraint, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.types import JSON
 
@@ -12,6 +12,14 @@ if TYPE_CHECKING:
 
 class Album(Base):
     __tablename__ = "albums"
+    __table_args__ = (
+        Index(
+            "uq_albums_release_group_mbid",
+            "release_group_mbid",
+            unique=True,
+            sqlite_where=text("release_group_mbid IS NOT NULL AND release_group_mbid != ''"),
+        ),
+    )
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     album_key: Mapped[str] = mapped_column(String, unique=True, index=True)

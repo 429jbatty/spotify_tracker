@@ -23,7 +23,7 @@ from backend.app.services.credit_fact_service import rebuild_credit_facts
 class MaintenanceLoggingTests(unittest.TestCase):
     def test_schema_failure_is_queryable_without_statement_or_parameters(self):
         exc = IntegrityError("INSERT INTO secrets VALUES (?)", ("private-token",), sqlite3.IntegrityError("constraint failed"))
-        with patch("backend.app.database.schema.Base.metadata.create_all", side_effect=exc), capture_logs() as events:
+        with patch("backend.app.database.schema.upgrade_database", side_effect=exc), capture_logs() as events:
             with self.assertRaises(IntegrityError):
                 create_schema("sqlite:///:memory:")
         self.assertEqual(events[0]["event"], "database_schema_initialization_failed")

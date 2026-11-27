@@ -26,10 +26,9 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 - SQLAlchemy models live in `backend/app/database/models/`.
 - Engine creation, session factory configuration, and SQLite pragmas live in
   `backend/app/database/engine.py`.
-- Schema initialization lives in `backend/app/database/schema.py`. SQLite
-  startup seeds the default profile and ensures unique indexes for known release
-  groups and assigned profile owners. Starting the app on a current database
-  preserves its data, including older credit formats.
+- Schema initialization lives in `backend/app/database/schema.py` and applies
+  Alembic revisions before seeding the default profile. Revisions live in
+  `backend/app/database/migrations/versions/`.
 - `AlbumCatalog(session)` owns shared album identity, metadata, artwork and
   physical cleanup of eligible catalog entries.
 - `AlbumLibrary(session, user)` owns a profile's collection, listens and
@@ -42,6 +41,49 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 - User lookup/creation belongs in `backend/app/database/repositories/user_repository.py`.
 - Spotify credential persistence belongs in
   `backend/app/database/repositories/spotify_credentials_repository.py`.
+
+## Schema migrations
+
+The API and standalone jobs upgrade SQLite to Alembic head on startup. A
+file-backed database uses a shared `<database>.migration.lock` that waits up
+to 60 seconds for another initializer. A migration failure stops startup.
+Keep the lock file in place. It is safe for concurrent initialization on one
+host. Stop older running application processes before migrating their database.
+
+The first revision, `0001`, freezes the schema. An existing database with no
+Alembic revision must follow the
+[adoption procedure](deployment.md#adopt-an-existing-sqlite-database).
+A fresh database needs no adoption step.
+
+For a schema change, start with a development database already at head, then
+edit the SQLAlchemy models and generate a draft revision from the repo root.
+
+```bash
+./.venv/bin/python -m alembic current
+./.venv/bin/python -m alembic revision --autogenerate -m "describe schema change"
+```
+
+Review the draft. Write any data transformations explicitly, including
+backfills for new required columns. Use SQLite batch operations when a table
+must be rebuilt. When another table references the table being rebuilt, plan
+the foreign-key change at the migration connection boundary. SQLite requires
+changing enforcement outside the transaction. Validate with
+`PRAGMA foreign_key_check` before committing the rebuild, and restore
+enforcement after the transaction ends, including on failure.
+
+Apply the reviewed migration to a populated, disposable database before
+deploying it.
+
+```bash
+./.venv/bin/python -m alembic upgrade head
+./.venv/bin/python -m alembic check
+make test
+```
+
+Manual Alembic commands use the application's database settings. Startup
+seeds the default profile separately and preserves any existing profile with
+that slug. See the [deployment recovery guide](deployment.md#recover-a-failed-deployment)
+for restoring a matching database backup.
 
 ## Engine and session lifetime
 
