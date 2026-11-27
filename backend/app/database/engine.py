@@ -1,9 +1,11 @@
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 from sqlalchemy import Engine, create_engine, event
-from sqlalchemy.engine import make_url
+from sqlalchemy.engine import URL, make_url
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import QueuePool
+from sqlalchemy.util import asbool
 
 from backend.app.config import get_settings
 
@@ -17,12 +19,9 @@ def get_engine(database_url: str | None = None) -> Engine:
     if url.get_backend_name() != "sqlite":
         raise ValueError("DATABASE_URL must use SQLite.")
 
-    is_memory = (
-        url.database in {None, "", ":memory:"} or url.query.get("mode") == "memory"
-        or url.database == "file::memory:"
-    )
-    if not is_memory and url.query.get("uri") != "true":
-        path = Path(url.database).expanduser()
+    path = sqlite_file_path(url)
+    is_memory = path is None
+    if path is not None and not asbool(url.query.get("uri", False)):
         path.parent.mkdir(parents=True, exist_ok=True)
         url = url.set(database=str(path))
 
@@ -32,6 +31,18 @@ def get_engine(database_url: str | None = None) -> Engine:
     engine = create_engine(url, connect_args={"check_same_thread": False, "timeout": 60}, **options)
     _configure_sqlite_engine(engine, is_memory=is_memory)
     return engine
+
+
+def sqlite_file_path(url: URL) -> Path | None:
+    database = url.database
+    if database in {None, "", ":memory:"}:
+        return None
+    if asbool(url.query.get("uri", False)) and database.startswith("file:"):
+        database = unquote(urlsplit(database).path)
+        if database in {"", ":memory:"} or url.query.get("mode") == "memory":
+            return None
+        return Path(database).resolve()
+    return Path(database).expanduser().resolve()
 
 
 def session_factory_for(engine: Engine) -> SessionFactory:

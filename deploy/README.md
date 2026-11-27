@@ -73,15 +73,12 @@ cd /opt/spotify_tracker
 sudo make deploy
 ```
 
-The deploy script performs:
-
-- `git pull --ff-only`
-- backend dependency sync
-- `npm ci`
-- `npm run build`
-- local artwork optimization (no remote downloads)
-- API restart
-- local health check
+The deploy script pauses the timer and API, drains the running worker, pulls
+the release, installs dependencies, builds the frontend, applies Alembic
+migrations, and optimizes local artwork. It starts the API, checks its health,
+and starts the timer. See the deployment guide for
+[one-time database adoption](../docs/deployment.md#adopt-an-existing-sqlite-database)
+and [failure recovery](../docs/deployment.md#recover-a-failed-deployment).
 
 The worker timer invokes `backend.app.jobs.track_all_users` through
 `spotify-tracker-worker.service`. From the configured checkout, `make track-all`

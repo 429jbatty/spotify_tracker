@@ -25,7 +25,8 @@ and 3-day development retention. Recovery after an outage is best effort, and
 the app must continue working when observability services are unavailable.
 
 Schema startup failures emit `database_schema_initialization_failed` with the
-sanitized database error fields used by the maintenance dashboard.
+sanitized database error fields used by the maintenance dashboard. An Alembic
+command failure or migration-lock timeout reports its error type.
 
 ## Logging practices
 
