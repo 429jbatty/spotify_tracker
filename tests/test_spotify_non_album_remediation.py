@@ -25,7 +25,7 @@ class SpotifyNonAlbumRemediationTests(unittest.TestCase):
         return sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
     def _seed_spotify_import_listen(self, session):
-        repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+        repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
         created = repository.add_album(
             {
                 "artist": "White Noise Artist",

@@ -57,7 +57,7 @@ class ArtworkBackfillServiceTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         session = session_factory()
-        user = UserRepository(session).ensure_default_user()
+        user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
         repository = AlbumStateRepository(session, user)
         repository.replace(state or album_state())
         return session, AlbumCatalog(session)

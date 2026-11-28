@@ -129,8 +129,8 @@ async function requestForm(path, formData, options = {}) {
 }
 
 export async function fetchAlbumState(userSlug = getSelectedUserSlug(), options = {}) {
-  if (userSlug) return requestJson(`/users/${userSlug}/album-state`, options);
-  return requestJson("/album-state", options);
+  if (!userSlug) throw new Error("Select a profile before loading album history.");
+  return requestJson(`/users/${userSlug}/album-state`, options);
 }
 
 export async function fetchUsers() {

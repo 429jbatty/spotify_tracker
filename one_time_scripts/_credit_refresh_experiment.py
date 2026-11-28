@@ -404,7 +404,7 @@ def main() -> int:
     if args.apply:
         with job_session(database_url) as session:
             users = UserRepository(session)
-            user = users.require_user_by_slug(args.user_slug) if args.user_slug else users.ensure_default_user()
+            user = users.require_user_by_slug(args.user_slug)
             repository = AlbumLibrary(session, user)
             results = apply_refresh_experiment(repository, candidates)
     else:

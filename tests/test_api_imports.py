@@ -114,7 +114,7 @@ class ApiImportTests(unittest.TestCase):
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
         with session_factory() as session:
-            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             AlbumStateRepository(session, repository.user).replace(state or sample_album_state())
             account = auth_service.create_account(
                 session,
@@ -167,7 +167,7 @@ class ApiImportTests(unittest.TestCase):
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 AlbumStateRepository(session, repository.user).replace(
                     {
                         "last_checked": None,
@@ -724,7 +724,7 @@ class ApiImportTests(unittest.TestCase):
                 )
                 self._run_import_session(database_url, response.json()["import_session_id"])
             history_response = client.get("/api/users/jacob/imports")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
             spotify_event_count = self._spotify_event_count(database_url)
             imported_event_count = self._imported_event_count(database_url)
 
@@ -846,7 +846,7 @@ class ApiImportTests(unittest.TestCase):
                 self._run_import_session(database_url, import_session_id)
                 elapsed_seconds = time.perf_counter() - started_at
             history_response = client.get("/api/users/jacob/imports")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
             spotify_events = self._spotify_events_for_import(database_url, import_session_id)
 
         history_item = history_response.json()[0]
@@ -1030,7 +1030,7 @@ class ApiImportTests(unittest.TestCase):
                 )
                 self._run_import_session(database_url, response.json()["import_session_id"])
             history_response = client.get("/api/users/jacob/imports")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
             imported_event_count = self._imported_event_count(database_url)
 
         self.assertEqual(response.status_code, 200)
@@ -1102,7 +1102,7 @@ class ApiImportTests(unittest.TestCase):
                     files={"file": ("spotify.zip", zip_file, "application/zip")},
                 )
                 self._run_import_session(database_url, response.json()["import_session_id"])
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
 
         listen_history = state_response.json()["completed_albums"][
             "Existing Artist - Existing Album"
@@ -1137,7 +1137,7 @@ class ApiImportTests(unittest.TestCase):
                 )
                 self._run_import_session(database_url, response.json()["import_session_id"])
             history_response = client.get("/api/users/jacob/imports")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
             spotify_event_count = self._spotify_event_count(database_url)
             processed_count = self._imported_event_count(database_url, "processed_album_listen")
             duplicate_count = self._imported_event_count(database_url, "duplicate_listen")
@@ -1859,7 +1859,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source=SPOTIFY_IMPORT_SOURCE,
@@ -2137,7 +2137,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source="spotify_import",
@@ -2192,7 +2192,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source=SPOTIFY_IMPORT_SOURCE,
@@ -2278,7 +2278,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 metadata = {
                     "artist": "Repair Artist",
                     "name": "Repair Album",
@@ -2388,7 +2388,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 lastfm_session = ImportSession(
                     user_id=repository.user.id,
                     source="lastfm",
@@ -2430,7 +2430,7 @@ class ApiImportTests(unittest.TestCase):
             engine = get_engine(database_url)
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 import_session = ImportSession(
                     user_id=repository.user.id,
                     source="spotify_import",
@@ -2470,7 +2470,7 @@ class ApiImportTests(unittest.TestCase):
                 import_session_id = response.json()["import_session_id"]
                 self._run_import_session(database_url, import_session_id)
             delete_response = client.delete(f"/api/users/jacob/imports/{import_session_id}")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
             spotify_event_count = self._spotify_event_count(database_url)
 
         self.assertEqual(delete_response.status_code, 200)
@@ -2625,7 +2625,7 @@ class ApiImportTests(unittest.TestCase):
             with patch("backend.app.services.lastfm_import_client.httpx.Client", return_value=mock_client):
                 second_preview = client.post("/api/users/jacob/imports/preview", json=request_body)
             history_response = client.get("/api/users/jacob/imports")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
 
         self.assertEqual(first_response.status_code, 200)
         self.assertEqual(second_preview.status_code, 200)
@@ -2691,7 +2691,7 @@ class ApiImportTests(unittest.TestCase):
                 )
                 self._run_import_session(database_url, response.json()["import_session_id"])
             history_response = client.get("/api/users/jacob/imports")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
             imported_event_count = self._imported_event_count(database_url)
             processed_count = self._imported_event_count(database_url, "processed_album_listen")
             duplicate_count = self._imported_event_count(database_url, "duplicate_listen")
@@ -2817,7 +2817,7 @@ class ApiImportTests(unittest.TestCase):
             delete_response = client.delete(f"/api/users/jacob/imports/{import_session_id}")
             history_response = client.get("/api/users/jacob/imports")
             review_response = client.get("/api/users/jacob/imports/review")
-            state_response = client.get("/api/album-state")
+            state_response = client.get("/api/album-state?user_slug=jacob")
 
         self.assertEqual(commit_response.status_code, 200)
         self.assertEqual(delete_response.status_code, 200)
@@ -2839,7 +2839,7 @@ class ApiImportTests(unittest.TestCase):
             session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 listened_at = "2026-04-01T10:00:00+00:00"
                 created = repository.add_album(
                     {

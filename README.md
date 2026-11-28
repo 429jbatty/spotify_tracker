@@ -38,9 +38,9 @@ make test              # run backend unittest suite
 make api               # start FastAPI on http://127.0.0.1:8000
 make dev               # start backend and frontend on localhost only
 make dev-home          # start frontend for same-Wi-Fi home network access
-make track             # run Spotify tracking for the default user
+make track USER_SLUG=<profile>  # run Spotify tracking for one profile
 make track-all         # run Spotify tracking for eligible connected profiles
-make refresh-metadata  # refresh configured album metadata
+make refresh-metadata USER_SLUG=<profile>  # refresh one library
 make cache-artwork     # cache remote artwork under DATA_DIR media storage
 make backfill-artwork  # find missing artwork from stored MusicBrainz IDs
 make deploy            # run the deploy script
@@ -132,3 +132,5 @@ the review queue instead of being silently dropped.
 
 Deployment templates live in `deploy/`. See [docs/deployment.md](docs/deployment.md)
 and [deploy/README.md](deploy/README.md) for the native LXC workflow.
+
+Profile selection and legacy API upgrade notes: [explicit profiles](docs/profile-selection.md).

@@ -9,6 +9,8 @@ from sqlalchemy import text
 import utils
 from backend.app.config import get_settings
 from tests.database_helpers import create_schema
+from backend.app.job_database import job_session
+from backend.app.database.repositories.user_repository import UserRepository
 
 
 def sample_state():
@@ -38,8 +40,10 @@ class SqliteStateUtilsTests(unittest.TestCase):
                     "DATABASE_URL": database_url,
                 },
             ):
-                utils.save_state(sample_state())
-                loaded = utils.load_state()
+                with job_session() as session:
+                    UserRepository(session).create_user(slug="listener", display_name="Listener")
+                utils.save_state(sample_state(), "listener")
+                loaded = utils.load_state("listener")
 
         self.assertEqual(loaded["last_checked"], "2026-04-18T16:14:25.872Z")
         self.assertEqual(

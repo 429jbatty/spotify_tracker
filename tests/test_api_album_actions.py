@@ -39,7 +39,7 @@ class ApiAlbumActionTests(unittest.TestCase):
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 
         with session_factory() as session:
-            repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+            repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             repository.replace(state or sample_album_state())
             album = next(iter(repository.load()["completed_albums"].values()))
             account = auth_service.create_account(
@@ -73,7 +73,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 other_token = auth_service.create_session(session, account=account)
                 session.commit()
 
-            path = f"/api/albums/{album_id}/listens"
+            path = f"/api/albums/{album_id}/listens?user_slug=jacob"
             denied = client.post(
                 path,
                 headers={"Authorization": f"Bearer {other_token}"},
@@ -106,7 +106,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                     "source": "musicbrainz",
                 },
             ):
-                response = client.post(f"/api/albums/{album_id}/refresh-metadata")
+                response = client.post(f"/api/albums/{album_id}/refresh-metadata?user_slug=jacob")
 
             self.assertEqual(response.status_code, 200)
             payload = response.json()
@@ -151,9 +151,9 @@ class ApiAlbumActionTests(unittest.TestCase):
                 "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
                 side_effect=LookupError("No metadata returned."),
             ):
-                response = client.post(f"/api/albums/{album_id}/refresh-metadata")
+                response = client.post(f"/api/albums/{album_id}/refresh-metadata?user_slug=jacob")
 
-            state = client.get("/api/album-state").json()
+            state = client.get("/api/album-state?user_slug=jacob").json()
             album = state["completed_albums"]["Artist - Old Title"]
 
         self.assertEqual(response.status_code, 502)
@@ -164,7 +164,7 @@ class ApiAlbumActionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)
 
-            response = client.post("/api/albums", json={"artist": "Artist"})
+            response = client.post("/api/albums?user_slug=jacob", json={"artist": "Artist"})
 
         self.assertEqual(response.status_code, 422)
 
@@ -177,7 +177,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 return_value={},
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={
                         "artist": "New Artist",
                         "name": "New Album",
@@ -202,7 +202,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 return_value={},
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={"artist": "New Artist", "name": "No Listen Album"},
                 )
 
@@ -228,7 +228,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 },
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={"artist": "Input Artist", "name": "Input Album"},
                 )
 
@@ -255,7 +255,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 },
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={"artist": "Input Artist", "name": "Input Album"},
                 )
 
@@ -290,7 +290,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 ),
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={"artist": "New Artist", "name": "New Album"},
                 )
 
@@ -309,7 +309,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 side_effect=OSError("MusicBrainz is unavailable"),
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={"artist": "New Artist", "name": "New Album"},
                 )
 
@@ -329,10 +329,10 @@ class ApiAlbumActionTests(unittest.TestCase):
                 "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
                 return_value={},
             ):
-                first_response = client.post("/api/albums", json=payload)
-                retry_response = client.post("/api/albums", json=payload)
+                first_response = client.post("/api/albums?user_slug=jacob", json=payload)
+                retry_response = client.post("/api/albums?user_slug=jacob", json=payload)
 
-            state = client.get("/api/album-state").json()
+            state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(first_response.status_code, 201)
         self.assertEqual(retry_response.status_code, 201)
@@ -359,10 +359,10 @@ class ApiAlbumActionTests(unittest.TestCase):
                 "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
                 side_effect=[{}, metadata],
             ):
-                first_response = client.post("/api/albums", json=payload)
-                retry_response = client.post("/api/albums", json=payload)
+                first_response = client.post("/api/albums?user_slug=jacob", json=payload)
+                retry_response = client.post("/api/albums?user_slug=jacob", json=payload)
 
-            state = client.get("/api/album-state").json()
+            state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(first_response.status_code, 201)
         self.assertEqual(retry_response.status_code, 201)
@@ -389,23 +389,23 @@ class ApiAlbumActionTests(unittest.TestCase):
                 "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
                 return_value={},
             ):
-                created = client.post("/api/albums", json=payload)
+                created = client.post("/api/albums?user_slug=jacob", json=payload)
 
             with patch(
                 "backend.app.services.metadata_refresh_logging.metadata_refresh_service.refresh_album_record",
                 return_value=canonical_metadata,
             ):
                 refreshed = client.post(
-                    f"/api/albums/{created.json()['id']}/refresh-metadata"
+                    f"/api/albums/{created.json()['id']}/refresh-metadata?user_slug=jacob"
                 )
 
             with patch(
                 "backend.app.services.manual_album_service.album_metadata_service.get_album_metadata",
                 return_value={},
             ):
-                retried = client.post("/api/albums", json=payload)
+                retried = client.post("/api/albums?user_slug=jacob", json=payload)
 
-            state = client.get("/api/album-state").json()
+            state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(created.status_code, 201)
         self.assertEqual(refreshed.status_code, 200)
@@ -427,7 +427,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 ) as get_metadata,
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={"artist": "New Artist", "name": "New Album"},
                 )
 
@@ -444,7 +444,7 @@ class ApiAlbumActionTests(unittest.TestCase):
                 return_value={},
             ):
                 response = client.post(
-                    "/api/albums",
+                    "/api/albums?user_slug=jacob",
                     json={
                         "artist": "Artist",
                         "name": "Old Title",
@@ -460,7 +460,7 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             response = client.patch(
-                f"/api/albums/{album_id}",
+                f"/api/albums/{album_id}?user_slug=jacob",
                 json={"label": "New Label"},
             )
 
@@ -491,13 +491,13 @@ class ApiAlbumActionTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir, state=state)
-            initial_state = client.get("/api/album-state").json()
+            initial_state = client.get("/api/album-state?user_slug=jacob").json()
             duplicate_id = initial_state["completed_albums"][
                 "Jimi Hendrix - Electric Ladyland"
             ]["id"]
 
             response = client.patch(
-                f"/api/albums/{duplicate_id}",
+                f"/api/albums/{duplicate_id}?user_slug=jacob",
                 json={"artist": "The Jimi Hendrix Experience"},
             )
 
@@ -528,7 +528,7 @@ class ApiAlbumActionTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir, state=state)
-            initial_state = client.get("/api/album-state").json()
+            initial_state = client.get("/api/album-state?user_slug=jacob").json()
             duplicate_id = initial_state["completed_albums"][
                 "Jimi Hendrix - Electric Ladyland"
             ]["id"]
@@ -537,10 +537,10 @@ class ApiAlbumActionTests(unittest.TestCase):
             ]["id"]
 
             response = client.post(
-                f"/api/albums/{duplicate_id}/merge",
+                f"/api/albums/{duplicate_id}/merge?user_slug=jacob",
                 json={"target_album_id": canonical_id},
             )
-            refreshed_state = client.get("/api/album-state").json()
+            refreshed_state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -559,7 +559,7 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             response = client.post(
-                f"/api/albums/{album_id}/listens",
+                f"/api/albums/{album_id}/listens?user_slug=jacob",
                 json={"listened_at": "2026-04-02T10:00:00.000Z"},
             )
 
@@ -574,11 +574,11 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             response = client.put(
-                f"/api/albums/{album_id}/your-tags",
+                f"/api/albums/{album_id}/your-tags?user_slug=jacob",
                 json={"your_tags": ["atmospheric", "cohesive"]},
             )
 
-            refreshed_state = client.get("/api/album-state").json()
+            refreshed_state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["your_tags"], ["atmospheric", "cohesive"])
@@ -592,7 +592,7 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             response = client.put(
-                f"/api/albums/{album_id}/your-tags",
+                f"/api/albums/{album_id}/your-tags?user_slug=jacob",
                 json={"your_tags": ["made-up-tag"]},
             )
 
@@ -603,11 +603,11 @@ class ApiAlbumActionTests(unittest.TestCase):
             client, album_id, _ = self._client(temp_dir)
 
             response = client.put(
-                f"/api/albums/{album_id}/your-feedback",
+                f"/api/albums/{album_id}/your-feedback?user_slug=jacob",
                 json={"rating": 7, "notes": "Strong opener, weaker middle."},
             )
 
-            refreshed_state = client.get("/api/album-state").json()
+            refreshed_state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()["rating"], 7)
@@ -625,13 +625,13 @@ class ApiAlbumActionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, album_id, _ = self._client(temp_dir)
             client.post(
-                f"/api/albums/{album_id}/listens",
+                f"/api/albums/{album_id}/listens?user_slug=jacob",
                 json={"listened_at": "2026-04-02T10:00:00.000Z"},
             )
 
             response = client.request(
                 "DELETE",
-                f"/api/albums/{album_id}/listens",
+                f"/api/albums/{album_id}/listens?user_slug=jacob",
                 json={"listened_at": "2026-04-01T10:00:00.000Z"},
             )
 
@@ -644,7 +644,7 @@ class ApiAlbumActionTests(unittest.TestCase):
 
             response = client.request(
                 "DELETE",
-                f"/api/albums/{album_id}/listens",
+                f"/api/albums/{album_id}/listens?user_slug=jacob",
                 json={"listened_at": "2026-04-03T10:00:00.000Z"},
             )
 
@@ -670,7 +670,7 @@ class ApiAlbumActionTests(unittest.TestCase):
 
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir, state=state)
-            initial_state = client.get("/api/album-state").json()
+            initial_state = client.get("/api/album-state?user_slug=jacob").json()
             duplicate_id = initial_state["completed_albums"][
                 "Jimi Hendrix - Electric Ladyland"
             ]["id"]
@@ -688,9 +688,9 @@ class ApiAlbumActionTests(unittest.TestCase):
                     "source": "musicbrainz",
                 },
             ):
-                response = client.post(f"/api/albums/{duplicate_id}/refresh-metadata")
+                response = client.post(f"/api/albums/{duplicate_id}/refresh-metadata?user_slug=jacob")
 
-            refreshed_state = client.get("/api/album-state").json()
+            refreshed_state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -715,8 +715,8 @@ class ApiAlbumActionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, album_id, _ = self._client(temp_dir)
 
-            response = client.delete(f"/api/albums/{album_id}")
-            refreshed_state = client.get("/api/album-state").json()
+            response = client.delete(f"/api/albums/{album_id}?user_slug=jacob")
+            refreshed_state = client.get("/api/album-state?user_slug=jacob").json()
 
         self.assertEqual(response.status_code, 204)
         self.assertEqual(refreshed_state["completed_albums"], {})
@@ -726,7 +726,7 @@ class ApiAlbumActionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client, _, _ = self._client(temp_dir)
 
-            response = client.delete("/api/albums/999999")
+            response = client.delete("/api/albums/999999?user_slug=jacob")
 
         self.assertEqual(response.status_code, 404)
 

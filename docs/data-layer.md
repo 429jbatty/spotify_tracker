@@ -27,7 +27,7 @@ deployment, set `DATA_DIR` outside the repo and back it up.
 - Engine creation, session factory configuration, and SQLite pragmas live in
   `backend/app/database/engine.py`.
 - Schema initialization lives in `backend/app/database/schema.py` and applies
-  Alembic revisions before seeding the default profile. Revisions live in
+  Alembic revisions without creating profiles. Revisions live in
   `backend/app/database/migrations/versions/`.
 - `AlbumCatalog(session)` owns shared album identity, metadata, artwork and
   physical cleanup of eligible catalog entries.
@@ -81,8 +81,7 @@ make test
 ```
 
 Manual Alembic commands use the application's database settings. Startup
-seeds the default profile separately and preserves any existing profile with
-that slug. See the [deployment recovery guide](deployment.md#recover-a-failed-deployment)
+preserves existing profiles and creates no profiles. See the [deployment recovery guide](deployment.md#recover-a-failed-deployment)
 for restoring a matching database backup.
 
 ## Engine and session lifetime

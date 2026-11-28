@@ -56,7 +56,7 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
 
             with patch.dict(
@@ -66,7 +66,7 @@ class ApiAlbumStateTests(unittest.TestCase):
                 },
             ):
                 client = TestClient(create_app())
-                response = client.get("/api/album-state")
+                response = client.get("/api/album-state?user_slug=jacob")
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -110,7 +110,7 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(state)
 
             with patch.dict(
@@ -120,7 +120,7 @@ class ApiAlbumStateTests(unittest.TestCase):
                 },
             ):
                 client = TestClient(create_app())
-                response = client.get("/api/album-state")
+                response = client.get("/api/album-state?user_slug=jacob")
 
         self.assertEqual(response.status_code, 200)
         album = response.json()["completed_albums"]["Soft Soundscapes - River"]
@@ -140,7 +140,7 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
 
             with patch.dict(
@@ -150,7 +150,7 @@ class ApiAlbumStateTests(unittest.TestCase):
                 },
             ):
                 client = TestClient(create_app())
-                response = client.get("/api/album-state")
+                response = client.get("/api/album-state?user_slug=jacob")
 
         self.assertEqual(response.status_code, 200)
         payload = response.json()
@@ -170,7 +170,7 @@ class ApiAlbumStateTests(unittest.TestCase):
             )
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 album = session.scalars(select(Album)).one()
                 album.local_image_path = "artwork/release-group-mbid.jpg"
@@ -184,7 +184,7 @@ class ApiAlbumStateTests(unittest.TestCase):
                 },
             ):
                 client = TestClient(create_app())
-                response = client.get("/api/album-state")
+                response = client.get("/api/album-state?user_slug=jacob")
 
         self.assertEqual(response.status_code, 200)
         album = response.json()["completed_albums"]["Artist - Finished Album"]

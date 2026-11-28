@@ -43,11 +43,11 @@ error translation.
 
 ## Jobs and Scripts
 
-- `make track`: runs `backend.app.jobs.track_default_user`. The root
-  `main.py` also forwards to that job for existing scripts.
+- `make track USER_SLUG=<profile>`: runs `backend.app.jobs.track_user --user-slug <profile>`.
+  The root `main.py` accepts the same required `--user-slug` option.
 - `make track-all`: runs `backend.app.jobs.track_all_users` for active, sync-enabled
   profiles with Spotify credentials.
-- `make refresh-metadata`: runs the targeted refresh script in
+- `make refresh-metadata USER_SLUG=<profile>`: runs the targeted refresh script in
   `one_time_scripts/_refresh_metadata.py`.
 - `make cache-artwork`: downloads and stores artwork through the artwork cache
   service.

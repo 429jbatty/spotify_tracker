@@ -49,7 +49,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         with session_factory() as session:
-            repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+            repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             repository.replace(sample_album_state())
 
         patcher = patch.dict(
@@ -84,7 +84,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                 )
             self.assertEqual(friend_create_response.status_code, 201)
 
-            default_state = client.get("/api/album-state").json()
+            default_state = client.get("/api/album-state?user_slug=jacob").json()
             friend_state = client.get("/api/users/friend/album-state").json()
 
         self.assertEqual(
@@ -105,7 +105,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
             _, friend_headers = self._create_user(client)
-            album_id = client.get("/api/album-state").json()["completed_albums"][
+            album_id = client.get("/api/album-state?user_slug=jacob").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
 
@@ -114,7 +114,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                 json={"listened_at": "2026-04-19T12:00:00.000Z"},
                 headers=friend_headers,
             )
-            default_state = client.get("/api/album-state").json()
+            default_state = client.get("/api/album-state?user_slug=jacob").json()
             friend_state = client.get("/api/users/friend/album-state").json()
 
         self.assertEqual(response.status_code, 200)
@@ -135,7 +135,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
             _, friend_headers = self._create_user(client)
-            album_id = client.get("/api/album-state").json()["completed_albums"][
+            album_id = client.get("/api/album-state?user_slug=jacob").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
             with patch(
@@ -157,7 +157,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                 json={"your_tags": ["atmospheric", "cohesive"]},
                 headers=friend_headers,
             )
-            default_state = client.get("/api/album-state").json()
+            default_state = client.get("/api/album-state?user_slug=jacob").json()
             friend_state = client.get("/api/users/friend/album-state").json()
 
         self.assertEqual(response.status_code, 200)
@@ -174,7 +174,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             client = self._client(temp_dir)
             _, friend_headers = self._create_user(client)
-            album_id = client.get("/api/album-state").json()["completed_albums"][
+            album_id = client.get("/api/album-state?user_slug=jacob").json()["completed_albums"][
                 "Artist - Shared Album"
             ]["id"]
             with patch(
@@ -196,7 +196,7 @@ class MultiUserAlbumStateTests(unittest.TestCase):
                 json={"rating": 9, "notes": "Locked in immediately."},
                 headers=friend_headers,
             )
-            default_state = client.get("/api/album-state").json()
+            default_state = client.get("/api/album-state?user_slug=jacob").json()
             friend_state = client.get("/api/users/friend/album-state").json()
 
         self.assertEqual(response.status_code, 200)

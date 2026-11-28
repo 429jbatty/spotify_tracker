@@ -240,7 +240,8 @@ def refresh_candidates(repository: AlbumLibrary, album_ids: list[int]) -> list[s
     actions = []
     for album_id in album_ids:
         try:
-            record = repository.record_for(repository.catalog.require_by_id(album_id))
+            album = repository.require_member(album_id)
+            record = repository.record_for(album)
             refreshed = metadata_refresh_service.refresh_album_record(record)
             repository.replace_metadata(
                 album_id,
@@ -281,6 +282,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Report and safely merge likely duplicate albums.",
     )
+    parser.add_argument("--user-slug", required=True, help="Profile whose library may be merged.")
     parser.add_argument("--apply", action="store_true", help="Apply safe merges.")
     parser.add_argument(
         "--refresh-candidates",
@@ -298,7 +300,7 @@ def main() -> int:
 
     actions: list[str] = []
     with job_session(database_url) as session:
-        repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+        repository = AlbumLibrary(session, UserRepository(session).require_user_by_slug(args.user_slug))
         groups = find_duplicate_groups(session)
         if args.refresh_candidates:
             candidate_ids = sorted({album.id for group in groups for album in group.albums})

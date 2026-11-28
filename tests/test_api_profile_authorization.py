@@ -228,7 +228,7 @@ class ProfileAuthorizationApiTests(unittest.TestCase):
             spotify_sync = client.post("/api/users/owner/spotify/sync")
             spotify_disconnect = client.delete("/api/users/owner/spotify")
             export_profile = client.get("/api/users/owner/export")
-            legacy_delete = client.delete("/api/albums/1")
+            legacy_delete = client.delete("/api/albums/1?user_slug=owner")
 
         for response in (
             import_preview,

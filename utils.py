@@ -10,15 +10,15 @@ load_dotenv()
 SOURCE_PRIORITY_BY_PARAM = {"updated": 3, "manual": 2, "start": 1, "google_sheets": 0}
 
 
-def load_state():
+def load_state(user_slug: str):
     with job_session() as session:
-        user = UserRepository(session).ensure_default_user()
+        user = UserRepository(session).require_user_by_slug(user_slug)
         return AlbumStateRepository(session, user).load()
 
 
-def save_state(state):
+def save_state(state, user_slug: str):
     with job_session() as session:
-        user = UserRepository(session).ensure_default_user()
+        user = UserRepository(session).require_user_by_slug(user_slug)
         AlbumStateRepository(session, user).replace(state)
 
 

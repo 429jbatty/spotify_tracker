@@ -133,6 +133,7 @@ def _refresh_catalog_album(
     spotify_url: str | None = None,
 ):
     target = library.catalog.find_for_refresh(artist=artist, title=album, key=key)
+    library.require_member(target.id)
     target_key = target.album_key
     existing_record = library.record_for(target)
     refreshed_record = refresh_album_record(existing_record, spotify_url=spotify_url)
@@ -153,13 +154,14 @@ def _refresh_catalog_album(
 
 def refresh_album_and_save(
     *,
+    user_slug: str,
     artist: str | None = None,
     album: str | None = None,
     key: str | None = None,
     spotify_url: str | None = None,
 ):
     with job_session() as session:
-        user = UserRepository(session).ensure_default_user()
+        user = UserRepository(session).require_user_by_slug(user_slug)
         return _refresh_catalog_album(
             AlbumLibrary(session, user),
             artist=artist,
@@ -169,13 +171,13 @@ def refresh_album_and_save(
         )
 
 
-def refresh_all_albums_and_save(continue_on_error: bool = True):
+def refresh_all_albums_and_save(user_slug: str, continue_on_error: bool = True):
     results = []
 
     with job_session() as session:
-        user = UserRepository(session).ensure_default_user()
+        user = UserRepository(session).require_user_by_slug(user_slug)
         library = AlbumLibrary(session, user)
-        original_keys = library.catalog.list_keys()
+        original_keys = list(library.list_records())
 
         for key in original_keys:
             try:

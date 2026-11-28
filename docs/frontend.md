@@ -37,8 +37,8 @@ fields such as total listens and latest listen, then passes data into page
 components.
 
 Active profile views should prefer user-scoped API routes such as
-`/api/users/{user_slug}/album-state`. The default `/api/album-state` endpoint is
-kept for compatibility and should not be the main path for new profile UI.
+`/api/users/{user_slug}/album-state`. The deprecated `/api/album-state` adapter requires `?user_slug=<profile>`.
+See [profile selection](profile-selection.md) for the compatibility contract.
 
 Mutation flows should call a function in `albumApi.js`, then refresh album
 state through the page-level `onDataChanged` callback. This keeps derived

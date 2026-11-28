@@ -10,7 +10,7 @@ album actions and metadata refresh scripts.
 
 ## Current Entry Points
 
-- `make track`: imports recent Spotify plays for the default user.
+- `make track USER_SLUG=<profile>`: imports recent Spotify plays for an explicitly selected profile.
 - `make track-all`: imports recent Spotify plays for every connected user.
 - `backend/app/routers/imports.py`: supports Last.fm preview/commit and
   Spotify ZIP upload, plus shared history, review, resolve, and delete

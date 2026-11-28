@@ -48,7 +48,7 @@ def _require_owner(session, user_slug: str, authorization: str | None):
 
 @router.get("", response_model=list[User])
 def list_users(session: AppSession) -> list:
-    return [_user_payload(user) for user in UserRepository(session).list_users_with_default()]
+    return [_user_payload(user) for user in UserRepository(session).list_users()]
 
 
 @router.post("", response_model=ProfileCreateResponse, status_code=status.HTTP_201_CREATED)

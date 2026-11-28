@@ -8,7 +8,7 @@ The app reads user-scoped album data from FastAPI through:
 /api/users/{user_slug}/album-state
 ```
 
-The older `/api/album-state` endpoint still exists for compatibility. New
+The deprecated `/api/album-state` adapter requires `?user_slug=<profile>`. New
 profile UI should use functions in `src/services/albumApi.js`, which choose the
 selected user route automatically.
 

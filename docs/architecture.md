@@ -9,7 +9,7 @@ and manual album actions.
 
 ```text
 Spotify recent plays
-  -> backend/app/jobs/track_all_users.py or track_default_user.py
+  -> backend/app/jobs/track_all_users.py or track_user.py
   -> backend/app/services/spotify_tracking_service.py
   -> tracking.py
   -> album_metadata_service.py
