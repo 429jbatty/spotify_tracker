@@ -20,7 +20,7 @@ from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
 from backend.app.database.repositories.album_state import AlbumStateRepository
-from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.spotify_access_service import require_spotify_sync_access
 from spotify_manager import SpotifyAPI
 
@@ -28,10 +28,6 @@ from spotify_manager import SpotifyAPI
 STALE_HOURS = 48
 
 logger = structlog.get_logger(__name__)
-
-
-def run_tracking_for_default_user() -> dict[str, int]:
-    return run_tracking_for_user(DEFAULT_USER_SLUG)
 
 
 def run_tracking_for_all_users() -> dict[str, dict[str, int | str]]:

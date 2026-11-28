@@ -95,7 +95,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         with session_factory() as session:
-            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             AlbumStateRepository(session, repository.user).replace(state or duplicate_state())
         return session_factory
 
@@ -150,7 +150,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             factory = self._session_factory(temp_dir)
             with factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 for artist, mbid in [("Beyonce", "group-one"), ("Beyoncé", "group-two")]:
                     repository.add_album(
                         {"artist": artist, "name": "Record", "release_group_mbid": mbid},
@@ -167,7 +167,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             factory = self._session_factory(temp_dir)
             with factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 other = UserRepository(session).create_user(slug="other", display_name="Other")
                 # Older rows can have distinct keys for the same normalized identity.
                 copies = []
@@ -197,9 +197,9 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                before = len(AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()["completed_albums"])
+                before = len(AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()["completed_albums"])
                 dedupe.find_duplicate_groups(session)
-                after = len(AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()["completed_albums"])
+                after = len(AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()["completed_albums"])
 
         self.assertEqual(before, 8)
         self.assertEqual(after, 8)
@@ -208,7 +208,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 groups = dedupe.find_duplicate_groups(session)
                 actions = dedupe.apply_duplicate_groups(repository, groups)
                 state = AlbumStateRepository(session, repository.user).load()
@@ -243,7 +243,7 @@ class DedupeAlbumsScriptTests(unittest.TestCase):
                 },
             )
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 album_id = next(iter(AlbumStateRepository(session, repository.user).load()["completed_albums"].values()))[
                     "id"
                 ]

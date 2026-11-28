@@ -18,7 +18,7 @@ from backend.app.database.models import (
 )
 from backend.app.database.repositories.album_library import AlbumLibrary
 from backend.app.database.repositories.album_state import AlbumStateRepository
-from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
+from backend.app.database.repositories.user_repository import UserRepository
 from backend.app.services.admin_user_service import delete_user_by_slug
 
 
@@ -55,7 +55,7 @@ class AdminUserServiceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                default_repo = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                default_repo = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 default_repo.replace(sample_album_state())
 
                 friend = UserRepository(session).create_user(
@@ -139,26 +139,27 @@ class AdminUserServiceTests(unittest.TestCase):
         self.assertEqual(result.deleted_user_app_state, 1)
         self.assertEqual(result.deleted_users, 1)
         self.assertEqual(result.orphaned_albums_removed, 1)
-        self.assertEqual(remaining_users, [DEFAULT_USER_SLUG])
+        self.assertEqual(remaining_users, ["jacob"])
         self.assertIn("Artist - Shared Album", remaining_albums)
         self.assertNotIn("Friend Artist - Friend Only Album", remaining_albums)
         self.assertEqual(len(shared_album_memberships), 1)
         self.assertEqual(remaining_credit_facts, [])
 
-    def test_delete_user_refuses_default_user_without_override(self):
+    def test_delete_jacob_like_any_other_profile(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                UserRepository(session).ensure_default_user()
+                UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
 
-                with self.assertRaises(ValueError):
-                    delete_user_by_slug(session, user_slug=DEFAULT_USER_SLUG)
+                result = delete_user_by_slug(session, user_slug="jacob")
+                self.assertTrue(result.found)
+                self.assertEqual(UserRepository(session).list_users(), [])
 
     def test_delete_user_returns_not_found_when_missing(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                UserRepository(session).ensure_default_user()
+                UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
                 result = delete_user_by_slug(session, user_slug="missing-user")
 
         self.assertFalse(result.found)

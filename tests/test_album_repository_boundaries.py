@@ -58,7 +58,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
 
     def test_empty_artwork_scope_uses_missing_art_filter(self):
         with self.sessions() as session:
-            library = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            library = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             complete = library.add_album({
                 "artist": "Artist", "name": "Complete", "release_mbid": "release-a",
                 "image_url": "https://example.test/complete.jpg",
@@ -88,7 +88,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             created = AlbumLibrary(session, owner).add_album(
                 {"artist": "Artist", "name": "Original"}, listen_date=timestamp,
             ).record
-            default_user = users.ensure_default_user()
+            default_user = users.ensure_user(slug="jacob", display_name="Jacob")
             default_library = AlbumLibrary(session, default_user)
 
             with self.assertRaisesRegex(KeyError, "Album is not available for user"):
@@ -103,7 +103,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
 
         with self.sessions() as session:
             users = UserRepository(session)
-            self.assertEqual(AlbumLibrary(session, users.ensure_default_user()).list_records(), {})
+            self.assertEqual(AlbumLibrary(session, users.ensure_user(slug="jacob", display_name="Jacob")).list_records(), {})
             record = AlbumLibrary(session, users.require_user_by_slug("owner")).list_records()[key]
             self.assertEqual(record["id"], created["id"])
             self.assertEqual(record["listen_history"], [timestamp])
@@ -111,7 +111,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
     def test_key_refresh_stages_target_credits_before_scoped_merge_checks(self):
         with self.sessions() as session:
             users = UserRepository(session)
-            library = AlbumLibrary(session, users.ensure_default_user())
+            library = AlbumLibrary(session, users.ensure_user(slug="jacob", display_name="Jacob"))
             other_library = AlbumLibrary(session, users.create_user(slug="other", display_name="Other"))
             source = library.add_album({"artist": "Artist", "name": "Source"}).record
             target = other_library.add_album({
@@ -140,7 +140,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
 
     def test_key_refresh_commits_a_scoped_merge_and_its_credit_facts_together(self):
         with self.sessions() as session:
-            user = UserRepository(session).ensure_default_user()
+            user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
             library = AlbumLibrary(session, user)
             source = library.add_album(
                 {"artist": "Artist", "name": "Source"}, listen_date="2026-01-01",
@@ -157,7 +157,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             commit.assert_called_once_with()
 
         with self.sessions() as session:
-            library = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            library = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             record = library.list_records()[key]
             self.assertEqual((key, record["id"]), (target["album_key"], target["id"]))
             self.assertEqual(record["listen_history"], ["2026-01-01", "2026-01-02"])
@@ -168,7 +168,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
     def test_credit_insert_failure_rolls_back_metadata_and_previous_facts(self):
         original_tracks = [{"title": "Original", "credits": [["Original Producer", "producer"]]}]
         with self.sessions() as session:
-            library = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            library = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             album_id = library.add_album({
                 "artist": "Artist", "name": "Album", "tracklist": original_tracks,
             }).change.album_id
@@ -189,7 +189,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             """)
 
         with self.sessions() as session:
-            library = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            library = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             with self.assertLogs("backend.app.repositories.sqlite_state_repository", level="ERROR") as logs:
                 with self.assertRaisesRegex(IntegrityError, "injected credit projection failure"):
                     library.patch_metadata(album_id, {
@@ -207,7 +207,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
     def test_import_cleanup_keeps_album_with_a_global_listen_or_membership(self):
         with self.sessions() as session:
             users = UserRepository(session)
-            importer = users.ensure_default_user()
+            importer = users.ensure_user(slug="jacob", display_name="Jacob")
             other = users.create_user(slug="other", display_name="Other")
             library = AlbumLibrary(session, importer)
             timestamp = "2026-02-01T00:00:00Z"
@@ -248,7 +248,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
         variable_limit = 512
         timestamp = "2026-02-02T00:00:00Z"
         with self.sessions() as session:
-            user_id = UserRepository(session).ensure_default_user().id
+            user_id = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob").id
             albums = [
                 Album(album_key=f"Artist - Album {index}", artist="Artist", name=f"Album {index}")
                 for index in range(album_count)
@@ -289,7 +289,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
         timestamp = "2026-03-01T00:00:00Z"
         with self.sessions() as session:
             users = UserRepository(session)
-            user_id = users.ensure_default_user().id
+            user_id = users.ensure_user(slug="jacob", display_name="Jacob").id
             other_id = users.create_user(slug="other", display_name="Other").id
             first, second, foreign = (
                 import_session_repository.stage_session(
@@ -323,7 +323,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
     def test_library_commit_survives_interruption_before_candidate_result(self):
         timestamp = "2026-03-01T00:00:00Z"
         with self.sessions() as session:
-            user = UserRepository(session).ensure_default_user()
+            user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
             row = import_session_repository.stage_session(
                 session, user_id=user.id, source="lastfm", status="finalizing", started_at=timestamp,
             )
@@ -342,7 +342,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             )
 
         with self.sessions() as session:
-            library = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            library = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             with patch.object(candidate_results.import_events, "record_candidate_result", side_effect=RuntimeError("interrupted")):
                 with self.assertRaisesRegex(RuntimeError, "interrupted"):
                     candidate_results.apply_candidate_results(session, library, [candidate()])
@@ -351,7 +351,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             self.assertEqual(session.scalars(select(AlbumListen.listened_at)).one(), timestamp)
             row = session.scalars(select(ImportedListeningEvent)).one()
             self.assertEqual((row.match_status, row.album_id), ("raw", None))
-            library = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            library = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             candidate_results.apply_candidate_results(session, library, [candidate()])
             session.commit()
 
@@ -362,7 +362,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
 
     def test_snapshot_replaces_then_extends_history_for_shared_input_identity(self):
         with self.sessions() as session:
-            user = UserRepository(session).ensure_default_user()
+            user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
             library = AlbumLibrary(session, user)
             result = library.add_album(
                 {"artist": "Artist", "name": "Canonical", "release_group_mbid": "group"},
@@ -386,7 +386,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             })
 
         with self.sessions() as session:
-            user = UserRepository(session).ensure_default_user()
+            user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
             completed = AlbumStateRepository(session, user).load()["completed_albums"]
             self.assertEqual(list(completed), ["Artist - Canonical"])
             record = completed["Artist - Canonical"]
@@ -397,7 +397,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
     def test_bulk_reads_keep_profile_data_order_and_constant_statement_counts(self):
         with self.sessions() as session:
             users = UserRepository(session)
-            user = users.ensure_default_user()
+            user = users.ensure_user(slug="jacob", display_name="Jacob")
             other = users.create_user(slug="other", display_name="Other")
             library = AlbumLibrary(session, user)
             first = library.add_album({
@@ -429,7 +429,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
         self.assertEqual((match.album_id, match.record["tracklist"]), (second["id"], [{"title": "Second"}]))
 
         with self.sessions() as session:
-            user_id = UserRepository(session).ensure_default_user().id
+            user_id = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob").id
             albums = [
                 Album(album_key=f"Other - Album {index:02}", artist="Other", name=f"Album {index:02}")
                 for index in range(40)
@@ -453,7 +453,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             session.execute(text("UPDATE albums SET metadata_json = x'80' WHERE id = :id"), {"id": first["id"]})
             session.commit()
         with self.sessions() as session:
-            state = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
+            state = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()
             corrupt = state["completed_albums"][first["album_key"]]
             self.assertNotIn("tracklist", corrupt)
             self.assertEqual(corrupt["listen_history"], first_record["listen_history"])
@@ -467,7 +467,7 @@ class AlbumRepositoryBoundaryTests(unittest.TestCase):
             statements.append(statement)
 
         with self.sessions() as session:
-            user = UserRepository(session).ensure_default_user()
+            user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
             event.listen(self.engine, "before_cursor_execute", collect)
             try:
                 state = AlbumStateRepository(session, user).load()

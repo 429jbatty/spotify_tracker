@@ -6,7 +6,6 @@ from fastapi import APIRouter, Depends, Header, HTTPException, status
 from backend.app.services import metadata_refresh_logging
 from backend.app.dependencies import AppSession
 from backend.app.database.repositories.album_library import AlbumLibrary
-from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG
 from backend.app.services.manual_album_service import (
     add_manual_album_listen, create_manual_album, delete_manual_album, delete_manual_album_listen,
     update_manual_album_feedback, update_manual_album_tags,
@@ -25,23 +24,24 @@ from backend.app.schemas import (
 )
 
 
-router = APIRouter(prefix="/albums", tags=["albums"])
+router = APIRouter(prefix="/albums", tags=["albums"], deprecated=True)
 DUPLICATE_KEY_PREFIX = "Album key already exists: "
 
 
-def _default_album_library(
+def _legacy_album_library(
     session: AppSession,
+    user_slug: str,
     authorization: str | None = Header(default=None),
 ) -> Iterator[AlbumLibrary]:
     user = auth_service.require_profile_owner(
         session,
-        user_slug=DEFAULT_USER_SLUG,
+        user_slug=user_slug,
         authorization=authorization,
     )
     yield AlbumLibrary(session, user)
 
 
-DefaultAlbumLibrary = Annotated[AlbumLibrary, Depends(_default_album_library)]
+LegacyAlbumLibrary = Annotated[AlbumLibrary, Depends(_legacy_album_library)]
 
 
 def _duplicate_album_detail(repository: AlbumLibrary, error: ValueError):
@@ -67,7 +67,7 @@ def _duplicate_album_detail(repository: AlbumLibrary, error: ValueError):
     response_model=CompletedAlbum,
 )
 def refresh_album_metadata(
-    repository: DefaultAlbumLibrary,
+    repository: LegacyAlbumLibrary,
     album_id: int,
     request: AlbumRefreshRequest | None = None,
 ) -> dict:
@@ -85,7 +85,7 @@ def refresh_album_metadata(
 
 
 @router.post("", response_model=CompletedAlbum, status_code=status.HTTP_201_CREATED)
-def create_album(repository: DefaultAlbumLibrary, request: ManualAlbumCreate) -> dict:
+def create_album(repository: LegacyAlbumLibrary, request: ManualAlbumCreate) -> dict:
     try:
         return create_manual_album(repository, request)
     except ValueError as exc:
@@ -93,7 +93,7 @@ def create_album(repository: DefaultAlbumLibrary, request: ManualAlbumCreate) ->
 
 
 @router.patch("/{album_id}", response_model=CompletedAlbum)
-def update_album(repository: DefaultAlbumLibrary, album_id: int, request: AlbumMetadataUpdate) -> dict:
+def update_album(repository: LegacyAlbumLibrary, album_id: int, request: AlbumMetadataUpdate) -> dict:
     fields = request.model_dump(exclude_unset=True)
     try:
         return repository.patch_metadata(album_id, fields)
@@ -107,7 +107,7 @@ def update_album(repository: DefaultAlbumLibrary, album_id: int, request: AlbumM
 
 
 @router.post("/{album_id}/listens", response_model=CompletedAlbum)
-def add_album_listen(repository: DefaultAlbumLibrary, album_id: int, request: AlbumListenCreate) -> dict:
+def add_album_listen(repository: LegacyAlbumLibrary, album_id: int, request: AlbumListenCreate) -> dict:
     try:
         return add_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
@@ -115,7 +115,7 @@ def add_album_listen(repository: DefaultAlbumLibrary, album_id: int, request: Al
 
 
 @router.delete("/{album_id}/listens", response_model=CompletedAlbum)
-def delete_album_listen(repository: DefaultAlbumLibrary, album_id: int, request: AlbumListenDelete) -> dict:
+def delete_album_listen(repository: LegacyAlbumLibrary, album_id: int, request: AlbumListenDelete) -> dict:
     try:
         return delete_manual_album_listen(repository, album_id, request.listened_at)
     except KeyError as exc:
@@ -123,7 +123,7 @@ def delete_album_listen(repository: DefaultAlbumLibrary, album_id: int, request:
 
 
 @router.post("/{album_id}/merge", response_model=CompletedAlbum)
-def merge_album(repository: DefaultAlbumLibrary, album_id: int, request: AlbumMergeRequest) -> dict:
+def merge_album(repository: LegacyAlbumLibrary, album_id: int, request: AlbumMergeRequest) -> dict:
     try:
         return repository.merge(
             album_id,
@@ -136,7 +136,7 @@ def merge_album(repository: DefaultAlbumLibrary, album_id: int, request: AlbumMe
 
 
 @router.delete("/{album_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_album(repository: DefaultAlbumLibrary, album_id: int) -> None:
+def delete_album(repository: LegacyAlbumLibrary, album_id: int) -> None:
     try:
         delete_manual_album(repository, album_id)
     except KeyError as exc:
@@ -144,7 +144,7 @@ def delete_album(repository: DefaultAlbumLibrary, album_id: int) -> None:
 
 
 @router.put("/{album_id}/your-tags", response_model=CompletedAlbum)
-def update_album_user_tags(repository: DefaultAlbumLibrary, album_id: int, request: UserAlbumTagsUpdate) -> dict:
+def update_album_user_tags(repository: LegacyAlbumLibrary, album_id: int, request: UserAlbumTagsUpdate) -> dict:
     try:
         return update_manual_album_tags(repository, album_id, request.your_tags)
     except KeyError as exc:
@@ -154,7 +154,7 @@ def update_album_user_tags(repository: DefaultAlbumLibrary, album_id: int, reque
 
 
 @router.put("/{album_id}/your-feedback", response_model=CompletedAlbum)
-def update_album_user_feedback(repository: DefaultAlbumLibrary, album_id: int, request: UserAlbumFeedbackUpdate) -> dict:
+def update_album_user_feedback(repository: LegacyAlbumLibrary, album_id: int, request: UserAlbumFeedbackUpdate) -> dict:
     try:
         return update_manual_album_feedback(
             repository,

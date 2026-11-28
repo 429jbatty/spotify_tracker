@@ -44,13 +44,15 @@ dev-home:
 	$(MAKE) dev FRONTEND_HOST=0.0.0.0 HOME_MODE=1
 
 track:
-	$(PYTHON) -m backend.app.jobs.track_default_user
+	@test -n "$(USER_SLUG)" || (echo "Usage: make track USER_SLUG=<profile>"; exit 2)
+	$(PYTHON) -m backend.app.jobs.track_user --user-slug "$(USER_SLUG)"
 
 track-all:
 	$(PYTHON) -m backend.app.jobs.track_all_users
 
 refresh-metadata:
-	$(PYTHON) -m one_time_scripts._refresh_metadata
+	@test -n "$(USER_SLUG)" || (echo "Usage: make refresh-metadata USER_SLUG=<profile>"; exit 2)
+	$(PYTHON) -m one_time_scripts._refresh_metadata --user-slug "$(USER_SLUG)"
 
 cache-artwork:
 	$(PYTHON) -m one_time_scripts._cache_artwork

@@ -15,7 +15,7 @@ Build the initial revision from the current models in
 `import_sessions`, `import_session_logs`, and `imported_listening_events`.
 Include their columns, constraints, and indexes, plus the partial unique indexes
 `uq_albums_release_group_mbid` and `uq_users_owner_account_id` currently created
-in `schema.py`. The default user is seeded separately after migration.
+in `schema.py`. Initialization creates no profiles after migration.
 
 This list is a snapshot of the schema expected from the repository today, not a
 verified snapshot of production. The models and frozen migration are the
@@ -35,8 +35,8 @@ authoritative definitions; compare production before adopting the baseline.
    columns, constraints, and indexes semantically against a database created
    by today's initializer. No general-purpose schema comparison tool is needed.
 3. **Integrate startup.** Replace `create_all()` and index creation in the
-   shared API/job initialization path with Alembic upgrades, then seed the
-   default user. An empty database upgrades from the initial revision. An
+   shared API/job initialization path with Alembic upgrades without creating
+   profiles. An empty database upgrades from the initial revision. An
    existing unversioned database must fail with clear adoption instructions;
    never stamp it automatically. Migration failures must stop startup.
 4. **Serialize migrations.** Use one shared, cross-process file lock associated

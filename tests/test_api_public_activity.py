@@ -30,7 +30,7 @@ class PublicActivityApiTests(unittest.TestCase):
             inactive = User(slug="inactive", display_name="Inactive", is_active=False)
             session.add(inactive)
             session.commit()
-            AlbumStateRepository(session, UserRepository(session).ensure_default_user()).replace(
+            AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).replace(
                 {
                     "last_checked": None,
                     "albums_in_progress": {},

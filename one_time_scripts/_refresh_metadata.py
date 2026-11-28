@@ -1,3 +1,4 @@
+import argparse
 import json
 import logging
 from dataclasses import asdict
@@ -70,17 +71,17 @@ def _status_counts(results):
     return counts
 
 
-def refresh_configured_albums():
+def refresh_configured_albums(user_slug: str):
     results = []
 
     if REFRESH_ALL:
         results = refresh_service.refresh_all_albums_and_save(
-            continue_on_error=CONTINUE_ON_ERROR,
+            user_slug=user_slug, continue_on_error=CONTINUE_ON_ERROR,
         )
     else:
         for key in ALBUM_KEYS:
             try:
-                result = refresh_service.refresh_album_and_save(key=key)
+                result = refresh_service.refresh_album_and_save(user_slug=user_slug, key=key)
             except Exception as exc:
                 if not CONTINUE_ON_ERROR:
                     raise
@@ -105,7 +106,7 @@ def refresh_configured_albums():
 
             try:
                 result = refresh_service.refresh_album_and_save(
-                    artist=artist,
+                    user_slug=user_slug, artist=artist,
                     album=album,
                     spotify_url=spotify_url,
                 )
@@ -129,6 +130,9 @@ def refresh_configured_albums():
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Refresh metadata for a profile library.")
+    parser.add_argument("--user-slug", required=True)
+    args = parser.parse_args()
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s | %(levelname)s | %(message)s",
@@ -138,7 +142,7 @@ def main():
     if not REFRESH_ALL and not ALBUM_KEYS and not ALBUMS:
         raise SystemExit("Set REFRESH_ALL=True or add entries to ALBUM_KEYS/ALBUMS.")
 
-    results = refresh_configured_albums()
+    results = refresh_configured_albums(args.user_slug)
     _print_summary(results)
     report_path = _write_report(results)
     print(f"Report: {report_path}")

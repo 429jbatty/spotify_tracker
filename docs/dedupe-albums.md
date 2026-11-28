@@ -3,7 +3,7 @@
 Use `one_time_scripts/_dedupe_albums.py` to find and safely merge duplicate
 album records in the SQLite database.
 
-The script is conservative by default. Running it with no flags only reports
+The script is conservative by default. With a required `--user-slug` and no action flags, it only reports
 candidate duplicate groups after normal schema initialization.
 
 ## Basic Usage
@@ -11,32 +11,32 @@ candidate duplicate groups after normal schema initialization.
 From the repo root:
 
 ```bash
-./.venv/bin/python one_time_scripts/_dedupe_albums.py
+./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE
 ```
 
 Against an explicit database:
 
 ```bash
-./.venv/bin/python one_time_scripts/_dedupe_albums.py \
+./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE \
   --database-url sqlite:///data/spotify_tracker.sqlite
 ```
 
 Apply safe merges:
 
 ```bash
-./.venv/bin/python one_time_scripts/_dedupe_albums.py --apply
+./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE --apply
 ```
 
 Refresh candidate metadata before reporting or applying:
 
 ```bash
-./.venv/bin/python one_time_scripts/_dedupe_albums.py --refresh-candidates
+./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE --refresh-candidates
 ```
 
 Refresh candidates and then apply safe merges:
 
 ```bash
-./.venv/bin/python one_time_scripts/_dedupe_albums.py \
+./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE \
   --refresh-candidates \
   --apply
 ```
@@ -77,7 +77,7 @@ Each album row includes:
 Text groups must also match the repository's canonical artist/title identity.
 Groups containing distinct known release-group MBIDs remain review-only.
 The report covers all profiles. Apply skips a group if any member is outside
-the default profile's library.
+the selected profile's library.
 
 The target album is chosen by preferring:
 
@@ -88,7 +88,7 @@ The target album is chosen by preferring:
 5. lower album ID as a stable tiebreaker
 
 Merging uses `AlbumLibrary.merge(source_id, target_id)`, which
-moves the default profile's listens and combines its membership fields.
+moves the selected profile's listens and combines its membership fields.
 Other profiles keep their memberships and listens. A source album can be
 deleted once it has no remaining owners.
 
@@ -133,7 +133,7 @@ skipped action and leaves that album unchanged.
 2. Run a dry report:
 
    ```bash
-   ./.venv/bin/python one_time_scripts/_dedupe_albums.py \
+   ./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE \
      --database-url sqlite:////path/to/production.sqlite
    ```
 
@@ -141,7 +141,7 @@ skipped action and leaves that album unchanged.
 4. Optionally run refresh-only first:
 
    ```bash
-   ./.venv/bin/python one_time_scripts/_dedupe_albums.py \
+   ./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE \
      --database-url sqlite:////path/to/production.sqlite \
      --refresh-candidates
    ```
@@ -149,7 +149,7 @@ skipped action and leaves that album unchanged.
 5. Apply only safe merges:
 
    ```bash
-   ./.venv/bin/python one_time_scripts/_dedupe_albums.py \
+   ./.venv/bin/python -m one_time_scripts._dedupe_albums --user-slug PROFILE \
      --database-url sqlite:////path/to/production.sqlite \
      --apply
    ```

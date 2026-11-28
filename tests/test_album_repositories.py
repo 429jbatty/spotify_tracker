@@ -75,7 +75,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 loaded = repository.load()
 
@@ -107,7 +107,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 repository.replace(sample_album_state())
 
@@ -122,7 +122,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 repository.replace(sample_album_state())
 
@@ -140,7 +140,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 original = session.scalars(select(AlbumCreditFact)).one()
                 original_identity = (original.id, original.updated_at)
@@ -155,7 +155,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 loaded = repository.load()
 
@@ -176,7 +176,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             updated_state["albums_in_progress"] = {}
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 repository.replace(updated_state)
                 loaded = repository.load()
@@ -200,7 +200,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             del updated_state["completed_albums"]["Artist - Finished Album"]
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 repository.replace(updated_state)
 
@@ -215,7 +215,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 new_key = AlbumLibrary(session, repository.user).replace_catalog_metadata_for_refresh(
                     "Artist - Finished Album",
@@ -249,7 +249,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 AlbumLibrary(session, repository.user).replace_catalog_metadata_for_refresh(
                     "Artist - Finished Album",
@@ -279,7 +279,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
 
                 exact = AlbumCatalog(session).find_for_refresh(
@@ -304,7 +304,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             ] = "https://example.test/new-cover.jpg"
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
 
                 album = session.scalars(
@@ -329,7 +329,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 album_id = repository.load()["completed_albums"][
                     "Artist - Finished Album"
@@ -348,7 +348,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
                 album_id = repository.load()["completed_albums"][
                     "Artist - Finished Album"
@@ -367,7 +367,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             session_factory = self._session_factory(temp_dir)
 
             with session_factory() as session:
-                repository = AlbumStateRepository(session, UserRepository(session).ensure_default_user())
+                repository = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.replace(sample_album_state())
 
                 album = session.scalars(
@@ -399,7 +399,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 imported = repository.add_album(
                     {
                         "artist": "Charli XCX",
@@ -436,7 +436,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 first = repository.add_album(
                     {"artist": "Beyoncé", "name": "Lemonade", "source": "manual"},
                     listen_date="2025-01-01T00:00:00Z",
@@ -461,7 +461,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
             for index, (first_source, second_source) in enumerate(source_pairs):
                 with self.subTest(first=first_source, second=second_source):
                     with session_factory() as session:
-                        repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                        repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                         first = repository.add_album(
                             {
                                 "artist": "Artist Name",
@@ -489,7 +489,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 first = repository.add_album(
                     {"artist": "Artist", "name": "Album", "release_group_mbid": "rg-one"},
                     listen_date="2025-01-01T00:00:00Z",
@@ -505,7 +505,7 @@ class AlbumStateRepositoryTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             session_factory = self._session_factory(temp_dir)
             with session_factory() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 source = repository.add_album(
                     {"artist": "Source Artist", "name": "Source Album"},
                     listen_date="2025-01-01T00:00:00Z",

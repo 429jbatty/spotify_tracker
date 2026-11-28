@@ -125,7 +125,7 @@ class DatabaseSchemaTests(unittest.TestCase):
             with TestClient(other_app) as other_client:
                 response = other_client.get("/api/users")
                 self.assertEqual(response.status_code, 200)
-                self.assertEqual({user["slug"] for user in response.json()}, {"jacob"})
+                self.assertEqual({user["slug"] for user in response.json()}, set())
 
     def test_create_schema_creates_album_metadata_cache_idempotently(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -259,13 +259,13 @@ class DatabaseSchemaTests(unittest.TestCase):
             with sqlite3.connect(path) as db:
                 self.assertEqual(
                     db.execute("SELECT slug, display_name, is_active, spotify_sync_enabled FROM users").fetchall(),
-                    [("jacob", "Jacob", 1, 0)],
+                    [],
                 )
                 db.executescript("""
                     INSERT INTO accounts (id, email, password_hash, created_at)
                     VALUES (1, 'owner@example.test', 'disabled', '2026-01-01');
-                    UPDATE users SET display_name='Existing', owner_account_id=1,
-                        spotify_sync_enabled=1 WHERE slug='jacob';
+                    INSERT INTO users (id, slug, display_name, is_active, owner_account_id, spotify_sync_enabled)
+                    VALUES (1, 'jacob', 'Existing', 1, 1, 1);
                     INSERT INTO users (id, slug, display_name, is_active) VALUES (2, 'other', 'Other', 1);
                     INSERT INTO user_spotify_credentials (user_id, refresh_token) VALUES (1, 'test-token');
                     INSERT INTO albums (id, album_key, artist, name, source, entry_source, metadata_json)

@@ -40,7 +40,7 @@ class DatabaseMigrationTests(unittest.TestCase):
         self.assertEqual(self._schema_signature(self.engine), self._schema_signature(original))
         with self.engine.connect() as connection:
             self.assertEqual(connection.scalar(text("SELECT version_num FROM alembic_version")), "0001")
-            self.assertEqual(connection.scalar(text("SELECT display_name FROM users WHERE slug = 'jacob'")), "Jacob")
+            self.assertEqual(connection.scalar(text("SELECT COUNT(*) FROM users")), 0)
             self.assertEqual(connection.scalar(text("PRAGMA foreign_keys")), 1)
             self.assertEqual(connection.exec_driver_sql("PRAGMA foreign_key_check").all(), [])
 
@@ -110,6 +110,8 @@ class DatabaseMigrationTests(unittest.TestCase):
 
     def test_later_batch_revision_preserves_listens_constraints_and_foreign_keys(self):
         initialize_database(self.engine)
+        with self.engine.begin() as connection:
+            connection.exec_driver_sql("INSERT INTO users (slug, display_name, is_active) VALUES ('jacob', 'Jacob', 1)")
         with self.engine.begin() as connection:
             connection.exec_driver_sql(
                 "INSERT INTO albums (id, album_key, artist, name, source, entry_source, metadata_json) "
@@ -203,7 +205,7 @@ class DatabaseMigrationTests(unittest.TestCase):
 
         with self.engine.connect() as connection:
             self.assertEqual(connection.scalar(text("SELECT version_num FROM alembic_version")), "0001")
-            self.assertEqual(connection.scalar(text("SELECT COUNT(*) FROM users")), 1)
+            self.assertEqual(connection.scalar(text("SELECT COUNT(*) FROM users")), 0)
 
     def test_file_lock_times_out_before_starting_sqlite_initialization(self):
         second_engine = get_engine(f"sqlite:///{self.path.as_uri()}?uri=1")
@@ -225,4 +227,4 @@ class DatabaseMigrationTests(unittest.TestCase):
             second.result(timeout=5)
         with engine.connect() as connection:
             self.assertEqual(connection.scalar(text("SELECT version_num FROM alembic_version")), "0001")
-            self.assertEqual(connection.scalar(text("SELECT COUNT(*) FROM users")), 1)
+            self.assertEqual(connection.scalar(text("SELECT COUNT(*) FROM users")), 0)

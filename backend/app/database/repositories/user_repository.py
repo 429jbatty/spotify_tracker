@@ -9,10 +9,6 @@ from backend.app.database.models import (
 from backend.app.database.repositories.album_catalog import AlbumCatalog
 
 
-DEFAULT_USER_SLUG = "jacob"
-DEFAULT_USER_DISPLAY_NAME = "Jacob"
-
-
 @dataclass
 class DeleteUserResult:
     found: bool
@@ -30,12 +26,6 @@ class DeleteUserResult:
 class UserRepository:
     def __init__(self, session: Session):
         self.session = session
-
-    def ensure_default_user(self) -> User:
-        return self.ensure_user(
-            slug=DEFAULT_USER_SLUG,
-            display_name=DEFAULT_USER_DISPLAY_NAME,
-        )
 
     def ensure_user(self, *, slug: str, display_name: str | None = None) -> User:
         normalized_slug = _normalize_slug(slug)
@@ -88,11 +78,6 @@ class UserRepository:
         if user is None:
             raise KeyError(f"User not found: {slug}")
         return user
-
-    def list_users_with_default(self) -> list[User]:
-        self.ensure_default_user()
-        self.session.commit()
-        return self.list_users()
 
     def list_users(self, active_only: bool = True) -> list[User]:
         query = select(User).order_by(User.display_name, User.slug)

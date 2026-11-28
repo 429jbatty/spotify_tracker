@@ -11,6 +11,7 @@ import utils
 from backend.app.album_identity import normalized_artist_title_identity
 from backend.app.database.models import Album
 from backend.app.job_database import job_session
+from backend.app.database.repositories.user_repository import UserRepository
 
 
 def state_with_album():
@@ -38,11 +39,13 @@ class MetadataRefreshServiceTests(unittest.TestCase):
         env = patch.dict(os.environ, {"DATABASE_URL": url})
         env.start()
         self.addCleanup(env.stop)
+        with job_session() as session:
+            UserRepository(session).create_user(slug="jacob", display_name="Jacob")
 
     def test_refresh_album_preserves_listen_history_and_replaces_metadata(self):
         state = state_with_album()
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
             return_value={
@@ -53,12 +56,12 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             },
         ) as get_album_metadata:
-            result = refresh.refresh_album_and_save(
+            result = refresh.refresh_album_and_save(user_slug="jacob",
                 artist="Artist",
                 album="Old Title",
             )
 
-        album = utils.load_state()["completed_albums"]["Artist - Old Title"]
+        album = utils.load_state("jacob")["completed_albums"]["Artist - Old Title"]
 
         get_album_metadata.assert_called_once_with(
             "Artist",
@@ -80,7 +83,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             }
         )
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
             return_value={
@@ -92,12 +95,12 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             },
         ):
-            result = refresh.refresh_album_and_save(
+            result = refresh.refresh_album_and_save(user_slug="jacob",
                 artist="Artist",
                 album="Old Title",
             )
 
-        album = utils.load_state()["completed_albums"]["Artist - Old Title"]
+        album = utils.load_state("jacob")["completed_albums"]["Artist - Old Title"]
 
         self.assertEqual(result.status, "refreshed_with_warnings")
         self.assertEqual(album["label"], "Existing Label")
@@ -115,7 +118,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             }
         )
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
             return_value={
@@ -125,12 +128,12 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             },
         ):
-            refresh.refresh_album_and_save(
+            refresh.refresh_album_and_save(user_slug="jacob",
                 artist="Artist",
                 album="Old Title",
             )
 
-        album = utils.load_state()["completed_albums"]["Artist - Old Title"]
+        album = utils.load_state("jacob")["completed_albums"]["Artist - Old Title"]
 
         self.assertEqual(album["image_url"], "/media/artwork/existing.jpg")
         self.assertEqual(album["remote_image_url"], "https://example.test/new.jpg")
@@ -139,7 +142,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
     def test_refresh_album_updates_key_when_canonical_metadata_changes(self):
         state = state_with_album()
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
             return_value={
@@ -148,11 +151,11 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             },
         ):
-            result = refresh.refresh_album_and_save(
+            result = refresh.refresh_album_and_save(user_slug="jacob",
                 key="Artist - Old Title",
             )
 
-        state = utils.load_state()
+        state = utils.load_state("jacob")
         self.assertEqual(result.key, "Artist - Canonical Title")
         self.assertNotIn("Artist - Old Title", state["completed_albums"])
         self.assertIn("Artist - Canonical Title", state["completed_albums"])
@@ -186,12 +189,12 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             }
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
             side_effect=fake_metadata,
         ):
-            results = refresh.refresh_all_albums_and_save()
+            results = refresh.refresh_all_albums_and_save("jacob")
 
         self.assertEqual(len(results), 2)
         self.assertEqual([result.refreshed for result in results], [True, False])
@@ -201,7 +204,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
     def test_refresh_all_skips_low_confidence_metadata_without_overwriting(self):
         state = state_with_album()
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
             return_value={
@@ -212,9 +215,9 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "_musicbrainz_match": {"confidence": 60},
             },
         ):
-            results = refresh.refresh_all_albums_and_save()
+            results = refresh.refresh_all_albums_and_save("jacob")
 
-        album = utils.load_state()["completed_albums"]["Artist - Old Title"]
+        album = utils.load_state("jacob")["completed_albums"]["Artist - Old Title"]
 
         self.assertEqual(len(results), 1)
         self.assertFalse(results[0].refreshed)
@@ -224,7 +227,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
         self.assertEqual(album["release_year"], 1999)
 
     def test_refresh_album_and_save_uses_direct_sqlite_update(self):
-        utils.save_state(state_with_album())
+        utils.save_state(state_with_album(), user_slug="jacob")
 
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
@@ -241,9 +244,9 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             "backend.app.database.repositories.album_state.AlbumStateRepository.replace",
             side_effect=AssertionError("save_state should not be called"),
         ):
-            result = refresh.refresh_album_and_save(key="Artist - Old Title")
+            result = refresh.refresh_album_and_save(user_slug="jacob", key="Artist - Old Title")
 
-        loaded = utils.load_state()
+        loaded = utils.load_state("jacob")
 
         self.assertEqual(result.key, "Artist - Canonical Title")
         self.assertNotIn("Artist - Old Title", loaded["completed_albums"])
@@ -257,7 +260,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
         )
 
     def test_key_refresh_rejects_a_concurrent_rename_during_remote_lookup(self):
-        utils.save_state(state_with_album())
+        utils.save_state(state_with_album(), user_slug="jacob")
 
         def rename_during_lookup(*_args, **_kwargs):
             with job_session(initialize=False) as other_session:
@@ -285,9 +288,9 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             side_effect=rename_during_lookup,
         ):
             with self.assertRaisesRegex(KeyError, "Album key not found: Artist - Old Title"):
-                refresh.refresh_album_and_save(artist="artist", album="old title")
+                refresh.refresh_album_and_save(user_slug="jacob", artist="artist", album="old title")
 
-        completed = utils.load_state()["completed_albums"]
+        completed = utils.load_state("jacob")["completed_albums"]
         self.assertEqual(list(completed), ["Artist - Concurrent Title"])
         self.assertEqual(completed["Artist - Concurrent Title"]["release_year"], 1999)
         self.assertEqual(
@@ -299,7 +302,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
         state = state_with_album()
         key = "Artist - Old Title"
         state["completed_albums"][key]["_manual_input_identity"] = "original"
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
 
         def update_identity_during_lookup(*_args, **_kwargs):
             with job_session(initialize=False) as other_session:
@@ -315,7 +318,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             "metadata_refresh_service.metadata_service.get_album_metadata",
             side_effect=update_identity_during_lookup,
         ):
-            result = refresh.refresh_album_and_save(key=key)
+            result = refresh.refresh_album_and_save(user_slug="jacob", key=key)
 
         self.assertTrue(result.refreshed)
         with job_session(initialize=False) as session:
@@ -339,7 +342,7 @@ class MetadataRefreshServiceTests(unittest.TestCase):
                 "source": "musicbrainz",
             }
 
-        utils.save_state(state)
+        utils.save_state(state, user_slug="jacob")
 
         with patch(
             "metadata_refresh_service.metadata_service.get_album_metadata",
@@ -351,9 +354,9 @@ class MetadataRefreshServiceTests(unittest.TestCase):
             "backend.app.database.repositories.album_state.AlbumStateRepository.replace",
             side_effect=AssertionError("save_state should not be called"),
         ):
-            results = refresh.refresh_all_albums_and_save()
+            results = refresh.refresh_all_albums_and_save("jacob")
 
-        loaded = utils.load_state()
+        loaded = utils.load_state("jacob")
 
         self.assertEqual([result.refreshed for result in results], [True, True])
         self.assertIn("Artist - Old Title Refreshed", loaded["completed_albums"])

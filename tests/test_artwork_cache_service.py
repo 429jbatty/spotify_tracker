@@ -50,7 +50,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
         engine = create_schema(database_url)
         session_factory = sessionmaker(bind=engine, autoflush=False, autocommit=False)
         session = session_factory()
-        user = UserRepository(session).ensure_default_user()
+        user = UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")
         repository = AlbumStateRepository(session, user)
         repository.replace(sample_album_state())
         return session, AlbumCatalog(session)
@@ -65,7 +65,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()
                 album = loaded["completed_albums"]["Artist - Album"]
                 output_path = Path(temp_dir) / album["local_image_path"]
 
@@ -105,7 +105,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()
                 album = loaded["completed_albums"]["Artist - Album"]
 
                 self.assertTrue(results[0].cached)
@@ -191,7 +191,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()
             finally:
                 session.close()
 
@@ -218,7 +218,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
                     downloader=lambda url: (image_bytes(format="PNG"), "image/png"),
                 )
                 results = service.cache_missing_artwork(repository)
-                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()
             finally:
                 session.close()
 
@@ -240,7 +240,7 @@ class ArtworkCacheServiceTests(unittest.TestCase):
 
             try:
                 results = service.cache_missing_artwork(repository)
-                loaded = AlbumStateRepository(session, UserRepository(session).ensure_default_user()).load()
+                loaded = AlbumStateRepository(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob")).load()
             finally:
                 session.close()
 

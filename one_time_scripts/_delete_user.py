@@ -9,11 +9,6 @@ from backend.app.services.admin_user_service import delete_user_by_slug
 def main() -> int:
     parser = argparse.ArgumentParser(description="Delete a user and dependent rows.")
     parser.add_argument("user_slug", help="User slug to delete")
-    parser.add_argument(
-        "--force-default-user",
-        action="store_true",
-        help="Allow deleting the default seeded user",
-    )
     args = parser.parse_args()
 
     with job_session(initialize=False) as session:
@@ -21,7 +16,6 @@ def main() -> int:
             result = delete_user_by_slug(
                 session,
                 user_slug=args.user_slug,
-                allow_default_user=args.force_default_user,
             )
         except ValueError as exc:
             print(str(exc), file=sys.stderr)

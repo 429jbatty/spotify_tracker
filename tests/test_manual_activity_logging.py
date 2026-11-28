@@ -27,7 +27,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
         self.engine = create_schema(self.database_url)
         self.sessions = sessionmaker(bind=self.engine, autoflush=False, autocommit=False)
         with self.sessions() as session:
-            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             account = auth_service.create_account(session, email="owner@example.com", password="unused")
             repository.user.owner_account_id = account.id
             self.user_id = repository.user.id
@@ -102,7 +102,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
         self.assertEqual([e["event"] for e in self.events], ["album_manually_added"])
 
     def test_compatibility_routes_and_unauthorized_requests(self):
-        self.assertEqual(self.create_album(path="/api/albums").status_code, 201)
+        self.assertEqual(self.create_album(path="/api/albums?user_slug=jacob").status_code, 201)
         self.assertEqual([e["event"] for e in self.events], ["album_manually_added"])
         self.events.clear()
         unauthorized = self.client.post("/api/users/jacob/albums", json={"artist": "Other", "name": "Other"}, headers={"Authorization": ""})
@@ -157,7 +157,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
         self.assertEqual(self.client.put(path, json={"rating": 8, "notes": "different"}).status_code, 200)
         self.assertEqual([e["change"] for e in self.events], ["updated", "updated"])
         self.events.clear()
-        self.assertEqual(self.client.put(f"/api/albums/{album_id}/your-feedback", json={}).status_code, 200)
+        self.assertEqual(self.client.put(f"/api/albums/{album_id}/your-feedback?user_slug=jacob", json={}).status_code, 200)
         self.assertEqual([e["event"] for e in self.events], ["album_rating_removed", "album_note_removed"])
         self.events.clear()
         self.assertEqual(self.client.put(path, json={"rating": 11}).status_code, 422)
@@ -173,7 +173,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
         self.events.clear()
         self.assertEqual(self.client.put(path, json={"your_tags": ["lush", "raw"]}).status_code, 200)
         self.assertEqual(self.events, [])
-        self.assertEqual(self.client.put(f"/api/albums/{album_id}/your-tags", json={"your_tags": ["lush", "noisy"]}).status_code, 200)
+        self.assertEqual(self.client.put(f"/api/albums/{album_id}/your-tags?user_slug=jacob", json={"your_tags": ["lush", "noisy"]}).status_code, 200)
         self.assertEqual((self.events[0]["added_tags"], self.events[0]["removed_tags"]), (["noisy"], ["raw"]))
         self.events.clear()
         self.assertEqual(self.client.put(path, json={"your_tags": ["invalid"]}).status_code, 422)
@@ -187,7 +187,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
             lambda repo: manual_album_service.update_manual_album_tags(repo, album_id, ["lush"]),
         ):
             with self.sessions() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 with patch.object(session, "commit", side_effect=RuntimeError("commit failed")):
                     with self.assertRaises(RuntimeError):
                         update(repository)
@@ -209,7 +209,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
             ready = threading.Barrier(2)
             def run():
                 with self.sessions() as session:
-                    repo = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                    repo = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                     ready.wait(timeout=5)
                     update(repo)
             with ThreadPoolExecutor(max_workers=2) as pool:
@@ -220,7 +220,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
 
     def test_import_feedback_does_not_emit_manual_activity(self):
         with self.sessions() as session:
-            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             album_id = repository.add_album({"artist": "Import", "name": "Album"}).record["id"]
             repository.set_feedback(album_id, rating=8, notes="imported")
             repository.set_tags(album_id, ["lush"])
@@ -228,7 +228,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
 
     def test_import_listen_does_not_repeat_membership_lookup_for_change_facts(self):
         with self.sessions() as session:
-            repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+            repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
             album_id = repository.add_album({"artist": "Artist", "name": "Import"}).record["id"]
 
         statements = []
@@ -239,7 +239,7 @@ class ManualActivityLoggingTests(unittest.TestCase):
         event.listen(self.engine, "before_cursor_execute", collect_membership_queries)
         try:
             with self.sessions() as session:
-                repository = AlbumLibrary(session, UserRepository(session).ensure_default_user())
+                repository = AlbumLibrary(session, UserRepository(session).ensure_user(slug="jacob", display_name="Jacob"))
                 repository.add_listen(album_id, "2026-01-01T00:00:00Z")
         finally:
             event.remove(self.engine, "before_cursor_execute", collect_membership_queries)
