@@ -1,5 +1,6 @@
 from collections.abc import Callable
 from contextlib import AbstractContextManager
+from copy import deepcopy
 from datetime import datetime, timezone
 import time
 import uuid
@@ -19,13 +20,14 @@ from backend.app.persistence_logging import database_error_fields
 from backend.app.database.repositories.spotify_credentials_repository import (
     SpotifyCredentialsRepository,
 )
-from backend.app.database.repositories.album_state import AlbumStateRepository
+from backend.app.database.repositories.album_state import AlbumStateRepository, SpotifySyncConflict
 from backend.app.database.repositories.user_repository import DEFAULT_USER_SLUG, UserRepository
 from backend.app.services.spotify_access_service import require_spotify_sync_access
 from spotify_manager import SpotifyAPI
 
 
 STALE_HOURS = 48
+MAX_SYNC_ATTEMPTS = 3
 
 logger = structlog.get_logger(__name__)
 
@@ -59,8 +61,14 @@ def run_tracking_for_user(
     started = time.perf_counter()
     with bound_contextvars(sync_run_id=uuid.uuid4().hex, user_id=None, sync_phase="initialize", album_state_saved=False):
         try:
-            with open_session() as session:
-                result = _run_tracking_for_user(user_slug, session)
+            for attempt in range(MAX_SYNC_ATTEMPTS):
+                try:
+                    with open_session() as session:
+                        result = _run_tracking_for_user(user_slug, session)
+                    break
+                except SpotifySyncConflict:
+                    if attempt == MAX_SYNC_ATTEMPTS - 1:
+                        raise
             logger.info("spotify_sync_completed", duration_ms=round((time.perf_counter() - started) * 1000, 3), **result)
             return result
         except Exception as exc:
@@ -84,7 +92,9 @@ def _run_tracking_for_user(user_slug: str, session: Session) -> dict[str, int]:
     )
     repository = AlbumStateRepository(session, user)
     bind_contextvars(sync_phase="load_state")
-    start_state = repository.load()
+    start_state = repository.load_for_sync()
+    # Tracking mutates nested progress and listen history in place.
+    expected_state = deepcopy(start_state)
 
     starting_completed_count = len(start_state.get("completed_albums", {}))
 
@@ -130,7 +140,7 @@ def _run_tracking_for_user(user_slug: str, session: Session) -> dict[str, int]:
     )
 
     bind_contextvars(sync_phase="save_album_state")
-    repository.replace(end_state)
+    repository.replace_for_sync(expected_state, end_state)
     # The state save commits separately from the sync-success update below.
     bind_contextvars(sync_phase="record_sync_success", album_state_saved=True)
     SpotifyCredentialsRepository(session).record_sync_success(
