@@ -21,6 +21,10 @@ from backend.app.database.repositories.credit_repository import CreditRepository
 _STATE_LAST_CHECKED = "last_checked"
 
 
+class SpotifySyncConflict(RuntimeError):
+    """The profile changed while Spotify data was being fetched or processed."""
+
+
 class AlbumStateRepository:
     def __init__(self, session: Session, user: User):
         self.session = session
@@ -35,6 +39,36 @@ class AlbumStateRepository:
             "completed_albums": self._library.list_records(),
             "most_recently_listened": self._most_recently_listened(),
         }
+
+    def load_for_sync(self) -> dict[str, Any]:
+        """Read one consistent snapshot, releasing the transaction before I/O.
+
+        SQLite's legacy transaction mode does not begin a transaction for
+        SELECTs. Explicit BEGIN keeps the multiple snapshot queries consistent.
+        This boundary owns a read-only session; never pass pending writes here.
+        """
+        self.session.connection().exec_driver_sql("BEGIN")
+        try:
+            return self.load()
+        finally:
+            self.session.rollback()
+
+    def replace_for_sync(self, expected: dict[str, Any], state: dict[str, Any]) -> None:
+        """Replace only if the source snapshot still matches current state.
+
+        The write reservation serializes validation and replacement across
+        processes, including overlapping syncs. No remote calls occur here.
+        Other snapshot callers retain their explicit replacement semantics.
+        """
+        self.session.rollback()
+        try:
+            self.session.connection().exec_driver_sql("BEGIN IMMEDIATE")
+            if self.load() != expected:
+                raise SpotifySyncConflict("Library changed during Spotify sync; retry required.")
+            self.replace(state)
+        except Exception:
+            self.session.rollback()
+            raise
 
     def replace(self, state: dict[str, Any]) -> None:
         cursor = self._tracking_cursor()
