@@ -329,7 +329,7 @@ hold fields needed for lookup, display, and filtering.
 
 ## Operational Notes
 
-Use `make refresh-metadata` for targeted refreshes configured in
+Use `make refresh-metadata USER_SLUG=<profile>` for targeted refreshes configured in
 `one_time_scripts/_refresh_metadata.py`. Keep broad refreshes deliberate because
 MusicBrainz is rate-limited and external metadata can change canonical album
 identity.
